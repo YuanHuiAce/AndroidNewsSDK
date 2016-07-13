@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">奇点资讯</string>
+    <string name="mNewsDetailTitle">在大多数情况下,这个方法还不赖,并且有一些优点</string>
+
+    <string name="drawer_btn_rss">频道管理</string>
+    <string name="subscribe_my_category">我的频道 (单击增删频道，长按拖拽排序)</string>
+    <string name="subscribe_more_category">更多频道 (点击添加更多)</string>
+    <string name="subscribe_more_category_info">单击添加频道</string>
+    <string name="subscribe_manager_category_info">单击增删频道</string>
+    <string name="subscribe_manager_category_info_2">单击增删频道，长按拖拽排序</string>
+    <string name="aty_guide_login_txt1">智能推荐您喜欢的文章</string>
+    <string name="aty_guide_login_txt2">只需一键登录</string>
+    <string name="aty_guide_login_txt3">先随便看看</string>
+
+
+</resources>

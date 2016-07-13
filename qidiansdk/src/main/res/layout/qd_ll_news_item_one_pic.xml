@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_feed_list_select">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/title_img_View"
+        android:layout_width="102dp"
+        android:layout_height="74dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/bg_load_default_small"
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="false"
+        fresco:roundTopLeft="false"
+        fresco:roundTopRight="false"
+        fresco:roundedCornerRadius="2dp"
+        fresco:roundingBorderColor="@color/new_color4"
+        fresco:roundingBorderWidth="1px" />
+
+    <TextView
+        android:id="@+id/title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/title_img_View"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/new_color1"
+        android:textSize="@dimen/new_font2" />
+
+    <LinearLayout
+        android:id="@+id/source_content_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_textView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/type_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:visibility="gone" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/news_source_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxEms="8"
+            android:lines="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font6"
+            android:gravity="center_vertical"
+            />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font6"
+            />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/new_color3"
+            android:layout_marginRight="-10dp"
+            android:textSize="@dimen/new_font6" />
+
+        <ImageView
+            android:id="@+id/delete_imageView"
+            android:layout_width="35dp"
+            android:layout_height="18dp"
+            android:paddingLeft="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/btn_news_feed_delete" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/checkFavoriteDelete_image"
+        android:src="@drawable/favorite_uncheck"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/favorite_surface"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/line_bottom_imageView"
+        android:layout_alignParentTop="true"
+        android:scaleType="center"/>
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/list_divider" />
+</RelativeLayout>

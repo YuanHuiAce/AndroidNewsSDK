@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/news_comment_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="小红的一天天的生活"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/news_comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="渠道"
+        android:textColor="@color/color5"
+        android:textSize="@dimen/font4" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/news_comment_hotComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="热门评论"
+            android:textColor="#4b515e"
+            android:textSize="@dimen/new_font4" />
+
+        <View
+            android:id="@+id/news_comment_hotComment_Line1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignRight="@id/news_comment_hotComment"
+            android:layout_below="@id/news_comment_hotComment"
+            android:layout_marginTop="8dp"
+            android:background="@color/new_color2" />
+
+        <View
+            android:id="@+id/news_comment_hotComment_Line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/news_comment_hotComment"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/news_comment_hotComment_Line1"
+            android:background="@color/color6" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/news_comment_NoCommentsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="169dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sofa_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="哎呦，快来抢沙发"
+            android:textColor="@color/color3" />
+    </LinearLayout>
+
+
+</LinearLayout>

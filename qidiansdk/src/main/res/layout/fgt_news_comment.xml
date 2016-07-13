@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/mNewsCommentList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color7"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:clipToPadding="false"
+        android:divider="@color/transparency"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none" />
+
+    <include layout="@layout/loading_view" />
+</RelativeLayout>

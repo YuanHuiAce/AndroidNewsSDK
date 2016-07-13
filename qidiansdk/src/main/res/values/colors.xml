@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_window">#FFE5E5E5</color>
+    <color name="green">#689F38</color>
+    <color name="greenDark">#3E5F22</color>
+    <color name="blue">#3eade1</color>
+    <color name="banana">#ffd800</color>
+    <color name="half_black">#30000000</color>
+    <color name="category_tab_highlight_bg">#ffd43d3d</color>
+    <color name="bg_news_detail">#ffffff</color>
+    <color name="border_text">#000000</color>
+    <color name="douban_item_blue">#4DB3EA</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="black_90">#E6000000</color>
+    <color name="color3">#9b9b9b</color>
+    <color name="color5">#b2b2b2</color>
+    <color name="color6">#e6e6e6</color>
+    <color name="color7">#f5f5f5</color>
+    <color name="color9">#505050</color>
+    <color name="new_color1">#333333</color>
+    <color name="new_color2">#009afa</color>
+    <color name="new_color2_15a">#30009afa</color>
+    <color name="new_color3">#9a9a9a</color>
+    <color name="new_color4">#e6e6e6</color>
+    <color name="new_color5">#d3d3d3</color>
+    <color name="new_color7">#666666</color>
+    <color name="new_color9">#f6f6f6</color>
+    <color name="new_color11">#d3d3d3</color>
+
+    <color name="subscribe_bg">#fff5f5f5</color>
+    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night</item>
+    <color name="transparency">#00ffffff</color>
+
+    <color name="setting_line_bg">#e9e9e9</color>
+    <color name="theme_color" >#0091fa</color>
+    <color name="common_header_bg">#f0f0f0</color>
+
+    <color name="Gray">#848484</color>
+    <color name="bg_feed_list">#e3e3e3</color>
+    <color name="new_encounter_cell_bg">#ececec</color>
+    <color name="default_text_night">#ff747474</color>
+    <color name="subscribe_item_text_color_pressed_night">#ff303030</color>
+    <color name="subscribe_item_selected_stroke_night">#ffbc494d</color>
+    <color name="subscribe_item_drag_stroke">#939393</color>
+    <color name="subscribe_item_drag_bg">#fff5f5f5</color>
+    <color name="subscribe_item_selected_bg">#ffffffff</color>
+    <color name="subscribe_item_selected_stroke">#ffcc3131</color>
+    <color name="subscribe_item_disabled_stroke">#ffd9d9d9</color>
+    <color name="subscribe_item_disabled_bg">#ffefefef</color>
+    <color name="subscribe_item_pressed_stroke">#ffcdcdcd</color>
+    <color name="subscribe_item_pressed_bg">#fff9f9f9</color>
+    <color name="subscribe_item_normal_stroke">#dedede</color>
+    <color name="subscribe_item_normal_bg">#ffffff</color>
+
+    <!--login portion-->
+    <color name="bg_home_login_header">#f6f6f6</color>
+
+    <color name="attention_lineColor" >#ffb3b3b3</color>
+    <color name="transparent">#00000000</color>
+    <color name="detail_share_frame" >#ffdcdcdc</color>
+    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
+
+    //feed 流
+    <color name="title_user_had_read" >#aaaaaa</color>
+
+
+    <color name="bg_news_sourcesite_bottom">#fafafa</color>
+    <color name="bg_news_sourcesite_bottom_focused">#d6d6d6</color>
+    <color name="news_sourcesite_bottom_divider">#dddddd</color>
+    <color name="news_sourcesite_divider">#d6d6d6</color>
+</resources>

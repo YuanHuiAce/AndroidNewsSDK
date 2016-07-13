@@ -1,0 +1,25 @@
+<resources>
+
+
+    <dimen name="font1">20sp</dimen>
+    <dimen name="font3">16sp</dimen>
+    <dimen name="font4">14sp</dimen>
+    <dimen name="font5">12sp</dimen>
+    <dimen name="new_font2">17sp</dimen>
+    <dimen name="new_font3">14sp</dimen>
+    <dimen name="new_font4">13sp</dimen>
+    <dimen name="new_font5">11sp</dimen>
+    <dimen name="new_font6">10sp</dimen>
+    <dimen name="new_font7">8sp</dimen>
+    <dimen name="new_font8">19sp</dimen>
+    <dimen name="new_font10">16sp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+
+    <dimen name="detail_padding_left">18dp</dimen>
+    <dimen name="detail_padding_right">18dp</dimen>
+    <dimen name="title_bar_height">44.0dip</dimen>
+
+</resources>

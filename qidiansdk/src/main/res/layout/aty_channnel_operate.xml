@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/subscribe_bg">
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <ImageView
+        android:id="@+id/line_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.56dp"
+        android:layout_below="@id/title_bar"
+        android:background="@color/new_color5" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/line_view"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/subscribe_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/subscribe_bg"
+            android:orientation="vertical"
+            android:paddingBottom="14.0dip">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/new_color9"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="3dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/new_color2" />
+
+                <TextView
+                    android:id="@+id/my_category_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/subscribe_my_category"
+                    android:textColor="@color/new_color3"
+                    android:textSize="@dimen/new_font4" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/seperate_line"
+                style="@style/subscribe_seperate_line" />
+
+            <com.news.yazhidao.widget.channel.SelectedGridView
+                android:id="@+id/userGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dip"
+                android:layout_marginRight="19dip"
+                android:layout_marginTop="13dp"
+                android:gravity="center"
+                android:horizontalSpacing="26dip"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:scrollbars="vertical"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/setting_line_bg" />
+
+            <View
+                android:id="@+id/seperate_line2"
+                style="@style/subscribe_seperate_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@color/new_color9"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="3dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/new_color2" />
+
+                <TextView
+                    android:id="@+id/more_category_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/subscribe_my_category"
+                    android:textColor="@color/new_color3"
+                    android:textSize="@dimen/new_font4" />
+            </LinearLayout>
+
+            <View style="@style/subscribe_seperate_line" />
+
+            <com.news.yazhidao.widget.channel.NormalGridView
+                android:id="@+id/otherGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dip"
+                android:layout_marginRight="19dip"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:horizontalSpacing="26dip"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="3"
+                android:scrollbars="vertical"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="8dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/category_layout"
+        layout="@layout/subscribe_category_item"
+        android:visibility="gone" />
+
+</RelativeLayout>

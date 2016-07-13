@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:background="@color/new_color5">
+
+    <TextView
+        android:id="@+id/title_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="刚刚看到这里，点击加载更多"
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/new_font4" />
+
+</RelativeLayout>

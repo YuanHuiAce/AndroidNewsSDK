@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/mDetailWebHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bg_home_login_header"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.3"
+            android:background="@color/black"
+            />
+        <ImageView
+            android:id="@+id/mLeftBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:contentDescription="转到上一级"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_left_back"/>
+
+    <ProgressBar
+        android:id="@+id/mNewsSourcesiteProgress"
+        android:layout_alignParentBottom="true"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:progressDrawable="@drawable/detail_page_progressbar_horizontal" />
+    </RelativeLayout>
+    <WebView
+        android:id="@+id/mNewsSourcesiteWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mDetailWebHeader">
+
+    </WebView>
+    <ImageView
+        android:id="@+id/mNewsSourcesiteBottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignTop="@+id/mNewsSourcesiteFooter"
+        android:layout_below="@id/mNewsSourcesiteWebview"
+        android:layout_marginTop="0px"
+        android:background="@color/news_sourcesite_divider" />
+
+    <LinearLayout
+        android:id="@+id/mNewsSourcesiteFooter"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/mNewsSourcesiteFooterPraise"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/mNewsSourcesitePraiseImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_news_sourcesite_praise" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mNewsSourcesitePraiseNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
+                android:text="1234" />
+
+            <TextView
+                android:id="@+id/mNewsSourcesitePraiseNumIncrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
+                android:text="+1"
+                android:textColor="#ff0000"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="40dp"
+            android:src="@color/news_sourcesite_bottom_divider" />
+
+        <RelativeLayout
+            android:id="@+id/mNewsSourcesiteFooterBlame"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/mNewsSourcesiteBlameNumImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_news_sourcesite_blame" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mNewsSourcesiteBlameNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
+                android:text="304" />
+
+            <TextView
+                android:id="@+id/mNewsSourcesiteBlameNumReduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
+                android:text="-1"
+                android:textColor="#ff0000"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="40dp"
+            android:src="@color/news_sourcesite_bottom_divider" />
+
+        <FrameLayout
+            android:id="@+id/mNewsSourcesiteFooterShare"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/news_detail_webview_bottom_item_selector">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/btn_news_sourcesite_share" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/new_color9">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="字体大小"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/new_font2" />
+
+        <ImageView
+            android:id="@+id/close_imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:padding="14dp"
+            android:src="@drawable/bg_close_text_size_setting" />
+        <TextView
+            android:id="@+id/text_success"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="@dimen/font3"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:text="完成"
+            android:visibility="gone"
+            android:textColor="@color/new_color1"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="44dp"
+            android:background="@color/new_color5" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="58dp"
+            android:text="标准"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/new_font3" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="58dp"
+            android:text="大"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/new_font3" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="58dp"
+            android:text="超大"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/new_font3" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/text_view"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/new_color5" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="6dp"
+            android:layout_below="@+id/text_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:background="@color/new_color5" />
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/text_view"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/new_color5" />
+
+        <SeekBar
+            android:id="@+id/change_text_size_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="7dp"
+            android:focusable="true"
+            android:max="100"
+            android:maxHeight="1dp"
+            android:minHeight="1dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:progressDrawable="@drawable/bg_change_text_size_bar"
+            android:thumb="@drawable/bg_btn_seekbar_change_text_size" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/change_text_size_hintImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/content_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_change_text_stze" />
+
+</RelativeLayout>

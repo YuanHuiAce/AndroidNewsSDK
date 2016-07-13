@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--<item name="android:windowBackground">@color/background_window</item>-->
+        <!--&lt;!&ndash; ...and here we setting appcompat’s color theming attrs &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/green</item>-->
+        <!--<item name="colorPrimaryDark">@color/greenDark</item>-->
+        <!--<item name="colorAccent">@color/banana</item>-->
+        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+
+    <!--</style>-->
+
+    <style name="home_style">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="popupWindowAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/enter</item>
+        <item name="android:windowExitAnimation">@anim/exit</item>
+    </style>
+    <style name="title_text_style">
+        <item name="android:textSize">@dimen/new_font8</item>
+        <item name="android:textColor">@color/new_color7</item>
+    </style>
+
+    <style name="main_title_bar_style">
+        <item name="android:background">@color/theme_color</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/title_bar_height</item>
+    </style>
+    <style name="title_bar_style">
+        <item name="android:background">@color/common_header_bg</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48.5dip</item>
+    </style>
+
+    <style name="text_on_button">
+        <item name="android:textSize">15.0sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:shadowRadius">0.0</item>
+    </style>
+
+    <style name="common_button" parent="@style/text_on_button">
+        <item name="android:background">@drawable/btn_common</item>
+        <item name="android:paddingLeft">6.0dip</item>
+        <item name="android:paddingRight">6.0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">50.0dip</item>
+        <item name="android:minHeight">30.0dip</item>
+    </style>
+
+    <style name="title_bar_button" parent="@style/common_button">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/btn_common_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+        <item name="android:paddingLeft">17.0dip</item>
+        <item name="android:paddingRight">17.0dip</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="subscribe_seperate_line">
+        <item name="android:background">@color/new_color5</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+    <!-- Application theme. -->
+    <style name="SwipeBackTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>
