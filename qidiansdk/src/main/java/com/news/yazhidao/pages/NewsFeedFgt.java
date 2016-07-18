@@ -163,6 +163,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             isNeedAddSP = false;
         }
+
+
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
 //            mHandler.removeCallbacks(mRunnable);
@@ -182,6 +184,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public void refreshData() {
         isNoteLoadDate = false;
+        mThread = new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.setRefreshing();
+                isListRefresh = true;
+                isClickHome = false;
+            }
+        };
+        mHandler.postDelayed(mThread, 1000);
     }
 
     public void onCreate(Bundle bundle) {
@@ -221,6 +232,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                     }
+
+
                 }
                 mAdapter.notifyDataSetChanged();
                 if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -436,6 +449,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             else
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
+                            Log.i("aaa" ,"mlvNewsFeed.getRefreshableView().setSelection(0);");
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);
 //                            new Handler().postDelayed(new Runnable() {
@@ -507,6 +521,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                 mIsFirst = false;
                 mlvNewsFeed.onRefreshComplete();
+                if (flag == PULL_DOWN_REFRESH)
+                    mlvNewsFeed.getRefreshableView().setSelection(0);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -546,6 +562,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
+                if (flag == PULL_DOWN_REFRESH)
+                    mlvNewsFeed.getRefreshableView().setSelection(0);
             }
         });
         HashMap<String, String> header = new HashMap<>();
@@ -651,15 +669,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //                }
 //            },1500);
 
-            mThread = new Runnable() {
-                @Override
-                public void run() {
-                    mlvNewsFeed.setRefreshing();
-                    isListRefresh = true;
-                    isClickHome = false;
-                }
-            };
-            mHandler.postDelayed(mThread, 1000);
+//            mThread = new Runnable() {
+//                @Override
+//                public void run() {
+//                    mlvNewsFeed.setRefreshing();
+//                    isListRefresh = true;
+//                    isClickHome = false;
+//                }
+//            };
+//            mHandler.postDelayed(mThread, 1000);
 
         }else{
             if(mArrNewsFeed!=null&&bgLayout.getVisibility()== View.VISIBLE) {

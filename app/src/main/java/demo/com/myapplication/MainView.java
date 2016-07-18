@@ -326,11 +326,12 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     }
                 }
             }
-            if (index == -1) {
                 return POSITION_NONE;
-            } else {
-                return POSITION_UNCHANGED;
-            }
+//            if (index == -1) {
+//                return POSITION_NONE;
+//            } else {
+//                return POSITION_UNCHANGED;
+//            }
         }
 
         @Override
