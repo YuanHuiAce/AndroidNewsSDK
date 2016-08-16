@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class HistoryEntity implements Serializable {
     private String cotent;
     private int position = 0;
+    private boolean isFocus = false;
 
     public HistoryEntity(String cotent ) {
         this.cotent = cotent;
@@ -31,4 +32,13 @@ public class HistoryEntity implements Serializable {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    public boolean isFocus() {
+        return isFocus;
+    }
+
+    public void setFocus(boolean focus) {
+        isFocus = focus;
+    }
+
 }

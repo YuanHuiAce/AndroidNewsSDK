@@ -64,6 +64,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private int mTitleViewWidth;
     private int mCardWidth, mCardHeight;
     private boolean isFavorite;
+    private boolean isNeedShowDisLikeIcon = true;
     boolean isCkeckVisity;
 
 
@@ -81,6 +82,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.qd_ll_news_card;
                     case 900:
                         return R.layout.qd_ll_news_item_time_line;
+                    case 4://奇点号Item
+                        return R.layout.ll_news_search_item;
+                    case 11://大图Item
+                    case 12:
+                    case 13:
+                        return R.layout.ll_news_big_pic2;
                     default:
                         return 0;
                 }
@@ -88,7 +95,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 4;
+                return 6;
             }
 
             @Override
@@ -103,6 +110,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.THREE_PIC;
                     case 900:
                         return NewsFeed.TIME_LINE;
+                    case 4://奇点号Item
+                        return NewsFeed.SERRCH_ITEM;
+                    case 11://大图Item
+                    case 12:
+                    case 13:
+                        return NewsFeed.BIG_PIC;
+
+
                     default:
                         return 0;
                 }
@@ -244,7 +259,26 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
 //                break;
-        } else if (layoutId == R.layout.qd_ll_news_card) {
+        }
+        else if (layoutId==R.layout.ll_news_big_pic2)
+        {
+            holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+            if (isFavorite) {
+                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+            } else {
+                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            }
+            LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
+            setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
+//            setFocusBgColor((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceBigPic.findViewById(R.id.delete_imageView));
+            setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null)
+                setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
+            llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+        }
+        else if (layoutId == R.layout.qd_ll_news_card) {
 //            case R.layout.qd_ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
             holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0));
@@ -473,6 +507,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
         });
 
+    }
+
+
+    public void isFavoriteList(){
+        isFavorite = true;
+        isNeedShowDisLikeIcon = false;
     }
 
 class ViewWrapper {

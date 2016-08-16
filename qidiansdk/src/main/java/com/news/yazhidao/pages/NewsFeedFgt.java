@@ -376,7 +376,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId;
+        String fixedParams = "&cid=" + mstrChannelId+"&uid=" + SharedPreManager.getUser(mContext).getMuid();
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
@@ -410,6 +410,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
         }
+        System.out.println("requestUrl:"+requestUrl);
         Log.e("jigang","request url =" +requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
@@ -496,7 +497,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
-                    showChangeTextSizeView();
+//                    showChangeTextSizeView();
                 } else {
                     //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
                     if (TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -607,7 +608,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
-                showChangeTextSizeView();
+//                showChangeTextSizeView();
             }
         } else {
             //请求token

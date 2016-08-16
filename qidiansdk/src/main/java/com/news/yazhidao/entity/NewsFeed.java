@@ -18,6 +18,8 @@ public class NewsFeed implements Serializable {
     public static final int ONE_AND_TWO_PIC = 1;
     public static final int THREE_PIC = 2;
     public static final int TIME_LINE = 3;
+    public static final int SERRCH_ITEM = 4;
+    public static final int BIG_PIC = 5;
 
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
@@ -84,23 +86,90 @@ public class NewsFeed implements Serializable {
      * 用户是否删除这条收藏数据
      */
     private boolean isFavorite = false;
+    /**
+     * 新闻备注
+     */
+    @DatabaseField
+    private String descr;
+
+    /** 是(1)否(0)已收藏 */
+    private int colflag;
+    /** 是(1)否(0)已关心 */
+    private int conflag;
+    /** 是(1)否(0)已关心该新闻对应的发布源 */
+    private int conpubflag;
+
+    /**搜索频道中的订阅源*/
+    public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
+
 
     @Override
     public String toString() {
         return "NewsFeed{" +
-                "pubTime='" + ptime + '\'' +
+                "ptime='" + ptime + '\'' +
+                ", nid=" + nid +
                 ", url='" + url + '\'' +
                 ", docid='" + docid + '\'' +
-                ", commentsCount='" + comment + '\'' +
-                ", pubName='" + pname + '\'' +
-                ", pubUrl='" + purl + '\'' +
-                ", imgStyle='" + style + '\'' +
+                ", comment=" + comment +
+                ", pname='" + pname + '\'' +
+                ", purl='" + purl + '\'' +
+                ", style=" + style +
                 ", title='" + title + '\'' +
-                ", imgList=" + imgs +
-                ", channelId='" + channel + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", imgs=" + imgs +
+                ", channel=" + channel +
+                ", collect=" + collect +
+                ", concern=" + concern +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isRead=" + isRead +
+                ", isFavorite=" + isFavorite +
+                ", descr='" + descr + '\'' +
+                ", colflag=" + colflag +
+                ", conflag=" + conflag +
+                ", conpubflag=" + conpubflag +
                 '}';
+    }
+
+    public ArrayList<AttentionListEntity> getAttentionListEntities() {
+        return attentionListEntities;
+    }
+
+    public void setAttentionListEntities(ArrayList<AttentionListEntity> attentionListEntities) {
+        this.attentionListEntities = attentionListEntities;
+    }
+
+    public int getConpubflag() {
+        return conpubflag;
+    }
+
+    public void setConpubflag(int conpubflag) {
+        this.conpubflag = conpubflag;
+    }
+
+    public int getColflag() {
+        return colflag;
+    }
+
+    public void setColflag(int colflag) {
+        this.colflag = colflag;
+    }
+
+    public int getConflag() {
+        return conflag;
+    }
+
+    public void setConflag(int conflag) {
+        this.conflag = conflag;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 
     public String getPtime() {

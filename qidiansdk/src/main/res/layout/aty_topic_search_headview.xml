@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/mSearchHotLabelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/new_color9"
+        android:orientation="vertical"
+        >
+        <RelativeLayout
+            android:id="@+id/HotSearchlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <View
+            android:layout_width="3dp"
+            android:layout_height="15dp"
+            android:background="@color/new_color2"
+            android:layout_marginTop="11dp"/>
+
+        <TextView
+            android:id="@+id/mSearchHotLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="热门搜索"
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font4"/>
+
+        <TextView
+            android:id="@+id/mDoSearchChangeBatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_search_change_batch"
+            android:text="换一批"
+            android:textColor="@color/do_search_change_batch"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:textStyle="bold"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/search_lineBlack"
+            android:layout_below="@id/mSearchHotLabel"/>
+
+        <com.news.yazhidao.widget.HotLabelsLayout
+            android:id="@+id/mHotLabelsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mSearchHotLabel"
+            android:layout_marginLeft="-2dp"
+            android:layout_marginTop="5dp"
+            />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/HistoryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <View
+                android:id="@+id/history_Line_bold"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/search_lineHistoryLine"
+                />
+            <View
+                android:id="@+id/history_Line_none"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/search_lineBlack"
+                android:layout_below="@id/history_Line_bold"/>
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="15dp"
+                android:background="@color/new_color2"
+                android:layout_marginTop="11dp"
+                android:layout_below="@+id/history_Line_none"/>
+
+            <TextView
+                android:id="@+id/mSearchHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="历史搜索"
+                android:layout_below="@+id/history_Line_none"
+                android:textColor="@color/new_color3"
+                android:textSize="@dimen/new_font4"/>
+
+
+            <View
+                android:id="@+id/history_Line_none1"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/search_lineBlack"
+                android:layout_below="@id/mSearchHistory"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

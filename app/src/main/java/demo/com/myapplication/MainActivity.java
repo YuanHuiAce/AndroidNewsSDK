@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mainView = new MainView(this); //传入的activity是FragmentActivity
         newsLayout.addView(mainView.getNewsView());
 
+
     }
 
     @Override

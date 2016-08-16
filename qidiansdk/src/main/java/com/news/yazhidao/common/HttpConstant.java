@@ -17,18 +17,11 @@ public class HttpConstant {
 
     public static final String URL_PRAISE = URL_SERVER_HOST + "/news/baijia/praise";
 
+    public static final String URL_SEARCH_WITH_SUBSCRIBE = URL_SERVER_HOST + "/ns/es/snp";//带有订阅信息的搜索
+
+    public static final String URL_SEARCH = URL_SERVER_HOST + "/ns/es/s";//搜索
+
     public static final String URL_GET_NEWS_CONTENT = URL_SERVER_HOST + "/news/baijia/point";
-
-   // /**新接口域名*/
-    //public static final String URL_SERVER_HOST_NEW = "http://bdp.deeporiginalx.com";
-    /**新接口游客注册*/
-   // public static final String URL_POST_USER_REG = URL_SERVER_HOST_NEW +"/v2/au/sin/g";
-    ///**新接口游客登录*/
-   // public static final String URL_POST_USER_LOGIN = URL_SERVER_HOST_NEW + "/v2/au/lin/g";
-
-
-
-
 
     /**
      * 谷歌今日焦点
@@ -83,12 +76,21 @@ public class HttpConstant {
     /**
      * feed流上拉加载更多
      */
-    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/l?";
+    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/ln?";
 
     /**
      * feed流下拉刷新
      */
-    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/r?";
+    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/rn?";
+    /**
+     * feed流关注上拉加载更多
+     */
+    public static final String URL_FEED_FOCUS_LOAD_MORE = URL_SERVER_HOST + "/ns/pbs/cocs/l?";
+
+    /**
+     * feed流关注下拉刷新
+     */
+    public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/pbs/cocs/r?";
 
     /**
      * 获取新闻详情页
@@ -151,4 +153,14 @@ public class HttpConstant {
      * 查看收藏列表
      */
     public static final String URL_SELECT_CAREFOR = URL_SERVER_HOST + "/ns/au/cocs?";
+    /**
+     * 添加新闻发布源关心（POST）
+     * 取消新闻发布源关心（DELETE）
+     */
+    public static final String URL_ADDORDELETE_ATTENTION = URL_SERVER_HOST + "/ns/pbs/cocs?";
+    /**
+     * 获取新闻详情页
+     */
+    public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
+
 }

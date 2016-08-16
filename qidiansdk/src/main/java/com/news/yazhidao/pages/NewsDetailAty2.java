@@ -30,7 +30,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
@@ -59,8 +58,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.news.yazhidao.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
 
 //import com.news.yazhidao.widget.SharePopupWindow;
 //import com.news.yazhidao.widget.UserCommentDialog;
@@ -187,6 +184,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
+        System.out.println("QiDianText");
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
@@ -510,21 +508,28 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    @Override
-    public void finish() {
-        if (mNewsFeed != null) {
-            Intent intent = new Intent();
-            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-            setResult(NewsFeedAdapter.REQUEST_CODE, intent);
-        }
-        super.finish();
-        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
-            Intent main = new Intent(this, MainAty.class);
-            startActivity(main);
-        }
-    }
+//
+//    @Override
+//    public void finish() {
+//        try {
+//
+//
+//        if (mNewsFeed != null) {
+//            Intent intent = new Intent();
+//            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+//            setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+//        }
+//        super.finish();
+//        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
+//        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+//            Intent main = new Intent(this, MainAty.class);
+//            startActivity(main);
+//        }
+//        }catch (Exception e)
+//        {
+//            System.out.println("DetailAty2:"+e.toString());
+//        }
+//    }
 
     @Override
     public void onClick(View v) {

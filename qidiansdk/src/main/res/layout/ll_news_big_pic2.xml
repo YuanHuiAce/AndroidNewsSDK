@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9">
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/new_color1"
+        android:textSize="@dimen/new_font2" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/title_img_View"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_textView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/pure_red"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/bg_load_default_small"
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="false"
+        fresco:roundTopLeft="false"
+        fresco:roundTopRight="false"
+        fresco:roundedCornerRadius="2dp"
+        fresco:roundingBorderColor="@color/new_color4"
+        fresco:roundingBorderWidth="1px"
+        fresco:viewAspectRatio="1.7777" />
+
+    <include
+        android:id="@+id/source_content_linearLayout"
+        layout="@layout/ll_news_item_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_img_View"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_below="@+id/source_content_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0.55dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/new_color5" />
+</RelativeLayout>

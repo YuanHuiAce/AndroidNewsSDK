@@ -1,25 +1,130 @@
 <resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+    <dimen name="stgv_margin">8dp</dimen>
+    <dimen name="big_button_height">50dp</dimen>
+    <dimen name="big_button_width">260dp</dimen>
+    <dimen name="big_button_radius">25dp</dimen>
+    <dimen name="edit_margin">20dp</dimen>
+    <dimen name="textsize_sixteen">16sp</dimen>
+    <dimen name="simple_button_width">240dp</dimen>
+    <dimen name="simple_button_height">50dp</dimen>
+    <dimen name="common_padding_one">1dp</dimen>
+    <dimen name="common_padding_five">10dp</dimen>
+    <dimen name="common_padding_ten">10dp</dimen>
+    <dimen name="common_padding_fifteen">15dp</dimen>
+    <dimen name="common_padding_twenty">20dp</dimen>
+    <dimen name="common_padding_twenty_five">25dp</dimen>
+    <dimen name="common_padding_thirty">30dp</dimen>
+    <dimen name="common_padding_thirty_five">35dp</dimen>
 
+    <dimen name="common_padding_fourty">40dp</dimen>
+
+    <dimen name="common_padding_fifty">50dp</dimen>
+    <dimen name="common_padding_fifty_five">55dp</dimen>
+    <dimen name="common_padding_sixty">60dp</dimen>
+
+    <dimen name="common_padding_seventy">70dp</dimen>
+    <dimen name="common_padding_ninety">90dp</dimen>
+    <dimen name="common_padding_hundred">100dp</dimen>
+    <dimen name="title_textsize">16sp</dimen>
+    <dimen name="textsize_twenty">20sp</dimen>
+    <dimen name="item_big_textsize">17sp</dimen>
+    <dimen name="textsize_fifteen">15sp</dimen>
+    <dimen name="textsize_fourteen">14sp</dimen>
+    <dimen name="textsize_thirteen">13sp</dimen>
+    <dimen name="textsize_twelve">12sp</dimen>
+    <dimen name="textsize_ten">10sp</dimen>
+
+    <dimen name="news_detail_layout_margin_top">20dp</dimen>
+    <dimen name="news_detail_item_margin_top">12dp</dimen>
+    <dimen name="news_detail_item_margin_left">16dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="img_size">10dp</dimen>
+    <dimen name="red_action_button_size">48dp</dimen>
+    <dimen name="red_action_button_margin">48dp</dimen>
+
+    <dimen name="red_action_button_content_size">48dp</dimen>
+    <dimen name="red_action_button_content_margin">36dp</dimen>
+
+    <dimen name="red_action_menu_radius">96dp</dimen>
+    <dimen name="blue_sub_action_button_size">42dp</dimen>
+    <dimen name="blue_sub_action_button_content_margin">10dp</dimen>
+
+    <dimen name="radius_large">120dp</dimen>
+    <dimen name="radius_small">30dp</dimen>
+    <dimen name="radius_medium">72dp</dimen>
+    <dimen name="action_button_margin">12dp</dimen>
+    <dimen name="action_button_size">20dp</dimen>
+    <dimen name="btn_marginbottom">30dp</dimen>
+
+    <dimen name="title_bar_height">44.0dip</dimen>
+    <dimen name="top_category_height">36.0dip</dimen>
+
+    <!--新闻feed流-->
+    <dimen name="news_feed_title">18sp</dimen>
 
     <dimen name="font1">20sp</dimen>
+    <dimen name="font2">18sp</dimen>
     <dimen name="font3">16sp</dimen>
     <dimen name="font4">14sp</dimen>
     <dimen name="font5">12sp</dimen>
+    <dimen name="font6">10sp</dimen>
+    <dimen name="new_font1">18sp</dimen>
     <dimen name="new_font2">17sp</dimen>
     <dimen name="new_font3">14sp</dimen>
     <dimen name="new_font4">13sp</dimen>
     <dimen name="new_font5">11sp</dimen>
     <dimen name="new_font6">10sp</dimen>
+    <dimen name="new_font6.5">9sp</dimen>
     <dimen name="new_font7">8sp</dimen>
     <dimen name="new_font8">19sp</dimen>
+    <dimen name="new_font9">21sp</dimen>
     <dimen name="new_font10">16sp</dimen>
-    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="new_font11">15sp</dimen>
 
-    <dimen name="header_footer_left_right_padding">24dp</dimen>
-    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+    <!--新闻详情页字体大小-->
+    <dimen name="detail_title">23sp</dimen>
+    <dimen name="detail_source_time">14sp</dimen>
+    <dimen name="detail_description">17sp</dimen>
+    <dimen name="detail_content">18sp</dimen>
+    <dimen name="detail_content_comments">11sp</dimen>
+    <dimen name="detail_imagewall_size">14sp</dimen>
+    <dimen name="detail_diffopinion_content">14sp</dimen>
+    <dimen name="detail_diffopinion_title">12sp</dimen>
+    <dimen name="detail_comments_username">14sp</dimen>
+    <dimen name="detail_comments_userspeech">14sp</dimen>
+    <dimen name="detail_comments_praisenum">10sp</dimen>
+    <dimen name="detail_comments_checkall">16sp</dimen>
+    <dimen name="detail_entry_title">14sp</dimen>
+    <dimen name="detail_relate_opinion_time">12sp</dimen>
+    <dimen name="detail_relate_opinion_content">14sp</dimen>
+    <dimen name="detail_weibo_username">14sp</dimen>
+    <dimen name="detail_weibo_username_speech">14sp</dimen>
+    <dimen name="detail_zhihu_title">14sp</dimen>
 
     <dimen name="detail_padding_left">18dp</dimen>
     <dimen name="detail_padding_right">18dp</dimen>
-    <dimen name="title_bar_height">44.0dip</dimen>
+    <dimen name="detail_padding_outer">0dp</dimen>
 
+
+    <!--用户评论dialog -->
+    <dimen name="detail_user_comment_dialog_height">160dp</dimen>
+
+    <dimen name="image_width">65dp</dimen>
+    <dimen name="image_final_width">24dp</dimen>
+    <dimen name="image_final_margin">10dp</dimen>
+    <dimen name="text_final_sice">10dp</dimen>
+    <dimen name="text_start_sice">20dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

@@ -1,45 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background_window">#FFE5E5E5</color>
-    <color name="green">#689F38</color>
-    <color name="greenDark">#3E5F22</color>
-    <color name="blue">#3eade1</color>
-    <color name="banana">#ffd800</color>
-    <color name="half_black">#30000000</color>
-    <color name="category_tab_highlight_bg">#ffd43d3d</color>
-    <color name="bg_news_detail">#ffffff</color>
-    <color name="border_text">#000000</color>
-    <color name="douban_item_blue">#4DB3EA</color>
-
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
-    <color name="black_90">#E6000000</color>
+    <color name="color1">#0091fa</color>
+    <color name="color2">#323232</color>
     <color name="color3">#9b9b9b</color>
+    <color name="color4">#aaaaaa</color>
     <color name="color5">#b2b2b2</color>
     <color name="color6">#e6e6e6</color>
     <color name="color7">#f5f5f5</color>
+    <color name="color8">#8cc3fa</color>
     <color name="color9">#505050</color>
     <color name="new_color1">#333333</color>
+    <color name="new_color1_c">#444444</color>
     <color name="new_color2">#009afa</color>
     <color name="new_color2_15a">#30009afa</color>
     <color name="new_color3">#9a9a9a</color>
     <color name="new_color4">#e6e6e6</color>
     <color name="new_color5">#d3d3d3</color>
+    <color name="new_color6">#bb1c1c</color>
     <color name="new_color7">#666666</color>
+    <color name="new_color8">#d9effe</color>
     <color name="new_color9">#f6f6f6</color>
+    <color name="new_color10">#f2f2f2</color>
     <color name="new_color11">#d3d3d3</color>
-
-    <color name="subscribe_bg">#fff5f5f5</color>
-    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night</item>
-    <color name="transparency">#00ffffff</color>
-
-    <color name="setting_line_bg">#e9e9e9</color>
-    <color name="theme_color" >#0091fa</color>
-    <color name="common_header_bg">#f0f0f0</color>
-
-    <color name="Gray">#848484</color>
+    <color name="new_color12">#fbfbfb</color>
     <color name="bg_feed_list">#e3e3e3</color>
+    <color name="common_header_bg">#f0f0f0</color>
+    <color name="news_list_table_channelname">#ff7f66</color>
+    <color name="news_list_table_devider">#e1e1e1</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="blacktou">#4d000000</color>
+    <color name="black_90">#E6000000</color>
+    <color name="setting_line_bg">#e9e9e9</color>
+    <color name="news_list_cell_sourcesitename">#a5a5a5</color>
+    <color name="news_list_bg">#f3f3fa</color>
+    <color name="common_theme_color">#ff7f66</color>
+    <color name="news_detail_item_relate_bg">#e1e1e1</color>
+    <color name="news_detail_item_relate_divider">#919191</color>
+    <color name="news_detail_relate_read">#EBEAF1</color>
+    <color name="border_text">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="gray_black">#8f000000</color>
+    <color name="white_light">#bbffffff</color>
+
+    <color name="transparency">#00ffffff</color>
+    <!-- 透明颜色 -->
+    <color name="all_bg">#1e2324</color>
+    <!-- 背景颜色 -->
+    <color name="title_bg">#474747</color>
+    <color name="all_light_bg">#38a41b</color>
+    <color name="TitleBackColor">#89b405</color>
+    <color name="PopupWindowColor">#effce9e9</color>
+    <color name="PopupWindowbgColor">#e0ffffff</color>
+    <color name="DarkGray">#3D454A</color>
+    <color name="AlphaGray">#40848484</color>
+    <color name="Gray">#848484</color>
+    <color name="LightGray">#CCCCCC</color>
+    <color name="Bg">#F0F0F0</color>
+    <color name="bg_share">#f0f0f0</color>
+    <color name="bg_share_press">#d3d3d3</color>
+    <color name="bg_share_text">#1a1a1a</color>
+    <color name="dark_black">#80000000</color>
+    <color name="BgBlue">#3EADE1</color>
+    <color name="BgBlueTransparent">#963EADE1</color>
+    <color name="DarkBlue">#044664</color>
+    <color name="blue">#3eade1</color>
+    <color name="douban_item_blue">#4DB3EA</color>
+    <color name="sina_item_gray">#D6D6D6</color>
+    <color name="sina_item_content_gray">#7F7F7F</color>
+    <color name="staggered_item_source">#f7f7f7</color>
+    <color name="Aboutbg">#e8f2f7</color>
+    <color name="AboutPandabg">#1693d4</color>
+    <color name="AboutButtonbg">#f2f6f8</color>
+    <color name="titleBg">#2f2f2f</color>
+    <color name="half_black">#30000000</color>
+    <color name="pure_red">#ff4c3d</color>
+    <color name="red">#FF0000</color>
+    <color name="he">#8b4513</color>
+    <color name="fen">#e75b87</color>
+    <color name="qing">#163246</color>
+    <color name="wall_info_color">#7a7a7a</color>
+    <color name="wall_follow_color">#989898</color>
+    <color name="more_wall_color">#808080</color>
+    <color name="wall_num_color">#ffa200</color>
+    <color name="like_num_color">#b8b8b8</color>
+    <!-- 系统设置相关颜色 -->
+    <color name="shape_line">#ffcccccc</color>
+    <!-- 系统设置中间线颜色 -->
+    <color name="window_bg">#fff0f3f6</color>
+    <color name="button_selected">#38a41b</color>
+    <color name="brown">#8d5d00</color>
+    <color name="title_line_bg">#c2c2c2</color>
+    <color name="new_dark_gray">#1b1b1b</color>
+    <color name="new_gray">#2f2f2f</color>
+    <color name="prompt_button_bg">#BDC5C9</color>
+    <color name="prompt_text_bg">#9AA3A6</color>
+    <color name="text_bg">#444444</color>
+    <color name="edit_head_color">#e2e2e2</color>
+    <color name="new_text_dark_gray">#272727</color>
+    <color name="new_text_middle_gray">#3c3c3c</color>
+    <color name="new_light_gray">#646464</color>
+    <color name="text_light_gray">#dadada</color>
+    <color name="notification_title">#d68400</color>
+    <color name="text_message">#999999</color>
+    <color name="text_prompt">#333333</color>
+    <color name="text_send">#ffd600</color>
+    <color name="new_transparent_black">#80000000</color>
+    <color name="bg_gray">#dfe6e9</color>
+    <color name="bg_date_progress">#403C9DFB</color>
+    <color name="date_progress">#66DBFB</color>
+    <color name="line_gray">#dddfe0</color>
+    <color name="message_line">#3d3d3d</color>
+    <color name="wall_group_color">#6e6e6e</color>
+    <color name="new_green_transparent">#3326c496</color>
+    <color name="new_text_gray">#bde9d9</color>
+    <color name="new_green_color">#26c496</color>
+    <color name="new_boy_color">#26c496</color>
+    <color name="new_light_yellow">#fded63</color>
+    <color name="new_yellow">#ffd600</color>
+    <color name="dark_yellow">#ffa200</color>
+    <color name="new_red">#ff6053</color>
+    <color name="new_red_text">#fca2a2</color>
+    <color name="new_girl_color">#fd3987</color>
     <color name="new_encounter_cell_bg">#ececec</color>
+    <color name="new_encounter_dot_dark">#676767</color>
+    <color name="new_encounter_line_dark">#9d9d9d</color>
+    <color name="new_encounter_image_border_gray">#c6c6c6</color>
+    <color name="new_white_transparent">#5affffff</color>
+    <color name="new_concern_light_gray">#e7e7e7</color>
+    <color name="new_concern_text_gray">#b2b2b2</color>
+    <color name="new_create_wall_gray_text">#6a6a6a</color>
+    <color name="new_frame_boarder_gray">#afafaf</color>
+    <color name="new_create_wall_radius_gray">#d0d0d0</color>
+    <color name="new_tip_bg">#ceefff</color>
+    <color name="new_tip_text">#8b9093</color>
+
+    <color name="radio_button_selected_color">#d6b400</color>
+    <color name="radio_button_unselected_color">@android:color/transparent</color>
+
+    <color name="wall_selection_title_color">#282828</color>
+    <color name="news_detail_time_and_temperature">#7f7f7f</color>
+    <color name="news_detail_sourcename_and_location">#818181</color>
+    <color name="bg_news_sourcesite_bottom">#fafafa</color>
+    <color name="bg_news_sourcesite_bottom_focused">#d6d6d6</color>
+    <color name="news_sourcesite_bottom_divider">#dddddd</color>
+    <color name="news_sourcesite_divider">#d6d6d6</color>
+    <color name="bg_ews_detail_relate_item">#f7f7f7</color>
+    <!--自定义dialog相关-->
+    <color name="text_color">#FFFFFF</color>
+    <color name="divider_color">#11000000</color>
+    <color name="msg_color">#FFFFFFFF</color>
+    <color name="dialog_bg">#ffe74c3c</color>
+
+    <color name="btn_press_color">#66000000</color>
+    <color name="btn_unpress_color">#22000000</color>
+
+    <!--login portion-->
+    <color name="bg_home_login_header">#f6f6f6</color>
+    <color name="bg_home_login">@color/theme_color</color>
+    <color name="home_login_chat">#2b2b2b</color>
+    <color name="home_logout">#ff7878</color>
+    <color name="bg_home_login_weixin">#00e17f</color>
+    <color name="bg_home_login_meizu">#00baff</color>
+    <color name="bg_home_login_weibo">#ff5d5d</color>
+    <color name="bg_home_login_mode">#000000</color>
+    <color name="divide_home_login">#989898</color>
+
+
+    <color name="background_window">#FFE5E5E5</color>
+    <color name="green">#689F38</color>
+    <color name="greenDark">#3E5F22</color>
+    <color name="banana">#ffd800</color>
+    <color name="tab_blue">#4fb5ea</color>
+    <color name="tabtextcolor">#007ed7</color>
+
+    <!--digger-->
+    <color name="dig_title_undone">#94bdc1</color>
+    <color name="dig_title_doing">#f6aa32</color>
+    <color name="dig_title_done">#0dd2ab</color>
+    <color name="dig_special_title">#a0a0a0</color>
+
+    <!--NewsDetailAty HeaderView color-->
+    <!--<color name="bg_news_detail">#E6E6E6</color>-->
+    <color name="bg_news_detail">#ffffff</color>
+    <color name="news_detail_speech_divider">#F0F0F0</color>
+    <color name="news_detail_desc">@color/color3</color>
+    <color name="news_detail_desc_shadow">#d8d8d8</color>
+
+    <!--NewsDetailAty news content color-->
+    <color name="news_detail_content">#606060</color>
+    <color name="news_detail_comment_count">#676767</color>
+    <color name="news_detail_imagewall">#55000000</color>
+    <color name="news_detail_different_opinion_title">#b8b8b8</color>
+    <color name="bg_news_detail_different_opinion_title">#e8e8e8</color>
+    <!--新闻频道相关-->
+    <color name="activity_bg_color">#fffafafa</color>
+    <color name="top_category_bar_background">#ffeeeeee</color>
+    <color name="divider">#ffdddddd</color>
+
+    <color name="category_tab_text">#ff707070</color>
+    <color name="category_tab_text_dark">#fffafafa</color>
+    <color name="category_tab_highlight_text">#fffafafa</color>
+    <color name="category_tab_highlight_text_dark">#ffd43d3d</color>
+    <color name="category_tab_highlight_bg">#ffd43d3d</color>
+    <color name="category_tab_highlight_dark_bg">#fffafafa</color>
+
+    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night</item>
+
     <color name="default_text_night">#ff747474</color>
     <color name="subscribe_item_text_color_pressed_night">#ff303030</color>
     <color name="subscribe_item_selected_stroke_night">#ffbc494d</color>
@@ -54,20 +221,43 @@
     <color name="subscribe_item_normal_stroke">#dedede</color>
     <color name="subscribe_item_normal_bg">#ffffff</color>
 
-    <!--login portion-->
-    <color name="bg_home_login_header">#f6f6f6</color>
+    <item name="subscribe_item_text_color_normal" type="color">@color/default_text</item>
 
-    <color name="attention_lineColor" >#ffb3b3b3</color>
-    <color name="transparent">#00000000</color>
-    <color name="detail_share_frame" >#ffdcdcdc</color>
-    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
+    <color name="default_text">#ff454545</color>
+    <color name="subscribe_item_text_color_pressed">#ffb9b9b9</color>
+    <color name="category_subscribe_text">#ffffffff</color>
+    <color name="drawer_item_bg">#ff5d5d5d</color>
+    <color name="drawer_line_color">#ff444444</color>
+    <color name="title_text_color">#ffffffff</color>
+    <color name="subscribe_tip_text">#ff2e2e2e</color>
+    <color name="subscribe_activity_bg">#ffefefef</color>
+    <color name="subscribe_bg">#fff5f5f5</color>
+    <color name="subscribe_seperate_line">#ffcdcdcd</color>
+
+    <color name="theme_color" >#0091fa</color>
+    <color name="do_search_not_do" >#c3c3c3</color>
+    <color name="do_search_can_do" >@color/white</color>
+    <color name="search_hot_label" >#959595</color>
+    <color name="do_search_change_batch" >#393939</color>
+    <color name="bg_seach_hot_label" >#EDEDED</color>
+    <color name="bg_splash" >#fdfdfe</color>
 
     //feed 流
     <color name="title_user_had_read" >#aaaaaa</color>
+    <color name="title_user_not_read" >@color/color2</color>
+
+    <color name="news_comment_line1" >#FE6946</color>
+    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
+    <color name="detail_share_frame" >#ffdcdcdc</color>
+    <color name="attention_lineColor" >#ffb3b3b3</color>
+    <color name="search_lineBlue" >#ffb3b3b3</color>
+    <color name="search_lineBlack" >#ffe0e0e0</color>
+    <color name="search_lineHistoryLine" >#ffe9e9e9</color>
+    <color name="attention_text" >#ffdc4526</color>
+    <color name="attention_line" >#ffe8e8e7</color>
+    <color name="attention_detali_dialog_text" >#ff181919</color>
+    <color name="unattention_line_color" >#ffc0c0c0</color>
+    <color name="attention_line_color" >#ffe71f19</color>
 
 
-    <color name="bg_news_sourcesite_bottom">#fafafa</color>
-    <color name="bg_news_sourcesite_bottom_focused">#d6d6d6</color>
-    <color name="news_sourcesite_bottom_divider">#dddddd</color>
-    <color name="news_sourcesite_divider">#d6d6d6</color>
 </resources>
