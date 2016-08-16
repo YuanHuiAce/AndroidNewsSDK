@@ -158,7 +158,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -172,23 +172,23 @@ public class NewsDetailFgt extends BaseFragment {
                 }
 
                 isLoadDate = true;
-                if (MAXPage > viewpointPage) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            beanList.addAll(beanPageList.get(viewpointPage));
-                            viewpointPage++;
-                            mAdapter.setNewsFeed(beanList);
-                            mAdapter.notifyDataSetChanged();
-                            mNewsDetailList.onRefreshComplete();
-                            if(MAXPage <= viewpointPage){
-                                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-                                footView_tv.setText("内容加载完毕");
-                            }
-                            isLoadDate = false;
-                        }
-                    }, 1000);
-                }
+//                if (MAXPage > viewpointPage) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            beanList.addAll(beanPageList.get(viewpointPage));
+//                            viewpointPage++;
+//                            mAdapter.setNewsFeed(beanList);
+//                            mAdapter.notifyDataSetChanged();
+//                            mNewsDetailList.onRefreshComplete();
+//                            if(MAXPage <= viewpointPage){
+//                                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+//                                footView_tv.setText("内容加载完毕");
+//                            }
+//                            isLoadDate = false;
+//                        }
+//                    }, 1000);
+//                }
             }
         });
         mNewsDetailList.setOnStateListener(new PullToRefreshBase.onStateListener() {
@@ -283,34 +283,34 @@ public class NewsDetailFgt extends BaseFragment {
         return rootView;
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case LOAD_MORE:
-                    beanList.addAll(beanPageList.get(viewpointPage));
-                    viewpointPage++;
-                    mAdapter.setNewsFeed(beanList);
-                    mAdapter.notifyDataSetChanged();
-                    mNewsDetailList.onRefreshComplete();
-                    break;
-                case LOAD_BOTTOM:
-                    if(isNoHaveBean){
-                        return;
-                    }
-
-                    isNoHaveBean = true;
-
-                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-                    ListView lv = mNewsDetailList.getRefreshableView();
-                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
-                    mNewsDetailFootView.setLayoutParams(layoutParams);
-                    lv.addFooterView(mNewsDetailFootView);
-                    break;
-            }
-        }
-    };
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            switch (msg.what) {
+//                case LOAD_MORE:
+//                    beanList.addAll(beanPageList.get(viewpointPage));
+//                    viewpointPage++;
+//                    mAdapter.setNewsFeed(beanList);
+//                    mAdapter.notifyDataSetChanged();
+//                    mNewsDetailList.onRefreshComplete();
+//                    break;
+//                case LOAD_BOTTOM:
+//                    if(isNoHaveBean){
+//                        return;
+//                    }
+//
+//                    isNoHaveBean = true;
+//
+//                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+//                    ListView lv = mNewsDetailList.getRefreshableView();
+//                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
+//                    mNewsDetailFootView.setLayoutParams(layoutParams);
+//                    lv.addFooterView(mNewsDetailFootView);
+//                    break;
+//            }
+//        }
+//    };
     @Override
     public void onDetach() {
         super.onDetach();
@@ -378,6 +378,13 @@ public class NewsDetailFgt extends BaseFragment {
 //                Log.e("aaa","1111");
             }
         });
+        //禁止长按移动到底部。
+        mDetailWebView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
         //第2部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
@@ -389,6 +396,10 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
+
+        detail_shared_CareForLayout.setVisibility(View.GONE);
+        detail_shared_FriendCircleLayout.setVisibility(View.GONE);
+        mCommentTitleView.findViewById(R.id.detail_shared_Text).setVisibility(View.GONE);
 
         detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
         detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
@@ -422,7 +433,7 @@ public class NewsDetailFgt extends BaseFragment {
         final View mViewPointLayout = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mViewPointLayout.setLayoutParams(layoutParams);
         //延时加载热点评论和相关观点
-        mHandler.postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mNewsDetailHeaderView.addView(mCommentTitleView);
@@ -482,7 +493,7 @@ public class NewsDetailFgt extends BaseFragment {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
-        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
+//        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
             }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
                     (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
@@ -529,44 +540,46 @@ public class NewsDetailFgt extends BaseFragment {
                 }
             });
         Logger.e("jigang", "URL_NEWS_RELATED=" + HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID);
-        related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
-                new TypeToken<ArrayList<RelatedItemEntity>>() {
-                }.getType(),
-
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
-                new Response.Listener<ArrayList<RelatedItemEntity>>() {
-                    @Override
-                    public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
-
-                        Logger.e("jigang", "URL_NEWS_RELATED  network success~~"+relatedItemEntities.toString());
-                        isCorrelationSuccess = true;
-                        isBgLayoutSuccess();
-//                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
-//                            Logger.e("jigang", "network success RelatedEntity~~" + response);
-
-                        if (!TextUtil.isListEmpty(relatedItemEntities)) {
-                            setBeanPageList(relatedItemEntities);
-                        } else {
-                            setNoRelatedDate();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        isCorrelationSuccess = true;
-                        isBgLayoutSuccess();
-                        setNoRelatedDate();
-                        Logger.e("jigang", "URL_NEWS_RELATED  network error~~");
-                    }
-                });
-
-
-        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-
         requestQueue.add(feedRequest);
-        requestQueue.add(related);
+        setNoRelatedDate();
+//        related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
+//                new TypeToken<ArrayList<RelatedItemEntity>>() {
+//                }.getType(),
+//
+//                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
+//                new Response.Listener<ArrayList<RelatedItemEntity>>() {
+//                    @Override
+//                    public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
+//
+//                        Logger.e("jigang", "URL_NEWS_RELATED  network success~~"+relatedItemEntities.toString());
+//                        isCorrelationSuccess = true;
+//                        isBgLayoutSuccess();
+////                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
+////                            Logger.e("jigang", "network success RelatedEntity~~" + response);
+//
+//                        if (!TextUtil.isListEmpty(relatedItemEntities)) {
+//                            setBeanPageList(relatedItemEntities);
+//                        } else {
+//                            setNoRelatedDate();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        isCorrelationSuccess = true;
+//                        isBgLayoutSuccess();
+//                        setNoRelatedDate();
+//                        Logger.e("jigang", "URL_NEWS_RELATED  network error~~");
+//                    }
+//                });
+//
+//
+//        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//        related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+
+
+//        requestQueue.add(related);
 
 
     }
@@ -607,65 +620,65 @@ public class NewsDetailFgt extends BaseFragment {
         }
     }
 
-    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
-    ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
-    int viewpointPage = 0;
-    int pageSize = 6;
-    int MAXPage;
-
-    public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
-        Logger.e("aaa", "time:================比较前=================");
-        for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
-        }
-        Collections.sort(relatedItemEntities);
-        Logger.e("aaa", "time:================比较====后=================");
-        for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
-        }
-        int listSice = relatedItemEntities.size();
-        int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
-        MAXPage = page;
-        int mYear = 0;
-        for (int i = 0; i < page; i++) {
-            ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
-            for (int j = 0; j < pageSize; j++) {
-                int itemPosition = j + i * pageSize;
-                if (itemPosition + 1 > listSice) {
-                    break;
-                }
-                Logger.e("aaa", "page:" + itemPosition);
-                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
-
-                int thisYear = calendar.get(Calendar.YEAR);//获取年份
-                if(thisYear != mYear){
-                    mYear = thisYear;
-                    relatedItemEntities.get(itemPosition).setYearFrist(true);
-                }
-
-                listBean.add(relatedItemEntities.get(itemPosition));
-            }
-            beanPageList.add(listBean);
-        }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                beanList.addAll(beanPageList.get(viewpointPage));
-                viewpointPage++;
-                mAdapter.setNewsFeed(beanList);
-                mAdapter.notifyDataSetChanged();
-                if (MAXPage <= viewpointPage) {
-                    mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-                    footView_tv.setText("内容加载完毕");
-                }
-                if (footerView_layout.getVisibility() == View.GONE) {
-                    footerView_layout.setVisibility(View.VISIBLE);
-                }
-                detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
-            }
-        }, 500);
-
-    }
+//    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
+//    ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
+//    int viewpointPage = 0;
+//    int pageSize = 6;
+//    int MAXPage;
+//
+//    public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
+//        Logger.e("aaa", "time:================比较前=================");
+//        for (int i = 0; i < relatedItemEntities.size(); i++) {
+//            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
+//        }
+//        Collections.sort(relatedItemEntities);
+//        Logger.e("aaa", "time:================比较====后=================");
+//        for (int i = 0; i < relatedItemEntities.size(); i++) {
+//            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
+//        }
+//        int listSice = relatedItemEntities.size();
+//        int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
+//        MAXPage = page;
+//        int mYear = 0;
+//        for (int i = 0; i < page; i++) {
+//            ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
+//            for (int j = 0; j < pageSize; j++) {
+//                int itemPosition = j + i * pageSize;
+//                if (itemPosition + 1 > listSice) {
+//                    break;
+//                }
+//                Logger.e("aaa", "page:" + itemPosition);
+//                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
+//
+//                int thisYear = calendar.get(Calendar.YEAR);//获取年份
+//                if(thisYear != mYear){
+//                    mYear = thisYear;
+//                    relatedItemEntities.get(itemPosition).setYearFrist(true);
+//                }
+//
+//                listBean.add(relatedItemEntities.get(itemPosition));
+//            }
+//            beanPageList.add(listBean);
+//        }
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                beanList.addAll(beanPageList.get(viewpointPage));
+//                viewpointPage++;
+//                mAdapter.setNewsFeed(beanList);
+//                mAdapter.notifyDataSetChanged();
+//                if (MAXPage <= viewpointPage) {
+//                    mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+//                    footView_tv.setText("内容加载完毕");
+//                }
+//                if (footerView_layout.getVisibility() == View.GONE) {
+//                    footerView_layout.setVisibility(View.VISIBLE);
+//                }
+//                detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
+//            }
+//        }, 500);
+//
+//    }
 
     private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder) {
         try {
