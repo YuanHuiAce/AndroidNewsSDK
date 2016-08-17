@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +38,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
-
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
@@ -51,7 +49,6 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
-import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +91,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
-    private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
     private RefreshReceiver mRefreshReciver;
@@ -637,13 +633,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         public void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
     }
 
-    private void showChangeTextSizeView() {
-        if (mstrChannelId.equals("1") && mFlag == false)
-            if (mChangeTextSizePopWindow == null) {
-                mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
-                mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-            }
-    }
 
     HomeWatcher mHomeWatcher;
     @Override
