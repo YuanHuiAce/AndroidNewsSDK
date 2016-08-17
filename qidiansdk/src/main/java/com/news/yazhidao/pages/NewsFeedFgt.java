@@ -312,7 +312,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             }
         };
-        mHandler.postDelayed(mThread, 1500);
+        mHandler.postDelayed(mThread, 500);
         return rootView;
     }
 
