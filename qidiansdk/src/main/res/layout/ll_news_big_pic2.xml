@@ -26,7 +26,6 @@
         android:layout_below="@id/title_textView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/pure_red"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/bg_load_default_small"
         fresco:placeholderImageScaleType="centerCrop"
