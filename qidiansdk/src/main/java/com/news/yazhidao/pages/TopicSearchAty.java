@@ -2,6 +2,7 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkRequest;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +24,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -31,15 +33,14 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onFocusItemClick;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.net.volley.GsonRequest;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
@@ -297,12 +298,10 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     protected void loadData() {
         mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
         mSearchTip.setText("暂无热门搜索热词");
-        final NetworkRequest request = new NetworkRequest("http://121.40.34.56/news/baijia/fetchElementary", NetworkRequest.RequestMethod.POST);
-        List<NameValuePair> pairs = new ArrayList<>();
-        request.setParams(pairs);
-        request.setCallback(new JsonCallback<ArrayList<Element>>() {
+        GsonRequest<ArrayList<Element>> hotWordRequest = new GsonRequest<ArrayList<Element>>(Request.Method.POST, new TypeToken<ArrayList<Element>>() {
+        }.getType(), "http://121.40.34.56/news/baijia/fetchElementary", new Response.Listener<ArrayList<Element>>() {
             @Override
-            public void success(ArrayList<Element> result) {
+            public void onResponse(ArrayList<Element> result) {
                 mHotLabels = result;
                 mBgLayout.setVisibility(View.GONE);
                 if (!TextUtil.isListEmpty(mHotLabels)) {
@@ -319,21 +318,19 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 //                    mSearchProgress.setVisibility(View.GONE);
                 }
             }
-
+        }, new Response.ErrorListener() {
             @Override
-            public void failed(MyAppException exception) {
-                Logger.e("jigang", "-----fetch hot label fail~");
+            public void onErrorResponse(VolleyError error) {
                 mBgLayout.setVisibility(View.GONE);
                 HotSearchlayout.setVisibility(View.GONE);
                 mSearchLoaddingWrapper.setVisibility(View.GONE);
                 mSearchTipImg.setVisibility(View.VISIBLE);
                 mSearchTip.setVisibility(View.VISIBLE);
                 HistoryLayout.setVisibility(View.GONE);
-//                mSearchProgress.setVisibility(View.GONE);
             }
-        }.setReturnType(new TypeToken<ArrayList<Element>>() {
-        }.getType()));
-        request.execute();
+        });
+        QiDianApplication.getInstance().getRequestQueue().add(hotWordRequest);
+
     }
 
     LinearLayout mFootView;
