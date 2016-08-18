@@ -30,7 +30,7 @@
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
         android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6" />
+        android:textSize="@dimen/new_font6"/>
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/comment_num_textView"
@@ -49,5 +49,5 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:paddingLeft="15dp"
-        android:src="@drawable/btn_news_feed_delete" />
+        android:src="@drawable/btn_news_feed_delete_selector" />
 </LinearLayout>
