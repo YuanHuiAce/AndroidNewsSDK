@@ -513,18 +513,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         return super.onKeyDown(keyCode, event);
     }
-//
+    //
     @Override
     public void finish() {
         try {
 
 
-        if (mNewsFeed != null) {
-            Intent intent = new Intent();
-            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-            setResult(NewsFeedAdapter.REQUEST_CODE, intent);
-        }
-        super.finish();
+            if (mNewsFeed != null) {
+                Intent intent = new Intent();
+                intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+                setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+            }
+            super.finish();
 //        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
 //        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
