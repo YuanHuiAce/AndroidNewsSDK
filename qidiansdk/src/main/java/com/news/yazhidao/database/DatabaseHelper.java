@@ -24,8 +24,8 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 23;
-    private HashMap<String,Dao> mDaos;
+    private static int DATABASE_VERSION = 24;
+    private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
     private ChannelItemDao channelDao;
@@ -34,44 +34,48 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super(context, TABLE_NAME, null, DATABASE_VERSION);
         mContext = context;
         mDaos = new HashMap<>();
-        Logger.e("jigang","DatabaseHelper()");
+        Logger.e("jigang", "DatabaseHelper()");
     }
+
     private static ArrayList<ChannelItem> mChannels = new ArrayList<>();
+
     static {
         /**默认用户选择的频道*/
-        mChannels.add(new ChannelItem("1","奇点",1,true));
-        mChannels.add(new ChannelItem("4","科技",2,true));
-        mChannels.add(new ChannelItem("29","外媒",3,true));
-        mChannels.add(new ChannelItem("35","点集",4,true));
-        mChannels.add(new ChannelItem("2","社会",5,true));
-        mChannels.add(new ChannelItem("7","财经",6,true));
-        mChannels.add(new ChannelItem("6","体育",7,true));
-        mChannels.add(new ChannelItem("5","汽车",8,true));
-        mChannels.add(new ChannelItem("9","国际",9,true));
-        mChannels.add(new ChannelItem("10","时尚",10,true));
-        mChannels.add(new ChannelItem("14","探索",11,true));
-        mChannels.add(new ChannelItem("25","科学",12,true));
-        mChannels.add(new ChannelItem("3","娱乐",13,true));
-        mChannels.add(new ChannelItem("23","趣图",14,true));
-        mChannels.add(new ChannelItem("21","搞笑",15,true));
-        mChannels.add(new ChannelItem("17","养生",16,true));
-        mChannels.add(new ChannelItem("11","游戏",17,true));
-        mChannels.add(new ChannelItem("16","育儿",18,true));
+        mChannels.add(new ChannelItem("1", "推荐", 1, true));
+        mChannels.add(new ChannelItem("3", "娱乐", 2, true));
+        mChannels.add(new ChannelItem("6", "体育", 3, true));
+        mChannels.add(new ChannelItem("5", "汽车", 4, true));
+        mChannels.add(new ChannelItem("21", "搞笑", 5, true));
+        mChannels.add(new ChannelItem("26", "美女", 6, true));
+        mChannels.add(new ChannelItem("2", "社会", 7, true));
+        mChannels.add(new ChannelItem("4", "科技", 8, true));
+        mChannels.add(new ChannelItem("7", "财经", 9, true));
+        mChannels.add(new ChannelItem("22", "互联网", 10, true));
+        mChannels.add(new ChannelItem("8", "军事", 11, true));
+        mChannels.add(new ChannelItem("11", "游戏", 12, true));
+        mChannels.add(new ChannelItem("30", "影视", 13, true));
+        mChannels.add(new ChannelItem("23", "趣图", 14, true));
+        mChannels.add(new ChannelItem("9", "国际", 15, true));
+        mChannels.add(new ChannelItem("10", "时尚", 16, true));
+        mChannels.add(new ChannelItem("18", "故事", 17, true));
         /**默认用户未选择的频道,并可选添加*/
-        mChannels.add(new ChannelItem("24","健康",1,false));
-        mChannels.add(new ChannelItem("30","影视",2,false));
-        mChannels.add(new ChannelItem("31","奇闻",3,false));
-        mChannels.add(new ChannelItem("32","萌宠",4,false));
-        mChannels.add(new ChannelItem("22","互联网",5,false));
-        mChannels.add(new ChannelItem("20","股票",6,false));
-        mChannels.add(new ChannelItem("8","军事",7,false));
-        mChannels.add(new ChannelItem("13","历史",8,false));
-        mChannels.add(new ChannelItem("18","故事",9,false));
-        mChannels.add(new ChannelItem("12","旅游",10,false));
-        mChannels.add(new ChannelItem("19","美文",11,false));
-        mChannels.add(new ChannelItem("15","美食",12,false));
-        mChannels.add(new ChannelItem("26","美女",13,false));
+        mChannels.add(new ChannelItem("31", "奇闻", 1, false));
+        mChannels.add(new ChannelItem("12", "旅游", 2, false));
+        mChannels.add(new ChannelItem("24", "健康", 3, false));
+        mChannels.add(new ChannelItem("15", "美食", 4, false));
+        mChannels.add(new ChannelItem("20", "股票", 5, false));
+        mChannels.add(new ChannelItem("25", "科学", 6, false));
+        mChannels.add(new ChannelItem("19", "美文", 7, false));
+        mChannels.add(new ChannelItem("17", "养生", 8, false));
+        mChannels.add(new ChannelItem("32", "萌宠", 9, false));
+        mChannels.add(new ChannelItem("13", "历史", 10, false));
+        mChannels.add(new ChannelItem("16", "育儿", 11, false));
+        mChannels.add(new ChannelItem("14", "探索", 12, false));
+        mChannels.add(new ChannelItem("29", "外媒", 13, false));
+        mChannels.add(new ChannelItem("36", "自媒体", 14, false));
+        mChannels.add(new ChannelItem("35", "点集", 15, false));
     }
+
     @Override
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
@@ -82,12 +86,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);
             /**初始化数据库或者升级数据库的时候,插入默认值*/
             channelDao = new ChannelItemDao(mContext);
-            if (!TextUtil.isListEmpty(oldChannelItems)){
+            if (!TextUtil.isListEmpty(oldChannelItems)) {
                 channelDao.insertList(oldChannelItems);
-            }else {
+            } else {
                 channelDao.insertList(mChannels);
             }
-
             Logger.e("jigang", "DatabaseHelper  onCreate()");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,12 +105,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             oldChannelItems = channelDao.queryForAll();
             //删除所有老版本上的频道
-            if (oldVersion <= DATABASE_VERSION){
-               oldChannelItems.clear();
+            if (oldVersion <= DATABASE_VERSION) {
+                oldChannelItems.clear();
             }
             /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
             NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
-            if (oldVersion <= 9){
+            if (oldVersion <= 9) {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
             }
 
@@ -143,20 +146,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     /**
      * 按Class 获取Dao对象
+     *
      * @param clazz
      * @return
      * @throws SQLException
      */
-    public synchronized Dao getDao(Class clazz) throws SQLException
-    {
+    public synchronized Dao getDao(Class clazz) throws SQLException {
         Dao dao = null;
         String className = clazz.getSimpleName();
-        if (mDaos.containsKey(className))
-        {
+        if (mDaos.containsKey(className)) {
             dao = mDaos.get(className);
         }
-        if (dao == null)
-        {
+        if (dao == null) {
             dao = super.getDao(clazz);
             mDaos.put(className, dao);
         }
@@ -169,13 +170,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        for (String key : mDaos.keySet())
-        {
+        for (String key : mDaos.keySet()) {
             Dao dao = mDaos.get(key);
             dao = null;
         }
     }
-
 
 
 }
