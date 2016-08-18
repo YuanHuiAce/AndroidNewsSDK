@@ -218,10 +218,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode);
+        Log.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
-            Logger.e("jigang", "newsid = " + newsId);
+            Log.e("jigang", "newsid = " + newsId);
+
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
                     if (item != null && newsId == item.getNid()) {
@@ -308,7 +309,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             }
         };
-        mHandler.postDelayed(mThread, 1500);
+        int delay = 1500;
+        if(mstrChannelId!=null&&mstrChannelId.equals("1")){
+            delay = 500;
+        }
+        mHandler.postDelayed(mThread, delay);
         return rootView;
     }
 

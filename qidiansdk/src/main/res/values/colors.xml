@@ -258,6 +258,7 @@
     <color name="attention_detali_dialog_text" >#ff181919</color>
     <color name="unattention_line_color" >#ffc0c0c0</color>
     <color name="attention_line_color" >#ffe71f19</color>
+    <color name="newsFeed_titleColor" >#ff111111</color>
 
 
 </resources>

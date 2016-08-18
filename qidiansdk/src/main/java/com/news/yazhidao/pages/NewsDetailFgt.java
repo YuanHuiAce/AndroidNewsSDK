@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -92,7 +95,7 @@ public class NewsDetailFgt extends BaseFragment {
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
-             mNewsDetailHeaderView;
+            mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
@@ -283,7 +286,7 @@ public class NewsDetailFgt extends BaseFragment {
         return rootView;
     }
 
-//    private Handler mHandler = new Handler() {
+    //    private Handler mHandler = new Handler() {
 //        @Override
 //        public void handleMessage(Message msg) {
 //            super.handleMessage(msg);
@@ -360,14 +363,26 @@ public class NewsDetailFgt extends BaseFragment {
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
                 "text/html", "utf-8", null);
-//        mDetailWebView.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                super.onPageFinished(view, url);
-//
-//            }
-//
-//        });
+        mDetailWebView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                Log.i("TAG", url);
+                // view.loadUrl(url);
+                if (openWithWevView(url)) {//如果是超链接，执行此方法
+                    startIntentBrowser("com.lieying.browser",url);
+                } else {
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.intent.action.VIEW");
+//                    Uri content_url = Uri.parse("http://www.baidu.com");
+//                    intent.setData(content_url);
+//                    intent.setClassName("com.lieying.browser","com.lieying.browser.BrowserActivity");
+//                    startActivity(intent);
+
+                }
+                return true;
+            }
+
+        });
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
@@ -479,7 +494,10 @@ public class NewsDetailFgt extends BaseFragment {
 
 
 
-    //    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
+
+
+
+//    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
 //        @Override
 //        public void addLove(NewsDetailComment comment, int position) {
 //            addNewsLove(comment);
@@ -494,51 +512,51 @@ public class NewsDetailFgt extends BaseFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 //        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
-            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                    (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
-                    "&p=" + (1)+ "&c=" + (20)
-                    , new Response.Listener<ArrayList<NewsDetailComment>>() {
+        feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+        }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
+                (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
+                "&p=" + (1)+ "&c=" + (20)
+                , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
-                @Override
-                public void onResponse(ArrayList<NewsDetailComment> result) {
-                    isCommentSuccess = true;
-                    isBgLayoutSuccess();
-                    mNewsDetailList.onRefreshComplete();
-                    Logger.e("jigang", "network success, comment" + result);
+            @Override
+            public void onResponse(ArrayList<NewsDetailComment> result) {
+                isCommentSuccess = true;
+                isBgLayoutSuccess();
+                mNewsDetailList.onRefreshComplete();
+                Logger.e("jigang", "network success, comment" + result);
 
-                    if (!TextUtil.isListEmpty(result)) {
-                        mComments = result;
-                        for(int i = 0;i<mComments.size();i++){
-                            if(i>2){
-                                mComments.remove(i);
-                            }
+                if (!TextUtil.isListEmpty(result)) {
+                    mComments = result;
+                    for(int i = 0;i<mComments.size();i++){
+                        if(i>2){
+                            mComments.remove(i);
                         }
+                    }
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
-                        Logger.d("aaa", "评论加载完毕！！！！！！");
-                        //同步服务器上的评论数据到本地数据库
-                        //  addCommentInfoToSql(mComments);
-                        mDetailSharedHotComment.setText("热门评论");//
-                        addCommentContent(result);
-                    } else {
-                        detail_shared_CommentTitleLayout.setVisibility(View.GONE);
-                        detail_shared_MoreComment.setVisibility(View.GONE);
-
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    isCommentSuccess = true;
-                    isBgLayoutSuccess();
-                    mNewsDetailList.onRefreshComplete();
+                    Logger.d("aaa", "评论加载完毕！！！！！！");
+                    //同步服务器上的评论数据到本地数据库
+                    //  addCommentInfoToSql(mComments);
+                    mDetailSharedHotComment.setText("热门评论");//
+                    addCommentContent(result);
+                } else {
                     detail_shared_CommentTitleLayout.setVisibility(View.GONE);
                     detail_shared_MoreComment.setVisibility(View.GONE);
-                    Logger.e("jigang", "URL_FETCH_HOTCOMMENTS  network fail");
 
                 }
-            });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                isCommentSuccess = true;
+                isBgLayoutSuccess();
+                mNewsDetailList.onRefreshComplete();
+                detail_shared_CommentTitleLayout.setVisibility(View.GONE);
+                detail_shared_MoreComment.setVisibility(View.GONE);
+                Logger.e("jigang", "URL_FETCH_HOTCOMMENTS  network fail");
+
+            }
+        });
         Logger.e("jigang", "URL_NEWS_RELATED=" + HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID);
         requestQueue.add(feedRequest);
         setNoRelatedDate();
@@ -915,11 +933,63 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     public interface  ShowCareforLayout{
-         void show();
+        void show();
     }
 
     ShowCareforLayout mShowCareforLayout;
     public void setShowCareforLayout(ShowCareforLayout showCareforLayout){
         mShowCareforLayout = showCareforLayout;
     }
+    protected boolean openWithWevView(String url) {//处理判断url的合法性
+        // TODO Auto-generated method stub
+        if (url.startsWith("http:") || url.startsWith("https:")) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * 判断跳转猎鹰浏览器
+     * @param packageName
+     * @param url
+     */
+    public void startIntentBrowser(String packageName, String url) {
+        boolean existLY=false;
+        PackageManager packageManager = getActivity().getPackageManager();
+        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+        for (PackageInfo packageinfo : packageInfos) {
+            String stemp = packageinfo.packageName;
+            Log.v("PACKAGENAME:",stemp);
+            if (stemp.equals(packageName)) {
+                existLY = true;
+            }
+        }
+        Intent intent;
+        if (existLY) {
+//            intent = packageManager.getLaunchIntentForPackage(packageName);
+            intent=new Intent();
+            intent.setClassName("com.lieying.browser","com.lieying.browser.BrowserActivity");
+//            intent.setAction(Intent.ACTION_VIEW);
+//            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+
+
+        } else {
+            intent=new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("url",url);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
+
+
+
+    }
+
+
+
+
 }
