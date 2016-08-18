@@ -1,9 +1,11 @@
 package com.news.yazhidao.pages;
 
 
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -60,6 +62,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
      * 用户栏目列表
      */
     ArrayList<ChannelItem> selectedChannelList = new ArrayList<ChannelItem>();
+    ArrayList<ChannelItem> selectedChannelListCurrent = new ArrayList<ChannelItem>();
     /**
      * 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。
      */
@@ -96,6 +99,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     @Override
     protected void loadData() {
         selectedChannelList = mDao.queryForSelected();
+        selectedChannelListCurrent = mDao.queryForSelected();
         otherChannelList = mDao.queryForNormal();
         userAdapter = new ChannelSelectedAdapter(this, selectedChannelList);
         userGridView.setAdapter(userAdapter);
@@ -174,7 +178,6 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 //			default:
 //				break;
     }
-
 
 
     /**
@@ -292,15 +295,33 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 //		}
     }
 
+
     @Override
     public void onBackPressed() {
-        try {
-            saveChannel();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    saveChannel();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
+        if (selectedChannelListCurrent.size() != channelItems.size()) {
             Intent data = new Intent();
-            data.putExtra(KEY_USER_SELECT, userAdapter.getChannnelList());
+            data.putExtra(KEY_USER_SELECT, channelItems);
             setResult(MainAty.REQUEST_CODE, data);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
+                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
+                    Intent data = new Intent();
+                    data.putExtra(KEY_USER_SELECT, channelItems);
+                    setResult(MainAty.REQUEST_CODE, data);
+                    break;
+                }
+            }
         }
         super.onBackPressed();
     }

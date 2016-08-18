@@ -312,7 +312,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             }
         };
-        mHandler.postDelayed(mThread, 1500);
+        mHandler.postDelayed(mThread, 500);
         return rootView;
     }
 
@@ -652,6 +652,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
         mHomeWatcher.startWatch();
         super.onResume();
+        if(mRefreshTitleBar.getVisibility()==View.VISIBLE){
+            mRefreshTitleBar.setVisibility(View.GONE);
+        }
         long time = (System.currentTimeMillis() - homeTime)/1000;
         Log.e("aaa", "time====" + time);
         if(isNewVisity&& isClickHome&&time>=60){

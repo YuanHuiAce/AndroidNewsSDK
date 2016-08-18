@@ -161,7 +161,7 @@ public class ChannelSelectedAdapter extends BaseAdapter {
      */
     public ArrayList<ChannelItem> getChannnelList() {
         if (channelList != null) {
-            return new ArrayList<>(channelList);
+            return (ArrayList<ChannelItem>) channelList;
         }
         return null;
     }
