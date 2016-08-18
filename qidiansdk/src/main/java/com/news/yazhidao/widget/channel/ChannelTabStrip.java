@@ -12,7 +12,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -144,10 +143,6 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //        category_text.setGravity(Gravity.CENTER);
         category_text.setSingleLine();
         category_text.setFocusable(true);
-        if (position == 0){
-            FrameLayout.LayoutParams params = (LayoutParams) category_text.getLayoutParams();
-            params.leftMargin = DensityUtil.dip2px(mContext,7.5f);
-        }
         category_text.setTextColor(getResources().getColor(R.color.new_color1));
         tab.setOnClickListener(new OnClickListener() {
             @Override
@@ -180,8 +175,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
         rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
                 ((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
-        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,6f), getHeight() - DensityUtil.dip2px(mContext,2),
-                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,6f), getHeight());
+        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,12), getHeight() - DensityUtil.dip2px(mContext,2),
+                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,12), getHeight());
 //		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
     }
 
