@@ -313,7 +313,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             }
         };
-        mHandler.postDelayed(mThread, 500);
+        int delay = 1500;
+        if(mstrChannelId!=null&&mstrChannelId.equals("1"){
+            delay = 500;
+        }
+        mHandler.postDelayed(mThread, delay);
         return rootView;
     }
 

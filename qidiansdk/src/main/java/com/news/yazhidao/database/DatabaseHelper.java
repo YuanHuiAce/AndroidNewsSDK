@@ -65,19 +65,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("31", "奇闻", 1, false));
         mChannels.add(new ChannelItem("12", "旅游", 2, false));
-        mChannels.add(new ChannelItem("24", "健康", 3, false));
-        mChannels.add(new ChannelItem("15", "美食", 4, false));
-        mChannels.add(new ChannelItem("20", "股票", 5, false));
-        mChannels.add(new ChannelItem("25", "科学", 6, false));
-        mChannels.add(new ChannelItem("19", "美文", 7, false));
-        mChannels.add(new ChannelItem("17", "养生", 8, false));
-        mChannels.add(new ChannelItem("32", "萌宠", 9, false));
-        mChannels.add(new ChannelItem("13", "历史", 10, false));
-        mChannels.add(new ChannelItem("16", "育儿", 11, false));
-        mChannels.add(new ChannelItem("14", "探索", 12, false));
-        mChannels.add(new ChannelItem("29", "外媒", 13, false));
-        mChannels.add(new ChannelItem("36", "自媒体", 14, false));
-        mChannels.add(new ChannelItem("35", "点集", 15, false));
+        mChannels.add(new ChannelItem("39", "帅哥", 3, false));
+        mChannels.add(new ChannelItem("24", "健康", 4, false));
+        mChannels.add(new ChannelItem("15", "美食", 5, false));
+        mChannels.add(new ChannelItem("20", "股票", 6, false));
+        mChannels.add(new ChannelItem("25", "科学", 7, false));
+        mChannels.add(new ChannelItem("19", "美文", 8, false));
+        mChannels.add(new ChannelItem("17", "养生", 9, false));
+        mChannels.add(new ChannelItem("32", "萌宠", 10, false));
+        mChannels.add(new ChannelItem("37", "风水玄学", 11, false));
+        mChannels.add(new ChannelItem("13", "历史", 12, false));
+        mChannels.add(new ChannelItem("16", "育儿", 13, false));
+        mChannels.add(new ChannelItem("14", "探索", 14, false));
+        mChannels.add(new ChannelItem("29", "外媒", 15, false));
+        mChannels.add(new ChannelItem("36", "自媒体", 16, false));
+        mChannels.add(new ChannelItem("35", "APP", 17, false));
     }
 
     @Override
