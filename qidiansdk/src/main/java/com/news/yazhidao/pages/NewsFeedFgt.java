@@ -314,7 +314,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         };
         int delay = 1500;
-        if(mstrChannelId!=null&&mstrChannelId.equals("1"){
+        if(mstrChannelId!=null&&mstrChannelId.equals("1")){
             delay = 500;
         }
         mHandler.postDelayed(mThread, delay);
