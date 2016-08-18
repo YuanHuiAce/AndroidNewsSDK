@@ -78,6 +78,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         initializeViews(context);
     }
 
+
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
