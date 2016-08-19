@@ -596,7 +596,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
 
             } else {
-                stopRefresh();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mlvNewsFeed.onRefreshComplete();
+                    }
+                },500);
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
@@ -605,7 +610,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 mAdapter.setNewsFeed(newsFeeds);
                 mAdapter.notifyDataSetChanged();
-                mlvNewsFeed.onRefreshComplete();
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
