@@ -43,7 +43,6 @@ import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -89,7 +88,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NetworkRequest mRequest;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    private String  mstrUserId, mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -195,7 +194,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onCreate(bundle);
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
-        mstrDeviceId = DeviceInfoUtil.getUUID();
 //        mHandler = new Handler(this);
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
@@ -596,7 +594,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
 
             } else {
-                stopRefresh();
+                mlvNewsFeed.onRefreshComplete();
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
@@ -605,7 +603,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 mAdapter.setNewsFeed(newsFeeds);
                 mAdapter.notifyDataSetChanged();
-                mlvNewsFeed.onRefreshComplete();
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
