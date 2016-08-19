@@ -42,7 +42,6 @@ import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -88,11 +87,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NetworkRequest mRequest;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    private String  mstrUserId, mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
-//    private RefreshReceiver mRefreshReciver;
     /**
      * 热词页面加载更多
      */
@@ -197,7 +195,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onCreate(bundle);
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
-        mstrDeviceId = DeviceInfoUtil.getUUID();
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
@@ -323,12 +320,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-//        mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
-
     }
 
     /**
@@ -608,6 +603,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
             }
         } else {
+            mHomeRetry.setVisibility(View.VISIBLE);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

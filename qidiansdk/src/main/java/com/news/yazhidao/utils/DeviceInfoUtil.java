@@ -378,7 +378,7 @@ public class DeviceInfoUtil {
      */
     public static String getUUID() {
         TelephonyManager telephonyManager = (TelephonyManager) QiDianApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = Build.PRODUCT+telephonyManager.getDeviceId()+getMacAddress(QiDianApplication.getAppContext())+getDeviceSerial()+ Settings.Secure.getString(QiDianApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String uuid = Build.PRODUCT+getMacAddress(QiDianApplication.getAppContext())+getDeviceSerial()+ Settings.Secure.getString(QiDianApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         return generateMD5(uuid);
     }
 
