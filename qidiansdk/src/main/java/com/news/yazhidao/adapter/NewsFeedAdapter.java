@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -368,9 +369,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tvTitle.setLineSpacing(0, 1.1f);
             }
             if (isRead) {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color7));
             } else {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.newsFeed_titleColor));
             }
             tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/btn_news_feed_delete" />
+    <item android:state_pressed="false" android:drawable="@drawable/unbtn_news_feed_delete" />
+    <item android:drawable="@drawable/unbtn_news_feed_delete" />
+
+</selector>

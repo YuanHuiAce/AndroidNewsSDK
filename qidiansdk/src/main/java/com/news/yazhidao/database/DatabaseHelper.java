@@ -11,9 +11,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.ChannelItem;
-import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.utils.Logger;
@@ -30,8 +28,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
-    private ArrayList<DiggerAlbum> oldDiggerAlbums;
-    private ArrayList<AlbumSubItem> oldDiggerAlbumItems;
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
@@ -65,19 +61,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("31", "奇闻", 1, false));
         mChannels.add(new ChannelItem("12", "旅游", 2, false));
-        mChannels.add(new ChannelItem("24", "健康", 3, false));
-        mChannels.add(new ChannelItem("15", "美食", 4, false));
-        mChannels.add(new ChannelItem("20", "股票", 5, false));
-        mChannels.add(new ChannelItem("25", "科学", 6, false));
-        mChannels.add(new ChannelItem("19", "美文", 7, false));
-        mChannels.add(new ChannelItem("17", "养生", 8, false));
-        mChannels.add(new ChannelItem("32", "萌宠", 9, false));
-        mChannels.add(new ChannelItem("13", "历史", 10, false));
-        mChannels.add(new ChannelItem("16", "育儿", 11, false));
-        mChannels.add(new ChannelItem("14", "探索", 12, false));
-        mChannels.add(new ChannelItem("29", "外媒", 13, false));
-        mChannels.add(new ChannelItem("36", "自媒体", 14, false));
-        mChannels.add(new ChannelItem("35", "点集", 15, false));
+        mChannels.add(new ChannelItem("39", "帅哥", 3, false));
+        mChannels.add(new ChannelItem("24", "健康", 4, false));
+        mChannels.add(new ChannelItem("15", "美食", 5, false));
+        mChannels.add(new ChannelItem("20", "股票", 6, false));
+        mChannels.add(new ChannelItem("25", "科学", 7, false));
+        mChannels.add(new ChannelItem("19", "美文", 8, false));
+        mChannels.add(new ChannelItem("17", "养生", 9, false));
+        mChannels.add(new ChannelItem("32", "萌宠", 10, false));
+        mChannels.add(new ChannelItem("37", "风水玄学", 11, false));
+        mChannels.add(new ChannelItem("13", "历史", 12, false));
+        mChannels.add(new ChannelItem("16", "育儿", 13, false));
+        mChannels.add(new ChannelItem("14", "探索", 14, false));
+        mChannels.add(new ChannelItem("29", "外媒", 15, false));
+        mChannels.add(new ChannelItem("36", "自媒体", 16, false));
+        mChannels.add(new ChannelItem("35", "APP", 17, false));
     }
 
     @Override
@@ -85,8 +83,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                          ConnectionSource connectionSource) {
         try {
 
-            TableUtils.createTableIfNotExists(connectionSource, DiggerAlbum.class);
-            TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);
@@ -97,17 +93,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             } else {
                 channelDao.insertList(mChannels);
             }
-            /**升级数据库,保留以前的专辑*/
-            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
-            if (!TextUtil.isListEmpty(oldDiggerAlbums)) {
-                albumDao.insertList(oldDiggerAlbums);
-            }
-            /**升级数据库,保留以前的专辑内容*/
-            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
-            if (!TextUtil.isListEmpty(oldDiggerAlbumItems)) {
-                albumSubItemDao.insertList(oldDiggerAlbumItems);
-            }
-
             Logger.e("jigang", "DatabaseHelper  onCreate()");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,23 +110,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (oldVersion <= DATABASE_VERSION) {
                 oldChannelItems.clear();
             }
-            /**查询数据库升级前的专辑列表*/
-            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
-            oldDiggerAlbums = albumDao.querForAll();
-            /**查询专辑列表下的新闻*/
-            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
-            if (oldVersion <= 9) {
-                albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
-            }
             /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
             NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
             if (oldVersion <= 9) {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
             }
-            oldDiggerAlbumItems = albumSubItemDao.queryForAll();
 
-            TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
-            TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);

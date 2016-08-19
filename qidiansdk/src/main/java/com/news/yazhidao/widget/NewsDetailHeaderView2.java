@@ -7,8 +7,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.utils.TextUtil;
 
 /**
  * Created by fengjigang on 15/9/6.
@@ -39,23 +37,6 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
      * @param pNewsDetail
      */
     public void updateView(Object pNewsDetail){
-         if(pNewsDetail instanceof NewsDetailAdd){
-            NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
-             mNewsDetailTitle.setText(detail.title);
-             String source = detail.sourceSiteName;
-             String time = detail.updateTime;
-             if (!TextUtil.isEmptyString(source)){
-                 source = source.replace("\n","") + "  ";
-             }else {
-                 source ="";
-             }
-             if (!TextUtil.isEmptyString(time)){
-                 time = time.replace("\n","");
-             }
-             if (TextUtil.isEmptyString(source + time)){
-                 mNewsDetailSourceAndTime.setVisibility(GONE);
-             }
-             mNewsDetailSourceAndTime.setText(source+time);
-        }
+
     }
 }

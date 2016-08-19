@@ -11,7 +11,7 @@
         android:layout_width="102dp"
         android:layout_height="74dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="12dp"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/bg_load_default_small"
@@ -28,21 +28,21 @@
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/title_img_View"
         android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@color/new_color1"
-        android:textSize="@dimen/new_font2" />
+        android:maxLines="2"
+        android:textColor="@color/newsFeed_titleColor"
+        android:textSize="@dimen/new_font1" />
 
     <LinearLayout
         android:id="@+id/source_content_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginTop="10dp">
 
         <ImageView
@@ -59,8 +59,8 @@
             android:maxEms="8"
             android:lines="1"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6"
+            android:textColor="@color/text_message"
+            android:textSize="@dimen/font5"
             android:gravity="center_vertical"
             />
 
@@ -81,16 +81,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textColor="@color/new_color3"
-            android:layout_marginRight="-10dp"
             android:textSize="@dimen/new_font6" />
 
         <ImageView
             android:id="@+id/delete_imageView"
-            android:layout_width="35dp"
-            android:layout_height="18dp"
-            android:paddingLeft="15dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginRight="4dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/btn_news_feed_delete" />
+            android:src="@drawable/btn_news_feed_delete_selector"  />
     </LinearLayout>
 
     <ImageView

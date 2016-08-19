@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -66,7 +65,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //    public LocationClient mLocationClient = null;
 //    public BDLocationListener myListener = new MyLocationListener();
 //    private SimpleDraweeView mUserCenter;
-    private TextView mDetailLeftBack;
 
     /**
      * 自定义的PopWindow
@@ -124,11 +122,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mViewPager = (ViewPager) view.findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
-        mDetailLeftBack = (TextView) view.findViewById(R.id.mDetailLeftBack);
-        mDetailLeftBack.setOnClickListener(this);
-        mDetailLeftBack.setVisibility(View.GONE);
-       View paddingView = (View) view.findViewById(R.id.paddingView);
-        paddingView.setVisibility(View.VISIBLE);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) view.findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);

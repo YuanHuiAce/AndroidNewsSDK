@@ -4,75 +4,57 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     >
 
 
     <LinearLayout
         android:id="@+id/mChannelLayout"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="41dp"
+        android:background="#f8f8f8"
         android:orientation="horizontal"
         >
 
         <!--<com.facebook.drawee.view.SimpleDraweeView-->
-            <!--android:id="@+id/mUserCenter"-->
-            <!--android:layout_width="45dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:padding="10dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--fresco:placeholderImage="@drawable/btn_user_center"-->
-            <!--fresco:roundAsCircle="true"-->
-            <!--fresco:roundingBorderWidth="1px"-->
-            <!--fresco:roundingBorderColor="@color/white"-->
+        <!--android:id="@+id/mUserCenter"-->
+        <!--android:layout_width="45dp"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:padding="10dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--fresco:placeholderImage="@drawable/btn_user_center"-->
+        <!--fresco:roundAsCircle="true"-->
+        <!--fresco:roundingBorderWidth="1px"-->
+        <!--fresco:roundingBorderColor="@color/white"-->
 
-            <!--/>-->
-        <TextView
-            android:id="@+id/mDetailLeftBack"
-            android:layout_width="45dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:background="@drawable/bg_left_back_selector"
-            android:clickable="true"
-            android:padding="15dp"
-            />
-        <View
-            android:id="@+id/paddingView"
-            android:layout_width="15dp"
-            android:layout_height="48dp"
-            android:visibility="gone"
-            />
+        <!--/>-->
         <com.news.yazhidao.widget.channel.ChannelTabStrip
-
+            android:layout_marginLeft="4dp"
             android:id="@+id/mChannelTabStrip"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
             />
 
         <ImageView
             android:id="@+id/mChannelExpand"
-            android:layout_width="46dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:padding="10dp"
-            android:src="@drawable/btn_channel_add"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:layout_gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_marginRight="4dp"
+            android:src="@drawable/channel_more_selector"
             />
     </LinearLayout>
-    <ImageView
-        android:id="@+id/mDividingLine"
-        android:layout_below="@id/mChannelLayout"
-        android:background="@color/new_color2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/mViewPager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/mDividingLine"/>
+        android:layout_below="@id/mChannelLayout"/>
+
     <com.news.yazhidao.widget.FeedDislikePopupWindow
         android:id="@+id/feedDislike_popupWindow"
         android:layout_width="match_parent"

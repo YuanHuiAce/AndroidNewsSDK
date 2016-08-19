@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
@@ -124,6 +129,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     boolean isFavorite;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
+
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -233,6 +239,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("aaa","===========================onResume====================");
         nowTime = System.currentTimeMillis();
         mDurationStart = System.currentTimeMillis();
         if (mRefreshReceiber == null) {
@@ -244,17 +251,14 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        lastTime = System.currentTimeMillis() - nowTime + lastTime;
-        long readDuration = System.currentTimeMillis() - mDurationStart;
-
+    protected void onPause() {
+        super.onPause();
+        Log.e("aaa","===========================onPause====================");
     }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e("aaa","===========================onDestroy====================");
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
@@ -268,7 +272,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @throws IOException
      */
     private void upLoadLog() {
-//
+        Log.e("aaa", "开始上传日志！");
         if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
             return;
         }
@@ -281,7 +285,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-        if (saveNum >= 30) {
+        if (saveNum >= 5) {
+            Log.e("aaa", "确认上传日志！");
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -300,7 +305,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 e.printStackTrace();
             }
 
-
             String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
                     "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
             Logger.d("aaa", "url===" + url);
@@ -313,6 +317,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                 }
             });
             requestQueue.add(request);
@@ -508,28 +513,28 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         return super.onKeyDown(keyCode, event);
     }
-//
-//    @Override
-//    public void finish() {
-//        try {
-//
-//
-//        if (mNewsFeed != null) {
-//            Intent intent = new Intent();
-//            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-//            setResult(NewsFeedAdapter.REQUEST_CODE, intent);
-//        }
-//        super.finish();
+    //
+    @Override
+    public void finish() {
+        try {
+
+
+            if (mNewsFeed != null) {
+                Intent intent = new Intent();
+                intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+                setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+            }
+            super.finish();
 //        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
 //        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
 //            startActivity(main);
 //        }
-//        }catch (Exception e)
-//        {
-//            System.out.println("DetailAty2:"+e.toString());
-//        }
-//    }
+        }catch (Exception e)
+        {
+            System.out.println("DetailAty2:"+e.toString());
+        }
+    }
 
     @Override
     public void onClick(View v) {
