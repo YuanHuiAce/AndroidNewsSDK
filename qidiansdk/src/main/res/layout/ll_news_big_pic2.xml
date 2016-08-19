@@ -6,27 +6,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_feed_list_select">
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/title_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:lineSpacingExtra="3dp"
-        android:textColor="@color/newsFeed_titleColor"
-        android:textSize="@dimen/new_font1" />
+
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/title_img_View"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title_textView"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_height="180dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/bg_load_default_small"
         fresco:placeholderImageScaleType="centerCrop"
@@ -37,7 +24,26 @@
         fresco:roundedCornerRadius="2dp"
         fresco:roundingBorderColor="@color/new_color4"
         fresco:roundingBorderWidth="1px"
-        fresco:viewAspectRatio="1.7777" />
+        fresco:viewAspectRatio="1.7777"
+        android:layout_marginTop="16dp"/>
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font3"
+        android:visibility="visible"
+        android:background="@color/black50"
+        android:layout_alignBottom="@+id/title_img_View"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        />
 
     <include
         android:id="@+id/source_content_linearLayout"
@@ -45,8 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_img_View"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="5dp" />
 
     <ImageView
@@ -54,8 +60,8 @@
         android:layout_below="@+id/source_content_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0.55dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="12dp"
         android:background="@color/new_color5" />
 </RelativeLayout>
