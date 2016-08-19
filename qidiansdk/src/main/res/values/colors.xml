@@ -28,6 +28,7 @@
     <color name="news_list_table_channelname">#ff7f66</color>
     <color name="news_list_table_devider">#e1e1e1</color>
     <color name="white">#ffffff</color>
+    <color name="white80">#ccffffff</color>
     <color name="black">#ff000000</color>
     <color name="black50">#80000000</color>
     <color name="blacktou">#4d000000</color>

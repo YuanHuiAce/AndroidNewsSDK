@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
-        android:layout_marginTop="6dp">
+        android:layout_marginTop="5dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_card1"
@@ -39,7 +39,7 @@
             fresco:roundTopRight="false"
             fresco:roundedCornerRadius="2dp"
             fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px" />
+            fresco:roundingBorderWidth="1px"/>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_card2"
@@ -55,7 +55,7 @@
             fresco:roundTopRight="false"
             fresco:roundedCornerRadius="2dp"
             fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px" />
+            fresco:roundingBorderWidth="1px"/>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_card3"
@@ -71,7 +71,7 @@
             fresco:roundTopRight="false"
             fresco:roundedCornerRadius="2dp"
             fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px" />
+            fresco:roundingBorderWidth="1px"/>
     </LinearLayout>
 
     <LinearLayout
@@ -139,7 +139,8 @@
             android:gravity="center"
             android:layout_alignBottom="@+id/line_bottom_imageView"
             android:layout_alignParentTop="true"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            android:visibility="gone"/>
 
 
     <ImageView
@@ -147,7 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/list_divider"/>
 </RelativeLayout>
 
