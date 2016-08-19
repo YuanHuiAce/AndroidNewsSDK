@@ -92,7 +92,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
-    private RefreshReceiver mRefreshReciver;
+//    private RefreshReceiver mRefreshReciver;
     /**
      * 热词页面加载更多
      */
@@ -323,7 +323,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        mContext.unregisterReceiver(mRefreshReciver);
+//        mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
