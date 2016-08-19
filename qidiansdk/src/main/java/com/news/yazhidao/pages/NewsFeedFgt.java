@@ -331,7 +331,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
-        ((ViewGroup) rootView.getParent()).removeView(rootView);
+        if (rootView != null){
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
+        }
     }
 
     /**
@@ -595,6 +597,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             } else {
                 mlvNewsFeed.onRefreshComplete();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mlvNewsFeed.onRefreshComplete();
+                    }
+                },500);
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);

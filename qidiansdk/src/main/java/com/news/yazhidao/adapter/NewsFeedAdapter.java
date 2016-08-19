@@ -264,11 +264,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         else if (layoutId==R.layout.ll_news_big_pic2)
         {
             holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
-            if (isFavorite) {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-            } else {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
-            }
+            setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+//            if (isFavorite) {
+//                setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+//            } else {
+//                setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+//            }
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
 //            setFocusBgColor((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceBigPic.findViewById(R.id.delete_imageView));
@@ -372,6 +373,24 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color7));
             } else {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.newsFeed_titleColor));
+            }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+        }
+    }
+    private void setTitleTextByBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            } else {
+                tvTitle.setText(strTitle);
+                tvTitle.setLineSpacing(0, 1.1f);
+            }
+            if (isRead) {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color7));
+            } else {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.white));
             }
             tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
