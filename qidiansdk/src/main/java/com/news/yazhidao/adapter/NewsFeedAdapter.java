@@ -179,10 +179,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //        switch (holder.getLayoutId()) {
 //            case R.layout.qd_ll_news_item_no_pic:
             if (isFavorite) {
-                Log.e("aaa", "isFavorite == " + false);
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             } else {
-                Log.e("aaa", "isRead == " + feed.isRead());
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
 
