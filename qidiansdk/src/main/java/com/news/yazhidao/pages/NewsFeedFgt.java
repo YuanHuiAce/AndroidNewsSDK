@@ -319,7 +319,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         ((ViewGroup) rootView.getParent()).removeView(rootView);
     }
