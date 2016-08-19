@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 
 public class ChannelTabStrip extends HorizontalScrollView {
@@ -174,8 +175,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
         rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
                 ((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
-        sliderRect.set(((int) left) + getPaddingLeft(), getHeight(),
-                ((int) width) + getPaddingLeft(), getHeight());
+        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,12), getHeight() - DensityUtil.dip2px(mContext,2),
+                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,12), getHeight());
 //		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
     }
 
@@ -219,10 +220,10 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
         // 绘制高亮背景矩形红框
         calculateIndicatorRect(indicatorRect);
-        if (indicator != null) {
-            indicator.setBounds(indicatorRect);
-            indicator.draw(canvas);
-        }
+//        if (indicator != null) {
+//            indicator.setBounds(indicatorRect);
+//            indicator.draw(canvas);
+//        }
         if (sliderDrawable != null) {
             sliderDrawable.setBounds(sliderRect);
             sliderDrawable.draw(canvas);
