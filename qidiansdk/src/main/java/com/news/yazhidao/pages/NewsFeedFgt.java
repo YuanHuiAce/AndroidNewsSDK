@@ -175,10 +175,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void refreshData() {
+        if (mlvNewsFeed == null) {//防止listview为空
+            return;
+        }
         isNoteLoadDate = false;
         mThread = new Runnable() {
             @Override
             public void run() {
+
                 mlvNewsFeed.setRefreshing();
                 isListRefresh = true;
                 isClickHome = false;
@@ -317,7 +321,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mHandler.removeCallbacks(mThread);
         }
         Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
-        if (rootView != null){
+        if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
     }

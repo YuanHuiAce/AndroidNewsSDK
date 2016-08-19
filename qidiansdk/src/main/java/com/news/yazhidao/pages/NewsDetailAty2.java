@@ -764,6 +764,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         @Override
         public void destroyItem(View container, int position, Object object) {
+//            if (container != null && !TextUtil.isListEmpty(views) &&views.size()>position &&views.get(position) != null) {
+//                ((ViewPager) container).removeView(views.get(position));
+//            }
             ((ViewPager) container).removeView(views.get(position));
         }
 
