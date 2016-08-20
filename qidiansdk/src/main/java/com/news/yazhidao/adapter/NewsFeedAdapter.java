@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -496,8 +495,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                ToastUtil.toastShort(feed.getPubName());
                 DeleteView = view;
                 DeleteClickBean = feed;
-                int[] LocationInWindow = new int[2];
                 int[] LocationOnScreen = new int[2];
+                int[] LocationInWindow = new int[2];
                 imageView.getLocationInWindow(LocationInWindow);
 
                 mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth() / 2, LocationInWindow[1] + imageView.getHeight() / 2,

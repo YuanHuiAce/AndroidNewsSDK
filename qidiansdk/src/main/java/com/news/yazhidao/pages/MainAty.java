@@ -378,7 +378,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
-            dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
+
+            dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this) );
 
         }
 

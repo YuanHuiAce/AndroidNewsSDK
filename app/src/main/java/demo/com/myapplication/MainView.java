@@ -60,6 +60,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
 
+
     FragmentActivity activity;
     //baidu Map
 //    public LocationClient mLocationClient = null;
@@ -70,7 +71,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 自定义的PopWindow
      */
     FeedDislikePopupWindow dislikePopupWindow;
-
     public MainView(FragmentActivity context) {
         super(context);
         initializeViews(context);
@@ -93,8 +93,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         MyViewPagerAdapter a = (MyViewPagerAdapter) mViewPager.getAdapter();
         NewsFeedFgt newsFeedFgt = (NewsFeedFgt) a.instantiateItem(mViewPager, mViewPager.getCurrentItem());
         Log.e("jigang","aaa---backFirstItemAndRefreshData");
-        newsFeedFgt.refreshData();
+//        newsFeedFgt.refreshData();
+        newsFeedFgt. getFirstPosition();
     }
+
 
 
     private class UserLoginReceiver extends BroadcastReceiver {
@@ -130,7 +132,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mChannelTabStrip.setViewPager(mViewPager);
 //                mUserCenter.setImageURI(Uri.parse("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0"));
         dislikePopupWindow = (FeedDislikePopupWindow) view.findViewById(R.id.feedDislike_popupWindow);
-        dislikePopupWindow.setVisibility(View.GONE);
+//        dislikePopupWindow.setVisibility(View.GONE);
+
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
             Handler mHandler = new Handler();
 
@@ -180,6 +183,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 开始顶部 progress 刷新动画
      */
     public void startTopRefresh() {
+
     }
 
     /**
@@ -362,14 +366,17 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //        }
 
     }
-
+    int[] LocationInWindow = new int[2];
     NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
         public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
-            mNewsFeedAdapter = mAdapter;
-            dislikePopupWindow.setSourceList("来源：" + PubName);
-            dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(activity));
+                mNewsFeedAdapter = mAdapter;
+                view.getLocationInWindow(LocationInWindow);
+
+                dislikePopupWindow.setSourceList("来源：" + PubName);
+                dislikePopupWindow.showView(x, y -LocationInWindow[1]);
+
 
         }
 

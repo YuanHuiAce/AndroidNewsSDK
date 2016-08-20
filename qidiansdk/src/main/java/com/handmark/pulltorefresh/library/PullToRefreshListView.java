@@ -133,6 +133,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		}
 	}
 
+
+
 	@Override
 	protected void onReset() {
 		/**

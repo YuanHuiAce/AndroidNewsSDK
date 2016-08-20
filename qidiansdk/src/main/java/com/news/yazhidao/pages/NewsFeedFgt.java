@@ -174,6 +174,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     }
 
+    public void getFirstPosition(){
+
+            mlvNewsFeed.getRefreshableView().setSelection(0);
+    }
+
+
     public void refreshData() {
         if (mlvNewsFeed == null) {//防止listview为空
             return;
