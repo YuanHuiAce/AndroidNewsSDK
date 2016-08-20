@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.nfc.Tag;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
@@ -147,6 +148,13 @@ public class FeedDislikePopupWindow extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 //        super.onLayout();
 //        super.onLayout(changed, l, t, r, b);
+        if(isVisity){//每次打开应用会闪。防止闪
+            return;
+        }
+
+        if(getVisibility() == VISIBLE){
+            isVisity = true;
+        }
 
         mLayoutWidth = r - mMarginLorR * 2;
         mScreeHeight = b;
@@ -189,10 +197,21 @@ public class FeedDislikePopupWindow extends RelativeLayout {
                 Animation.RELATIVE_TO_SELF, isDirection ? 1f : 0f);
         scaleAnim2.setDuration(200);
 
+
         mPopWindowLayout.startAnimation(scaleAnim);
         mTriangle.startAnimation(scaleAnim2);
+        Log.e("aaa", "==============");
     }
 
+    boolean isVisity;
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if(visibility ==GONE){
+            isVisity = false;
+        }
+    }
 
     public void showView(int clickX, int clickY) {
         setVisibility(View.VISIBLE);
