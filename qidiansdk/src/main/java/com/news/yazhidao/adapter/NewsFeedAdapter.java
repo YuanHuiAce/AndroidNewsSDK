@@ -201,7 +201,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
             final TextView tvTitle = holder.getView(R.id.title_textView);
-            final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
+                final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
             SimpleDraweeView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
@@ -227,30 +227,31 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //            }
 //            llSourceContent.setLayoutParams(lpSourceContent);
 //            ivBottomLine.setLayoutParams(lpBottomLine);
-            tvTitle.post(new Runnable() {
-                @Override
-                public void run() {
-                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceContent.getLayoutParams();
-                    RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
-                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
-                    int lineCount = tvTitle.getLineCount();
-                    if (lineCount >= 3) {
-                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
-                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                    } else if (lineCount <= 1) {
-                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
-                        lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                    } else {
-                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                        lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                    }
-                    llSourceContent.setLayoutParams(lpSourceContent);
-                    ivBottomLine.setLayoutParams(lpBottomLine);
-                }
-            });
+            //
+//            tvTitle.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceContent.getLayoutParams();
+//                    RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
+//                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
+//                    int lineCount = tvTitle.getLineCount();
+//                    if (lineCount >= 3) {
+//                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+//                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+//                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+//                    } else if (lineCount <= 1) {
+//                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
+//                        lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+//                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                    } else {
+//                        titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+//                        lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+//                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                    }
+//                    llSourceContent.setLayoutParams(lpSourceContent);
+//                    ivBottomLine.setLayoutParams(lpBottomLine);
+//                }
+//            });
 
                 setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment()+"");
@@ -367,7 +368,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
-                tvTitle.setLineSpacing(0, 1.1f);
+                tvTitle.setLineSpacing(0, 1f);
             }
             if (isRead) {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color7));

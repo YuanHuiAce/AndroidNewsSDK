@@ -14,7 +14,6 @@
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:lineSpacingExtra="3dp"
         android:textColor="@color/newsFeed_titleColor"
         android:textSize="@dimen/new_font1"/>
 
@@ -24,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="@dimen/usual_margin"
-        android:layout_marginTop="11dp">
+        android:layout_marginTop="2dp">
 
         <ImageView
             android:id="@+id/type_imageView"
@@ -90,6 +89,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="11dp"
         android:background="@drawable/list_divider"/>
 </RelativeLayout>

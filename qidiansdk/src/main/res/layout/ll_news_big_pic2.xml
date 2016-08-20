@@ -34,7 +34,6 @@
         android:layout_marginRight="@dimen/usual_margin"
         android:ellipsize="end"
         android:singleLine="true"
-        android:lineSpacingExtra="3dp"
         android:textColor="@color/white"
         android:textSize="@dimen/font3"
         android:visibility="visible"
@@ -62,6 +61,6 @@
         android:layout_height="0.55dp"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="2dp"
         android:background="@color/new_color5" />
 </RelativeLayout>

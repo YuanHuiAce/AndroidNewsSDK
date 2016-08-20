@@ -928,7 +928,10 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mNewsDetailHeaderView.removeView(mDetailWebView);
+        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
+            mNewsDetailHeaderView.removeView(mDetailWebView);
+        }
+
         mDetailWebView.destroy();
     }
 
