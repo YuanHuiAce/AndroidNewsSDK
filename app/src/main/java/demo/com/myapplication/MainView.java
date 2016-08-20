@@ -93,8 +93,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         MyViewPagerAdapter a = (MyViewPagerAdapter) mViewPager.getAdapter();
         NewsFeedFgt newsFeedFgt = (NewsFeedFgt) a.instantiateItem(mViewPager, mViewPager.getCurrentItem());
         Log.e("jigang","aaa---backFirstItemAndRefreshData");
-        newsFeedFgt.refreshData();
+//        newsFeedFgt.refreshData();
+        newsFeedFgt. getFirstPosition();
     }
+
 
 
     private class UserLoginReceiver extends BroadcastReceiver {
@@ -181,6 +183,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 开始顶部 progress 刷新动画
      */
     public void startTopRefresh() {
+
     }
 
     /**
