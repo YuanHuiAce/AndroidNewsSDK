@@ -25,17 +25,5 @@
         android:layout_marginLeft="-2dp"
         />
 
-    <TextView
-        android:id="@+id/right_text"
-        style="@style/title_bar_button"
-        android:layout_alignParentRight="true"
-        android:visibility="gone" />
-
-   <View
-       android:layout_width="match_parent"
-       android:layout_height="8dp"
-       android:background="#f0f0f0f0"
-       android:layout_below="@id/mDetailLeftBack"
-       />
 
 </RelativeLayout>
