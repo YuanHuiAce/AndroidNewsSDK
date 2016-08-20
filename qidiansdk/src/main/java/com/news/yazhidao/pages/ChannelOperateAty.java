@@ -220,7 +220,10 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                moveViewGroup.removeView(mMoveView);
+                if (moveViewGroup != null && mMoveView != null) {
+                    moveViewGroup.removeView(mMoveView);
+                }
+
                 // instanceof 方法判断2边实例是不是一样，判断点击的是DragGrid还是OtherGridView
                 if (clickGridView instanceof SelectedGridView) {
                     otherAdapter.setVisible(true);
