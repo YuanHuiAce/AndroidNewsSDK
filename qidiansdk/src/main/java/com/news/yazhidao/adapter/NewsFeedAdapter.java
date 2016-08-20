@@ -342,10 +342,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tvComment.setText("");
             } else {
                 int time = (int) (between * 60 / 3600000);
-                if (time > 0)
+                if (time > 0) {
                     tvComment.setText(between * 60 / 3600000 + "分钟前");
-                else
+                }else if (time <=0){
+                    tvComment.setText("");
+                }else {
                     tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
+                }
 //                if (between / 3600000 == 0) {
 //                    tvComment.setText( between *60/ 3600000+"分钟前");
 //                } else {

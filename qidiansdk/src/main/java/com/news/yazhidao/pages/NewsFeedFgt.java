@@ -532,6 +532,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
                 if (error.toString().contains("2002")) {
                     mRefreshTitleBar.setText("已是最新数据");
                     mRefreshTitleBar.setVisibility(View.VISIBLE);

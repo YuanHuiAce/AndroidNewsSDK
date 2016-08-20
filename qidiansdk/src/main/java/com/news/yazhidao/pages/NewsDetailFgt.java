@@ -10,13 +10,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -47,13 +44,9 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.RelatedEntity;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
-//import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
-import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -63,9 +56,9 @@ import com.news.yazhidao.widget.webview.LoadWebView;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
+
+//import com.news.yazhidao.net.volley.NewsCommentRequest;
 
 //import com.news.yazhidao.utils.helper.ShareSdkHelper;
 //import com.news.yazhidao.widget.UserCommentDialog;
@@ -973,13 +966,10 @@ public class NewsDetailFgt extends BaseFragment {
 //            intent = packageManager.getLaunchIntentForPackage(packageName);
             intent=new Intent();
             intent.setClassName("com.lieying.browser","com.lieying.browser.BrowserActivity");
-//            intent.setAction(Intent.ACTION_VIEW);
-//            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra("back_to_navigation", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse(url));
             startActivity(intent);
-
-
         } else {
             intent=new Intent(Intent.ACTION_VIEW,Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
