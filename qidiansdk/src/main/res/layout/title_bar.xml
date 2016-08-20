@@ -2,14 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/title_bar_style" >
 
-    <TextView
-        android:id="@+id/mLeftBack"
+    <ImageView
+        android:id="@+id/mDetailLeftBack"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:src="@drawable/btn_left_back"
         android:background="@drawable/bg_left_back_selector"
         android:clickable="true"
-        android:drawableLeft="@drawable/btn_left_back"
-        android:paddingLeft="15dp"
+        android:padding="14dp"
+        android:scaleType="centerInside"
+        android:layout_centerVertical="true"
         />
 
     <TextView
@@ -17,8 +19,11 @@
         style="@style/title_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/drawer_btn_rss"/>
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/mDetailLeftBack"
+        android:text="@string/drawer_btn_rss"
+        android:layout_marginLeft="-2dp"
+        />
 
     <TextView
         android:id="@+id/right_text"
@@ -26,15 +31,11 @@
         android:layout_alignParentRight="true"
         android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/right_progress"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15.0dip"
-        android:indeterminateOnly="true"
-        android:visibility="gone" />
+   <View
+       android:layout_width="match_parent"
+       android:layout_height="8dp"
+       android:background="#f0f0f0f0"
+       android:layout_below="@id/mDetailLeftBack"
+       />
 
 </RelativeLayout>

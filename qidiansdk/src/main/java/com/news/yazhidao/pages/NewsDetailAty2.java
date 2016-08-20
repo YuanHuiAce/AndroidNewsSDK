@@ -91,7 +91,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
-    private TextView mDetailLeftBack
+    private ImageView mDetailLeftBack
 //            ,mDetailRightMore
             ;
     private ImageView mNewsLoadingImg;
@@ -203,7 +203,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
-        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
 //        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
 //        mDetailRightMore.setOnClickListener(this);
