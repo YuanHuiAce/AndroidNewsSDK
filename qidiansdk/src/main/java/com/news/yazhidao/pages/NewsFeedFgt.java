@@ -87,7 +87,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NetworkRequest mRequest;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String  mstrUserId, mstrChannelId, mstrKeyWord;
+    private String mstrUserId, mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -174,9 +174,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     }
 
-    public void getFirstPosition(){
-
-            mlvNewsFeed.getRefreshableView().setSelection(0);
+    public void getFirstPosition() {
+        if (mlvNewsFeed == null) {//防止listview为空
+            return;
+        }
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+            isNoteLoadDate = true;
+        } else {
+            isNoteLoadDate = false;
+        }
+        mlvNewsFeed.getRefreshableView().setSelection(0);
     }
 
 
@@ -326,7 +333,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
+        Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
@@ -587,6 +594,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     startTopRefresh();
                 } else {
                     isNoteLoadDate = false;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mlvNewsFeed.onRefreshComplete();
+                        }
+                    }, 500);
                 }
             } else {
                 mHandler.postDelayed(new Runnable() {

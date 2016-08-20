@@ -23,7 +23,6 @@ import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
