@@ -20,8 +20,8 @@
         <item name="android:windowExitAnimation">@anim/exit</item>
     </style>
     <style name="title_text_style">
-        <item name="android:textSize">@dimen/new_font8</item>
-        <item name="android:textColor">@color/new_color7</item>
+        <item name="android:textSize">@dimen/new_font1</item>
+        <item name="android:textColor">#111111</item>
     </style>
 
     <style name="main_title_bar_style">
@@ -32,7 +32,7 @@
     <style name="title_bar_style">
         <item name="android:background">@color/common_header_bg</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">48.5dip</item>
+        <item name="android:layout_height">56dip</item>
     </style>
 
     <style name="text_on_button">

@@ -24,7 +24,7 @@
     <color name="new_color11">#d3d3d3</color>
     <color name="new_color12">#fbfbfb</color>
     <color name="bg_feed_list">#e3e3e3</color>
-    <color name="common_header_bg">#f0f0f0</color>
+    <color name="common_header_bg">#ffffff</color>
     <color name="news_list_table_channelname">#ff7f66</color>
     <color name="news_list_table_devider">#e1e1e1</color>
     <color name="white">#ffffff</color>

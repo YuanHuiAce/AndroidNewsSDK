@@ -1,11 +1,9 @@
 package com.news.yazhidao.pages;
 
 
-import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -69,7 +67,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     boolean isMove = false;
     private ChannelItemDao mDao = new ChannelItemDao(this);
 
-    private View mLeftBack;
+    private View mDetailLeftBack;
 
 
     @Override
@@ -86,8 +84,8 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     protected void initializeViews() {
         userGridView = (SelectedGridView) findViewById(R.id.userGridView);
         otherGridView = (NormalGridView) findViewById(R.id.otherGridView);
-        mLeftBack = findViewById(R.id.mLeftBack);
-        mLeftBack.setOnClickListener(new View.OnClickListener() {
+        mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();

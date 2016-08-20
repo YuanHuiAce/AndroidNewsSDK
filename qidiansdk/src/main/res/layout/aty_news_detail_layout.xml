@@ -12,14 +12,15 @@
         android:layout_height="48dp"
         android:background="@color/common_header_bg">
 
-        <TextView
+        <ImageView
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:drawableLeft="@drawable/btn_left_back"
+            android:src="@drawable/btn_left_back"
             android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
-            android:paddingLeft="15dp"
+            android:padding="14dp"
+            android:scaleType="centerInside"
             />
 
 
