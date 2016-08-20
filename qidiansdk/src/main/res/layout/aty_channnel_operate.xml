@@ -28,45 +28,47 @@
             android:id="@+id/subscribe_main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/subscribe_bg"
+            android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="14.0dip">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/setting_line_bg" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@color/new_color9"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="3dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/new_color2" />
+                <!--<ImageView-->
+                <!--android:layout_width="3dp"-->
+                <!--android:layout_height="15dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:background="@color/new_color2" />-->
 
                 <TextView
                     android:id="@+id/my_category_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="13dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="13dp"
                     android:text="@string/subscribe_my_category"
-                    android:textColor="@color/new_color3"
-                    android:textSize="@dimen/new_font4" />
+                    android:textColor="@color/new_color7"
+                    android:textSize="@dimen/new_font10" />
 
             </LinearLayout>
-
-            <View
-                android:id="@+id/seperate_line"
-                style="@style/subscribe_seperate_line" />
 
             <com.news.yazhidao.widget.channel.SelectedGridView
                 android:id="@+id/userGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="19dip"
-                android:layout_marginRight="19dip"
-                android:layout_marginTop="13dp"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
                 android:gravity="center"
                 android:horizontalSpacing="26dip"
                 android:listSelector="@android:color/transparent"
@@ -76,9 +78,12 @@
                 android:verticalSpacing="8dp" />
 
             <View
+                style="@style/subscribe_seperate_line"
+                android:layout_marginTop="20dp" />
+
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:layout_marginTop="20dp"
                 android:background="@color/setting_line_bg" />
 
             <View
@@ -87,37 +92,37 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:background="@color/new_color9"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="3dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/new_color2" />
+                <!--<ImageView-->
+                <!--android:layout_width="3dp"-->
+                <!--android:layout_height="15dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:background="@color/new_color2" />-->
 
                 <TextView
                     android:id="@+id/more_category_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="13dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="13dp"
                     android:text="@string/subscribe_my_category"
-                    android:textColor="@color/new_color3"
-                    android:textSize="@dimen/new_font4" />
+                    android:textColor="@color/new_color7"
+                    android:textSize="@dimen/new_font10" />
             </LinearLayout>
 
-            <View style="@style/subscribe_seperate_line" />
 
             <com.news.yazhidao.widget.channel.NormalGridView
                 android:id="@+id/otherGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="19dip"
-                android:layout_marginRight="19dip"
-                android:layout_marginTop="13dp"
                 android:layout_marginBottom="25dp"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="16dip"
                 android:gravity="center"
                 android:horizontalSpacing="26dip"
                 android:listSelector="@android:color/transparent"
