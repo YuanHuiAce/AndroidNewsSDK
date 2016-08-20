@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/newsFeed_titleColor"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="12dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_card1"
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/image_list_LinearLayout"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="3dp">
+        android:layout_marginTop="9dp">
 
         <ImageView
             android:id="@+id/type_imageView"
@@ -148,7 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="9dp"
         android:background="@drawable/list_divider"/>
 </RelativeLayout>
 

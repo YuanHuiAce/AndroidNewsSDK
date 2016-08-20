@@ -65,7 +65,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
     public ChannelTabStrip(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.mContext = context;
-        setBackgroundColor(context.getResources().getColor(R.color.white));
+        setBackgroundColor(context.getResources().getColor(R.color.channeltabstrip_bg));
         mLayoutInflater = LayoutInflater.from(context);
         drawables = new TextDrawable[3];
         int i = 0;

@@ -14,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="0.56dp"
         android:layout_below="@id/title_bar"
-        android:background="@color/new_color5" />
+        android:background="@color/new_color5"
+        android:visibility="gone"
+        />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -262,5 +262,6 @@
     <color name="attention_line_color" >#ffe71f19</color>
     <color name="newsFeed_titleColor" >#ff111111</color>
 
+    <color name="channeltabstrip_bg">#f8f8f8</color>
 
 </resources>
