@@ -8,12 +8,10 @@ import com.google.gson.Gson;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.HistoryEntity;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.entity.UserVisitorEntity;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -260,19 +258,6 @@ public class SharedPreManager {
 
 
 
-//        UploadLogEntity uploadLogEntity = new UploadLogEntity();
-//        if (mReadData != null && mReadData.length() != 0) {
-//            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
-//
-//        }
-//        uploadLogEntity.getData().add(uploadLogDataEntity);
-//
-//        uploadLogEntity.setUid(mUserId);
-//        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
-//
-//        upLoadLogDelter(key);
-//        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
-//        return uploadLogEntity.getData().size();
     }
     public static int upLoadLogSaveList(String mUserId, String key, List<UploadLogDataEntity> list) {
 
