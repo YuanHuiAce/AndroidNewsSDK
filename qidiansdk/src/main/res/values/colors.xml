@@ -253,7 +253,7 @@
     <color name="detail_share_frame" >#ffdcdcdc</color>
     <color name="attention_lineColor" >#ffb3b3b3</color>
     <color name="search_lineBlue" >#ffb3b3b3</color>
-    <color name="search_lineBlack" >#ffe0e0e0</color>
+    <color name="search_lineBlack" >#e0e0e0</color>
     <color name="search_lineHistoryLine" >#ffe9e9e9</color>
     <color name="attention_text" >#ffdc4526</color>
     <color name="attention_line" >#ffe8e8e7</color>

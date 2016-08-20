@@ -3,7 +3,7 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="36dp"
-    android:background="@color/new_color5">
+    android:background="@color/common_header_bg">
 
     <TextView
         android:id="@+id/title_textView"
