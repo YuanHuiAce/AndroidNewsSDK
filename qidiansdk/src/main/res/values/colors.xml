@@ -263,5 +263,6 @@
     <color name="newsFeed_titleColor" >#ff111111</color>
 
     <color name="channeltabstrip_bg">#f8f8f8</color>
+    <color name="channeltabstrip_divider">#f0f0f0</color>
 
 </resources>

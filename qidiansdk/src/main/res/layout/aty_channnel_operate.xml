@@ -37,7 +37,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/setting_line_bg" />
+                android:background="@color/channeltabstrip_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,12 +81,14 @@
 
             <View
                 style="@style/subscribe_seperate_line"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:visibility="invisible"
+                />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
-                android:background="@color/setting_line_bg" />
+                android:background="@color/channeltabstrip_divider" />
 
             <View
                 android:id="@+id/seperate_line2"
