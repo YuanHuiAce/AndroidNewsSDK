@@ -16,8 +16,9 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.util.Log;
 import android.widget.ImageView.ScaleType;
+
+import com.news.yazhidao.utils.Logger;
 
 @SuppressWarnings("UnusedDeclaration")
 public class RoundedDrawable extends Drawable {
@@ -93,7 +94,7 @@ public class RoundedDrawable extends Drawable {
       if (bm != null) {
         return new RoundedDrawable(bm);
       } else {
-        Log.w(TAG, "Failed to insert bitmap from drawable!");
+        Logger.w(TAG, "Failed to insert bitmap from drawable!");
       }
     }
     return drawable;

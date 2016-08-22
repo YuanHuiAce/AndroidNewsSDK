@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -233,7 +232,7 @@ public class NewsDetailFgt extends BaseFragment {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
@@ -359,7 +358,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                Log.i("TAG", url);
+                Logger.i("TAG", url);
                 // view.loadUrl(url);
                 if (openWithWevView(url)) {//如果是超链接，执行此方法
                     startIntentBrowser("com.lieying.browser",url);
@@ -379,7 +378,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
-                Log.e("aaa","22222");
+                Logger.e("aaa","22222");
                 isWebSuccess = true;
                 mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
@@ -956,7 +955,7 @@ public class NewsDetailFgt extends BaseFragment {
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
         for (PackageInfo packageinfo : packageInfos) {
             String stemp = packageinfo.packageName;
-            Log.v("PACKAGENAME:",stemp);
+            Logger.v("PACKAGENAME:",stemp);
             if (stemp.equals(packageName)) {
                 existLY = true;
             }

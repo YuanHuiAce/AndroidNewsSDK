@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         //2.刷新数据
         MyViewPagerAdapter a = (MyViewPagerAdapter) mViewPager.getAdapter();
         NewsFeedFgt newsFeedFgt = (NewsFeedFgt) a.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-        Log.e("jigang","aaa---backFirstItemAndRefreshData");
 //        newsFeedFgt.refreshData();
         newsFeedFgt. getFirstPosition();
     }

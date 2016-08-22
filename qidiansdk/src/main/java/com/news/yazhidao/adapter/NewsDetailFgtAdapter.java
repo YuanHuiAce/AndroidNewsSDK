@@ -2,7 +2,6 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -110,7 +109,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
        mAttentionlayout.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               Log.i("aaa ", "onClick: onAttentionItemClickListener");
+               Logger.i("aaa ", "onClick: onAttentionItemClickListener");
                Intent webviewIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                String zhihuUrl =  relatedItemEntity.getUrl();
                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);

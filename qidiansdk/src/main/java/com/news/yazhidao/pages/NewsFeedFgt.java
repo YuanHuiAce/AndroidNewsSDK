@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,10 +220,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("jigang", "requestCode = " + requestCode);
+        Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
-            Log.e("jigang", "newsid = " + newsId);
+            Logger.e("jigang", "newsid = " + newsId);
 
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
@@ -335,7 +334,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mHandler.removeCallbacks(mThread);
         }
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
-        if (rootView != null) {
+        if (rootView != null && rootView.getParent() != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
     }
@@ -416,7 +415,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
         System.out.println("requestUrl:" + requestUrl);
-        Log.e("jigang", "request url =" + requestUrl);
+        Logger.e("jigang", "request url =" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
         }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
@@ -455,7 +454,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             else
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
-                            Log.i("aaa", "mlvNewsFeed.getRefreshableView().setSelection(0);");
+                            Logger.i("aaa", "mlvNewsFeed.getRefreshableView().setSelection(0);");
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);
 //                            new Handler().postDelayed(new Runnable() {
@@ -586,8 +585,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public void loadData(final int flag) {
         User user = SharedPreManager.getUser(mContext);
-        Log.e("aaa", "loaddata -----" + flag);
-        Log.e("aaa", "loadData:user === " + user);
+        Logger.e("aaa", "loaddata -----" + flag);
+        Logger.e("aaa", "loadData:user === " + user);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNoteLoadDate) {
@@ -839,7 +838,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
