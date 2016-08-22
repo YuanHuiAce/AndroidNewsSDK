@@ -313,17 +313,7 @@ public class NewsDetailFgt extends BaseFragment {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
-    @Override
-    public void onPause() {
-        super.onPause();
-        mDetailWebView.pauseTimers();
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mDetailWebView.resumeTimers();
-    }
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
