@@ -338,7 +338,12 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         @Override
         public Fragment getItem(int position) {
-            String channelId = mSelChannelItems.get(position).getId();
+            String channelId = "";
+            try {
+                channelId = mSelChannelItems.get(position).getId();
+            }catch (Exception e){
+                channelId = mSelChannelItems.get(mSelChannelItems.size() - 1).getId();
+            }
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
             feedFgt.setNewsFeedFgtPopWindow(mNewsFeedFgtPopWindow);
             feedFgt.setNewsSaveDataCallBack(MainView.this);

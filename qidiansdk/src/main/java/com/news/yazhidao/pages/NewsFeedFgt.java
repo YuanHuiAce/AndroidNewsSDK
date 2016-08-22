@@ -672,7 +672,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
         long time = (System.currentTimeMillis() - homeTime) / 1000;
-        Log.e("aaa", "time====" + time);
+        Logger.e("aaa", "time====" + time);
         if (isNewVisity && isClickHome && time >= 60) {
 //            mlvNewsFeed.setRefreshing();
 //            isListRefresh = true;

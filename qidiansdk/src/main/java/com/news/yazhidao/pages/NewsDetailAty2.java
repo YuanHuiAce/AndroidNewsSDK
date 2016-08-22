@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -235,7 +234,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("aaa","===========================onResume====================");
+        Logger.e("aaa","===========================onResume====================");
         nowTime = System.currentTimeMillis();
         mDurationStart = System.currentTimeMillis();
         if (mRefreshReceiber == null) {
@@ -249,12 +248,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("aaa","===========================onPause====================");
+        Logger.e("aaa","===========================onPause====================");
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("aaa","===========================onDestroy====================");
+        Logger.e("aaa","===========================onDestroy====================");
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
@@ -268,7 +267,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @throws IOException
      */
     private void upLoadLog() {
-        Log.e("aaa", "开始上传日志！");
+        Logger.e("aaa", "开始上传日志！");
         if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
             return;
         }
@@ -282,7 +281,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         if (saveNum >= 5) {
-            Log.e("aaa", "确认上传日志！");
+            Logger.e("aaa", "确认上传日志！");
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -566,7 +565,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //                break;
         } else if (getId == R.id.mDetailComment) {
 //            case R.id.mDetailComment:
-            Log.e("aaa", "onClick: mDetailComment ");
+            Logger.e("aaa", "onClick: mDetailComment ");
             if (!isCommentPage) {
                 isCommentPage = true;
                 mNewsDetailViewPager.setCurrentItem(1);
