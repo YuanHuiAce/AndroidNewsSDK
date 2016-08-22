@@ -184,6 +184,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             isNoteLoadDate = false;
         }
         mlvNewsFeed.getRefreshableView().setSelection(0);
+        mlvNewsFeed.getRefreshableView().smoothScrollToPosition(0);
     }
 
 
