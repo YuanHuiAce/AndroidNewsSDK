@@ -21,6 +21,7 @@ import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
+import com.news.yazhidao.utils.Logger;
 
 @TargetApi(9)
 public final class OverscrollHelper {
@@ -129,7 +130,7 @@ public final class OverscrollHelper {
 				final int newScrollValue = (deltaValue + scrollValue);
 
 				if (PullToRefreshBase.DEBUG) {
-					Log.d(LOG_TAG, "OverScroll. DeltaX: " + deltaX + ", ScrollX: " + scrollX + ", DeltaY: " + deltaY
+					Logger.d(LOG_TAG, "OverScroll. DeltaX: " + deltaX + ", ScrollX: " + scrollX + ", DeltaY: " + deltaY
 							+ ", ScrollY: " + scrollY + ", NewY: " + newScrollValue + ", ScrollRange: " + scrollRange
 							+ ", CurrentScroll: " + currentScrollValue);
 				}
