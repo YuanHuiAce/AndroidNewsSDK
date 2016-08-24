@@ -1,5 +1,6 @@
 package com.news.yazhidao.utils;
 
+
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -34,7 +35,6 @@ public class TextUtil {
         return false;
     }
 
-
     /**
      * 判断字符串是否为null 或者 长度为0 或者 只包含空字符
      *
@@ -50,19 +50,6 @@ public class TextUtil {
         }
         return false;
     }
-
-    public static String List2String(ArrayList<ChannelItem> list) {
-        if (isListEmpty(list)) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder("");
-        for (ChannelItem item : list) {
-            sb.append(item.getName()).append(",");
-        }
-        return sb.deleteCharAt(sb.length() - 1).toString();
-    }
-
-
 
     /**
      * 获取字符串的Base64格式
@@ -82,21 +69,35 @@ public class TextUtil {
         return url;
     }
 
-    /**
-     * 生成新闻详情中的css样式
-     */
-    public static String generateCSS() {
-        StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
-        cssBuilder.append("" +
-                "body { margin: 14px 18px 18px 18px; background-color: #f6f6f6;} " +
-                "h3 { margin: 0px; } " +
-                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
-                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
-                ".content img { width: 100%; }" +
-                ".p_img { text-align: center; }");
-        cssBuilder.append("</style>");
-        return cssBuilder.toString();
+    public static String List2String(ArrayList<ChannelItem> list) {
+        if (isListEmpty(list)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder("");
+        for (ChannelItem item : list) {
+            sb.append(item.getName()).append(",");
+        }
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
+
+    public static boolean isChannelChanged(ArrayList<ChannelItem> oldList, ArrayList<ChannelItem> newList) {
+        if (isListEmpty(oldList) || isListEmpty(newList)) {
+            return false;
+        }
+        for (int i = 0; i < oldList.size(); i++) {
+            ChannelItem oldItem = oldList.get(i);
+            for (int j = 0; j < newList.size(); j++) {
+                ChannelItem newItem = newList.get(j);
+                if (oldItem.getId().equals(newItem.getId())) {
+                    if (!oldItem.getOrderId().equals(newItem.getOrderId())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 解析出iframe中的video url
@@ -146,10 +147,29 @@ public class TextUtil {
         return sb.toString();
     }
 
+    /**
+     * 生成新闻详情中的css样式
+     */
+    public static String generateCSS() {
+        StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
+        cssBuilder.append("" +
+                "body { margin: 14px 18px 18px 18px; background-color: #f6f6f6;} " +
+                "h3 { margin: 0px; } " +
+                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
+                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
+                ".content img { width: 100%; }" +
+                ".p_img { text-align: center; }" +
+                ".p_video { text-align: center;position: relative; }"
+        );
+        cssBuilder.append("</style>");
+        return cssBuilder.toString();
+    }
+
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
         return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);} var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}};</script>";
     }
+
 
     /**
      * 生成新闻详情的html
