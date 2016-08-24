@@ -9,12 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -61,7 +59,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    public LocationClient mLocationClient = null;
 //    public BDLocationListener myListener = new MyLocationListener();
 //    private SimpleDraweeView mUserCenter;
-    private TextView mDetailLeftBack;
 
     /**
      * 自定义的PopWindow
@@ -110,8 +107,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
-        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
-        mDetailLeftBack.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
