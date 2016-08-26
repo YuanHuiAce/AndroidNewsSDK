@@ -8,7 +8,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -319,7 +319,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
-    FragmentStatePagerAdapter pagerAdapter;
+    FragmentPagerAdapter pagerAdapter;
 
     /**
      * 显示新闻详情和评论
@@ -342,7 +342,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 }
             }
         });
-        pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
