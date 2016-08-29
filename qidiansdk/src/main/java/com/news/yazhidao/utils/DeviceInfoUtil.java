@@ -77,6 +77,14 @@ public class DeviceInfoUtil {
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
     }
+
+    public static float obtainDensity() {
+        WindowManager wm = (WindowManager) QiDianApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.density;
+    }
+
     /**
      * 获取状态栏的高度
      * @param mContext
