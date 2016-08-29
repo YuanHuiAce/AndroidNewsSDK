@@ -26,7 +26,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
     public static final int REQUEST_CODE = 1030;
 
     public NewsDetailFgtAdapter(Activity context) {
-        super(R.layout.item_news_detail_relate_attention,context,null);
+            super(R.layout.item_news_detail_relate_attention,context,null);
         this.mContext = context;
     }
 
