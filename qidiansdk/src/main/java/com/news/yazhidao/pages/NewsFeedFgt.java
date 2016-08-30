@@ -547,12 +547,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                         }
                     }, 1000);
-                } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
+                } else if (error.toString().contains("4003")) {//说明三方登录已过期,防止开启3个loginty
                     User user = SharedPreManager.getUser(getActivity());
                     user.setUtype("2");
                     SharedPreManager.saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
+                    UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+                        @Override
+                        public void registeSuccess() {
+                            loadData(flag);
+                        }
+                    });
                 }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);

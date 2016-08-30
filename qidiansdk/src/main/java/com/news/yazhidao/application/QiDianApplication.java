@@ -5,6 +5,7 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -14,40 +15,42 @@ public class QiDianApplication {
     private static QiDianApplication mInstance;
     private RequestQueue mRequestQueue;
 
-    public static void initQDApp(Context context){
+    public static void initQDApp(Context context) {
         mContext = context;
         mInstance = new QiDianApplication();
-
-
-        Fresco.initialize(context);
-
     }
 
-    QiDianApplication (){
-       mInstance = this;
+    QiDianApplication() {
+        mInstance = this;
+        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig
+                .newBuilder(mContext).setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(mContext, imagePipelineConfig);
     }
-//    public void onCreate() {
+
+    //    public void onCreate() {
 //        mContext=this;
 //        mInstance = this;
-        //在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
+    //在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
 //        CrashHandler crashHandler = CrashHandler.getInstance();
 //        crashHandler.init(this);
 //        PushAgent mPushAgent = PushAgent.getInstance(this);
 //        mPushAgent.setDebugMode(false);
 //        mPushAgent.setNotificationClickHandler(notificationClickHandler);
-        //init fresco
+    //init fresco
 //        Fresco.initialize(this);
 //        String device_token = UmengRegistrar.getRegistrationId(this);
 //        Logger.e("device_token","token="+device_token);
 //        super.onCreate();
 //    }
-    public static Context getAppContext(){
+    public static Context getAppContext() {
         return mContext;
     }
+
     /**
      * 该Handler是在BroadcastReceiver中被调用，故
      * 如果需启动Activity，需添加Intent.FLAG_ACTIVITY_NEW_TASK
-     * */
+     */
 //    UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler(){
 //
 //        @Override
@@ -119,9 +122,8 @@ public class QiDianApplication {
 //            }
 //        }
 //    };
-
     public static synchronized QiDianApplication getInstance() {
-        if (null == mInstance){
+        if (null == mInstance) {
             mInstance = new QiDianApplication();
         }
         return mInstance;
