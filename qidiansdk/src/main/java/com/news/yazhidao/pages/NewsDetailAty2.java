@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -267,23 +268,30 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @throws IOException
      */
     private void upLoadLog() {
-        Logger.e("aaa", "开始上传日志！");
+        Log.e("aaa", "开始上传日志！");
         if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
             return;
         }
-        UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+        final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
         uploadLogDataEntity.setN(mNewsFeed.getNid() + "");
         uploadLogDataEntity.setC(mNewsFeed.getChannel() + "");
         uploadLogDataEntity.setT("0");
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
-        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-        if (saveNum >= 5) {
-            Logger.e("aaa", "确认上传日志！");
-            Gson gson = new Gson();
-            LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
+        final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
+        String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        LocationEntity locationEntity = null;
+        Gson gson = new Gson();
+        locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
+        if(!TextUtil.isEmptyString(LogData)){
+            SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+        }
+
+//        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+//        if (saveNum >= 5) {
+        Logger.e("aaa", "确认上传日志！");
+
+
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             String userid = null, p = null, t = null, i = null;
             try {
@@ -301,7 +309,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
 
             String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                    "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+                    "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData)?gson.toJson(uploadLogDataEntity):SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
             Logger.d("aaa", "url===" + url);
 
             UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
@@ -312,11 +320,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
                 }
             });
             requestQueue.add(request);
-        }
+//        }
     }
 
     FragmentPagerAdapter pagerAdapter;
