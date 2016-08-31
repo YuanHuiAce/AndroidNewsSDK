@@ -131,10 +131,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         this.mNewsSaveCallBack = listener;
     }
 
-    boolean isNoteLoadDate;
+    boolean isNotLoadData;
 
     public void setNewsFeed(ArrayList<NewsFeed> results) {
-        isNoteLoadDate = true;
+        isNotLoadData = true;
         this.mArrNewsFeed = results;
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -178,9 +178,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             return;
         }
         if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-            isNoteLoadDate = true;
+            isNotLoadData = true;
         } else {
-            isNoteLoadDate = false;
+            isNotLoadData = false;
         }
         mlvNewsFeed.getRefreshableView().setSelection(0);
         mlvNewsFeed.getRefreshableView().smoothScrollToPosition(0);
@@ -191,7 +191,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mlvNewsFeed == null) {//防止listview为空
             return;
         }
-        isNoteLoadDate = false;
+        isNotLoadData = false;
         mThread = new Runnable() {
             @Override
             public void run() {
@@ -306,7 +306,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void run() {
 //                mlvNewsFeed.setRefreshing();
-                loadData(PULL_DOWN_REFRESH);
+                /**
+                 *  梁帅： 2016.08.31 修改加载逻辑
+                 *  如果有数据，拿数据的一条的是时间是下拉刷新
+                 *  如果没有数据，直接加载
+                 */
+
+                ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                if(!TextUtil.isListEmpty(arrNewsFeed)){
+                    loadData(PULL_DOWN_REFRESH);
+                }else{
+                    loadData(PULL_UP_REFRESH);
+                }
+
                 isListRefresh = false;
 
             }
@@ -595,14 +607,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         Logger.e("aaa", "loadData:user === " + user);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
-                if (!isNoteLoadDate) {
+                if (!isNotLoadData) {
                     if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
                     } else if (!TextUtil.isEmptyString(mstrChannelId))
                         loadNewsFeedData("recommend", flag);
                     startTopRefresh();
                 } else {
-                    isNoteLoadDate = false;
+                    isNotLoadData = false;
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
