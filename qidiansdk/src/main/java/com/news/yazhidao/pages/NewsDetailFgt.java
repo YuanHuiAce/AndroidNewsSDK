@@ -362,7 +362,6 @@ public class NewsDetailFgt extends BaseFragment {
             public void After() {
                 Logger.e("aaa","22222");
                 isWebSuccess = true;
-                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 //                Log.e("aaa","1111");
             }
@@ -900,13 +899,27 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mDetailWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDetailWebView.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             mNewsDetailHeaderView.removeView(mDetailWebView);
         }
-
+        mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
+        System.exit(0);
     }
 
     public interface  ShowCareforLayout{
