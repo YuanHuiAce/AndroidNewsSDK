@@ -283,7 +283,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
             currentPosition = position;
             currentPositionOffset = positionOffset;
 
-            scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+            scrollToChild(position, 0);
             invalidate();
         }
 
