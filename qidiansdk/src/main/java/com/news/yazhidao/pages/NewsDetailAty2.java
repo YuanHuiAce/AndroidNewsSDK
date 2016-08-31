@@ -316,11 +316,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 @Override
                 public void onResponse(String response) {
                     SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                    Logger.e("aaa", "上传日志成功！");
+                    /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
+                    System.exit(0);
+
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                    Logger.e("aaa", "上传日志失败！");
+                    /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
+                    System.exit(0);
                 }
             });
             requestQueue.add(request);

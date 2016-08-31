@@ -919,7 +919,6 @@ public class NewsDetailFgt extends BaseFragment {
         }
         mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
-        System.exit(0);
     }
 
     public interface  ShowCareforLayout{
