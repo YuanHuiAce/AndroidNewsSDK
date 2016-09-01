@@ -45,6 +45,7 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -334,6 +335,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
                 "text/html", "utf-8", null);

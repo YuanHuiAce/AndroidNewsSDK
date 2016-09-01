@@ -167,8 +167,7 @@ public class TextUtil {
 
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
-        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);} var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}};</script>";
-    }
+        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";    }
 
 
     /**
@@ -223,7 +222,7 @@ public class TextUtil {
                     contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "')\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
-                    int w = (int) (DeviceInfoUtil.getScreenWidth() / 3 - DeviceInfoUtil.obtainDensity());
+                    int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
                     int h = (int) (w * 0.75);
                     String url = parseVideoUrl(vid, w, h);
                     contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
