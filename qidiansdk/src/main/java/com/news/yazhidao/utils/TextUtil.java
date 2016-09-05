@@ -167,13 +167,13 @@ public class TextUtil {
 
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
-        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";    }
+        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url,isLoadImag){console.log(\"img pro \"+url);if(!isLoadImag){return}if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";    }
 
 
     /**
      * 生成新闻详情的html
      */
-    public static String genarateHTML(NewsDetail detail, int textSize) {
+    public static String genarateHTML(NewsDetail detail, int textSize,boolean isLoadImgs) {
         if (detail == null) {
             return "";
         }
@@ -219,7 +219,8 @@ public class TextUtil {
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "')\"></p>");
+                    /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "',"+isLoadImgs+")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
