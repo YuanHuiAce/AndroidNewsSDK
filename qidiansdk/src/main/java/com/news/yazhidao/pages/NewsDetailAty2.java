@@ -312,6 +312,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         Logger.d("aaa", "url===" + url);
 
+
         final UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

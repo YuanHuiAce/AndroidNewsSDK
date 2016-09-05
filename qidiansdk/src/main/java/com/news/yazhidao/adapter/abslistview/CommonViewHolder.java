@@ -1,5 +1,6 @@
 package com.news.yazhidao.adapter.abslistview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 
@@ -109,6 +112,22 @@ public class CommonViewHolder {
         SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
             imageView.setImageURI(Uri.parse(strImg));
+            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        }
+    }
+
+
+    public void setIsWifiSimpleDraweeViewURI(Context mContext,int draweeView, String strImg) {
+        SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            //梁帅：如果不是WiFi状态下，不加载图片
+            if(NetUtil.isWifi(mContext)){
+                imageView.setImageURI(Uri.parse(strImg));
+            }else{
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
+            }
+
+
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
     }

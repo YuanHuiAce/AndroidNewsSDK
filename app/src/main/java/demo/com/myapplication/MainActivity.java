@@ -3,6 +3,7 @@ package demo.com.myapplication;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,5 +48,16 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //设置频道的回调
         mainView.onActivityResult(requestCode, resultCode, data);
+    }
+    //梁帅: 点击返回如果不喜欢窗口是显示的，隐藏它；
+    //如果是不显示的直接退出
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mainView != null && mainView.closePopWindow()) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
