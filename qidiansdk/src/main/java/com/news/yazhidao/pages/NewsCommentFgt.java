@@ -36,9 +36,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-//import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -51,6 +49,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+//import com.news.yazhidao.net.volley.NewsCommentRequest;
 
 //import com.news.yazhidao.widget.UserCommentDialog;
 

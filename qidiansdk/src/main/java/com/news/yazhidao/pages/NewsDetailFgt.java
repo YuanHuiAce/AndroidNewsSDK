@@ -46,6 +46,7 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
@@ -336,6 +337,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
                 "text/html", "utf-8", null);
@@ -908,12 +910,25 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mDetailWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDetailWebView.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             mNewsDetailHeaderView.removeView(mDetailWebView);
         }
-
+        mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
     }
 

@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -235,7 +234,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        Logger.e("aaa","===========================onResume====================");
+        Logger.e("aaa", "===========================onResume====================");
         nowTime = System.currentTimeMillis();
         mDurationStart = System.currentTimeMillis();
         if (mRefreshReceiber == null) {
@@ -249,12 +248,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.e("aaa","===========================onPause====================");
+        Logger.e("aaa", "===========================onPause====================");
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Logger.e("aaa","===========================onDestroy====================");
+        Logger.e("aaa", "===========================onDestroy====================");
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
@@ -268,7 +268,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @throws IOException
      */
     private void upLoadLog() {
-        Log.e("aaa", "开始上传日志！");
+        Logger.e("aaa", "开始上传日志！");
         if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
             return;
         }
@@ -279,11 +279,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
         final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        final String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        final String LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
         LocationEntity locationEntity = null;
         Gson gson = new Gson();
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-        if(!TextUtil.isEmptyString(LogData)){
+        if (!TextUtil.isEmptyString(LogData)) {
             SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         }
 
@@ -292,41 +292,53 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         Logger.e("aaa", "确认上传日志！");
 
 
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String userid = null, p = null, t = null, i = null;
-            try {
-                userid = URLEncoder.encode(mUserId + "", "utf-8");
-                if (locationEntity != null) {
-                    if (locationEntity.getProvince() != null)
-                        p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
-                    if (locationEntity.getCity() != null)
-                        t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                    if (locationEntity.getDistrict() != null)
-                        i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String userid = null, p = null, t = null, i = null;
+        try {
+            userid = URLEncoder.encode(mUserId + "", "utf-8");
+            if (locationEntity != null) {
+                if (locationEntity.getProvince() != null)
+                    p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
+                if (locationEntity.getCity() != null)
+                    t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+                if (locationEntity.getDistrict() != null)
+                    i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
             }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
-            String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                    "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData)?gson.toJson(uploadLogDataEntity):SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-            Logger.d("aaa", "url===" + url);
+        String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+        Logger.d("aaa", "url===" + url);
 
-            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    if(!TextUtil.isEmptyString(LogData)){
+
+        final UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!TextUtil.isEmptyString(LogData)) {
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                }
+                Logger.e("aaa", "上传日志成功！");
+                /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
+                System.exit(0);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (!error.getMessage().contains("302")) {
+                    SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                }else {
+                    if (!TextUtil.isEmptyString(LogData)) {
                         SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                     }
-
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-                }
-            });
-            requestQueue.add(request);
+                Logger.e("aaa", "上传日志失败！" + error.getMessage());
+                /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
+                System.exit(0);
+            }
+        });
+        requestQueue.add(request);
 //        }
     }
 
@@ -519,6 +531,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         return super.onKeyDown(keyCode, event);
     }
+
     //
     @Override
     public void finish() {
@@ -536,9 +549,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //            Intent main = new Intent(this, MainAty.class);
 //            startActivity(main);
 //        }
-        }catch (Exception e)
-        {
-            System.out.println("DetailAty2:"+e.toString());
+        } catch (Exception e) {
+            System.out.println("DetailAty2:" + e.toString());
         }
     }
 
