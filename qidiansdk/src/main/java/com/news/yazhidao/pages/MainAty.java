@@ -265,24 +265,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
-//                dislikePopupWindow.setVisibility(View.GONE);
-//                return true;
-//            }
-//            long pressedBackKeyTime = System.currentTimeMillis();
-//            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
-//                finish();
-//            } else {
-//                if (DeviceInfoUtil.isFlyme()) {
-//                    ToastUtil.toastShort(getString(R.string.press_back_again_exit));
-//                } else {
-//                    ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-//                }
-//                mLastPressedBackKeyTime = pressedBackKeyTime;
-//                return true;
-//            }
-//        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
+                dislikePopupWindow.setVisibility(View.GONE);
+                return true;
+            }
+        }
 
         return super.onKeyDown(keyCode, event);
     }

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -356,13 +358,19 @@ public class NewsDetailFgt extends BaseFragment {
                 return true;
             }
 
+
         });
+        //梁帅：如果不是WiFi状态下，不加载图片
+        if(NetUtil.isWifi(getActivity())){
+            mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
+        }else{
+            mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
+        }
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
                 Logger.e("aaa","22222");
                 isWebSuccess = true;
-                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 //                Log.e("aaa","1111");
             }

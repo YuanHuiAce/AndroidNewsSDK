@@ -279,7 +279,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
         final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        final String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
         LocationEntity locationEntity = null;
         Gson gson = new Gson();
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
@@ -315,7 +315,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                    if(!TextUtil.isEmptyString(LogData)){
+                        SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                    }
+
                 }
             }, new Response.ErrorListener() {
                 @Override

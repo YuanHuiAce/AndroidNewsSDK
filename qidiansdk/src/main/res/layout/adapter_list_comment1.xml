@@ -47,20 +47,25 @@
         <!--android:layout_toRightOf="@+id/iv_user_icon"-->
         <!--android:textColor="@color/new_color3"-->
         <!--android:textSize="@dimen/new_font5" />-->
+
+        <!--梁帅：隐藏点赞数量 android:visibility="invisible"-->
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_praise_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/new_color3"
             android:text="1212121"
-            android:textSize="@dimen/new_font5"/>
+            android:textSize="@dimen/new_font5"
+            android:visibility="invisible"/>
+        <!--梁帅：隐藏点赞图片 android:visibility="invisible"-->
         <ImageView
             android:id="@+id/iv_praise"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:scaleType="centerInside"
             android:layout_marginBottom="3dp"
-            android:src="@drawable/bg_normal_praise"/>
+            android:src="@drawable/bg_normal_praise"
+            android:visibility="invisible"/>
 
 
     </LinearLayout>

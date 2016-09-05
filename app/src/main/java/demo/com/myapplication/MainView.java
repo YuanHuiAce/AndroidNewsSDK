@@ -384,4 +384,17 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     };
 
+    /**
+     * 梁帅：隐藏不喜欢窗口的方法
+     * @return
+     */
+    public boolean closePopWindow(){
+        if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
+            dislikePopupWindow.setVisibility(View.GONE);
+            return true;
+        }
+        return false;
+    }
+
+
 }

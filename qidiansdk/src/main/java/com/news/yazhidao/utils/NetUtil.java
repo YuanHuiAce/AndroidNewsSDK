@@ -58,7 +58,7 @@ public class NetUtil {
 	 * @param context
 	 * @return
 	 */
-	private static boolean isWIFIConnection(Context context) {
+	public static boolean isWIFIConnection(Context context) {
 
 		// 获取到系统服务�?—关于链接的管理
 		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -69,4 +69,21 @@ public class NetUtil {
 		}
 		return false;
 	}
+	/**
+	 * 判断网络是不是WIFI
+	 * @param mContext
+	 * @return
+	 */
+	public static boolean isWifi(Context mContext) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) mContext
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+		if (activeNetInfo != null
+				&& activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+			return true;
+		}
+		return false;
+	}
+
+
 }
