@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
@@ -25,6 +26,7 @@ import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
@@ -394,6 +396,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             return true;
         }
         return false;
+    }
+
+    /**
+     * 梁帅：设置是否 不显示图片
+     */
+    public void setNotShowImages(boolean isShow){
+        SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, isShow);
     }
 
 

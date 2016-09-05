@@ -17,6 +17,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 
 /**
@@ -117,14 +118,14 @@ public class CommonViewHolder {
     }
 
 
-    public void setIsWifiSimpleDraweeViewURI(Context mContext,int draweeView, String strImg) {
+    public void setIsShowImagesSimpleDraweeViewURI(Context mContext,int draweeView, String strImg) {
         SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            //梁帅：如果不是WiFi状态下，不加载图片
-            if(NetUtil.isWifi(mContext)){
-                imageView.setImageURI(Uri.parse(strImg));
-            }else{
+            //梁帅：判断图片是不是  不显示
+            if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
+            }else{
+                imageView.setImageURI(Uri.parse(strImg));
             }
 
 

@@ -56,4 +56,5 @@ public final class CommonConstant {
     public static final int TEXT_SIZE_BIG = 19;
     public static final int TEXT_SIZE_BIGGER = 21;
     public static final String CHANGE_TEXT_ACTION = "change_text";
+    public static final String TYPE_SHOWIMAGES = "showImagesType";
 }

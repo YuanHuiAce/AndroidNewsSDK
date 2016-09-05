@@ -192,7 +192,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                break;
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
 //            case R.layout.qd_ll_news_item_one_pic:
-                holder.setIsWifiSimpleDraweeViewURI(mContext,R.id.title_img_View, feed.getImgs().get(0));
+                holder.setIsShowImagesSimpleDraweeViewURI(mContext,R.id.title_img_View, feed.getImgs().get(0));
             final String strTitle = feed.getTitle();
             if (isFavorite) {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -263,7 +263,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
         else if (layoutId==R.layout.ll_news_big_pic2)
         {
-            holder.setIsWifiSimpleDraweeViewURI(mContext,R.id.title_img_View, feed.getImgs().get(0));
+            holder.setIsShowImagesSimpleDraweeViewURI(mContext,R.id.title_img_View, feed.getImgs().get(0));
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
 //            if (isFavorite) {
 //                setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -283,9 +283,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         else if (layoutId == R.layout.qd_ll_news_card) {
 //            case R.layout.qd_ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-            holder.setIsWifiSimpleDraweeViewURI(mContext,R.id.image_card1, strArrImgUrl.get(0));
-            holder.setIsWifiSimpleDraweeViewURI(mContext,R.id.image_card2, strArrImgUrl.get(1));
-            holder.setIsWifiSimpleDraweeViewURI(mContext,R.id.image_card3, strArrImgUrl.get(2));
+            holder.setIsShowImagesSimpleDraweeViewURI(mContext,R.id.image_card1, strArrImgUrl.get(0));
+            holder.setIsShowImagesSimpleDraweeViewURI(mContext,R.id.image_card2, strArrImgUrl.get(1));
+            holder.setIsShowImagesSimpleDraweeViewURI(mContext,R.id.image_card3, strArrImgUrl.get(2));
             setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card1), 15, 1, 3);
             setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card3), 1, 15, 3);

@@ -362,11 +362,12 @@ public class NewsDetailFgt extends BaseFragment {
 
 
         });
-        //梁帅：如果不是WiFi状态下，不加载图片
-        if(NetUtil.isWifi(getActivity())){
-            mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
-        }else{
+        //梁帅：判断图片是不是  不显示
+        if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
             mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
+        }else{
+            mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
+
         }
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
