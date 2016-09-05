@@ -220,7 +220,7 @@ public class TextUtil {
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);
                     /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "',"+isLoadImgs+")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "',"+!isLoadImgs+")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());

@@ -399,7 +399,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-     * 梁帅：设置是否 不显示图片
+     * 梁帅：设置是否是  智能模式（不显示图片）
      */
     public void setNotShowImages(boolean isShow){
         SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, isShow);
