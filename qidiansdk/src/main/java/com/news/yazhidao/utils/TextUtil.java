@@ -182,7 +182,7 @@ public class TextUtil {
             titleTextSize = 20;
             commentTextSize = 13;
             contentTextSize = 17;
-        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
+        } else if (textSize == CommonConstant.TEXT_SIZE_SMALL) {
             titleTextSize = 22;
             commentTextSize = 15;
             contentTextSize = 18;

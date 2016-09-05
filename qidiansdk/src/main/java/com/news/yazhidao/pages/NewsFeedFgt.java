@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.NetworkRequest;
 import android.os.Bundle;
@@ -113,6 +114,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
+    private RefreshReceiver mRefreshReciver;
 
 
     public interface NewsSaveDataCallBack {
@@ -215,6 +217,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
+        /** 梁帅：注册修改字体大小的广播*/
+        mRefreshReciver = new RefreshReceiver();
+        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
+        mContext.registerReceiver(mRefreshReciver, intentFilter);
+
     }
 
     @Override
@@ -758,14 +765,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     };
 
-    private class RefreshReceiver extends BroadcastReceiver {
+    public class RefreshReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
                 Logger.e("aaa", "文字的改变！！！");
-//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-//                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -924,5 +929,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
     }
+    public void setTextSize(){
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 
 }

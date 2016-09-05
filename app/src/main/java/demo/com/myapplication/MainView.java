@@ -3,6 +3,7 @@ package demo.com.myapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -59,7 +60,15 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
-
+    public enum FONTSIZE{TEXT_SIZE_SMALL(16),TEXT_SIZE_NORMAL(18),TEXT_SIZE_BIG(20);
+        int size;
+        FONTSIZE(int i) {
+            size = i;
+        }
+        public int getfontsize(){
+            return size;
+        }
+    }
 
     FragmentActivity activity;
     //baidu Map
@@ -201,13 +210,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void loadData() {
 
-		 UserManager.registerVisitor(activity,null);
-    //    mHandler.postDelayed(new Runnable() {
-     //       @Override
+        UserManager.registerVisitor(activity,null);
+        //    mHandler.postDelayed(new Runnable() {
+        //       @Override
 //public void run() {
-   //             UmengUpdateAgent.setUpdateAutoPopup(true);
-    //            UmengUpdateAgent.update(MainAty.this);
-    //        }
+        //             UmengUpdateAgent.setUpdateAutoPopup(true);
+        //            UmengUpdateAgent.update(MainAty.this);
+        //        }
         //}, 2000);
     }
 
@@ -323,7 +332,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     }
                 }
             }
-                return POSITION_NONE;
+            return POSITION_NONE;
 //            if (index == -1) {
 //                return POSITION_NONE;
 //            } else {
@@ -375,11 +384,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
         public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
-                mNewsFeedAdapter = mAdapter;
-                view.getLocationInWindow(LocationInWindow);
+            mNewsFeedAdapter = mAdapter;
+            view.getLocationInWindow(LocationInWindow);
 
-                dislikePopupWindow.setSourceList("来源：" + PubName);
-                dislikePopupWindow.showView(x, y -LocationInWindow[1]);
+            dislikePopupWindow.setSourceList("来源：" + PubName);
+            dislikePopupWindow.showView(x, y -LocationInWindow[1]);
 
 
         }
@@ -403,6 +412,18 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      */
     public void setNotShowImages(boolean isShow){
         SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, isShow);
+    }
+
+    /**
+     * 梁帅：修改全局字体文字大小
+     * @param fontSize
+     * {@link FONTSIZE}
+     */
+    public void setTextSize(FONTSIZE fontSize) {
+        SharedPreManager.save("showflag", "textSize", fontSize.getfontsize());
+        Intent intent = new Intent();
+        intent.setAction(CommonConstant.CHANGE_TEXT_ACTION);
+        activity.sendBroadcast(intent);
     }
 
 
