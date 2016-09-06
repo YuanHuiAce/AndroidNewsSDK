@@ -121,7 +121,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsDetailCommentDao newsDetailCommentDao;
 
     private LinearLayout careforLayout;
-    boolean isFavorite;
+//    boolean isFavorite;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
 
@@ -292,7 +292,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         Logger.e("aaa", "确认上传日志！");
 
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         String userid = null, p = null, t = null, i = null;
         try {
             userid = URLEncoder.encode(mUserId + "", "utf-8");
@@ -375,7 +375,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mUrl);
                     args.putString(NewsDetailFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
-                    detailFgt.setShowCareforLayout(mShowCareforLayout);
+//                    detailFgt.setShowCareforLayout(mShowCareforLayout);
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
@@ -400,11 +400,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
-        try {
-            Logger.e("aaa", "刚刚进入============" + SharedPreManager.myFavoriteGetList().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Logger.e("aaa", "刚刚进入============" + SharedPreManager.myFavoriteGetList().toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
         mNewsLoadingImg.setVisibility(View.GONE);
@@ -423,12 +423,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         uuid = DeviceInfoUtil.getUUID();
 
-        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-        if (isFavorite) {
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-        } else {
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-        }
+//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        if (isFavorite) {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        } else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//        }
 
         Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
@@ -636,17 +636,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         }
     }
-
-    public void shareDismiss() {
-        mivShareBg.startAnimation(mAlphaAnimationOut);
-        mivShareBg.setVisibility(View.INVISIBLE);
-        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-        if (isFavorite) {
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-        } else {
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-        }
-    }
+/** 梁帅： 因为收藏才注释*/
+//    public void shareDismiss() {
+//        mivShareBg.startAnimation(mAlphaAnimationOut);
+//        mivShareBg.setVisibility(View.INVISIBLE);
+//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        if (isFavorite) {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        } else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//        }
+//    }
 
 //    private void configViewPagerViews() {
 //        mDetailHeader.setBackgroundColor(getResources().getColor(R.color.black));
@@ -801,86 +801,86 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     }
 
-    ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
-        @Override
-        public void show() {
-            CareForAnimation(true);
-        }
-    };
+//    ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
+//        @Override
+//        public void show() {
+//            CareForAnimation(true);
+//        }
+//    };
 
-    public void CareForAnimation(final boolean isCarefor) {
-        if (isCarefor) {
-            carefor_Image.setImageResource(R.drawable.carefor_image);
-            carefor_Text.setText("将推荐更多此类文章");
-        } else {
-            carefor_Image.setImageResource(R.drawable.hook_image);
-            if (isFavorite) {
-                isFavorite = false;
-                carefor_Text.setText("收藏已取消");
-                SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
-                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-            } else {
-                isFavorite = true;
-                carefor_Text.setText("收藏成功");
-                SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
-                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-            }
-
-        }
-
-        //图片渐变模糊度始终
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-        //渐变时间
-        alphaAnimation.setDuration(500);
-        careforLayout.startAnimation(alphaAnimation);
-        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                if (careforLayout.getVisibility() == View.GONE) {
-                    careforLayout.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
-                        //渐变时间
-                        alphaAnimationEnd.setDuration(500);
-                        careforLayout.startAnimation(alphaAnimationEnd);
-                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                if (careforLayout.getVisibility() == View.VISIBLE) {
-                                    careforLayout.setVisibility(View.GONE);
-                                }
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                    }
-                }, 1000);
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
+//    public void CareForAnimation(final boolean isCarefor) {
+//        if (isCarefor) {
+//            carefor_Image.setImageResource(R.drawable.carefor_image);
+//            carefor_Text.setText("将推荐更多此类文章");
+//        } else {
+//            carefor_Image.setImageResource(R.drawable.hook_image);
+//            if (isFavorite) {
+//                isFavorite = false;
+//                carefor_Text.setText("收藏已取消");
+//                SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+//                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//            } else {
+//                isFavorite = true;
+//                carefor_Text.setText("收藏成功");
+//                SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+//                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//            }
+//
+//        }
+//
+//        //图片渐变模糊度始终
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+//        //渐变时间
+//        alphaAnimation.setDuration(500);
+//        careforLayout.startAnimation(alphaAnimation);
+//        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//                if (careforLayout.getVisibility() == View.GONE) {
+//                    careforLayout.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
+//                        //渐变时间
+//                        alphaAnimationEnd.setDuration(500);
+//                        careforLayout.startAnimation(alphaAnimationEnd);
+//                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
+//                            @Override
+//                            public void onAnimationStart(Animation animation) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onAnimationEnd(Animation animation) {
+//                                if (careforLayout.getVisibility() == View.VISIBLE) {
+//                                    careforLayout.setVisibility(View.GONE);
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onAnimationRepeat(Animation animation) {
+//
+//                            }
+//                        });
+//                    }
+//                }, 1000);
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//    }
 
 }

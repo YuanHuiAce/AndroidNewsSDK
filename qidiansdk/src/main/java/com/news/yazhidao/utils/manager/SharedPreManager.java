@@ -296,96 +296,96 @@ public class SharedPreManager {
         remove(CommonConstant.UPLOAD_LOG, key);
     }
 
-
-    /**
-     * 收藏本地版
-     * @param bean
-     */
-    public static void myFavoriteSaveList(NewsFeed bean){
-        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
-        try {
-            list = myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        list.add(bean);
-        Gson gson = new Gson();
-        String str = gson.toJson(list);
-        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
-    }
-    public static boolean myFavoriteisSame(String newsID){
-        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
-        try {
-            list = myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-        Logger.d("bbb", "newsID==" + newsID);
-        Logger.e("aaa","收藏的数据======"+list.toString());
-        for(int i = 0; i < list.size(); i++){
-//            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
-            if(newsID.equals(list.get(i).getNid()+"")){
-                return true;
-            }
-        }
-        return false;
-    }
-    public static ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
-        Gson gson = new Gson();
-        String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
-        JSONArray array;
-        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
-        array = new JSONArray(mf);
-        for (int i = 0; i < array.length(); i++) {
-            String str = array.getString(i);
-            NewsFeed bean = gson.fromJson(str, NewsFeed.class);
-            list.add(bean);
-
-        }
-        return list;
-
-    }
-    public static void myFavoritRemoveItem(String newsID){
-        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
-        try {
-            list = myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        for(int i = 0; i < list.size(); i++){
-            if (newsID.equals(list.get(i).getNid() + "")) {
-                list.remove(i);
-                Gson gson = new Gson();
-                String str = gson.toJson(list);
-                save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
-            }
-        }
-    }
-
-    public static ArrayList<NewsFeed> myFavoritRemoveList(ArrayList<NewsFeed> deleteList){
-        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
-        try {
-            list = myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//        Logger.e("aaa","1111111111111"+list.size());
-//        list.removeAll(deleteList);
-//        Logger.e("aaa","2222222222222"+list.size());
+/** 梁帅： 因为收藏才注释*/
+//    /**
+//     * 收藏本地版
+//     * @param bean
+//     */
+//    public static void myFavoriteSaveList(NewsFeed bean){
+//        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+//        try {
+//            list = myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        list.add(bean);
 //        Gson gson = new Gson();
 //        String str = gson.toJson(list);
 //        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
-        for(NewsFeed bean : deleteList){
-            myFavoritRemoveItem(bean.getNid()+"");
-        }
-        try {
-            list = myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+//    }
+//    public static boolean myFavoriteisSame(String newsID){
+//        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+//        try {
+//            list = myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        Logger.d("bbb", "newsID==" + newsID);
+//        Logger.e("aaa","收藏的数据======"+list.toString());
+//        for(int i = 0; i < list.size(); i++){
+////            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
+//            if(newsID.equals(list.get(i).getNid()+"")){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//    public static ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
+//        Gson gson = new Gson();
+//        String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
+//        JSONArray array;
+//        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+//        array = new JSONArray(mf);
+//        for (int i = 0; i < array.length(); i++) {
+//            String str = array.getString(i);
+//            NewsFeed bean = gson.fromJson(str, NewsFeed.class);
+//            list.add(bean);
+//
+//        }
+//        return list;
+//
+//    }
+//    public static void myFavoritRemoveItem(String newsID){
+//        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+//        try {
+//            list = myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        for(int i = 0; i < list.size(); i++){
+//            if (newsID.equals(list.get(i).getNid() + "")) {
+//                list.remove(i);
+//                Gson gson = new Gson();
+//                String str = gson.toJson(list);
+//                save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+//            }
+//        }
+//    }
+//
+//    public static ArrayList<NewsFeed> myFavoritRemoveList(ArrayList<NewsFeed> deleteList){
+//        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+//        try {
+//            list = myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+////        Logger.e("aaa","1111111111111"+list.size());
+////        list.removeAll(deleteList);
+////        Logger.e("aaa","2222222222222"+list.size());
+////        Gson gson = new Gson();
+////        String str = gson.toJson(list);
+////        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+//        for(NewsFeed bean : deleteList){
+//            myFavoritRemoveItem(bean.getNid()+"");
+//        }
+//        try {
+//            list = myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 
 
     /**
