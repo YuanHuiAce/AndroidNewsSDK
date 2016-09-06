@@ -6,23 +6,24 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_feed_list_select">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/title_img_View"
         android:layout_width="84dp"
         android:layout_height="63dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="12dp"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/bg_load_default_small"
-        fresco:placeholderImageScaleType="centerCrop"
-        fresco:roundBottomLeft="false"
-        fresco:roundBottomRight="false"
-        fresco:roundTopLeft="false"
-        fresco:roundTopRight="false"
-        fresco:roundedCornerRadius="2dp"
-        fresco:roundingBorderColor="@color/new_color4"
-        fresco:roundingBorderWidth="1px"/>
+        android:layout_marginTop="12dp"/>
+        <!--fresco:actualImageScaleType="centerCrop"-->
+        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+        <!--fresco:placeholderImageScaleType="centerCrop"-->
+        <!--fresco:roundBottomLeft="false"-->
+        <!--fresco:roundBottomRight="false"-->
+        <!--fresco:roundTopLeft="false"-->
+        <!--fresco:roundTopRight="false"-->
+        <!--fresco:roundedCornerRadius="2dp"-->
+        <!--fresco:roundingBorderColor="@color/new_color4"-->
+        <!--fresco:roundingBorderWidth="1px"-->
+        <!--/>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,15 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
+            <com.news.yazhidao.widget.EllipsizeEndTextView
                 android:id="@+id/title_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/usual_margin"
                 android:layout_marginRight="@dimen/usual_margin"
                 android:layout_toLeftOf="@+id/title_img_View"
-                android:ellipsize="end"
-                android:maxLines="2"
                 android:textColor="@color/newsFeed_titleColor"
                 android:textSize="@dimen/new_font1"/>
 
