@@ -32,7 +32,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ZipperUtil;
+import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.BufferedWriter;
@@ -158,11 +158,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             if (isFavorite) {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             } else {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
-
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
@@ -175,9 +174,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
             final String strTitle = feed.getTitle();
             if (isFavorite) {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, false);
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, false);
             } else {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             }
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
@@ -220,9 +219,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
             if (isFavorite) {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             } else {
-                setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
@@ -289,15 +288,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     }
 
-    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
+    private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
+            tvTitle.setMaxLines(2);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
-                tvTitle.setLineSpacing(0, 1f);
+//                tvTitle.setLineSpacing(0, 1f);
             }
             if (isRead) {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color7));

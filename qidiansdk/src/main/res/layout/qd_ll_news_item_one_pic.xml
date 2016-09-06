@@ -37,15 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
+            <com.news.yazhidao.widget.EllipsizeEndTextView
                 android:id="@+id/title_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/usual_margin"
                 android:layout_marginRight="@dimen/usual_margin"
                 android:layout_toLeftOf="@+id/title_img_View"
-                android:ellipsize="end"
-                android:maxLines="2"
                 android:textColor="@color/newsFeed_titleColor"
                 android:textSize="@dimen/new_font1"/>
 
