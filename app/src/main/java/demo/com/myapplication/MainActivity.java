@@ -29,12 +29,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int size = SharedPreManager.getInt("showflag", "textSize");
-                Log.e("aaa", "size==" + size);
                 if(size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()){
-                    Log.e("aaa", "11111111111111111");
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 }else{
-                    Log.e("aaa", "222222222222222222222");
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
                 }
             }
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //添加View
         newsLayout = (RelativeLayout)findViewById(R.id.newsLayout);
         mainView = new MainView(this); //传入的activity是FragmentActivity
-        mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
+        mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         newsLayout.addView(mainView.getNewsView());
 
     }
