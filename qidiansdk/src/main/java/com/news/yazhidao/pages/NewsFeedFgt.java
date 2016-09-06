@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -336,7 +337,23 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         if (rootView != null) {
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
+            unbindDrawables(rootView);
+        }
+    }
+
+    private void unbindDrawables(View view)
+    {
+        if (view.getBackground() != null)
+        {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup && !(view instanceof AdapterView))
+        {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+            {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
         }
     }
 

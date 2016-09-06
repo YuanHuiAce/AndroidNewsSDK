@@ -94,7 +94,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
         String imageUrl = relatedItemEntity.getImgUrl();
         if(imageUrl != null&&imageUrl.length()!= 0){
             holder.getView(R.id.attention_haveImageShow).setVisibility(View.VISIBLE);
-            holder.setSimpleDraweeViewURI(R.id.attention_img_View,imageUrl);
+//            holder.setSimpleDraweeViewURI(R.id.attention_img_View,imageUrl);
+            holder.setGlideDraweeViewURI(R.id.attention_img_View,imageUrl,0,0);
         }else{
             holder.getView(R.id.attention_img_View).setVisibility(View.GONE);
             holder.getView(R.id.attention_haveImageShow).setVisibility(View.GONE);

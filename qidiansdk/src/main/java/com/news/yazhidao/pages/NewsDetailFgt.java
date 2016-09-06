@@ -32,7 +32,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -793,7 +792,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     class CommentHolder {
-        SimpleDraweeView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
@@ -801,7 +800,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-            ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
+            ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
             tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);

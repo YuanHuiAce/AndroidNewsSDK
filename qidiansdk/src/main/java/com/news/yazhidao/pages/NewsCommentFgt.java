@@ -25,7 +25,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -36,9 +35,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-//import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -51,6 +48,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+//import com.news.yazhidao.net.volley.NewsCommentRequest;
 
 //import com.news.yazhidao.widget.UserCommentDialog;
 
@@ -260,7 +259,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-                holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
+                holder.ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
 //                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
@@ -384,7 +383,7 @@ public class NewsCommentFgt extends BaseFragment {
 
 
     class Holder {
-        SimpleDraweeView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;

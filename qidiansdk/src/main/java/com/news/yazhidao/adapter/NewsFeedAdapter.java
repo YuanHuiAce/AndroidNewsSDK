@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -82,8 +81,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.qd_ll_news_card;
                     case 900:
                         return R.layout.qd_ll_news_item_time_line;
-                    case 4://奇点号Item
-                        return R.layout.ll_news_search_item;
+//                    case 4://奇点号Item
+//                        return R.layout.ll_news_search_item;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -95,7 +94,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 6;
+                return 5;
             }
 
             @Override
@@ -110,8 +109,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.THREE_PIC;
                     case 900:
                         return NewsFeed.TIME_LINE;
-                    case 4://奇点号Item
-                        return NewsFeed.SERRCH_ITEM;
+//                    case 4://奇点号Item
+//                        return NewsFeed.SERRCH_ITEM;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -183,16 +182,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
 
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment()+"");
-                if (feed.getPtime() != null)
-                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+            setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null)
+                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
 //                break;
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
 //            case R.layout.qd_ll_news_item_one_pic:
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+//                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
             final String strTitle = feed.getTitle();
             if (isFavorite) {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -200,9 +200,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
             final TextView tvTitle = holder.getView(R.id.title_textView);
-                final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
+            final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-            SimpleDraweeView ivCard = holder.getView(R.id.title_img_View);
+            ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = mCardWidth;
             lpCard.height = mCardHeight;
@@ -252,18 +252,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                }
 //            });
 
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment()+"");
-                if (feed.getPtime() != null) {
-                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+            setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null) {
+                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
 //                break;
-        }
-        else if (layoutId==R.layout.ll_news_big_pic2)
-        {
-            holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+        } else if (layoutId == R.layout.ll_news_big_pic2) {
+            ArrayList<String> strArrBigImgUrl = feed.getImgs();
+            int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            int height = (int) (with * 9 / 16.0f);
+            int num = feed.getStyle() - 11;
+//            holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height);
+            ImageView ivBigPic = holder.getView(R.id.title_img_View);
+            RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();
+            lpBigPic.width = with;
+            lpBigPic.height = height;
+            ivBigPic.setLayoutParams(lpBigPic);
+
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
 //            if (isFavorite) {
 //                setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -279,25 +288,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
-        }
-        else if (layoutId == R.layout.qd_ll_news_card) {
+        } else if (layoutId == R.layout.qd_ll_news_card) {
 //            case R.layout.qd_ll_news_card:
-                ArrayList<String> strArrImgUrl = feed.getImgs();
-            holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0));
-            holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1));
-            holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2));
-            setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card1), 15, 1, 3);
-            setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card2), 1, 1, 3);
-            setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card3), 1, 15, 3);
+            ArrayList<String> strArrImgUrl = feed.getImgs();
+//            holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0));
+//            holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1));
+//            holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2));
+            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
+            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
+            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
+            setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
+            setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
+            setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
             if (isFavorite) {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             } else {
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             }
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment()+"");
-                if (feed.getPtime() != null)
-                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+            setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null)
+                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
 //                break;
@@ -314,7 +325,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
 
-    private void setCardMargin(SimpleDraweeView ivCard, int leftMargin, int rightMargin, int pageNum) {
+    private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();
         localLayoutParams.leftMargin = DensityUtil.dip2px(mContext, leftMargin);
         localLayoutParams.rightMargin = DensityUtil.dip2px(mContext, rightMargin);
@@ -344,9 +355,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 int time = (int) (between * 60 / 3600000);
                 if (time > 0) {
                     tvComment.setText(between * 60 / 3600000 + "分钟前");
-                }else if (time <=0){
+                } else if (time <= 0) {
                     tvComment.setText("");
-                }else {
+                } else {
                     tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
                 }
 //                if (between / 3600000 == 0) {
@@ -380,6 +391,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
+
     private void setTitleTextByBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
@@ -468,8 +480,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 String channelName = "";
                 ChannelItemDao dao = new ChannelItemDao(mContext);
                 ArrayList<ChannelItem> channelItems = dao.queryForAll();
-                for (ChannelItem item: channelItems){
-                    if (Integer.valueOf(feed.getChannel()).equals(item.getId())){
+                for (ChannelItem item : channelItems) {
+                    if (Integer.valueOf(feed.getChannel()).equals(item.getId())) {
                         channelName = item.getName();
                         break;
                     }
@@ -533,28 +545,28 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
 
-    public void isFavoriteList(){
+    public void isFavoriteList() {
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
 
-class ViewWrapper {
-    private View mTarget;
+    class ViewWrapper {
+        private View mTarget;
 
-    public ViewWrapper(View mTarget) {
-        this.mTarget = mTarget;
-    }
+        public ViewWrapper(View mTarget) {
+            this.mTarget = mTarget;
+        }
 
-    public int getHeight() {
-        int height = mTarget.getLayoutParams().height;
-        return height;
-    }
+        public int getHeight() {
+            int height = mTarget.getLayoutParams().height;
+            return height;
+        }
 
-    public void setHeight(int height) {
-        mTarget.getLayoutParams().height = height;
-        mTarget.requestLayout();
+        public void setHeight(int height) {
+            mTarget.getLayoutParams().height = height;
+            mTarget.requestLayout();
+        }
     }
-}
 
     private introductionNewsFeed mIntroductionNewsFeed;
 
@@ -585,17 +597,17 @@ class ViewWrapper {
         notifyDataSetChanged();
     }
 
-/**
- * 接口回调传入数据的添加与删除
- * <p>
- * isCheck true：添加   false：删除
- */
-public interface introductionNewsFeed {
-    public void getDate(NewsFeed feed, boolean isCheck);
-}
+    /**
+     * 接口回调传入数据的添加与删除
+     * <p/>
+     * isCheck true：添加   false：删除
+     */
+    public interface introductionNewsFeed {
+        public void getDate(NewsFeed feed, boolean isCheck);
+    }
 
-public interface clickShowPopWindow {
-    public void showPopWindow(int x, int y, NewsFeed feed);
-}
+    public interface clickShowPopWindow {
+        public void showPopWindow(int x, int y, NewsFeed feed);
+    }
 
 }

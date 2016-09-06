@@ -1,11 +1,9 @@
 package com.news.yazhidao.application;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -20,7 +18,7 @@ public class QiDianApplication {
         mInstance = new QiDianApplication();
 
 
-        Fresco.initialize(context);
+//        Fresco.initialize(context);
 
     }
 

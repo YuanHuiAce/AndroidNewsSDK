@@ -272,7 +272,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 Logger.e("jigang", "index = " + index);
                 index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
             }
-            mViewPager.setCurrentItem(index);
+            mViewPager.setCurrentItem(index)    ;
             Fragment item = mViewPagerAdapter.getItem(index);
             if (item != null) {
                 ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));

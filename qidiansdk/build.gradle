@@ -20,9 +20,9 @@ dependencies {
     //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'com.facebook.fresco:fresco:0.6.1'
     compile files('libs/ormlite-core-4.48.jar')
     compile files('libs/ormlite-android-4.48.jar')
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.android.support:support-v4:24.0.0'
+    compile files('libs/glide-3.6.1.jar')
 }

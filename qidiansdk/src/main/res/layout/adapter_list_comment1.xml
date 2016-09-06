@@ -16,15 +16,15 @@
         android:gravity="center_vertical"
         >
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/iv_user_icon"
             android:layout_width="33dp"
-            android:layout_height="33dp"
-            app:failureImage="@drawable/ic_user_comment_default"
-            app:placeholderImage="@drawable/ic_user_comment_default"
-            app:roundAsCircle="true"
-            app:roundingBorderColor="@color/bg_home_login_header"
-            app:roundingBorderWidth="2px"/>
+            android:layout_height="33dp"/>
+            <!--app:failureImage="@drawable/ic_user_comment_default"-->
+            <!--app:placeholderImage="@drawable/ic_user_comment_default"-->
+            <!--app:roundAsCircle="true"-->
+            <!--app:roundingBorderColor="@color/bg_home_login_header"-->
+            <!--app:roundingBorderWidth="2px"/>-->
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_user_name"

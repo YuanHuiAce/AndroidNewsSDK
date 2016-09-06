@@ -25,53 +25,53 @@
         android:layout_below="@+id/title_textView"
         android:layout_marginTop="12dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/image_card1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:placeholderImage="@drawable/bg_load_default_small"
-            fresco:placeholderImageScaleType="centerCrop"
-            fresco:roundBottomLeft="false"
-            fresco:roundBottomRight="false"
-            fresco:roundTopLeft="false"
-            fresco:roundTopRight="false"
-            fresco:roundedCornerRadius="2dp"
-            fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px"/>
+            android:layout_weight="1.0"/>
+            <!--fresco:actualImageScaleType="centerCrop"-->
+            <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+            <!--fresco:placeholderImageScaleType="centerCrop"-->
+            <!--fresco:roundBottomLeft="false"-->
+            <!--fresco:roundBottomRight="false"-->
+            <!--fresco:roundTopLeft="false"-->
+            <!--fresco:roundTopRight="false"-->
+            <!--fresco:roundedCornerRadius="2dp"-->
+            <!--fresco:roundingBorderColor="@color/new_color4"-->
+            <!--fresco:roundingBorderWidth="1px"/>-->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/image_card2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:placeholderImage="@drawable/bg_load_default_small"
-            fresco:placeholderImageScaleType="centerCrop"
-            fresco:roundBottomLeft="false"
-            fresco:roundBottomRight="false"
-            fresco:roundTopLeft="false"
-            fresco:roundTopRight="false"
-            fresco:roundedCornerRadius="2dp"
-            fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px"/>
+            android:layout_weight="1.0"/>
+            <!--fresco:actualImageScaleType="centerCrop"-->
+            <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+            <!--fresco:placeholderImageScaleType="centerCrop"-->
+            <!--fresco:roundBottomLeft="false"-->
+            <!--fresco:roundBottomRight="false"-->
+            <!--fresco:roundTopLeft="false"-->
+            <!--fresco:roundTopRight="false"-->
+            <!--fresco:roundedCornerRadius="2dp"-->
+            <!--fresco:roundingBorderColor="@color/new_color4"-->
+            <!--fresco:roundingBorderWidth="1px"/>-->
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/image_card3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:placeholderImage="@drawable/bg_load_default_small"
-            fresco:placeholderImageScaleType="centerCrop"
-            fresco:roundBottomLeft="false"
-            fresco:roundBottomRight="false"
-            fresco:roundTopLeft="false"
-            fresco:roundTopRight="false"
-            fresco:roundedCornerRadius="2dp"
-            fresco:roundingBorderColor="@color/new_color4"
-            fresco:roundingBorderWidth="1px"/>
+            android:layout_weight="1.0"/>
+            <!--fresco:actualImageScaleType="centerCrop"-->
+            <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+            <!--fresco:placeholderImageScaleType="centerCrop"-->
+            <!--fresco:roundBottomLeft="false"-->
+            <!--fresco:roundBottomRight="false"-->
+            <!--fresco:roundTopLeft="false"-->
+            <!--fresco:roundTopRight="false"-->
+            <!--fresco:roundedCornerRadius="2dp"-->
+            <!--fresco:roundingBorderColor="@color/new_color4"-->
+            <!--fresco:roundingBorderWidth="1px"/>-->
     </LinearLayout>
 
     <LinearLayout
