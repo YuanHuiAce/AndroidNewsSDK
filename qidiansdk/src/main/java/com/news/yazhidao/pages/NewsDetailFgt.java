@@ -32,11 +32,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -45,8 +48,10 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -56,13 +61,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-//import com.news.yazhidao.net.volley.NewsCommentRequest;
-
-//import com.news.yazhidao.utils.helper.ShareSdkHelper;
-//import com.news.yazhidao.widget.UserCommentDialog;
-//
-//import cn.sharesdk.wechat.moments.WechatMoments;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -232,7 +230,7 @@ public class NewsDetailFgt extends BaseFragment {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
@@ -313,17 +311,7 @@ public class NewsDetailFgt extends BaseFragment {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
-    @Override
-    public void onPause() {
-        super.onPause();
-        mDetailWebView.pauseTimers();
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mDetailWebView.resumeTimers();
-    }
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -350,15 +338,17 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
-        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+        /** 梁帅：判断图片是不是  不显示 */
+        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+                SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                Log.i("TAG", url);
+                Logger.i("TAG", url);
                 // view.loadUrl(url);
                 if (openWithWevView(url)) {//如果是超链接，执行此方法
                     startIntentBrowser("com.lieying.browser",url);
@@ -374,13 +364,20 @@ public class NewsDetailFgt extends BaseFragment {
                 return true;
             }
 
+
         });
+        //梁帅：判断图片是不是  不显示
+//        if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
+//            mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
+//        }else{
+//            mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
+//
+//        }
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
-                Log.e("aaa","22222");
+                Logger.e("aaa","22222");
                 isWebSuccess = true;
-                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 //                Log.e("aaa","1111");
             }
@@ -501,7 +498,7 @@ public class NewsDetailFgt extends BaseFragment {
     private void loadData() {
 
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 //        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
@@ -819,7 +816,9 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa","详情页===文字的改变！！！");
 //                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
-                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+                /** 梁帅：判断图片是不是  不显示 */
+                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+                        SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
                         "text/html", "utf-8", null);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT , LinearLayout.LayoutParams.WRAP_CONTENT);
                 mDetailWebView.setLayoutParams(params);
@@ -865,7 +864,7 @@ public class NewsDetailFgt extends BaseFragment {
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
-            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+            Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(getActivity(),33)).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -918,12 +917,25 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mDetailWebView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDetailWebView.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             mNewsDetailHeaderView.removeView(mDetailWebView);
         }
-
+        mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
     }
 
@@ -955,7 +967,7 @@ public class NewsDetailFgt extends BaseFragment {
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
         for (PackageInfo packageinfo : packageInfos) {
             String stemp = packageinfo.packageName;
-            Log.v("PACKAGENAME:",stemp);
+            Logger.v("PACKAGENAME:",stemp);
             if (stemp.equals(packageName)) {
                 existLY = true;
             }

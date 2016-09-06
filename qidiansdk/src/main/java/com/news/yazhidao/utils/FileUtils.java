@@ -348,7 +348,7 @@ public class FileUtils {
              out = new BufferedOutputStream(o);
             out.write(bytes);
             path = FileUtils.getSavePath(mContext, name);
-            Log.e("jigang", "---writeFile2SDCard- success");
+            Logger.e("jigang", "---writeFile2SDCard- success");
         } catch (IOException e) {
             e.printStackTrace();
         }finally {

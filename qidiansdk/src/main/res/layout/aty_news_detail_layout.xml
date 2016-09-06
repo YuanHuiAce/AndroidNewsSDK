@@ -33,13 +33,13 @@
             android:layout_centerVertical="true">
 
             <ImageView
-            android:id="@+id/mDetailCommentPic"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="评论"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_no_comment"
-            />
+                android:id="@+id/mDetailCommentPic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="评论"
+                android:scaleType="centerInside"
+                android:src="@drawable/btn_detail_no_comment"
+                />
 
             <TextView
                 android:id="@+id/mDetailCommentNum"
@@ -57,16 +57,16 @@
                 />
         </FrameLayout>
         <!--<TextView-->
-            <!--android:id="@+id/mDetailRightMore"-->
-            <!--android:layout_width="48dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:drawableRight="@drawable/btn_detail_right_more"-->
-            <!--android:background="@drawable/bg_left_back_selector"-->
-            <!--android:clickable="true"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:visibility="gone"-->
-            <!--/>-->
+        <!--android:id="@+id/mDetailRightMore"-->
+        <!--android:layout_width="48dp"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:drawableRight="@drawable/btn_detail_right_more"-->
+        <!--android:background="@drawable/bg_left_back_selector"-->
+        <!--android:clickable="true"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
 
     </RelativeLayout>
 
@@ -144,7 +144,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="16dp"
-            android:layout_toLeftOf="@+id/mDetailComment"
+
             android:layout_weight="30"
             android:background="@drawable/user_add_comment"
             android:paddingBottom="4dp"
@@ -156,35 +156,35 @@
             />
 
         <!--<FrameLayout-->
-            <!--android:id="@+id/mDetailComment"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_toLeftOf="@+id/mDetailFavorite">-->
+        <!--android:id="@+id/mDetailComment"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toLeftOf="@+id/mDetailFavorite">-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/mDetailCommentPic"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:contentDescription="评论"-->
-                <!--android:scaleType="centerInside"-->
-                <!--android:src="@drawable/btn_detail_no_comment"-->
-                <!--/>-->
+        <!--<ImageView-->
+        <!--android:id="@+id/mDetailCommentPic"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:contentDescription="评论"-->
+        <!--android:scaleType="centerInside"-->
+        <!--android:src="@drawable/btn_detail_no_comment"-->
+        <!--/>-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/mDetailCommentNum"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:layout_marginBottom="4dp"-->
-                <!--android:layout_marginLeft="8dp"-->
-                <!--android:background="@drawable/bg_news_detail_commit_num"-->
-                <!--android:gravity="center"-->
-                <!--android:text=""-->
-                <!--android:textColor="@color/white"-->
-                <!--android:textSize="8sp"-->
-                <!--android:visibility="gone"-->
-                <!--/>-->
+        <!--<TextView-->
+        <!--android:id="@+id/mDetailCommentNum"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_marginBottom="4dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:background="@drawable/bg_news_detail_commit_num"-->
+        <!--android:gravity="center"-->
+        <!--android:text=""-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="8sp"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
         <!--</FrameLayout>-->
 
         <ImageView
@@ -212,13 +212,14 @@
     </RelativeLayout>
 
 
-
+    <!--梁帅：2016.08.31 修改加载的动画在title之下  android:layout_below="@id/mHeaderDivider"-->
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:visibility="visible"
+        android:layout_below="@id/mHeaderDivider"
         >
 
         <ImageView

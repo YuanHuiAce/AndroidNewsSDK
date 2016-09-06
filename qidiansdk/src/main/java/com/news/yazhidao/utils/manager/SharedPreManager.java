@@ -178,6 +178,12 @@ public class SharedPreManager {
         e.putLong(key, value);
         e.commit();
     }
+    public static void save(String spName, String key, int value){
+        Logger.d("SettingsManager", "SettingsManager : " + spName + ":" + "key : " + key + "value : " + value);
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+        e.putInt(key,value);
+        e.commit();
+    }
 
     public static void save(String spName, String key, boolean value){
         SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
@@ -198,6 +204,9 @@ public class SharedPreManager {
     }
     public static String get(String spName, String key){
         return getSettings(spName, Context.MODE_PRIVATE).getString(key, "");
+    }
+    public static int getInt(String spName, String key){
+        return getSettings(spName, Context.MODE_PRIVATE).getInt(key, 0);
     }
 
     public static boolean getBoolean(String spName, String key){

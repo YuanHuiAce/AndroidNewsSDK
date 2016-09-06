@@ -1,7 +1,6 @@
 package com.news.yazhidao.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +136,6 @@ public class ChannelSelectedAdapter extends BaseAdapter {
     public void exchange(int dragPostion, int dropPostion) {
         holdPosition = dropPostion;
         ChannelItem dragItem = getItem(dragPostion);
-        Log.d(TAG, "startPostion=" + dragPostion + ";endPosition=" + dropPostion);
         if (dragPostion < dropPostion) {
             channelList.add(dropPostion + 1, dragItem);
             channelList.remove(dragPostion);

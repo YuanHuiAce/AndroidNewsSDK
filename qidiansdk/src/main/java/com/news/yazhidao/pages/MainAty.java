@@ -9,12 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -61,7 +59,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    public LocationClient mLocationClient = null;
 //    public BDLocationListener myListener = new MyLocationListener();
 //    private SimpleDraweeView mUserCenter;
-    private TextView mDetailLeftBack;
 
     /**
      * 自定义的PopWindow
@@ -110,8 +107,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
-        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
-        mDetailLeftBack.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
@@ -270,24 +265,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
-//                dislikePopupWindow.setVisibility(View.GONE);
-//                return true;
-//            }
-//            long pressedBackKeyTime = System.currentTimeMillis();
-//            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
-//                finish();
-//            } else {
-//                if (DeviceInfoUtil.isFlyme()) {
-//                    ToastUtil.toastShort(getString(R.string.press_back_again_exit));
-//                } else {
-//                    ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-//                }
-//                mLastPressedBackKeyTime = pressedBackKeyTime;
-//                return true;
-//            }
-//        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
+                dislikePopupWindow.setVisibility(View.GONE);
+                return true;
+            }
+        }
 
         return super.onKeyDown(keyCode, event);
     }

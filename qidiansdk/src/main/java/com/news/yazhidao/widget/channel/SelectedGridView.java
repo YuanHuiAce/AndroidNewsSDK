@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Vibrator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.ChannelSelectedAdapter;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 
 
 public class SelectedGridView extends GridView {
@@ -333,7 +333,7 @@ public class SelectedGridView extends GridView {
 				float x_vlaue = ((float) mHorizontalSpacing / (float) itemWidth) + 1.0f;
 				//y_vlaue移动的距离百分比（相对于自己宽度的百分比）
 				float y_vlaue = ((float) mVerticalSpacing / (float) itemHeight) + 1.0f;
-				Log.d("x_vlaue", "x_vlaue = " + x_vlaue);
+				Logger.d("x_vlaue", "x_vlaue = " + x_vlaue);
 				for (int i = 0; i < movecount_abs; i++) {
 					to_x = x_vlaue;
 					to_y = y_vlaue;

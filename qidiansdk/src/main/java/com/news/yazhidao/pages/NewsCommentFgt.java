@@ -25,10 +25,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -70,7 +72,7 @@ public class NewsCommentFgt extends BaseFragment {
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiber mRefreshReceiber;
-//    private RefreshLikeBroReceiber mRefreshLike;
+    //    private RefreshLikeBroReceiber mRefreshLike;
     private RelativeLayout bgLayout;
     private User mUser;
     private NewsDetailComment mComment;
@@ -175,42 +177,42 @@ public class NewsCommentFgt extends BaseFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
-            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
-                    "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+        feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
+                "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
-                @Override
-                public void onResponse(ArrayList<NewsDetailComment> result) {
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                    mNewsCommentList.onRefreshComplete();
-                    Logger.e("jigang", "network success, comment" + result);
+            @Override
+            public void onResponse(ArrayList<NewsDetailComment> result) {
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
+                mNewsCommentList.onRefreshComplete();
+                Logger.e("jigang", "network success, comment" + result);
 
-                    if (!TextUtil.isListEmpty(result)) {
-                        mComments.addAll(result);
-                        mCommentsAdapter.setData(mComments);
-                        Logger.d("aaa", "评论加载完毕！！！！！！");
-                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                if (!TextUtil.isListEmpty(result)) {
+                    mComments.addAll(result);
+                    mCommentsAdapter.setData(mComments);
+                    Logger.d("aaa", "评论加载完毕！！！！！！");
+                    news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                } else {
+                    if (mComments.size() == 0) {
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
                     } else {
-                        if (mComments.size() == 0) {
-                            news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
-                        } else {
-                            news_comment_NoCommentsLayout.setVisibility(View.GONE);
-                        }
+                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                    }
 
-                    }
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    mNewsCommentList.onRefreshComplete();
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                    Logger.e("jigang", "NewsCommentFgt  network fail"+error);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mNewsCommentList.onRefreshComplete();
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
                 }
-            });
+                Logger.e("jigang", "NewsCommentFgt  network fail"+error);
+            }
+        });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
     }
@@ -262,8 +264,9 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
 //                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
-                holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
-                holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
+                //梁帅：点赞功能注释掉
+//                holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
+//                holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -275,23 +278,24 @@ public class NewsCommentFgt extends BaseFragment {
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+                Glide.with(mContext).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(mContext,33)).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
-            int count = comment.getCommend();
-            if (count == 0) {
-                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
-            } else {
-                holder.tvPraiseCount.setVisibility(View.VISIBLE);
-                holder.tvPraiseCount.setText(comment.getCommend() + "");
-            }
-
-            holder.tvContent.setText(comment.getContent());
-            if (comment.getUpflag() == 0) {
-                holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-            } else {
-                holder.ivPraise.setImageResource(R.drawable.bg_praised);
-            }
+            //梁帅：点赞功能注释掉
+//            int count = comment.getCommend();
+//            if (count == 0) {
+//                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+//            } else {
+//                holder.tvPraiseCount.setVisibility(View.VISIBLE);
+//                holder.tvPraiseCount.setText(comment.getCommend() + "");
+//            }
+            //梁帅：点赞功能注释掉
+//            holder.tvContent.setText(comment.getContent());
+//            if (comment.getUpflag() == 0) {
+//                holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+//            } else {
+//                holder.ivPraise.setImageResource(R.drawable.bg_praised);
+//            }
 
 //            if (user != null && user.getUserId().equals(comment.getUid())) {
 //                holder.ivPraise.setVisibility(View.GONE);
@@ -299,9 +303,10 @@ public class NewsCommentFgt extends BaseFragment {
 //                holder.ivPraise.setVisibility(View.VISIBLE);
 //
 //            }
-            holder.ivPraise.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            //梁帅：点赞功能注释掉
+//            holder.ivPraise.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
 
 //
 //                    if (user == null) {
@@ -313,8 +318,8 @@ public class NewsCommentFgt extends BaseFragment {
 //                        comments.get(position).setLove(comment.getLove() + 1);
 //                    }
 
-                }
-            });
+//                }
+//            });
             return convertView;
         }
     }
@@ -386,8 +391,8 @@ public class NewsCommentFgt extends BaseFragment {
         ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
-        TextViewExtend tvPraiseCount;
         TextViewExtend tvTime;
-        ImageView ivPraise;
+//        TextViewExtend tvPraiseCount;
+//        ImageView ivPraise;
     }
 }

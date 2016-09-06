@@ -3,13 +3,13 @@ package com.news.yazhidao.pages;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +115,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
+    private RefreshReceiver mRefreshReciver;
 
 
     public interface NewsSaveDataCallBack {
@@ -133,10 +134,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         this.mNewsSaveCallBack = listener;
     }
 
-    boolean isNoteLoadDate;
+    boolean isNotLoadData;
 
     public void setNewsFeed(ArrayList<NewsFeed> results) {
-        isNoteLoadDate = true;
+        isNotLoadData = true;
         this.mArrNewsFeed = results;
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -180,9 +181,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             return;
         }
         if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-            isNoteLoadDate = true;
+            isNotLoadData = true;
         } else {
-            isNoteLoadDate = false;
+            isNotLoadData = false;
         }
         mlvNewsFeed.getRefreshableView().setSelection(0);
         mlvNewsFeed.getRefreshableView().smoothScrollToPosition(0);
@@ -193,7 +194,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mlvNewsFeed == null) {//防止listview为空
             return;
         }
-        isNoteLoadDate = false;
+        isNotLoadData = false;
         mThread = new Runnable() {
             @Override
             public void run() {
@@ -217,15 +218,20 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
+        /** 梁帅：注册修改字体大小的广播*/
+        mRefreshReciver = new RefreshReceiver();
+        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
+        mContext.registerReceiver(mRefreshReciver, intentFilter);
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("jigang", "requestCode = " + requestCode);
+        Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
-            Log.e("jigang", "newsid = " + newsId);
+            Logger.e("jigang", "newsid = " + newsId);
 
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
@@ -308,7 +314,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void run() {
 //                mlvNewsFeed.setRefreshing();
-                loadData(PULL_DOWN_REFRESH);
+                /**
+                 *  梁帅： 2016.08.31 修改加载逻辑
+                 *  如果有数据，拿数据的一条的是时间是下拉刷新
+                 *  如果没有数据，直接加载
+                 */
+
+                ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                if(!TextUtil.isListEmpty(arrNewsFeed)){
+                    loadData(PULL_DOWN_REFRESH);
+                }else{
+                    loadData(PULL_UP_REFRESH);
+                }
+
                 isListRefresh = false;
 
             }
@@ -347,13 +365,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         {
             view.getBackground().setCallback(null);
         }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView))
-        {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
-            {
-                unbindDrawables(((ViewGroup) view).getChildAt(i));
-            }
-            ((ViewGroup) view).removeAllViews();
+        if (rootView != null && rootView.getParent() != null) {
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
     }
 
@@ -433,7 +446,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
         System.out.println("requestUrl:" + requestUrl);
-        Log.e("jigang", "request url =" + requestUrl);
+        Logger.e("jigang", "request url =" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
         }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
@@ -472,7 +485,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             else
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
-                            Log.i("aaa", "mlvNewsFeed.getRefreshableView().setSelection(0);");
+                            Logger.i("aaa", "mlvNewsFeed.getRefreshableView().setSelection(0);");
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);
 //                            new Handler().postDelayed(new Runnable() {
@@ -565,12 +578,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                         }
                     }, 1000);
-                } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
+                } else if (error.toString().contains("4003")) {//说明三方登录已过期,防止开启3个loginty
                     User user = SharedPreManager.getUser(getActivity());
                     user.setUtype("2");
                     SharedPreManager.saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
+                    UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+                        @Override
+                        public void registeSuccess() {
+                            loadData(flag);
+                        }
+                    });
                 }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
@@ -603,18 +622,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public void loadData(final int flag) {
         User user = SharedPreManager.getUser(mContext);
-        Log.e("aaa", "loaddata -----" + flag);
-        Log.e("aaa", "loadData:user === " + user);
+        Logger.e("aaa", "loaddata -----" + flag);
+        Logger.e("aaa", "loadData:user === " + user);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
-                if (!isNoteLoadDate) {
+                if (!isNotLoadData) {
                     if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
                     } else if (!TextUtil.isEmptyString(mstrChannelId))
                         loadNewsFeedData("recommend", flag);
                     startTopRefresh();
                 } else {
-                    isNoteLoadDate = false;
+                    isNotLoadData = false;
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -689,7 +708,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
         long time = (System.currentTimeMillis() - homeTime) / 1000;
-        Log.e("aaa", "time====" + time);
+        Logger.e("aaa", "time====" + time);
         if (isNewVisity && isClickHome && time >= 60) {
 //            mlvNewsFeed.setRefreshing();
 //            isListRefresh = true;
@@ -758,14 +777,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     };
 
-    private class RefreshReceiver extends BroadcastReceiver {
+    public class RefreshReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
                 Logger.e("aaa", "文字的改变！！！");
-//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-//                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -856,7 +873,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
@@ -924,5 +941,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
     }
+    public void setTextSize(){
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 
 }

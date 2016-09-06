@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.nfc.Tag;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.tag.TagBaseAdapter;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
 
@@ -200,7 +200,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mPopWindowLayout.startAnimation(scaleAnim);
         mTriangle.startAnimation(scaleAnim2);
-        Log.e("aaa", "==============");
+        Logger.e("aaa", "==============");
     }
 
     boolean isVisity;

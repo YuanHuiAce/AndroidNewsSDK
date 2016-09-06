@@ -47,7 +47,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/newsFeed_titleColor"
-                android:textSize="@dimen/new_font1" />
+                android:textSize="@dimen/new_font1"/>
 
             <LinearLayout
                 android:id="@+id/source_content_linearLayout"

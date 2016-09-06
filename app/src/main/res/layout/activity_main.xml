@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:text="点击跳转Activity" />
+        android:text="设置字体大小" />
 
     <TextView
         android:id="@+id/mFirstAndTop"
