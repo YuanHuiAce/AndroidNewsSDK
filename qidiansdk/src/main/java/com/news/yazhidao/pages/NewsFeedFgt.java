@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -346,6 +345,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRefreshReciver != null){
+            mContext.unregisterReceiver(mRefreshReciver);
+        }
+    }
 
     @Override
     public void onDestroyView() {

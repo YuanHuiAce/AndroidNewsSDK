@@ -290,7 +290,7 @@ public class NewsCommentFgt extends BaseFragment {
 //                holder.tvPraiseCount.setText(comment.getCommend() + "");
 //            }
             //梁帅：点赞功能注释掉
-//            holder.tvContent.setText(comment.getContent());
+            holder.tvContent.setText(comment.getContent());
 //            if (comment.getUpflag() == 0) {
 //                holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
 //            } else {
