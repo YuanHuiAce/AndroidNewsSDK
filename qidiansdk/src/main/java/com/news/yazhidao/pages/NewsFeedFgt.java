@@ -347,6 +347,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     };
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRefreshReciver != null){
+            mContext.unregisterReceiver(mRefreshReciver);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (mHandler != null) {
