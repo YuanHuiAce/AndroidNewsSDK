@@ -31,12 +31,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
@@ -787,7 +789,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     class CommentHolder {
-        SimpleDraweeView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
@@ -795,7 +797,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-            ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
+            ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
             tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
@@ -862,7 +864,7 @@ public class NewsDetailFgt extends BaseFragment {
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
-            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+            Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(getActivity(),33)).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");

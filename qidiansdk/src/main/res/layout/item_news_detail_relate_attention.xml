@@ -60,20 +60,20 @@
                 android:paddingRight="15dp"
                 android:layout_marginTop="6dp"
                 >
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/attention_img_View"
                     android:layout_width="85dp"
                     android:layout_height="58dp"
-                    android:layout_alignParentRight="true"
-                    custom:actualImageScaleType="centerCrop"
-                    custom:placeholderImageScaleType="centerCrop"
-                    custom:roundBottomLeft="false"
-                    custom:roundBottomRight="false"
-                    custom:roundTopLeft="false"
-                    custom:roundTopRight="false"
-                    custom:roundedCornerRadius="2dp"
-                    custom:roundingBorderWidth="1px"
-                    />
+                    android:layout_alignParentRight="true"/>
+                    <!--custom:actualImageScaleType="centerCrop"-->
+                    <!--custom:placeholderImageScaleType="centerCrop"-->
+                    <!--custom:roundBottomLeft="false"-->
+                    <!--custom:roundBottomRight="false"-->
+                    <!--custom:roundTopLeft="false"-->
+                    <!--custom:roundTopRight="false"-->
+                    <!--custom:roundedCornerRadius="2dp"-->
+                    <!--custom:roundingBorderWidth="1px"-->
+                    <!--/>-->
                 <LinearLayout
                     android:id="@+id/attention_contentLayout"
                     android:layout_width="wrap_content"

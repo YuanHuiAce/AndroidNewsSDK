@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -18,14 +16,15 @@ public class QiDianApplication {
     public static void initQDApp(Context context) {
         mContext = context;
         mInstance = new QiDianApplication();
+//        Fresco.initialize(context);
     }
 
     QiDianApplication() {
         mInstance = this;
-        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig
-                .newBuilder(mContext).setDownsampleEnabled(true)
-                .build();
-        Fresco.initialize(mContext, imagePipelineConfig);
+//        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig
+//                .newBuilder(mContext).setDownsampleEnabled(true)
+//                .build();
+//        Fresco.initialize(mContext, imagePipelineConfig);
     }
 
     //    public void onCreate() {

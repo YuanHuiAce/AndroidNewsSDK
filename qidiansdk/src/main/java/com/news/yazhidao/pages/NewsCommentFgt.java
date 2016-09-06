@@ -25,11 +25,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -260,7 +261,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-                holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
+                holder.ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
 //                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 //梁帅：点赞功能注释掉
@@ -277,7 +278,7 @@ public class NewsCommentFgt extends BaseFragment {
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+                Glide.with(mContext).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(mContext,33)).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             //梁帅：点赞功能注释掉
@@ -387,7 +388,7 @@ public class NewsCommentFgt extends BaseFragment {
 
 
     class Holder {
-        SimpleDraweeView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvTime;
