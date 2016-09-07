@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+//        SharedPreManager.mInstance(this).save("flag","text1","一天天的测试！");
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int size = SharedPreManager.getInt("showflag", "textSize");
+                int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if(size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()){
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 }else{

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -173,6 +174,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
+//        Log.e("aaa", "获取Sp数据：" + SharedPreManager.mInstance(this).get("flag", "text1"));
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
@@ -234,6 +236,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+
         Logger.e("aaa", "===========================onResume====================");
         nowTime = System.currentTimeMillis();
         mDurationStart = System.currentTimeMillis();
@@ -278,16 +281,16 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         uploadLogDataEntity.setT("0");
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
-        final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        final String LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        final String locationJsonString = SharedPreManager.mInstance(this).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
+        final String LogData = SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
         LocationEntity locationEntity = null;
         Gson gson = new Gson();
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
         if (!TextUtil.isEmptyString(LogData)) {
-            SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+            SharedPreManager.mInstance(this).upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         }
 
-//        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+//        Logger.e("ccc", "详情页的数据====" + SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
 //        if (saveNum >= 5) {
         Logger.e("aaa", "确认上传日志！");
 
@@ -309,7 +312,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
 
         String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         Logger.d("aaa", "url===" + url);
 
 
@@ -317,7 +320,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void onResponse(String response) {
                 if (!TextUtil.isEmptyString(LogData)) {
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                    SharedPreManager.mInstance(NewsDetailAty2.this).upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                 }
                 Logger.e("aaa", "上传日志成功！");
                 /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
@@ -327,10 +330,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (!error.getMessage().contains("302")) {
-                    SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                    SharedPreManager.mInstance(NewsDetailAty2.this).upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
                 }else {
                     if (!TextUtil.isEmptyString(LogData)) {
-                        SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                        SharedPreManager.mInstance(NewsDetailAty2.this).upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                     }
                 }
                 Logger.e("aaa", "上传日志失败！" + error.getMessage());
@@ -401,7 +404,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
 //        try {
-//            Logger.e("aaa", "刚刚进入============" + SharedPreManager.myFavoriteGetList().toString());
+//            Logger.e("aaa", "刚刚进入============" + SharedPreManager.mInstance(this).myFavoriteGetList().toString());
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
@@ -416,14 +419,14 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
-        User user = SharedPreManager.getUser(NewsDetailAty2.this);
+        User user = SharedPreManager.mInstance(this).getUser(NewsDetailAty2.this);
         if (user != null) {
             mUserId = user.getMuid() + "";
             mPlatformType = user.getPlatformType();
         }
         uuid = DeviceInfoUtil.getUUID();
 
-//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mUrl);
 //        if (isFavorite) {
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
 //        } else {
@@ -622,7 +625,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //                break;
         } else if (getId == R.id.mDetailFavorite) {
 //            case R.id.mDetailFavorite:
-            User user = SharedPreManager.getUser(NewsDetailAty2.this);
+            User user = SharedPreManager.mInstance(this).getUser(NewsDetailAty2.this);
 //                if (user == null) {
 //                    Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
@@ -640,7 +643,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //    public void shareDismiss() {
 //        mivShareBg.startAnimation(mAlphaAnimationOut);
 //        mivShareBg.setVisibility(View.INVISIBLE);
-//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mUrl);
 //        if (isFavorite) {
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
 //        } else {
@@ -817,12 +820,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //            if (isFavorite) {
 //                isFavorite = false;
 //                carefor_Text.setText("收藏已取消");
-//                SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+//                SharedPreManager.mInstance(this).myFavoritRemoveItem(mUsedNewsFeed.getUrl());
 //                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
 //            } else {
 //                isFavorite = true;
 //                carefor_Text.setText("收藏成功");
-//                SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+//                SharedPreManager.mInstance(this).myFavoriteSaveList(mUsedNewsFeed);
 //                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
 //            }
 //

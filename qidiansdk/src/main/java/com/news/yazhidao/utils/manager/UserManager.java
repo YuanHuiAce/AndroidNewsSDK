@@ -28,8 +28,8 @@ public class UserManager {
     /**
      * 注册游客身份,获取访问所有接口数据的token
      */
-    public static void registerVisitor(Context mContext, final RegisterVisitorListener mListener) {
-        final User user = SharedPreManager.getUser(mContext);
+    public static void registerVisitor(final Context mContext, final RegisterVisitorListener mListener) {
+        final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         if (user == null) {
             JSONObject requestBody = new JSONObject();
             try {
@@ -53,7 +53,7 @@ public class UserManager {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    SharedPreManager.saveUser(user);
+                    SharedPreManager.mInstance(mContext).saveUser(user);
                     if (mListener != null){
                         mListener.registeSuccess();
                     }
@@ -82,7 +82,7 @@ public class UserManager {
                             user.setUtype(response.optString("utype"));
                             user.setMuid(response.optInt("uid"));
                             user.setPassword(response.optString("password"));
-                            SharedPreManager.saveUser(user);
+                            SharedPreManager.mInstance(mContext).saveUser(user);
                             if (mListener != null){
                                 mListener.registeSuccess();
                             }
