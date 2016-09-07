@@ -425,5 +425,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         activity.sendBroadcast(intent);
     }
 
+    /**
+     *  梁帅：是否让屏幕保持常亮
+     * @param isKeepOn
+     */
+    public void setKeepScreenOn(boolean isKeepOn){
+        SharedPreManager.mInstance(activity).save("showflag", "isKeepScreenOn", isKeepOn);
+    }
+
 
 }

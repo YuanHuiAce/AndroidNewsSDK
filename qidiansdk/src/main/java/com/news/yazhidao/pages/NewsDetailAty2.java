@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -122,7 +123,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsDetailCommentDao newsDetailCommentDao;
 
     private LinearLayout careforLayout;
-//    boolean isFavorite;
+    //    boolean isFavorite;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
 
@@ -174,6 +175,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
+        if(SharedPreManager.mInstance(this).getBoolean("showflag","isKeepScreenOn")){
+            /** 梁帅：保持让屏幕常亮*/
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
+
 //        Log.e("aaa", "获取Sp数据：" + SharedPreManager.mInstance(this).get("flag", "text1"));
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
@@ -262,7 +269,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
+
         upLoadLog();
+        if(SharedPreManager.mInstance(this).getBoolean("showflag","isKeepScreenOn")) {
+            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     /**
@@ -639,7 +651,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         }
     }
-/** 梁帅： 因为收藏才注释*/
+    /** 梁帅： 因为收藏才注释*/
 //    public void shareDismiss() {
 //        mivShareBg.startAnimation(mAlphaAnimationOut);
 //        mivShareBg.setVisibility(View.INVISIBLE);

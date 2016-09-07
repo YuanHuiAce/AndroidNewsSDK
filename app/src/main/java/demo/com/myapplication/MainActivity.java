@@ -43,7 +43,12 @@ public class MainActivity extends AppCompatActivity {
         //添加View
         newsLayout = (RelativeLayout)findViewById(R.id.newsLayout);
         mainView = new MainView(this); //传入的activity是FragmentActivity
+        /**梁帅：修改智能模式（不显示图片）*/
+//        mainView.setNotShowImages(false);
+        /**梁帅：修改文字大小的方法*/
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
+        /**梁帅：修改屏幕是否常亮的方法*/
+        mainView.setKeepScreenOn(true);
         newsLayout.addView(mainView.getNewsView());
 
     }
