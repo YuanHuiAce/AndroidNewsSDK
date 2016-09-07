@@ -336,21 +336,23 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 }
                 Logger.e("aaa", "上传日志成功！");
                 /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
-                System.exit(0);
+//                System.exit(0);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (!error.getMessage().contains("302")) {
-                    SharedPreManager.mInstance(NewsDetailAty2.this).upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-                }else {
+                /** 纪纲、梁帅：重复上传日志error可能为null */
+                if (error ==  null || TextUtil.isEmptyString(error.getMessage())){
+                    return;
+                }
+                if (error.getMessage().contains("302")) {
                     if (!TextUtil.isEmptyString(LogData)) {
                         SharedPreManager.mInstance(NewsDetailAty2.this).upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                     }
                 }
                 Logger.e("aaa", "上传日志失败！" + error.getMessage());
                 /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
-                System.exit(0);
+//                System.exit(0);
             }
         });
         requestQueue.add(request);
