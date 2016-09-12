@@ -200,5 +200,11 @@ java.lang.Object readResolve();
 -keep class com.news.yazhidao.javascript.VideoJavaScriptBridge{
     public <fields>;
     public <methods>;
+}
 
+##Glide 混淆相关
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
 }
