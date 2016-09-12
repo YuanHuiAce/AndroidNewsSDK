@@ -27,61 +27,74 @@ import java.util.UUID;
 /**
  * Created by fengjigang on 15/5/6.
  */
-public class SharedPreManager {
-    public static SharedPreferences getSettings(String name, int mode){
-        return QiDianApplication.getAppContext().getSharedPreferences(name, mode);
+public final class SharedPreManager {
+
+    private static Context mContext;
+    private static SharedPreManager mInstance;
+    private SharedPreManager(Context context){
+        mContext = context;
+    }
+    public static SharedPreManager mInstance(Context mContext){
+        if (mInstance == null){
+            mInstance = new SharedPreManager(mContext.getApplicationContext());
+        }
+        return mInstance;
     }
 
-    public static void saveUserIdAndPlatform(String spName, String keyUserIdAndPlatform, String userId, String platform) {
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+    public SharedPreferences getSettings(String name, int mode){
+        return mContext.getSharedPreferences(name, mode);
+    }
+
+    public  void saveUserIdAndPlatform(String spName, String keyUserIdAndPlatform, String userId, String platform) {
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         e.putString(keyUserIdAndPlatform, userId+","+platform);
         e.commit();
     }
-    public static void save(String spName, String key, String value){
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+    public  void save(String spName, String key, String value){
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         e.putString(key, value);
         boolean result = e.commit();
         Logger.d("jigang","save result = " + result + ",value="+value);
     }
 
     @Deprecated
-    public static void saveJPushId(String value){
-        SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_PRIVATE).edit();
+    public  void saveJPushId(String value){
+        SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_MULTI_PROCESS).edit();
         e.putString(CommonConstant.KEY_JPUSH_ID, value);
         e.commit();
     }
 
-    public static void saveUUID(){
+    public  void saveUUID(){
         if (TextUtil.isEmptyString(getUUID())){
-            SharedPreferences.Editor e = getSettings(CommonConstant.FILE_USER, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor e = getSettings(CommonConstant.FILE_USER, Context.MODE_MULTI_PROCESS).edit();
             e.putString(CommonConstant.KEY_UUID, UUID.randomUUID().toString());
             e.commit();
         }
     }
 
-    public static String getUUID(){
+    public  String getUUID(){
         return get(CommonConstant.FILE_USER, CommonConstant.KEY_UUID);
     }
 
-    public static String getJPushId(){
+    public  String getJPushId(){
         return get(CommonConstant.FILE_JPUSH, CommonConstant.KEY_JPUSH_ID);
     }
 
-    public static void saveUmengId(String value){
-        SharedPreferences.Editor e = getSettings(CommonConstant.FILE_UMENG, Context.MODE_PRIVATE).edit();
+    public  void saveUmengId(String value){
+        SharedPreferences.Editor e = getSettings(CommonConstant.FILE_UMENG, Context.MODE_MULTI_PROCESS).edit();
         e.putString(CommonConstant.KEY_UMENG_ID, value);
         e.commit();
     }
 
-    public static String getUmengId(){
+    public String getUmengId(){
         return get(CommonConstant.FILE_UMENG, CommonConstant.KEY_UMENG_ID);
     }
 
     /**
      * 保存搜索词
      */
-    public static void saveSearchWord(String pKeyWord){
-        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
+    public  void saveSearchWord(String pKeyWord){
+        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_MULTI_PROCESS);
         String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
         if (!TextUtil.isEmptyString(oldWords)){
             ArrayList<String> oldList = new ArrayList<>(Arrays.asList(oldWords.split(",")));
@@ -105,8 +118,8 @@ public class SharedPreManager {
     /**
      * 获取搜索词列表
      */
-    public static List<String> getSearchWord(){
-        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
+    public  List<String> getSearchWord(){
+        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_MULTI_PROCESS);
         String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
         if (!TextUtil.isEmptyString(oldWords)){
             return Arrays.asList(oldWords.split(","));
@@ -120,14 +133,14 @@ public class SharedPreManager {
      * 保存User json
      * @param user
      */
-    public static void saveUser(User user){
+    public  void saveUser(User user){
         save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO, user.toJsonString());
     }
 
     /**
      * 删除保存的user json
      */
-    public static void deleteUser(Context mContext){
+    public  void deleteUser(Context mContext){
         User user = getUser(mContext);
         if(user!=null){
 //            if (!"meizu".equals(user.getPlatformType())){
@@ -142,7 +155,7 @@ public class SharedPreManager {
      * 从 sp 中获取用户对象
      * @return
      */
-    public static User getUser(Context mContext){
+    public  User getUser(Context mContext){
 //        ShareSDK.initSDK(mContext);
         String userJson = get(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
         if(TextUtils.isEmpty(userJson)){
@@ -172,58 +185,58 @@ public class SharedPreManager {
         }
         return null;
     }
-    public static void save(String spName, String key, long value){
+    public  void save(String spName, String key, long value){
         Logger.d("SettingsManager", "SettingsManager : " + spName + ":" + "key : " + key + "value : " + value);
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         e.putLong(key, value);
         e.commit();
     }
-    public static void save(String spName, String key, int value){
+    public  void save(String spName, String key, int value){
         Logger.d("SettingsManager", "SettingsManager : " + spName + ":" + "key : " + key + "value : " + value);
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         e.putInt(key,value);
         e.commit();
     }
 
-    public static void save(String spName, String key, boolean value){
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+    public  void save(String spName, String key, boolean value){
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         e.putBoolean(key, value);
         e.commit();
     }
 
 
-    public static void clear(String spName){
-        SharedPreferences.Editor editor = getSettings(spName, Context.MODE_PRIVATE).edit();
+    public  void clear(String spName){
+        SharedPreferences.Editor editor = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         editor.clear();
         editor.commit();
     }
 
-    public static String[] getUserIdAndPlatform(String spName, String key){
-        String data = getSettings(spName, Context.MODE_PRIVATE).getString(key, "");
+    public  String[] getUserIdAndPlatform(String spName, String key){
+        String data = getSettings(spName, Context.MODE_MULTI_PROCESS).getString(key, "");
         return TextUtils.isEmpty(data)?null:data.split(",");
     }
-    public static String get(String spName, String key){
-        return getSettings(spName, Context.MODE_PRIVATE).getString(key, "");
+    public  String get(String spName, String key){
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getString(key, "");
     }
-    public static int getInt(String spName, String key){
-        return getSettings(spName, Context.MODE_PRIVATE).getInt(key, 0);
-    }
-
-    public static boolean getBoolean(String spName, String key){
-        return getSettings(spName, Context.MODE_PRIVATE).getBoolean(key, false);
+    public  int getInt(String spName, String key){
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 0);
     }
 
-    public static boolean getBoolean(String spName, String key, boolean defaultValue){
-        return getSettings(spName, Context.MODE_PRIVATE).getBoolean(key, defaultValue);
+    public  boolean getBoolean(String spName, String key){
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getBoolean(key, false);
     }
 
-    public static long getLong(String spName, String key){
-        return getSettings(spName, Context.MODE_PRIVATE).getLong(key, 0);
+    public  boolean getBoolean(String spName, String key, boolean defaultValue){
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getBoolean(key, defaultValue);
     }
 
-    public static void remove(String spName, String...keys){
+    public  long getLong(String spName, String key){
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getLong(key, 0);
+    }
+
+    public  void remove(String spName, String...keys){
         if(keys == null) return;
-        SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor e = getSettings(spName, Context.MODE_MULTI_PROCESS).edit();
         for(String key : keys){
             e.remove(key);
         }
@@ -240,7 +253,7 @@ public class SharedPreManager {
      * @return
      */
 
-    public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
+    public  int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
 
         String mReadData = upLoadLogGet(key);
         if(mReadData.indexOf("city")!= -1){
@@ -268,7 +281,7 @@ public class SharedPreManager {
 
 
     }
-    public static int upLoadLogSaveList(String mUserId, String key, List<UploadLogDataEntity> list) {
+    public  int upLoadLogSaveList(String mUserId, String key, List<UploadLogDataEntity> list) {
 
         String mReadData = upLoadLogGet(key);
         Gson gson = new Gson();
@@ -287,11 +300,11 @@ public class SharedPreManager {
         save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
         return uploadLogEntity.getData().size();
     }
-    public static String upLoadLogGet(String key){
+    public  String upLoadLogGet(String key){
 
         return get(CommonConstant.UPLOAD_LOG,key);
     }
-    public static void upLoadLogDelter(String key){
+    public  void upLoadLogDelter(String key){
 
         remove(CommonConstant.UPLOAD_LOG, key);
     }
@@ -301,7 +314,7 @@ public class SharedPreManager {
 //     * 收藏本地版
 //     * @param bean
 //     */
-//    public static void myFavoriteSaveList(NewsFeed bean){
+//    public  void myFavoriteSaveList(NewsFeed bean){
 //        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
 //        try {
 //            list = myFavoriteGetList();
@@ -313,7 +326,7 @@ public class SharedPreManager {
 //        String str = gson.toJson(list);
 //        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
 //    }
-//    public static boolean myFavoriteisSame(String newsID){
+//    public  boolean myFavoriteisSame(String newsID){
 //        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
 //        try {
 //            list = myFavoriteGetList();
@@ -331,7 +344,7 @@ public class SharedPreManager {
 //        }
 //        return false;
 //    }
-//    public static ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
+//    public  ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
 //        Gson gson = new Gson();
 //        String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
 //        JSONArray array;
@@ -346,7 +359,7 @@ public class SharedPreManager {
 //        return list;
 //
 //    }
-//    public static void myFavoritRemoveItem(String newsID){
+//    public  void myFavoritRemoveItem(String newsID){
 //        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
 //        try {
 //            list = myFavoriteGetList();
@@ -363,7 +376,7 @@ public class SharedPreManager {
 //        }
 //    }
 //
-//    public static ArrayList<NewsFeed> myFavoritRemoveList(ArrayList<NewsFeed> deleteList){
+//    public  ArrayList<NewsFeed> myFavoritRemoveList(ArrayList<NewsFeed> deleteList){
 //        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
 //        try {
 //            list = myFavoriteGetList();
@@ -392,7 +405,7 @@ public class SharedPreManager {
      * 搜索历史的添加，获得，删除
      * @param content
      */
-    public static void HistorySave(String content){
+    public  void HistorySave(String content){
         HistoryEntity historyEntity = new HistoryEntity(content);
         ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
         try {
@@ -404,7 +417,7 @@ public class SharedPreManager {
         historyEntities.add(historyEntity);
         save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
     }
-    public static ArrayList<HistoryEntity> HistoryGetList() throws JSONException {
+    public  ArrayList<HistoryEntity> HistoryGetList() throws JSONException {
         ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
         String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
         Gson gson = new Gson();
@@ -416,11 +429,11 @@ public class SharedPreManager {
         }
         return historyEntities;
     }
-    public static void Historyremove(){
+    public  void Historyremove(){
         remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
     }
 
-//    public static BDLocation getLocation(){
+//    public  BDLocation getLocation(){
 //        String locationStr = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
 //        return GsonUtil.deSerializedByClass(locationStr,BDLocation.class);
 //    }
