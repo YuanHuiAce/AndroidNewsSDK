@@ -574,6 +574,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     bgLayout.setVisibility(View.GONE);
                 }
                 if (error.toString().contains("2002")) {
+                    if (mDeleteIndex != 0) {
+                        mArrNewsFeed.remove(mDeleteIndex);
+                        mDeleteIndex = 0;
+                        mAdapter.notifyDataSetChanged();
+                    }
                     mRefreshTitleBar.setText("已是最新数据");
                     mRefreshTitleBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
