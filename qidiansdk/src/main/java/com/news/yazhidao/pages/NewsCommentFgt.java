@@ -178,7 +178,7 @@ public class NewsCommentFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
         feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
+        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.mInstance(getActivity()).getUser(getActivity()).getMuid():"")+
                 "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
             @Override
@@ -273,7 +273,7 @@ public class NewsCommentFgt extends BaseFragment {
             }
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
-            final User user = SharedPreManager.getUser(mContext);
+            final User user = SharedPreManager.mInstance(getActivity()).getUser(mContext);
             mComment = comment;
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());

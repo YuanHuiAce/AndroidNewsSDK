@@ -145,7 +145,7 @@ public class NewsDetailFgt extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
-        user = SharedPreManager.getUser(getActivity());
+        user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
         // 声明video，把之后的视频放到这里面去
 //        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
@@ -327,7 +327,9 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
 
-        mDetailWebView = (LoadWebView) mNewsDetailHeaderView.findViewById(R.id.mDetailWebView);
+
+        mDetailWebView = new LoadWebView(getActivity().getApplicationContext());
+        mDetailWebView.setLayoutParams(params);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 //        } else {
@@ -343,7 +345,7 @@ public class NewsDetailFgt extends BaseFragment {
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         /** 梁帅：判断图片是不是  不显示 */
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
+                SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -367,7 +369,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         });
         //梁帅：判断图片是不是  不显示
-//        if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
+//        if(SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
 //            mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
 //        }else{
 //            mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
@@ -389,6 +391,9 @@ public class NewsDetailFgt extends BaseFragment {
                 return true;
             }
         });
+        mNewsDetailHeaderView.addView(mDetailWebView);
+
+
         //第2部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
@@ -503,7 +508,7 @@ public class NewsDetailFgt extends BaseFragment {
 //        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
+                (user!=null?"&uid="+SharedPreManager.mInstance(getActivity()).getUser(getActivity()).getMuid():"")+
                 "&p=" + (1)+ "&c=" + (20)
                 , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
@@ -818,7 +823,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 /** 梁帅：判断图片是不是  不显示 */
                 mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                        SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
+                        SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
                         "text/html", "utf-8", null);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT , LinearLayout.LayoutParams.WRAP_CONTENT);
                 mDetailWebView.setLayoutParams(params);
@@ -862,7 +867,7 @@ public class NewsDetailFgt extends BaseFragment {
 
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
-        final User user = SharedPreManager.getUser(getActivity());
+        final User user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(getActivity(),33)).into(holder.ivHeadIcon);
         }

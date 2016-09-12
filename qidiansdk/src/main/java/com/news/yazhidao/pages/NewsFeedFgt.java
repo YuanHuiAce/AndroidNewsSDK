@@ -210,7 +210,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onCreate(bundle);
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
-        User user = SharedPreManager.getUser(mContext);
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
         else
@@ -418,7 +418,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.getUser(mContext).getMuid();
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid();
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
@@ -574,6 +574,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     bgLayout.setVisibility(View.GONE);
                 }
                 if (error.toString().contains("2002")) {
+                    if (mDeleteIndex != 0) {
+                        mArrNewsFeed.remove(mDeleteIndex);
+                        mDeleteIndex = 0;
+                        mAdapter.notifyDataSetChanged();
+                    }
                     mRefreshTitleBar.setText("已是最新数据");
                     mRefreshTitleBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
@@ -586,9 +591,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         }
                     }, 1000);
                 } else if (error.toString().contains("4003")) {//说明三方登录已过期,防止开启3个loginty
-                    User user = SharedPreManager.getUser(getActivity());
+                    User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
                     user.setUtype("2");
-                    SharedPreManager.saveUser(user);
+                    SharedPreManager.mInstance(mContext).saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
                     UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
@@ -619,16 +624,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
         feedRequest.setRequestHeader(header);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
-        Logger.e("jigang", "uuid = " + SharedPreManager.getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
+        Logger.e("jigang", "uuid = " + SharedPreManager.mInstance(mContext).getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
     }
 
 
     public void loadData(final int flag) {
-        User user = SharedPreManager.getUser(mContext);
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         Logger.e("aaa", "loaddata -----" + flag);
         Logger.e("aaa", "loadData:user === " + user);
         if (null != user) {
@@ -804,8 +809,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //            uploadLogDataEntity.setC(bean.getChannel()+"");
 //            uploadLogDataEntities.add(uploadLogDataEntity);
 //        }
-//        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-//        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//        int saveNum = SharedPreManager.mInstance(mContext).upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
+//        Logger.e("ccc", "主页的数据====" + SharedPreManager.mInstance(mContext).upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
 //    }
 
 

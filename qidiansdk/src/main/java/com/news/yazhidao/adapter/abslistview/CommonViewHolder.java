@@ -130,7 +130,7 @@ public class CommonViewHolder {
     public void setGlideDraweeViewURI(int draweeView, String strImg, int width, int height) {
         ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
                 imageView.setImageResource(R.drawable.bg_load_default_small);
             } else {
                 String img = strImg.replace("bdp-", "pro-");

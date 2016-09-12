@@ -153,9 +153,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             if (mKeyWord != null && !mKeyWord.equals("")) {
                 hideKeyboard(v);
                 mSearchTip.setText("暂无搜索结果");
-                SharedPreManager.HistorySave(mKeyWord);
+                SharedPreManager.mInstance(this).HistorySave(mKeyWord);
                 try {
-                    historyEntities = SharedPreManager.HistoryGetList();
+                    historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -182,9 +182,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 //                if(mKeyWord!=null&&!mKeyWord.equals("")) {
 //                    hideKeyboard(v);
 //                    mSearchTip.setText("暂无搜索结果");
-//                    SharedPreManager.HistorySave(mKeyWord);
+//                    SharedPreManager.mInstance(this).HistorySave(mKeyWord);
 //                    try {
-//                        historyEntities = SharedPreManager.HistoryGetList();
+//                        historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
 //                    } catch (JSONException e) {
 //                        e.printStackTrace();
 //                    }
@@ -360,7 +360,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mDoSearchChangeBatch.setOnClickListener(this);
         lv.addHeaderView(headView);
         try {
-            historyEntities = SharedPreManager.HistoryGetList();
+            historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -388,9 +388,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
 //            hideKeyboard(view);
             mSearchTip.setText("暂无搜索结果");
-            SharedPreManager.HistorySave(mKeyWord);
+            SharedPreManager.mInstance(TopicSearchAty.this).HistorySave(mKeyWord);
             try {
-                historyEntities = SharedPreManager.HistoryGetList();
+                historyEntities = SharedPreManager.mInstance(TopicSearchAty.this).HistoryGetList();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -439,9 +439,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                         hideKeyboard(v);
                         mSearchContent.setText(element.getTitle());
                         mSearchTip.setText("暂无搜索结果");
-                        SharedPreManager.HistorySave(element.getTitle());
+                        SharedPreManager.mInstance(TopicSearchAty.this).HistorySave(element.getTitle());
                         try {
-                            historyEntities = SharedPreManager.HistoryGetList();
+                            historyEntities = SharedPreManager.mInstance(TopicSearchAty.this).HistoryGetList();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -586,7 +586,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         footView_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreManager.Historyremove();
+                SharedPreManager.mInstance(TopicSearchAty.this).Historyremove();
                 HistoryLayout.setVisibility(View.GONE);
                 historyEntities = new ArrayList<HistoryEntity>();
                 HistoryEntity bean = new HistoryEntity(-1);
