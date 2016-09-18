@@ -445,6 +445,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
     }
 
+    /**
+     * 新闻标签的样式（rtype   0普通新闻(不用显示标识)、1热点、2推送、3广告）
+     * @param tag
+     * @param type
+     */
     public void newsTag(TextViewExtend tag, int type) {
         String content = "";
         if (type == 1) {
