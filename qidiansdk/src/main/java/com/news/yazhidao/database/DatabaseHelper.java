@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 25;
+    private static int DATABASE_VERSION = 26;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -111,8 +111,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
             NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
-            if (oldVersion <= 9) {
+            if (oldVersion <= 25) {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
             }
 
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
