@@ -8,9 +8,11 @@
         android:id="@+id/type_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:visibility="gone"
-        android:text="papi"/>
+        android:text="papi"
+        android:textSize="@dimen/new_font7"
+        android:visibility="gone" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/news_source_TextView"

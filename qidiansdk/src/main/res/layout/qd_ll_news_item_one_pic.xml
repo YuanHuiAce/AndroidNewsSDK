@@ -48,60 +48,69 @@
                 android:textColor="@color/newsFeed_titleColor"
                 android:textSize="@dimen/new_font1"/>
 
-            <LinearLayout
+            <!--<LinearLayout-->
+                <!--android:id="@+id/source_content_linearLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/title_textView"-->
+                <!--android:layout_marginLeft="@dimen/usual_margin"-->
+                <!--android:layout_marginTop="2dp">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/type_imageView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="5dp"-->
+                    <!--android:visibility="gone" />-->
+
+                <!--<com.news.yazhidao.widget.TextViewExtend-->
+                    <!--android:id="@+id/news_source_TextView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:maxEms="8"-->
+                    <!--android:lines="1"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:textColor="@color/text_message"-->
+                    <!--android:textSize="@dimen/font5"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--/>-->
+
+                <!--<com.news.yazhidao.widget.TextViewExtend-->
+                    <!--android:id="@+id/comment_textView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="5dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:textColor="@color/new_color3"-->
+                    <!--android:textSize="@dimen/new_font6"-->
+                    <!--/>-->
+
+                <!--<com.news.yazhidao.widget.TextViewExtend-->
+                    <!--android:id="@+id/comment_num_textView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:textColor="@color/new_color3"-->
+                    <!--android:textSize="@dimen/new_font6" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/delete_imageView"-->
+                    <!--android:layout_width="22dp"-->
+                    <!--android:layout_height="22dp"-->
+                    <!--android:layout_marginRight="4dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:src="@drawable/btn_news_feed_delete_selector"  />-->
+            <!--</LinearLayout>-->
+            <include
                 android:id="@+id/source_content_linearLayout"
+                layout="@layout/ll_news_item_source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/title_textView"
+                android:layout_below="@+id/image_list_LinearLayout"
                 android:layout_marginLeft="@dimen/usual_margin"
-                android:layout_marginTop="2dp">
-
-                <ImageView
-                    android:id="@+id/type_imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:visibility="gone" />
-
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/news_source_TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxEms="8"
-                    android:lines="1"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/text_message"
-                    android:textSize="@dimen/font5"
-                    android:gravity="center_vertical"
-                    />
-
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/comment_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/new_color3"
-                    android:textSize="@dimen/new_font6"
-                    />
-
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/comment_num_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/new_color3"
-                    android:textSize="@dimen/new_font6" />
-
-                <ImageView
-                    android:id="@+id/delete_imageView"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/btn_news_feed_delete_selector"  />
-            </LinearLayout>
+                android:layout_marginRight="@dimen/usual_margin"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
     </LinearLayout>
 

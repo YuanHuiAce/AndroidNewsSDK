@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.view.Gravity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -169,6 +170,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
@@ -191,6 +193,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -211,6 +214,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
             holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
@@ -230,6 +234,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -438,6 +443,51 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             }
         });
+    }
+
+    /**
+     * 新闻标签的样式（rtype   0普通新闻(不用显示标识)、1热点、2推送、3广告）
+     * @param tag
+     * @param type
+     */
+    public void newsTag(TextViewExtend tag, int type) {
+        String content = "";
+        if (type == 1) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "热点";
+            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
+            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
+        } else if (type == 2) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "推送";
+            tag.setTextColor(mContext.getResources().getColor(R.color.color1));
+            tag.setBackgroundResource(R.drawable.newstag_push_shape);
+        } else if (type == 3) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "广告";
+            tag.setTextColor(mContext.getResources().getColor(R.color.theme_color));
+            tag.setBackgroundResource(R.drawable.newstag_ad_shape);
+        } else {
+            if (tag.getVisibility() == View.VISIBLE) {
+                tag.setVisibility(View.GONE);
+            }
+            return;
+        }
+
+        tag.setText(content);
+
+        tag.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
+        params.width = DensityUtil.dip2px(mContext, 20);
+        params.height = DensityUtil.dip2px(mContext, 11);
+        tag.setLayoutParams(params);
+
     }
 
     int height;

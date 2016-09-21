@@ -265,4 +265,6 @@
     <color name="channeltabstrip_bg">#f8f8f8</color>
     <color name="channeltabstrip_divider">#f0f0f0</color>
 
+    <color name="newsfeed_red" >#fff83b3b</color>
+
 </resources>

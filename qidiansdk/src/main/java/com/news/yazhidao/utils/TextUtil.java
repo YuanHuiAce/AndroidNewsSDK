@@ -179,28 +179,28 @@ public class TextUtil {
         }
         int titleTextSize, commentTextSize, contentTextSize;
         if (textSize == CommonConstant.TEXT_SIZE_NORMAL) {
-            titleTextSize = 20;
-            commentTextSize = 13;
-            contentTextSize = 17;
-        } else if (textSize == CommonConstant.TEXT_SIZE_SMALL) {
-            titleTextSize = 22;
-            commentTextSize = 15;
+            titleTextSize = 24;
+            commentTextSize = 12;
             contentTextSize = 18;
+        } else if (textSize == CommonConstant.TEXT_SIZE_SMALL) {
+            titleTextSize = 18;
+            commentTextSize = 12;
+            contentTextSize = 14;
         } else {
-            titleTextSize = 23;
-            commentTextSize = 16;
-            contentTextSize = 19;
+            titleTextSize = 26;
+            commentTextSize = 22;
+            contentTextSize = 22;
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() + generateJs() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;\">" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #333333;\">" +
                 detail.getTitle() +
-                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #9a9a9a;\" class=\"top\"><span>" +
+                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #999999;\" class=\"top\"><span>" +
                 detail.getPname() + "</span>" +
-                "&nbsp; <span>" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
+                "&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
         if (detail.getCommentSize() != 0) {
-            contentBuilder.append("&nbsp; <span>" + detail.getCommentSize() + "评论" + "</span>");
+            contentBuilder.append("&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + detail.getCommentSize() + "评论" + "</span>");
         }
         contentBuilder.append("</div><div class=\"content\">");
 
