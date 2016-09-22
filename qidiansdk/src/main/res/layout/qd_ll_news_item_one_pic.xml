@@ -10,6 +10,7 @@
         android:id="@+id/title_img_View"
         android:layout_width="84dp"
         android:layout_height="63dp"
+        android:scaleType="centerCrop"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="12dp"/>

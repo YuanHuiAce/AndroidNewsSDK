@@ -287,7 +287,9 @@ public class NewsCommentFgt extends BaseFragment {
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                Glide.with(mContext).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(mContext,33)).into(holder.ivHeadIcon);
+                Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            }else{
+                Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             //梁帅：点赞功能注释掉
