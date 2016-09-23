@@ -94,6 +94,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 回到"奇点"频道并刷新
      */
     public void backFirstItemAndRefreshData() {
+        int currentItem = mViewPager.getCurrentItem();
         //1.返回到"奇点"频道
         mViewPager.setCurrentItem(0,false);
         mChannelTabStrip.scrollToFirstItem();
@@ -101,7 +102,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         MyViewPagerAdapter a = (MyViewPagerAdapter) mViewPager.getAdapter();
         NewsFeedFgt newsFeedFgt = (NewsFeedFgt) a.instantiateItem(mViewPager, mViewPager.getCurrentItem());
 //        newsFeedFgt.refreshData();
-        newsFeedFgt. getFirstPosition();
+        if(currentItem==0) {
+            newsFeedFgt.getFirstPosition();
+        }
     }
 
 

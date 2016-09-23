@@ -179,11 +179,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mlvNewsFeed == null) {//防止listview为空
             return;
         }
-        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-            isNotLoadData = true;
-        } else {
-            isNotLoadData = false;
-        }
+//        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+//            isNotLoadData = true;
+//        } else {
+//            isNotLoadData = false;
+//        }
+        isNotLoadData = false;
         mlvNewsFeed.getRefreshableView().setSelection(0);
         mlvNewsFeed.getRefreshableView().smoothScrollToPosition(0);
     }
