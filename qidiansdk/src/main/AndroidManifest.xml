@@ -1,11 +1,11 @@
 <manifest package="com.news.yazhidao"
           xmlns:android="http://schemas.android.com/apk/res/android">
-
     <application
         android:largeHeap="true"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         >
         <activity
             android:name=".pages.MainAty"
@@ -25,7 +25,18 @@
         <activity
             android:name=".pages.PlayVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="landscape" />
+             />
+        <activity
+            android:name="com.tencent.smtt.sdk.VideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true">
+            <intent-filter>
+                <action android:name="com.tencent.smtt.tbs.video.PLAY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
