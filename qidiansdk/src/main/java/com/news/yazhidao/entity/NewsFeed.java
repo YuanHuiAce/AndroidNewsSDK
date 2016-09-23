@@ -99,6 +99,12 @@ public class NewsFeed implements Serializable {
     private int conflag;
     /** 是(1)否(0)已关心该新闻对应的发布源 */
     private int conpubflag;
+    /**
+     * 0普通新闻(不用显示标识)、1热点、2推送、3广告
+     */
+    @DatabaseField
+    private int rtype;
+
 
     /**搜索频道中的订阅源*/
     public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
@@ -139,6 +145,14 @@ public class NewsFeed implements Serializable {
 
     public void setAttentionListEntities(ArrayList<AttentionListEntity> attentionListEntities) {
         this.attentionListEntities = attentionListEntities;
+    }
+
+    public int getRtype() {
+        return rtype;
+    }
+
+    public void setRtype(int rtype) {
+        this.rtype = rtype;
     }
 
     public int getConpubflag() {

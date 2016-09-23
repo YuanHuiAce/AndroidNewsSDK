@@ -865,7 +865,10 @@ public class NewsDetailFgt extends BaseFragment {
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
-            Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).crossFade().centerCrop().transform(new CommonViewHolder.GlideRoundTransform(getActivity(),33)).into(holder.ivHeadIcon);
+            Uri uri = Uri.parse(comment.getAvatar());
+            Glide.with(getActivity()).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+        } else {
+            Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
