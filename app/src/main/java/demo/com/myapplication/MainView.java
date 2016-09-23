@@ -89,11 +89,16 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public void result(String channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
     }
-
+    long firstClick = 0;
     /**
      * 回到"奇点"频道并刷新
      */
     public void backFirstItemAndRefreshData() {
+        if (System.currentTimeMillis() - firstClick <= 1500L) {
+            firstClick = System.currentTimeMillis();
+            return;
+        }
+        firstClick = System.currentTimeMillis();
         int currentItem = mViewPager.getCurrentItem();
         //1.返回到"奇点"频道
         mViewPager.setCurrentItem(0,false);
