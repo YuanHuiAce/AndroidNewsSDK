@@ -190,15 +190,20 @@ public class NewsCommentFgt extends BaseFragment {
                 Logger.e("jigang", "network success, comment" + result);
 
                 if (!TextUtil.isListEmpty(result)) {
+                    Logger.e("ccc","1111111111111");
                     mComments.addAll(result);
                     mCommentsAdapter.setData(mComments);
                     Logger.d("aaa", "评论加载完毕！！！！！！");
                     news_comment_NoCommentsLayout.setVisibility(View.GONE);
                 } else {
-                    if (mComments.size() == 0) {
-                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
-                    } else {
+                    /** 梁帅:代码要严谨 原来 (mComments.size() == 0) */
+
+                    if (!TextUtil.isListEmpty(mComments)) {
+                        Logger.e("ccc","2222222222222222222");
                         news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                    } else {
+                        Logger.e("ccc","333333333333333333333");
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
                     }
 
                 }
@@ -209,6 +214,10 @@ public class NewsCommentFgt extends BaseFragment {
                 mNewsCommentList.onRefreshComplete();
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
+                }
+                /** 梁帅:服务器返回空的状态码是 2002 */
+                if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
+                    news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
                 }
                 Logger.e("jigang", "NewsCommentFgt  network fail"+error);
             }
