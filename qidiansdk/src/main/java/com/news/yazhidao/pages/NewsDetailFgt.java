@@ -336,7 +336,6 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
-        mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);

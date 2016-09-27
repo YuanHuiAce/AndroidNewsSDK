@@ -398,7 +398,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     }
 
                 }
-
                 /**点击查看详情时,统计当前的频道名称*/
                 String channelName = "";
                 ChannelItemDao dao = new ChannelItemDao(mContext);

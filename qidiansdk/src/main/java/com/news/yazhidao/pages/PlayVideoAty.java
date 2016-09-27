@@ -1,24 +1,26 @@
 package com.news.yazhidao.pages;
 
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.x5webview.X5WebView;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 public class PlayVideoAty extends BaseActivity {
-    private WebView mPlayVideoWebView;
+    private X5WebView mPlayVideoWebView;
     private String mVideoUrl;
 //    private JavascriptInterface javascriptInterface;
 
@@ -30,16 +32,17 @@ public class PlayVideoAty extends BaseActivity {
 
     @Override
     protected void setContentView() {
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.activity_play_video);
     }
 
     @Override
     protected void initializeViews() {
         mVideoUrl = getIntent().getStringExtra(VideoJavaScriptBridge.KEY_VIDEO_URL);
-        if (!TextUtil.isEmptyString(mVideoUrl)){
+        if (!TextUtil.isEmptyString(mVideoUrl) && mVideoUrl.contains("&")){
             mVideoUrl = mVideoUrl.substring(0,mVideoUrl.indexOf("&"));
         }
-        mPlayVideoWebView = (WebView) findViewById(R.id.mPlayVideoWebView);
+        mPlayVideoWebView = (X5WebView) findViewById(R.id.mPlayVideoWebView);
 //
         Logger.e("jigang","aty url =" + mVideoUrl);
         initWebView();
@@ -47,10 +50,9 @@ public class PlayVideoAty extends BaseActivity {
     }
     public void initWebView(){
 
-        WebSettings settings = mPlayVideoWebView.getSettings();
+        com.tencent.smtt.sdk.WebSettings settings = mPlayVideoWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setPluginState(WebSettings.PluginState.ON);
         settings.setAllowFileAccess(true);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
