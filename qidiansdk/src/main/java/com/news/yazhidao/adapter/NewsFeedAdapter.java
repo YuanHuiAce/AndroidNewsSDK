@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
 import android.view.Gravity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -372,7 +371,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                    Log.i("tag","firstClick"+firstClick);
                 } else {
                     ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
                 }

@@ -4,15 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -55,6 +59,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
+    private ConnectivityManager mConnectivityManager;
+    private TextView mtvNewWorkBar;
     //baidu Map
 //    public LocationClient mLocationClient = null;
 //    public BDLocationListener myListener = new MyLocationListener();
@@ -84,6 +90,42 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
 //                mUserCenter.setImageURI(null);
 //            }
+            String action = intent.getAction();
+            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
+                if(netInfo != null && netInfo.isAvailable()) {
+                    /////////////网络连接
+                    String name = netInfo.getTypeName();
+
+                    if(netInfo.getType()==ConnectivityManager.TYPE_WIFI){
+                        /////WiFi网络
+
+                    }else if(netInfo.getType()==ConnectivityManager.TYPE_ETHERNET){
+                        /////有线网络
+
+                    }else if(netInfo.getType()==ConnectivityManager.TYPE_MOBILE){
+                        /////////3g网络
+
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i("tag","1111");
+                            mtvNewWorkBar.setVisibility(View.VISIBLE);
+                        }
+                    });
+                } else {
+                    ////////网络断开
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i("tag","222");
+                            mtvNewWorkBar.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
         }
     }
 
@@ -104,6 +146,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
+        mtvNewWorkBar = (TextView) findViewById(R.id.mNetWorkBar);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
@@ -150,8 +193,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //        }
         /**注册用户登录广播*/
         mReceiver = new UserLoginReceiver();
-        IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(ACTION_USER_LOGOUT);
+        filter.addAction(ACTION_USER_LOGIN);
         registerReceiver(mReceiver, filter);
 
 

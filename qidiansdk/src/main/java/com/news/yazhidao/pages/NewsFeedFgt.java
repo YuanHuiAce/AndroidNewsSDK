@@ -156,6 +156,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             isNeedAddSP = false;
         }
+        if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
+            loadData(PULL_DOWN_REFRESH);
+        }
 
 
 //        if (rootView != null && !isVisibleToUser) {
@@ -321,9 +324,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                  */
 
                 ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
-                if(!TextUtil.isListEmpty(arrNewsFeed)){
+                if (!TextUtil.isListEmpty(arrNewsFeed)) {
                     loadData(PULL_DOWN_REFRESH);
-                }else{
+                } else {
                     loadData(PULL_UP_REFRESH);
                 }
 
@@ -350,7 +353,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mRefreshReciver != null){
+        if (mRefreshReciver != null) {
             mContext.unregisterReceiver(mRefreshReciver);
         }
     }
@@ -367,10 +370,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
-    private void unbindDrawables(View view)
-    {
-        if (view.getBackground() != null)
-        {
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
             view.getBackground().setCallback(null);
         }
         if (rootView != null && rootView.getParent() != null) {
@@ -954,7 +955,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
     }
-    public void setTextSize(){
+
+    public void setTextSize() {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }

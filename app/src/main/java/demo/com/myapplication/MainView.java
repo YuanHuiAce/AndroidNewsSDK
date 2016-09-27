@@ -3,7 +3,11 @@ package demo.com.myapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -57,14 +62,20 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
+    private TextView mtvNewWorkBar;
+    private ConnectivityManager mConnectivityManager;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
-    public enum FONTSIZE{TEXT_SIZE_SMALL(16),TEXT_SIZE_NORMAL(18),TEXT_SIZE_BIG(20);
+
+    public enum FONTSIZE {
+        TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
         int size;
+
         FONTSIZE(int i) {
             size = i;
         }
-        public int getfontsize(){
+
+        public int getfontsize() {
             return size;
         }
     }
@@ -79,6 +90,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 自定义的PopWindow
      */
     FeedDislikePopupWindow dislikePopupWindow;
+
     public MainView(FragmentActivity context) {
         super(context);
         initializeViews(context);
@@ -89,7 +101,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public void result(String channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
     }
+
     long firstClick = 0;
+
     /**
      * 回到"奇点"频道并刷新
      */
@@ -101,33 +115,17 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         firstClick = System.currentTimeMillis();
         int currentItem = mViewPager.getCurrentItem();
         //1.返回到"奇点"频道
-        mViewPager.setCurrentItem(0,false);
+        mViewPager.setCurrentItem(0, false);
         mChannelTabStrip.scrollToFirstItem();
         //2.刷新数据
         MyViewPagerAdapter a = (MyViewPagerAdapter) mViewPager.getAdapter();
         NewsFeedFgt newsFeedFgt = (NewsFeedFgt) a.instantiateItem(mViewPager, mViewPager.getCurrentItem());
 //        newsFeedFgt.refreshData();
-        if(currentItem==0) {
+        if (currentItem == 0) {
             newsFeedFgt.getFirstPosition();
         }
     }
 
-
-
-    private class UserLoginReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-//            if (ACTION_USER_LOGIN.equals(intent.getAction())) {
-//                String url = intent.getStringExtra(KEY_INTENT_USER_URL);
-//                if (!TextUtil.isEmptyString(url)) {
-//                    mUserCenter.setImageURI(Uri.parse(url));
-//                }
-//            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
-//                mUserCenter.setImageURI(null);
-//            }
-        }
-    }
 
     protected void initializeViews(final FragmentActivity mContext) {
 //        MobclickAgent.onEvent(this,"bainews_user_assess_app");
@@ -135,6 +133,14 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mChannelItemDao = new ChannelItemDao(mContext);
         mSelChannelItems = new ArrayList<>();
+        mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
+        mtvNewWorkBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                activity.startActivity(intent);
+            }
+        });
         mChannelTabStrip = (ChannelTabStrip) view.findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) view.findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
@@ -182,18 +188,63 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //            }
 //        }
         /**注册用户登录广播*/
-//        mReceiver = new UserLoginReceiver();
-//        IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
-//        filter.addAction(ACTION_USER_LOGOUT);
-//        registerReceiver(mReceiver, filter);
-
-
+        mReceiver = new UserLoginReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(ACTION_USER_LOGOUT);
+        filter.addAction(ACTION_USER_LOGIN);
+        activity.registerReceiver(mReceiver, filter);
     }
 
+    private class UserLoginReceiver extends BroadcastReceiver {
 
-    public View  getNewsView(){
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            if (ACTION_USER_LOGIN.equals(intent.getAction())) {
+//                String url = intent.getStringExtra(KEY_INTENT_USER_URL);
+//                if (!TextUtil.isEmptyString(url)) {
+//                    mUserCenter.setImageURI(Uri.parse(url));
+//                }
+//            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
+//                mUserCenter.setImageURI(null);
+//            }
+            String action = intent.getAction();
+            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
+                if (netInfo != null && netInfo.isAvailable()) {
+                    /////////////网络连接
+                    String name = netInfo.getTypeName();
+
+                    if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        /////WiFi网络
+
+                    } else if (netInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+                        /////有线网络
+
+                    } else if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        /////////3g网络
+
+                    }
+                    mtvNewWorkBar.setVisibility(View.GONE);
+                } else {
+                    ////////网络断开
+                    mtvNewWorkBar.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    public void unregisterNetWorkReceiver(){
+        if (mReceiver != null) {
+            activity.unregisterReceiver(mReceiver);
+        }
+    }
+
+    public View getNewsView() {
         return this.view;
     }
+
     /**
      * 开始顶部 progress 刷新动画
      */
@@ -217,7 +268,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void loadData() {
 
-        UserManager.registerVisitor(activity,null);
+        UserManager.registerVisitor(activity, null);
         //    mHandler.postDelayed(new Runnable() {
         //       @Override
 //public void run() {
@@ -288,7 +339,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 Logger.e("jigang", "index = " + index);
                 index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
             }
-            mViewPager.setCurrentItem(index)    ;
+            mViewPager.setCurrentItem(index);
             Fragment item = mViewPagerAdapter.getItem(index);
             if (item != null) {
                 ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
@@ -298,7 +349,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             mChannelTabStrip.setViewPager(mViewPager);
         }
     }
-
 
 
     public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -357,7 +407,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             String channelId = "";
             try {
                 channelId = mSelChannelItems.get(position).getId();
-            }catch (Exception e){
+            } catch (Exception e) {
                 channelId = mSelChannelItems.get(mSelChannelItems.size() - 1).getId();
             }
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
@@ -386,6 +436,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //        }
 
     }
+
     int[] LocationInWindow = new int[2];
     NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
@@ -395,7 +446,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             view.getLocationInWindow(LocationInWindow);
 
             dislikePopupWindow.setSourceList("来源：" + PubName);
-            dislikePopupWindow.showView(x, y -LocationInWindow[1]);
+            dislikePopupWindow.showView(x, y - LocationInWindow[1]);
 
 
         }
@@ -404,9 +455,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     /**
      * 梁帅：隐藏不喜欢窗口的方法
+     *
      * @return
      */
-    public boolean closePopWindow(){
+    public boolean closePopWindow() {
         if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
             dislikePopupWindow.setVisibility(View.GONE);
             return true;
@@ -417,14 +469,14 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     /**
      * 梁帅：设置是否是  智能模式（不显示图片）
      */
-    public void setNotShowImages(boolean isShow){
+    public void setNotShowImages(boolean isShow) {
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, isShow);
     }
 
     /**
      * 梁帅：修改全局字体文字大小
-     * @param fontSize
-     * {@link FONTSIZE}
+     *
+     * @param fontSize {@link FONTSIZE}
      */
     public void setTextSize(FONTSIZE fontSize) {
         SharedPreManager.mInstance(activity).save("showflag", "textSize", fontSize.getfontsize());
@@ -434,13 +486,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-     *  梁帅：是否让屏幕保持常亮
+     * 梁帅：是否让屏幕保持常亮
+     *
      * @param isKeepOn
      */
-    public void setKeepScreenOn(boolean isKeepOn){
+    public void setKeepScreenOn(boolean isKeepOn) {
         SharedPreManager.mInstance(activity).save("showflag", "isKeepScreenOn", isKeepOn);
     }
-
 
 
 }
