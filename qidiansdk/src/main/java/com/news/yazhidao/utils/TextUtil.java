@@ -114,6 +114,9 @@ public class TextUtil {
             }
         }
         Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
+        if (url.contains("vid=")){
+            url = url.substring(0,url.indexOf("&"));
+        }
         return url;
 //        String params = url.substring(url.indexOf("?") + 1);
 //        Logger.e("jigang", "params url=" + params);
