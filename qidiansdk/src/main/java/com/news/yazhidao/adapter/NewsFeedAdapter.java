@@ -28,6 +28,7 @@ import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -173,7 +174,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
             final String strTitle = feed.getTitle();
             if (isFavorite) {
                 setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, false);
@@ -193,12 +194,25 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+            //广告
+//            ArrayList<String> arrUrl = feed.getAdimpression();
+//            if (arrUrl != null && !TextUtil.isEmptyString(arrUrl.get(0)) && !feed.isUpload()) {
+//                feed.setUpload(true);
+//                String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+//                String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+//                String requestUrl = url + "&lon=" + lon + "&lat=" + lat;
+//                Log.i("tag", "request" + requestUrl);
+//                NetworkRequest request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
+//                HashMap<String, Object> hashMap = new HashMap<>();
+//                request.getParams = hashMap;
+//                request.execute();
+//            }
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             int height = (int) (with * 9 / 16.0f);
             int num = feed.getStyle() - 11;
-            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
             ImageView ivBigPic = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();
             lpBigPic.width = with;
@@ -216,9 +230,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
-            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
-            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
-            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
+            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
@@ -362,17 +376,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-
-                ArrayList<String> imageList = feed.getImgs();
-                if (imageList != null && imageList.size() != 0) {
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
-                }
-                if (mNewsFeedFgt != null) {
-                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                if (feed.getRtype() == 3) {
+                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                    AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(AdIntent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
+                    }
                 } else {
-                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+
+                    ArrayList<String> imageList = feed.getImgs();
+                    if (imageList != null && imageList.size() != 0) {
+                        intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
+                    }
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    }
                 }
                 //推送人员使用
                 if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
@@ -444,6 +468,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     /**
      * 新闻标签的样式（rtype   0普通新闻(不用显示标识)、1热点、2推送、3广告）
+     *
      * @param tag
      * @param type
      */

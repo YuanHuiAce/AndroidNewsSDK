@@ -75,7 +75,7 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private int concern;
     /**
-     *  这个参数是收藏用的单张图
+     * 这个参数是收藏用的单张图
      */
     private String imageUrl;
     /**
@@ -93,20 +93,34 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String descr;
 
-    /** 是(1)否(0)已收藏 */
+    /**
+     * 是(1)否(0)已收藏
+     */
     private int colflag;
-    /** 是(1)否(0)已关心 */
+    /**
+     * 是(1)否(0)已关心
+     */
     private int conflag;
-    /** 是(1)否(0)已关心该新闻对应的发布源 */
+    /**
+     * 是(1)否(0)已关心该新闻对应的发布源
+     */
     private int conpubflag;
     /**
      * 0普通新闻(不用显示标识)、1热点、2推送、3广告
      */
     @DatabaseField
     private int rtype;
+    /**
+     * 印象展示
+     */
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<String> adimpression;
 
+    private boolean isUpload;
 
-    /**搜索频道中的订阅源*/
+    /**
+     * 搜索频道中的订阅源
+     */
     public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
 
 
@@ -337,5 +351,21 @@ public class NewsFeed implements Serializable {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public ArrayList<String> getAdimpression() {
+        return adimpression;
+    }
+
+    public void setAdimpression(ArrayList<String> adimpression) {
+        this.adimpression = adimpression;
+    }
+
+    public boolean isUpload() {
+        return isUpload;
+    }
+
+    public void setUpload(boolean upload) {
+        isUpload = upload;
     }
 }

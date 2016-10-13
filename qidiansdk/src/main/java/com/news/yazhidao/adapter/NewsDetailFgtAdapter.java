@@ -2,9 +2,14 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.text.Html;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
@@ -12,6 +17,7 @@ import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.widget.TextViewExtend;
 
 import java.util.Calendar;
 
@@ -86,17 +92,22 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
                 (month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day);
 
 
-        holder.setTextViewExtendTextandTextSice(R.id.attention_Title, relatedItemEntity.getTitle());
+//        holder.setTextViewExtendTextandTextSice(R.id.attention_Title, relatedItemEntity.getTitle());
+        TextViewExtend title = (TextViewExtend) holder.getView(R.id.attention_Title);
+        title.setText(Html.fromHtml(relatedItemEntity.getTitle()));
 
 
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
         String imageUrl = relatedItemEntity.getImgUrl();
         if (imageUrl != null && imageUrl.length() != 0) {
+            Log.i("tag",imageUrl + "===");
             holder.getView(R.id.attention_haveImageShow).setVisibility(View.VISIBLE);
+            holder.getView(R.id.attention_img_View).setVisibility(View.VISIBLE);
+            ImageView ivAttention = holder.getView(R.id.attention_img_View);
 //            holder.setSimpleDraweeViewURI(R.id.attention_img_View,imageUrl);
 //            ImageView ivAttention = holder.getView(R.id.attention_img_View);
-//            Glide.with(mContext).load(Uri.parse(imageUrl)).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().into(ivAttention);
-            holder.setGlideDraweeViewURI(R.id.attention_img_View,imageUrl,0,0);
+            Glide.with(mContext).load(Uri.parse(imageUrl)).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().into(ivAttention);
+//            holder.setGlideDraweeViewURI(R.id.attention_img_View, imageUrl);
         } else {
             holder.getView(R.id.attention_img_View).setVisibility(View.GONE);
             holder.getView(R.id.attention_haveImageShow).setVisibility(View.GONE);

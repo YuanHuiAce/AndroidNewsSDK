@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.news.yazhidao.R;
@@ -119,23 +120,30 @@ public class CommonViewHolder {
         return mLayoutId;
     }
 
-    public void setSimpleDraweeViewURI(int draweeView, String strImg) {
-//        SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
-//        if (!TextUtil.isEmptyString(strImg)) {
-//            imageView.setImageURI(Uri.parse(strImg));
+    public void setGlideDraweeViewURI(int draweeView, String strImg) {
+        ImageView imageView = getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            imageView.setImageURI(Uri.parse(strImg));
 //            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-//        }
+        }
     }
-
-    public void setGlideDraweeViewURI(int draweeView, String strImg, int width, int height) {
+    public void setGlideDraweeViewURI(int draweeView, String strImg, int width, int height, int rType) {
         ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
             if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
                 imageView.setImageResource(R.drawable.bg_load_default_small);
+//                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
+//                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
             } else {
-                String img = strImg.replace("bdp-", "pro-");
-                Uri uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().transform(new GlideTransform(mContext, 1)).into(imageView);
+                Uri uri;
+                if (rType != 3) {
+                    String img = strImg.replace("bdp-", "pro-");
+                    uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
+                } else {
+                    uri = Uri.parse(strImg);
+                }
+                Glide.with(mContext).load(uri).centerCrop().placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
             }
         }
     }
@@ -172,9 +180,9 @@ public class CommonViewHolder {
             RectF rectF = new RectF(0, 0, source.getWidth(), source.getHeight());
             canvas.drawRect(rectF, paint);
 
-            Paint  paint1 = new Paint();
+            Paint paint1 = new Paint();
             paint1.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            RectF rectF1 = new RectF(radius/2.0f, radius/2.0f, source.getWidth()-radius/2.0f, source.getHeight()-radius/2.0f);
+            RectF rectF1 = new RectF(radius / 2.0f, radius / 2.0f, source.getWidth() - radius / 2.0f, source.getHeight() - radius / 2.0f);
             canvas.drawRect(rectF1, paint1);
             return result;
         }

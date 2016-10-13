@@ -42,6 +42,8 @@ public final class CommonConstant {
     public static final String KEY_SEARCH_WORDS = "key_search_words";
     public static final String FILE_USER_LOCATION = "file_user_location";
     public static final String KEY_USER_LOCATION = "key_user_location";
+    public static final String KEY_LOCATION_LATITUDE = "key_location_latitude";
+    public static final String KEY_LOCATION_LONGITUDE = "key_location_longitude";
     public static final String KEY_USER_NEED_SHOW_GUIDE_PAGE = "key_user_need_show_guide_page";
     public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
     public static final String KEY_UUID = "key_uuid";//确保用户唯一的uuid
