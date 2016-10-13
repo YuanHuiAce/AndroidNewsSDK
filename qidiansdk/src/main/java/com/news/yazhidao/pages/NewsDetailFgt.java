@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,7 +153,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -245,27 +246,27 @@ public class NewsDetailFgt extends BaseFragment {
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
-//                if (beanList.size() == 0) {
-//
-//                    return;
-//                }
-//                int lastPositon =  absListView.getLastVisiblePosition();
-//                Logger.e("aaa", "lastPositon====" + lastPositon);
-//                Message msg = new Message();
-//                if(lastPositon -2 ==beanList.size()-1){
-//                    if (MAXPage > viewpointPage) {
-//                        if(oldLastPositon == lastPositon){
-//                            return;
-//                        }
-//                        msg.what = LOAD_MORE;
-//                        mHandler.sendMessage(msg);
-//                    }else{
-//                        msg.what = LOAD_BOTTOM;
-//                        mHandler.sendMessage(msg);
-//
-//                    }
-//                }
-//                oldLastPositon = lastPositon;
+                if (beanList.size() == 0) {
+
+                    return;
+                }
+                int lastPositon =  absListView.getLastVisiblePosition();
+                Logger.e("aaa", "lastPositon====" + lastPositon);
+                Message msg = new Message();
+                if(lastPositon -2 ==beanList.size()-1){
+                    if (MAXPage > viewpointPage) {
+                        if(oldLastPositon == lastPositon){
+                            return;
+                        }
+                        msg.what = LOAD_MORE;
+                        mHandler.sendMessage(msg);
+                    }else{
+                        msg.what = LOAD_BOTTOM;
+                        mHandler.sendMessage(msg);
+
+                    }
+                }
+                oldLastPositon = lastPositon;
             }
         });
         mAdapter = new NewsDetailFgtAdapter(getActivity());
@@ -277,34 +278,34 @@ public class NewsDetailFgt extends BaseFragment {
         return rootView;
     }
 
-    //    private Handler mHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            switch (msg.what) {
-//                case LOAD_MORE:
-//                    beanList.addAll(beanPageList.get(viewpointPage));
-//                    viewpointPage++;
-//                    mAdapter.setNewsFeed(beanList);
-//                    mAdapter.notifyDataSetChanged();
-//                    mNewsDetailList.onRefreshComplete();
-//                    break;
-//                case LOAD_BOTTOM:
-//                    if(isNoHaveBean){
-//                        return;
-//                    }
-//
-//                    isNoHaveBean = true;
-//
-//                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//                    ListView lv = mNewsDetailList.getRefreshableView();
-//                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
-//                    mNewsDetailFootView.setLayoutParams(layoutParams);
-//                    lv.addFooterView(mNewsDetailFootView);
-//                    break;
-//            }
-//        }
-//    };
+        private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_MORE:
+                    beanList.addAll(beanPageList.get(viewpointPage));
+                    viewpointPage++;
+                    mAdapter.setNewsFeed(beanList);
+                    mAdapter.notifyDataSetChanged();
+                    mNewsDetailList.onRefreshComplete();
+                    break;
+                case LOAD_BOTTOM:
+                    if(isNoHaveBean){
+                        return;
+                    }
+
+                    isNoHaveBean = true;
+
+                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                    ListView lv = mNewsDetailList.getRefreshableView();
+                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
+                    mNewsDetailFootView.setLayoutParams(layoutParams);
+                    lv.addFooterView(mNewsDetailFootView);
+                    break;
+            }
+        }
+    };
     @Override
     public void onDetach() {
         super.onDetach();
@@ -582,6 +583,7 @@ public class NewsDetailFgt extends BaseFragment {
         //热门评论  不添加
         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.GONE);
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
 //        feedRequest.setRetryPolicy、(new DefaultRetryPolicy(15000, 0, 0));
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 
