@@ -48,6 +48,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 
         if (getCount() == position + 1) {//去掉最后一条的线
             holder.getView(R.id.attention_bottomLine).setVisibility(View.GONE);
+        }else {
+            holder.getView(R.id.attention_bottomLine).setVisibility(View.VISIBLE);
         }
     }
 

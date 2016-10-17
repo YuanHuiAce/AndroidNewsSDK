@@ -134,6 +134,6 @@
         android:layout_below="@id/mSearchHeader"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        layout="@layout/loading_view_anim"
+        layout="@layout/qd_loading_view_anim"
         android:visibility="visible" />
 </RelativeLayout>

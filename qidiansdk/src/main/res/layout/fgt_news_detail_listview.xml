@@ -16,7 +16,7 @@
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never"
         android:scrollbars="none"/>
-    <include layout="@layout/loading_view" />
+    <include layout="@layout/qd_loading_view_anim" />
 
 
 

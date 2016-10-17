@@ -8,6 +8,7 @@
     <item android:drawable="@drawable/qd_jz_dh_6" android:duration="80"/>
     <item android:drawable="@drawable/qd_jz_dh_7" android:duration="80"/>
     <item android:drawable="@drawable/qd_jz_dh_8" android:duration="80"/>
+    <item android:drawable="@drawable/qd_jz_dh_9" android:duration="80"/>
 
 
 </animation-list>

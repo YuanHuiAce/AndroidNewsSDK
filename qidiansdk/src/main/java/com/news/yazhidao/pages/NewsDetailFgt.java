@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -356,13 +358,12 @@ public class NewsDetailFgt extends BaseFragment {
                 if (openWithWevView(url)) {//如果是超链接，执行此方法
                     startIntentBrowser("com.lieying.browser", url);
                 } else {
-//                    Intent intent = new Intent();
-//                    intent.setAction("android.intent.action.VIEW");
-//                    Uri content_url = Uri.parse("http://www.baidu.com");
-//                    intent.setData(content_url);
-//                    intent.setClassName("com.lieying.browser","com.lieying.browser.BrowserActivity");
-//                    startActivity(intent);
-
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse("http://www.baidu.com");
+                    intent.setData(content_url);
+                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -983,16 +984,24 @@ public class NewsDetailFgt extends BaseFragment {
             Logger.v("PACKAGENAME:", stemp);
             if (stemp.equals(packageName)) {
                 existLY = true;
+                break;
             }
         }
         Intent intent;
         if (existLY) {
 //            intent = packageManager.getLaunchIntentForPackage(packageName);
-            intent = new Intent();
+            intent = new Intent(Intent.ACTION_WEB_SEARCH);
+            String keyword = "";
+            try {
+                keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            intent.putExtra(SearchManager.QUERY, keyword);
             intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
             intent.putExtra("back_to_navigation", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse(url));
+//            intent.setData(Uri.parse(url));
             startActivity(intent);
         } else {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
