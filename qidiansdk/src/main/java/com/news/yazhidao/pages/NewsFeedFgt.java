@@ -881,9 +881,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
-        //发版时候去掉
-//        bgLayout.setVisibility(View.VISIBLE);
-
     }
     private void loadNewFeedError(VolleyError error,final int flag){
         if (error.toString().contains("2002")) {

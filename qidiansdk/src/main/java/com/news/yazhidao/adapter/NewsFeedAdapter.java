@@ -173,7 +173,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
-        } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
+        } else if (layoutId == R.layout.qd_ll_news_item_one_pic && feed.getRtype() != 3) {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
             final String strTitle = feed.getTitle();
             if (isFavorite) {
