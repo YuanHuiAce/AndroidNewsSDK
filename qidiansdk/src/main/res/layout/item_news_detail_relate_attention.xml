@@ -12,14 +12,29 @@
         android:layout_marginRight="16dp"
         android:background="@color/white">
 
+        <ImageView
+            android:id="@+id/title_img_View"
+            android:layout_width="84dp"
+            android:layout_height="63dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop" />
+
+
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/attention_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="12dp"
+            android:layout_toLeftOf="@id/title_img_View"
+            android:ellipsize="end"
             android:includeFontPadding="false"
+            android:maxLines="2"
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font10" />
 
@@ -28,9 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/attention_Title"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="10dp"
             android:textColor="@color/new_color3"
             android:textSize="@dimen/new_font6" />
 
@@ -38,7 +53,7 @@
             android:id="@+id/attention_bottomLine"
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:layout_below="@+id/attention_Source"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@color/new_color4" />

@@ -62,6 +62,7 @@ import com.news.yazhidao.utils.manager.UserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
@@ -425,7 +426,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public void stopRefresh() {
     }
 
-    public String getAdMessage(){
+    public String getAdMessage() {
 
         Gson gson = new Gson();
 
@@ -434,15 +435,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */
         adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mActivity)+"");
+        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mActivity) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(mActivity.TELEPHONY_SERVICE);
         /** 设置IMEI */
         adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
         /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mActivity.getContentResolver(),Settings.Secure.ANDROID_ID);
-        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId)?null:DeviceInfoUtil.generateMD5(androidId));
+        String androidId = Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
         /** 设置设备品牌 */
         String brand = Build.BRAND;
         adDeviceEntity.setBrand(brand);
@@ -458,9 +459,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         adDeviceEntity.setDevice_size(CrashHandler.getResolution(mActivity));
         /** 设置IP */
         String ip = "";
-        if(DeviceInfoUtil.isWifiNetWorkState(mActivity)){
+        if (DeviceInfoUtil.isWifiNetWorkState(mActivity)) {
             ip = DeviceInfoUtil.getIpAddress(mActivity);
-        }else{
+        } else {
             ip = DeviceInfoUtil.getLocalIpAddress();
         }
         adDeviceEntity.setIp(ip);
@@ -468,16 +469,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         String networkType = DeviceInfoUtil.getNetworkType(mActivity);
         if (TextUtil.isEmptyString(networkType)) {
             adDeviceEntity.setNetwork("0");
-        }else{
+        } else {
             if ("wifi".endsWith(networkType)) {
                 adDeviceEntity.setNetwork("1");
-            }else if("2G".endsWith(networkType)){
+            } else if ("2G".endsWith(networkType)) {
                 adDeviceEntity.setNetwork("2");
-            }else if("3G".endsWith(networkType)){
+            } else if ("3G".endsWith(networkType)) {
                 adDeviceEntity.setNetwork("3");
-            }else if("4G".endsWith(networkType)){
+            } else if ("4G".endsWith(networkType)) {
                 adDeviceEntity.setNetwork("4");
-            }else{
+            } else {
                 adDeviceEntity.setNetwork("0");
             }
         }
@@ -486,16 +487,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
 //        adDeviceEntity.setLongitude(locationEntity.get);
         /** 设置横竖屏幕 */
-        if(DeviceInfoUtil.isScreenChange(mActivity)){//横屏
+        if (DeviceInfoUtil.isScreenChange(mActivity)) {//横屏
             adDeviceEntity.setScreen_orientation("2");
-        }else{//竖屏
+        } else {//竖屏
             adDeviceEntity.setScreen_orientation("1");
         }
 
 
-
         AdEntity adEntity = new AdEntity();
-        adEntity.setTs((System.currentTimeMillis()/1000)+"");
+        adEntity.setTs((System.currentTimeMillis() / 1000) + "");
         adEntity.setDevice(adDeviceEntity);
         adEntity.getImpression().add(adImpressionEntity);
 
@@ -513,7 +513,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         String tstart = System.currentTimeMillis() + "";
         String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid();
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
-        adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId)?null:Long.parseLong(mstrChannelId));
+        adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         Gson gson = new Gson();
         Logger.e("ccc", "getAdMessage==" + getAdMessage());
@@ -525,9 +525,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
-            adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
+            adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
-            requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_PULL_DOWN: HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+            requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_PULL_DOWN : HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -538,38 +538,38 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     } else {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
-                    adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
+                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
                     }
-                    adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
+                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 }
             } else {
                 mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mFlag = true;
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
-                adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
-                requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
+                requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
         }
         Logger.e("jigang", "request url =" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        if("1".equals(mstrChannelId)){
+        if ("1".equals(mstrChannelId)) {
             Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
             Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override
                 public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result,flag);
+                    loadNewFeedSuccess(result, flag);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error,flag);
+                    loadNewFeedError(error, flag);
                 }
             });
             HashMap<String, String> header = new HashMap<>();
@@ -578,19 +578,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             newsFeedRequestPost.setRequestHeaders(header);
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(newsFeedRequestPost);
-        }else {
+        } else {
 
             FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
             }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
 
                 @Override
                 public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result,flag);
+                    loadNewFeedSuccess(result, flag);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error,flag);
+                    loadNewFeedError(error, flag);
                 }
             });
 //            HashMap<String, String> header = new HashMap<>();
@@ -779,7 +779,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //        Logger.e("jigang", "uuid = " + SharedPreManager.mInstance(mContext).getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
     }
 
-    public void loadNewFeedSuccess(final ArrayList<NewsFeed> result,int flag){
+    public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
         if (mDeleteIndex != 0) {
             mArrNewsFeed.remove(mDeleteIndex);
             mDeleteIndex = 0;
@@ -791,6 +791,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
             mRefreshTitleBarAnimtation();
 
+        }
+        for (Iterator it = result.iterator(); it.hasNext();) {
+            NewsFeed newsFeed = (NewsFeed) it.next();
+            if(newsFeed.getRtype()==3){
+                it.remove();
+            }
         }
         if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
             NewsFeed newsFeed = new NewsFeed();
@@ -882,7 +888,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
     }
-    private void loadNewFeedError(VolleyError error,final int flag){
+
+    private void loadNewFeedError(VolleyError error, final int flag) {
         if (error.toString().contains("2002")) {
             if (mDeleteIndex != 0) {
                 mArrNewsFeed.remove(mDeleteIndex);
@@ -931,6 +938,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         stopRefresh();
         mlvNewsFeed.onRefreshComplete();
     }
+
     public void loadData(final int flag) {
         User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         Logger.e("aaa", "loaddata -----" + flag);

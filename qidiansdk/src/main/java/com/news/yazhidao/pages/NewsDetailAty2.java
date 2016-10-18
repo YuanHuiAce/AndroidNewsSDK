@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -230,7 +229,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);
-        Log.i("tag","22222==="+System.currentTimeMillis());
     }
 
     long lastTime, nowTime;

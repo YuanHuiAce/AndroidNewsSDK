@@ -23,7 +23,7 @@ public class RelatedItemEntity implements Serializable,Comparable {
     private int rank;
     private String pname;
     private String from;
-    private String imgUrl;
+    private String img;
     private String title;
     private String abs;
     private String ptime;
@@ -103,11 +103,11 @@ public class RelatedItemEntity implements Serializable,Comparable {
 
 
     public String getImgUrl() {
-        return imgUrl;
+        return img;
     }
 
     public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+        this.img= imgUrl;
     }
 
     public String getTitle() {

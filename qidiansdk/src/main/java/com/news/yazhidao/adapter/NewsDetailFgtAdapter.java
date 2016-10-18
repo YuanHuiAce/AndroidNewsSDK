@@ -1,18 +1,28 @@
 package com.news.yazhidao.adapter;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.text.Html;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //import com.news.yazhidao.pages.NewsDetailWebviewAty;
 
@@ -23,10 +33,15 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 
     private Activity mContext;
     public static final int REQUEST_CODE = 1030;
+    private int mCardWidth, mCardHeight;
+    private int mScreenWidth;
 
     public NewsDetailFgtAdapter(Activity context) {
         super(R.layout.item_news_detail_relate_attention, context, null);
         this.mContext = context;
+        mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
+        mCardHeight = (int) (mCardWidth * 213 / 326.0f);
     }
 
 
@@ -39,17 +54,26 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
             return;
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
-        String form = relatedItemEntity.getFrom();
-        TextViewExtend title = (TextViewExtend) holder.getView(R.id.attention_Title);
+        TextViewExtend title = holder.getView(R.id.attention_Title);
         title.setText(Html.fromHtml(relatedItemEntity.getTitle()));
-
-
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
 
         if (getCount() == position + 1) {//去掉最后一条的线
             holder.getView(R.id.attention_bottomLine).setVisibility(View.GONE);
-        }else {
+        } else {
             holder.getView(R.id.attention_bottomLine).setVisibility(View.VISIBLE);
+        }
+        ImageView ivCard = holder.getView(R.id.title_img_View);
+        String imgUrl = relatedItemEntity.getImgUrl();
+        if (TextUtil.isEmptyString(imgUrl)) {
+            ivCard.setVisibility(View.GONE);
+        } else {
+            ivCard.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+            lpCard.width = mCardWidth;
+            lpCard.height = mCardHeight;
+            ivCard.setLayoutParams(lpCard);
+            Glide.with(mContext).load(imgUrl).centerCrop().placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivCard);
         }
     }
 
@@ -57,13 +81,28 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Logger.i("aaa ", "onClick: onAttentionItemClickListener");
-                Intent webviewIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                String zhihuUrl = relatedItemEntity.getUrl();
-                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
-                mContext.startActivity(webviewIntent);
-////               MobclickAgent.onEvent(mContext,"yazhidao_user_view_relate_point");
-
+                String title = relatedItemEntity.getTitle();
+                Pattern p = Pattern.compile("<font color='#0091fa' >([^<]*)</font>");
+                Matcher m = p.matcher(title);
+                StringBuilder sbKeyword = new StringBuilder();
+                while (m.find()) {
+                    sbKeyword.append(m.group(1));
+                }
+                String keyword = sbKeyword.toString();
+                Intent intent;
+                if (TextUtil.isEmptyString(keyword)) {
+                    intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                    String zhihuUrl = relatedItemEntity.getUrl();
+                    intent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
+                    mContext.startActivity(intent);
+                } else {
+                    intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                    intent.putExtra(SearchManager.QUERY, keyword);
+                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+                    intent.putExtra("back_to_navigation", true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);
+                }
             }
         });
     }
