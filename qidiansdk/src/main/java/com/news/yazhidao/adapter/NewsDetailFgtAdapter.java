@@ -1,9 +1,8 @@
 package com.news.yazhidao.adapter;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
-import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,9 +19,6 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //import com.news.yazhidao.pages.NewsDetailWebviewAty;
 
@@ -55,7 +51,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
         TextViewExtend title = holder.getView(R.id.attention_Title);
-        title.setText(Html.fromHtml(relatedItemEntity.getTitle()));
+        String strTitle =  relatedItemEntity.getTitle().replace("<font color='#0091fa' >","").replace("</font>","");
+        title.setText(strTitle);
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
 
         if (getCount() == position + 1) {//去掉最后一条的线
@@ -81,28 +78,31 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = relatedItemEntity.getTitle();
-                Pattern p = Pattern.compile("<font color='#0091fa' >([^<]*)</font>");
-                Matcher m = p.matcher(title);
-                StringBuilder sbKeyword = new StringBuilder();
-                while (m.find()) {
-                    sbKeyword.append(m.group(1));
-                }
-                String keyword = sbKeyword.toString();
-                Intent intent;
-                if (TextUtil.isEmptyString(keyword)) {
-                    intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    String zhihuUrl = relatedItemEntity.getUrl();
-                    intent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
-                    mContext.startActivity(intent);
-                } else {
-                    intent = new Intent(Intent.ACTION_WEB_SEARCH);
-                    intent.putExtra(SearchManager.QUERY, keyword);
-                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
-                    intent.putExtra("back_to_navigation", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
-                }
+                Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                String zhihuUrl = relatedItemEntity.getUrl();
+                intent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
+                mContext.startActivity(intent);
+//                Pattern p = Pattern.compile("<font color='#0091fa' >([^<]*)</font>");
+//                Matcher m = p.matcher(title);
+//                StringBuilder sbKeyword = new StringBuilder();
+//                while (m.find()) {
+//                    sbKeyword.append(m.group(1));
+//                }
+//                String keyword = sbKeyword.toString();
+//                Intent intent;
+//                if (TextUtil.isEmptyString(keyword)) {
+//                    intent = new Intent(mContext, NewsDetailWebviewAty.class);
+//                    String zhihuUrl = relatedItemEntity.getUrl();
+//                    intent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
+//                    mContext.startActivity(intent);
+//                } else {
+//                    intent = new Intent(Intent.ACTION_WEB_SEARCH);
+//                    intent.putExtra(SearchManager.QUERY, keyword);
+//                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+//                    intent.putExtra("back_to_navigation", true);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    mContext.startActivity(intent);
+//                }
             }
         });
     }
