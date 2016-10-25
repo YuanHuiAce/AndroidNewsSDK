@@ -516,7 +516,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         Gson gson = new Gson();
-        Logger.e("ccc", "getAdMessage==" + getAdMessage());
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
