@@ -1,0 +1,2 @@
+# AndroidNewsSDK
+for news client
