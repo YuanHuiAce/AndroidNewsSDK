@@ -10,11 +10,13 @@ import android.net.Uri;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
@@ -50,8 +52,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_layout);
         mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
-        mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.BELOW, R.id.mDetailWebHeader);
+        mNewsSourcesiteWebview = new WebView(getApplicationContext());
+        mNewsSourcesiteWebview.setLayoutParams(params);
+        layout.addView(mNewsSourcesiteWebview);
         mLeftBack=findViewById(R.id.mLeftBack);
         mLeftBack.setOnClickListener(this);
 
