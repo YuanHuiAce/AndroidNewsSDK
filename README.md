@@ -1,4 +1,6 @@
 # AndroidNewsSDK
+ ![Version Status](https://img.shields.io/badge/AndroidNewsSdk-1.0.1-yellow.svg)
+ ![Platform](https://img.shields.io/badge/platform-android-brightgreen.svg)
 ##主要依赖的第三方框架为
 ====
     compile 'com.android.support:appcompat-v7:22.2.1'
@@ -25,7 +27,7 @@
 │   │    │     └──NewsFeedDao                                    处理新闻数据
 │   │    ├──entity                                               新闻，详情等实体类
 │   │    ├──net.volley                                           网络请求封装类
-│   │    ├──gages   
+│   │    ├──pages   
 │   │    │     ├── ChannelOperateAty                             新闻频道管理页面
 │   │    │     ├── MainAty                                       主页面
 │   │    │     ├── NewsCommentFgt                                新闻评论展示
