@@ -2,7 +2,6 @@
  ![Version Status](https://img.shields.io/badge/AndroidNewsSdk-1.0.1-yellow.svg)
  ![Platform](https://img.shields.io/badge/platform-android-brightgreen.svg)
 ##主要依赖的第三方框架为
-====
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile files('libs/ormlite-core-4.48.jar')
@@ -11,7 +10,6 @@
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
 ##项目结构（主要部分）
-====
 ```
 ├── qidiansdk/src/main
 |   ├──java/news/yazhidao
@@ -44,3 +42,6 @@
 ├── jniLibs 播放视频用的so文件
 ├── res  # 资源文件，如图片、音频等
 └── AndroidMainfest.xml  
+```
+##Request API
+[API](https://github.com/YuanHuiAce/AndroidNewsSDK/wiki/request-Api "悬停显示")  
