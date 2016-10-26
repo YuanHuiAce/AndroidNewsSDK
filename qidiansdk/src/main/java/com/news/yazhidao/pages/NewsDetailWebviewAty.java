@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
@@ -203,9 +202,12 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
                                     long contentLength) {
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+//            Uri uri = Uri.parse(url);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            startActivity(intent);
+            Intent intent = new Intent(NewsDetailWebviewAty.this, NewsDetailWebviewAty.class);
+//            String zhihuUrl = relatedItemEntity.getUrl();
+            intent.putExtra(NewsDetailWebviewAty.KEY_URL, url);
         }
     }
 
@@ -216,14 +218,14 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mNewsSourcesiteWebview.canGoBack()){
-                mNewsSourcesiteWebview.goBack();
-                return true;
-            }else {
-                finish();
-            }
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            if (mNewsSourcesiteWebview.canGoBack()){
+//                mNewsSourcesiteWebview.goBack();
+//                return true;
+//            }else {
+//                finish();
+//            }
+//        }
 
         return super.onKeyDown(keyCode, event);
     }
