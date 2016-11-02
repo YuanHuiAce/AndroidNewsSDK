@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
         newsLayout.addView(mainView.getNewsView());
-
     }
 
     @Override
@@ -76,4 +75,8 @@ public class MainActivity extends AppCompatActivity {
         mainView.unregisterNetWorkReceiver();
         super.onDestroy();
     }
+
+
+
+
 }

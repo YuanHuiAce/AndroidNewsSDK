@@ -52,7 +52,9 @@ public final class CommonConstant {
     public static final String UPLOAD_LOG_DETAIL = "uploadlog_detali";//用户上传日志
     public static final String MY_FAVORITE = "my_favorite";//我的收藏
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
-
+    public static final String KEY_LOCATION_PROVINCE="key_location_province";
+    public static final String KEY_LOCATION_CITY="key_location_city";
+    public static final String KEY_LOCATION_COUNTY="key_location_county";
 
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;

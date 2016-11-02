@@ -2,7 +2,6 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,7 +12,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.RelatedItemEntity;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
+import com.news.yazhidao.pages.RelevantViewWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -78,9 +77,9 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                Intent intent = new Intent(mContext, RelevantViewWebviewAty.class);
                 String zhihuUrl = relatedItemEntity.getUrl();
-                intent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
+                intent.putExtra(RelevantViewWebviewAty.KEY_URL, zhihuUrl);
                 mContext.startActivity(intent);
 //                Pattern p = Pattern.compile("<font color='#0091fa' >([^<]*)</font>");
 //                Matcher m = p.matcher(title);

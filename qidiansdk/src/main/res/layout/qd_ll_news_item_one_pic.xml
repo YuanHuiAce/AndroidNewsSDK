@@ -10,34 +10,36 @@
         android:id="@+id/title_img_View"
         android:layout_width="84dp"
         android:layout_height="63dp"
-        android:scaleType="centerCrop"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="12dp"/>
-        <!--fresco:actualImageScaleType="centerCrop"-->
-        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
-        <!--fresco:placeholderImageScaleType="centerCrop"-->
-        <!--fresco:roundBottomLeft="false"-->
-        <!--fresco:roundBottomRight="false"-->
-        <!--fresco:roundTopLeft="false"-->
-        <!--fresco:roundTopRight="false"-->
-        <!--fresco:roundedCornerRadius="2dp"-->
-        <!--fresco:roundingBorderColor="@color/new_color4"-->
-        <!--fresco:roundingBorderWidth="1px"-->
-        <!--/>-->
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop" />
+    <!--fresco:actualImageScaleType="centerCrop"-->
+    <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+    <!--fresco:placeholderImageScaleType="centerCrop"-->
+    <!--fresco:roundBottomLeft="false"-->
+    <!--fresco:roundBottomRight="false"-->
+    <!--fresco:roundTopLeft="false"-->
+    <!--fresco:roundTopRight="false"-->
+    <!--fresco:roundedCornerRadius="2dp"-->
+    <!--fresco:roundingBorderColor="@color/new_color4"-->
+    <!--fresco:roundingBorderWidth="1px"-->
+    <!--/>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toLeftOf="@id/title_img_View"
-        android:layout_centerVertical="true"
-        android:layout_alignTop="@id/title_img_View"
         android:layout_alignBottom="@id/title_img_View"
-        android:gravity="center">
+        android:layout_alignTop="@id/title_img_View"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/title_img_View"
+        android:gravity="center"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <com.news.yazhidao.widget.EllipsizeEndTextView
                 android:id="@+id/title_textView"
                 android:layout_width="match_parent"
@@ -46,61 +48,61 @@
                 android:layout_marginRight="@dimen/usual_margin"
                 android:layout_toLeftOf="@+id/title_img_View"
                 android:textColor="@color/newsFeed_titleColor"
-                android:textSize="@dimen/new_font1"/>
+                android:textSize="@dimen/new_font1" />
 
             <!--<LinearLayout-->
-                <!--android:id="@+id/source_content_linearLayout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/title_textView"-->
-                <!--android:layout_marginLeft="@dimen/usual_margin"-->
-                <!--android:layout_marginTop="2dp">-->
+            <!--android:id="@+id/source_content_linearLayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/title_textView"-->
+            <!--android:layout_marginLeft="@dimen/usual_margin"-->
+            <!--android:layout_marginTop="2dp">-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/type_imageView"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginRight="5dp"-->
-                    <!--android:visibility="gone" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/type_imageView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:visibility="gone" />-->
 
-                <!--<com.news.yazhidao.widget.TextViewExtend-->
-                    <!--android:id="@+id/news_source_TextView"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:maxEms="8"-->
-                    <!--android:lines="1"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:textColor="@color/text_message"-->
-                    <!--android:textSize="@dimen/font5"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--/>-->
+            <!--<com.news.yazhidao.widget.TextViewExtend-->
+            <!--android:id="@+id/news_source_TextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:maxEms="8"-->
+            <!--android:lines="1"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:textColor="@color/text_message"-->
+            <!--android:textSize="@dimen/font5"-->
+            <!--android:gravity="center_vertical"-->
+            <!--/>-->
 
-                <!--<com.news.yazhidao.widget.TextViewExtend-->
-                    <!--android:id="@+id/comment_textView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="5dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:textColor="@color/new_color3"-->
-                    <!--android:textSize="@dimen/new_font6"-->
-                    <!--/>-->
+            <!--<com.news.yazhidao.widget.TextViewExtend-->
+            <!--android:id="@+id/comment_textView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:textColor="@color/new_color3"-->
+            <!--android:textSize="@dimen/new_font6"-->
+            <!--/>-->
 
-                <!--<com.news.yazhidao.widget.TextViewExtend-->
-                    <!--android:id="@+id/comment_num_textView"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:textColor="@color/new_color3"-->
-                    <!--android:textSize="@dimen/new_font6" />-->
+            <!--<com.news.yazhidao.widget.TextViewExtend-->
+            <!--android:id="@+id/comment_num_textView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:textColor="@color/new_color3"-->
+            <!--android:textSize="@dimen/new_font6" />-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/delete_imageView"-->
-                    <!--android:layout_width="22dp"-->
-                    <!--android:layout_height="22dp"-->
-                    <!--android:layout_marginRight="4dp"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:src="@drawable/btn_news_feed_delete_selector"  />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/delete_imageView"-->
+            <!--android:layout_width="22dp"-->
+            <!--android:layout_height="22dp"-->
+            <!--android:layout_marginRight="4dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:src="@drawable/btn_news_feed_delete_selector"  />-->
             <!--</LinearLayout>-->
             <include
                 android:id="@+id/source_content_linearLayout"
@@ -116,23 +118,10 @@
 
 
     <ImageView
-        android:id="@+id/checkFavoriteDelete_image"
-        android:src="@drawable/favorite_uncheck"
-        android:layout_width="55dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/favorite_surface"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignBottom="@+id/line_bottom_imageView"
-        android:layout_alignParentTop="true"
-        android:scaleType="center"/>
-
-    <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_below="@id/title_img_View"
         android:layout_marginTop="12dp"
-        android:background="@drawable/list_divider"
-        android:layout_below="@id/title_img_View"/>
+        android:background="@drawable/list_divider" />
 </RelativeLayout>

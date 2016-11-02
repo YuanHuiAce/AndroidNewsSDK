@@ -1,5 +1,6 @@
 <manifest package="com.news.yazhidao"
           xmlns:android="http://schemas.android.com/apk/res/android">
+
     <application
         android:largeHeap="true"
         android:allowBackup="true"
@@ -21,6 +22,10 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
         <activity
             android:name=".pages.NewsDetailWebviewAty"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".pages.RelevantViewWebviewAty"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity

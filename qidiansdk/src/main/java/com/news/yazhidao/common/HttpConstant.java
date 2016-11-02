@@ -102,6 +102,10 @@ public class HttpConstant {
     public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la";
 
     /**
+     *  手机信息上传
+     */
+    public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/rep/v2/p";
+    /**
      * 获取新闻详情页
      */
     public static final String URL_FETCH_CONTENT = URL_SERVER_HOST + "/ns/con?";

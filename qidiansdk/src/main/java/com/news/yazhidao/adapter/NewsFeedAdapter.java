@@ -4,12 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -18,34 +18,32 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsFeedDao;
-import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -60,9 +58,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private int mCardWidth, mCardHeight;
-    private boolean isFavorite;
     private boolean isNeedShowDisLikeIcon = true;
-    boolean isCkeckVisity;
 
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
@@ -121,9 +117,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         this.mNewsFeedFgt = newsFeedFgt;
-        if (mNewsFeedFgt == null) {
-            isFavorite = true;
-        }
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
@@ -139,31 +132,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
+        //广告
+        upLoadAd(feed);
         int layoutId = holder.getLayoutId();
-        if (layoutId == R.layout.qd_ll_news_item_no_pic || layoutId == R.layout.qd_ll_news_item_one_pic
-                || layoutId == R.layout.qd_ll_news_card) {
-            if (isCkeckVisity) {
-                holder.getView(R.id.checkFavoriteDelete_image).setVisibility(View.VISIBLE);
-            } else {
-                holder.getView(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
-                holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
-            }
-            if (isFavorite) {
-                holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
-                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
-                holder.getView(R.id.line_bottom_imageView).setBackgroundColor(mContext.getResources().getColor(R.color.new_color5));
-                if (getCount() == position + 1) {//去掉最后一条的线
-                    holder.getView(R.id.line_bottom_imageView).setVisibility(View.INVISIBLE);
-                }
-                ClickDeleteFavorite((ImageView) holder.getView(R.id.checkFavoriteDelete_image), feed);
-            }
-        }
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
-            if (isFavorite) {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-            } else {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
-            }
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
@@ -176,11 +149,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
             final String strTitle = feed.getTitle();
-            if (isFavorite) {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, false);
-            } else {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
-            }
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = mCardWidth;
@@ -194,19 +163,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-            //广告
-//            ArrayList<String> arrUrl = feed.getAdimpression();
-//            if (arrUrl != null && !TextUtil.isEmptyString(arrUrl.get(0)) && !feed.isUpload()) {
-//                feed.setUpload(true);
-//                String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-//                String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-//                String requestUrl = url + "&lon=" + lon + "&lat=" + lat;
-//                Log.i("tag", "request" + requestUrl);
-//                NetworkRequest request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
-//                HashMap<String, Object> hashMap = new HashMap<>();
-//                request.getParams = hashMap;
-//                request.execute();
-//            }
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -236,11 +192,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
-            if (isFavorite) {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-            } else {
-                setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
-            }
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
@@ -258,6 +210,32 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
+    private void upLoadAd(NewsFeed feed) {
+        if (feed.getRtype() == 3) {
+            String url = null;
+            ArrayList<String> arrUrl = feed.getAdimpression();
+            if (!TextUtil.isListEmpty(arrUrl)) {
+                url = arrUrl.get(0);
+            }
+            //广告
+            if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
+                feed.setUpload(true);
+                //获取经纬度
+                String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                String[] realUrl = url.split("&lon");
+                final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("tag", "response");
+                    }
+                }, null);
+                requestQueue.add(request);
+            }
+        }
+    }
 
     private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();
@@ -280,10 +258,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-//                tvComment.setText(updateTime);
                 tvComment.setText("");
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-//                tvComment.setText(between / 3600000 + "小时前");
                 tvComment.setText("");
             } else {
                 int time = (int) (between * 60 / 3600000);
@@ -294,11 +270,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
                 }
-//                if (between / 3600000 == 0) {
-//                    tvComment.setText( between *60/ 3600000+"分钟前");
-//                } else {
-//                    tvComment.setText(between / 3600000 / 60 + "分钟前");
-//                }
             }
         } catch (ParseException e) {
             tvComment.setText(updateTime);
@@ -378,61 +349,20 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 if (feed.getRtype() == 3) {
                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
-                    if (mNewsFeedFgt != null) {
-                        mNewsFeedFgt.startActivityForResult(AdIntent, REQUEST_CODE);
-                    } else {
-                        ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
-                    }
+                    AdIntent.putExtra(KEY_URL, feed.getPurl());
+                    mContext.startActivity(AdIntent);
                 } else {
+                    feed.setRead(true);
+                    mNewsFeedDao.update(feed);
+                    notifyDataSetChanged();
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-
                     ArrayList<String> imageList = feed.getImgs();
                     if (imageList != null && imageList.size() != 0) {
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
                     }
-                    if (mNewsFeedFgt != null) {
-                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                    } else {
-                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-                    }
+                    mContext.startActivity(intent);
                 }
-                //推送人员使用
-                if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
-                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
-                    BufferedWriter bis = null;
-                    try {
-                        bis = new BufferedWriter(new FileWriter(file));
-                        bis.write(feed.getTitle() + ",newsid=" + feed.getNid());
-                        bis.newLine();
-                        bis.flush();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (bis != null) {
-                            try {
-                                bis.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                }
-                /**点击查看详情时,统计当前的频道名称*/
-                String channelName = "";
-                ChannelItemDao dao = new ChannelItemDao(mContext);
-                ArrayList<ChannelItem> channelItems = dao.queryForAll();
-                for (ChannelItem item : channelItems) {
-                    if (Integer.valueOf(feed.getChannel()).equals(item.getId())) {
-                        channelName = item.getName();
-                        break;
-                    }
-                }
-                HashMap<String, String> hashmap = new HashMap();
-                hashmap.put("channel", channelName);
-
             }
         });
     }
@@ -451,17 +381,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ToastUtil.toastShort(feed.getPubName());
                 DeleteView = view;
                 DeleteClickBean = feed;
                 int[] LocationOnScreen = new int[2];
                 int[] LocationInWindow = new int[2];
                 imageView.getLocationInWindow(LocationInWindow);
-
                 mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth() / 2, LocationInWindow[1] + imageView.getHeight() / 2,
                         feed);
-
-
             }
         });
     }
@@ -501,15 +427,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             return;
         }
-
         tag.setText(content);
-
         tag.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
         params.width = DensityUtil.dip2px(mContext, 20);
         params.height = DensityUtil.dip2px(mContext, 11);
         tag.setLayoutParams(params);
-
     }
 
     int height;
@@ -531,12 +454,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 notifyDataSetChanged();
             }
         });
-
     }
 
 
     public void isFavoriteList() {
-        isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
 
@@ -556,34 +477,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             mTarget.getLayoutParams().height = height;
             mTarget.requestLayout();
         }
-    }
-
-    private introductionNewsFeed mIntroductionNewsFeed;
-
-    public void setIntroductionNewsFeed(introductionNewsFeed mIntroductionNewsFeed) {
-        this.mIntroductionNewsFeed = mIntroductionNewsFeed;
-    }
-
-    public void ClickDeleteFavorite(final ImageView checkDelete, final NewsFeed feed) {
-//        checkDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(feed.isFavorite()){
-//                    feed.setFavorite(false);
-//                    mIntroductionNewsFeed.getDate(feed,false);
-//                    checkDelete.setImageResource(R.drawable.favorite_uncheck);
-//                }else{
-//                    mIntroductionNewsFeed.getDate(feed,true);
-//                    feed.setFavorite(true);
-//                    checkDelete.setImageResource(R.drawable.favorite_check);
-//                }
-//            }
-//        });
-    }
-
-    public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
-        isCkeckVisity = isVisity;
-        notifyDataSetChanged();
     }
 
     /**

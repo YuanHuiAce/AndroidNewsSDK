@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/mDetailWebHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bg_home_login_header">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.3"
+            android:background="@color/black" />
+
+        <ImageView
+            android:id="@+id/mLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:padding="14dp"
+            android:contentDescription="转到上一级"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_left_back"
+            android:background="@drawable/bg_left_back_selector"/>
+
+        <ProgressBar
+            android:id="@+id/mNewsSourcesiteProgress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:progressDrawable="@drawable/detail_page_progressbar_horizontal" />
+    </RelativeLayout>
+
+</RelativeLayout>

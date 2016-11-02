@@ -6,11 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.NetworkRequest;
+import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -31,6 +30,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -60,17 +60,16 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 
-public class NewsFeedFgt extends Fragment implements Handler.Callback {
+public class NewsFeedFgt extends Fragment {
 
-    public static final String KEY_NEWS_CHANNEL = "key_news_channel";
-    public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
-    public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
-    public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
-    public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
 
@@ -80,44 +79,23 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_CHANNEL_ID = "key_channel_id";
     public static String KEY_WORD = "key_word";
     public static String KEY_NEWS_SOURCE = "key_news_source";
-    public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
-    public static String KEY_COLLECTION = "key_collection";
-
-    public static String KEY_TITLE = "key_title";
-    public static String KEY_PUBNAME = "key_pubname";
-    public static String KEY_PUBTIME = "key_pubtime";
-    public static String KEY_COMMENTCOUNT = "key_commentcount";
-
-    public static final int REQUEST_CODE = 1060;
-
-    public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static final int PULL_DOWN_REFRESH = 1;
     public static final int PULL_UP_REFRESH = 2;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<NewsFeed>();
     private Context mContext;
-    private NetworkRequest mRequest;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrUserId, mstrChannelId, mstrKeyWord;
+    private String mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
-    /**
-     * 热词页面加载更多
-     */
-    private int mSearchPage = 1;
     private boolean mIsFirst = true;
     private int mDeleteIndex;
-    /**
-     * 当前的fragment 是否已经加载过数据
-     */
-//    private boolean isLoadedData = false;
     private NewsSaveDataCallBack mNewsSaveCallBack;
-    private View mHomeRelative;
     private View mHomeRetry;
-    private RelativeLayout bgLayout, mSearch_layout;
+    private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
     private boolean isNeedAddSP = true;
@@ -154,7 +132,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
             if (bgLayout.getVisibility() == View.VISIBLE) {
-
                 bgLayout.setVisibility(View.GONE);
             }
         }
@@ -227,45 +204,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onCreate(bundle);
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
-        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-        if (user != null)
-            mstrUserId = user.getUserId();
-        else
-            mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
         /** 梁帅：注册修改字体大小的广播*/
         mRefreshReciver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
         mContext.registerReceiver(mRefreshReciver, intentFilter);
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode);
-        if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
-            Logger.e("jigang", "newsid = " + newsId);
-
-            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-                for (NewsFeed item : mArrNewsFeed) {
-                    if (item != null && newsId == item.getNid()) {
-                        item.setRead(true);
-                        mNewsFeedDao.update(item);
-                    }
-
-
-                }
-                mAdapter.notifyDataSetChanged();
-                if (bgLayout.getVisibility() == View.VISIBLE) {
-                    bgLayout.setVisibility(View.GONE);
-                }
-            }
-//        }else if (requestCode == LoginAty.REQUEST_CODE && data != null){
-//            loadData(PULL_DOWN_REFRESH);
-        }
     }
 
 
@@ -277,10 +221,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
-
-
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,12 +230,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.GONE);
             }
         });
-
-
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setMainFooterView(true);
-
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -308,20 +246,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 isListRefresh = true;
                 Logger.e("aaa", "加载");
                 loadData(PULL_UP_REFRESH);
-
             }
         });
-
         addHFView(LayoutInflater);
-
-
         mAdapter = new NewsFeedAdapter(getActivity(), this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
-
         mlvNewsFeed.setAdapter(mAdapter);
-
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
-
         setUserVisibleHint(getUserVisibleHint());
 //        String platform = AnalyticsConfig.getChannel(getActivity());
         //load news data
@@ -335,14 +266,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                  *  如果有数据，拿数据的一条的是时间是下拉刷新
                  *  如果没有数据，直接加载
                  */
-
                 ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (!TextUtil.isListEmpty(arrNewsFeed)) {
                     loadData(PULL_DOWN_REFRESH);
                 } else {
                     loadData(PULL_UP_REFRESH);
                 }
-
                 isListRefresh = false;
 
             }
@@ -358,8 +287,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
-            mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
-
+            if (mNewsFeedFgtPopWindow != null) {
+                mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
+            }
         }
     };
 
@@ -393,26 +323,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     /**
-     * 设置搜索热词
-     *
-     * @param pKeyWord
-     */
-    public void setSearchKeyWord(String pKeyWord) {
-        mAdapter.setSearchKeyWord(pKeyWord);
-        this.mstrKeyWord = pKeyWord;
-        mArrNewsFeed = null;
-        mSearchPage = 1;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                mlvNewsFeed.setRefreshing();
-                loadData(PULL_DOWN_REFRESH);
-                isListRefresh = false;
-            }
-        }, 1000);
-    }
-
-    /**
      * 当前新闻feed流fragment的父容器是否是MainAty,如果是则进行刷新动画
      */
     public void startTopRefresh() {
@@ -440,7 +350,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(mActivity.TELEPHONY_SERVICE);
         /** 设置IMEI */
-        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
+//        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
@@ -602,180 +512,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
         }
-//        FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-//        }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
-//
-//            @Override
-//            public void onResponse(final ArrayList<NewsFeed> result) {
-//
-//                if (mDeleteIndex != 0) {
-//                    mArrNewsFeed.remove(mDeleteIndex);
-//                    mDeleteIndex = 0;
-//                }
-//                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
-//                    if (result == null || result.size() == 0) {
-//                        return;
-//                    }
-//                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
-//                    mRefreshTitleBarAnimtation();
-//
-//                }
-//                if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
-//                    NewsFeed newsFeed = new NewsFeed();
-//                    newsFeed.setStyle(900);
-//                    result.add(newsFeed);
-//                    mDeleteIndex = result.size() - 1;
-//                }
-//
-//                mHomeRetry.setVisibility(View.GONE);
-//                stopRefresh();
-//                if (result != null && result.size() > 0) {
-//
-//                    mSearchPage++;
-//                    switch (flag) {
-//                        case PULL_DOWN_REFRESH:
-//                            if (mArrNewsFeed == null)
-//                                mArrNewsFeed = result;
-//                            else
-//                                mArrNewsFeed.addAll(0, result);
-//                            mlvNewsFeed.getRefreshableView().setSelection(0);
-//                            Logger.i("aaa", "mlvNewsFeed.getRefreshableView().setSelection(0);");
-////                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
-////                            mRefreshTitleBar.setVisibility(View.VISIBLE);
-////                            new Handler().postDelayed(new Runnable() {
-////                                @Override
-////                                public void run() {
-////                                    if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
-////                                        mRefreshTitleBar.setVisibility(View.GONE);
-////                                    }
-////
-////                                }
-////                            }, 1000);
-//                            break;
-//                        case PULL_UP_REFRESH:
-//                            Logger.e("aaa", "===========PULL_UP_REFRESH==========");
-//                            if (isNewVisity) {//首次进入加入他
-////                                addSP(result);
-//                                isNeedAddSP = false;
-//
-//                            }
-//                            if (mArrNewsFeed == null) {
-//                                mArrNewsFeed = result;
-//                            } else {
-//                                mArrNewsFeed.addAll(result);
-//                            }
-//                            break;
-//                    }
-//                    if (mNewsSaveCallBack != null) {
-//                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
-//                    }
-//                    //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-//                    if (mstrChannelId != null && "1".equals(mstrChannelId)) {
-//                        for (NewsFeed newsFeed : result)
-//                            newsFeed.setChannel(1);
-//                    }
-//
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mNewsFeedDao.insert(result);
-//                        }
-//                    }).start();
-//                    mAdapter.setNewsFeed(mArrNewsFeed);
-//                    mAdapter.notifyDataSetChanged();
-//                    if (bgLayout.getVisibility() == View.VISIBLE) {
-//                        bgLayout.setVisibility(View.GONE);
-//                    }
-////                    showChangeTextSizeView();
-//                } else {
-//                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
-//                    if (TextUtil.isListEmpty(mArrNewsFeed)) {
-//                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-//                        if (TextUtil.isListEmpty(newsFeeds)) {
-//                            mHomeRetry.setVisibility(View.VISIBLE);
-//                        } else {
-//                            mArrNewsFeed = newsFeeds;
-//                            mHomeRetry.setVisibility(View.GONE);
-//                            mAdapter.setNewsFeed(newsFeeds);
-//                            mAdapter.notifyDataSetChanged();
-//                        }
-//                    } else {
-//                        mAdapter.setNewsFeed(mArrNewsFeed);
-//                        mAdapter.notifyDataSetChanged();
-//
-//                    }
-//                    if (bgLayout.getVisibility() == View.VISIBLE) {
-//                        bgLayout.setVisibility(View.GONE);
-//                    }
-//                }
-//
-//                mIsFirst = false;
-//                mlvNewsFeed.onRefreshComplete();
-//                if (flag == PULL_DOWN_REFRESH)
-//                    mlvNewsFeed.getRefreshableView().setSelection(0);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                if (bgLayout.getVisibility() == View.VISIBLE) {
-//                    bgLayout.setVisibility(View.GONE);
-//                }
-//                if (error.toString().contains("2002")) {
-//                    if (mDeleteIndex != 0) {
-//                        mArrNewsFeed.remove(mDeleteIndex);
-//                        mDeleteIndex = 0;
-//                        mAdapter.notifyDataSetChanged();
-//                    }
-//                    mRefreshTitleBar.setText("已是最新数据");
-//                    mRefreshTitleBar.setVisibility(View.VISIBLE);
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
-//                                mRefreshTitleBar.setVisibility(View.GONE);
-//                            }
-//
-//                        }
-//                    }, 1000);
-//                } else if (error.toString().contains("4003")) {//说明三方登录已过期,防止开启3个loginty
-//                    User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
-//                    user.setUtype("2");
-//                    SharedPreManager.mInstance(mContext).saveUser(user);
-////                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
-////                    startActivityForResult(loginAty, REQUEST_CODE);
-//                    UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
-//                        @Override
-//                        public void registeSuccess() {
-//                            loadData(flag);
-//                        }
-//                    });
-//                }
-//                if (TextUtil.isListEmpty(mArrNewsFeed)) {
-//                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-//                    if (TextUtil.isListEmpty(newsFeeds)) {
-//                        mHomeRetry.setVisibility(View.VISIBLE);
-//                    } else {
-//                        mArrNewsFeed = newsFeeds;
-//                        mHomeRetry.setVisibility(View.GONE);
-//                        mAdapter.setNewsFeed(newsFeeds);
-//                        mAdapter.notifyDataSetChanged();
-//                        if (bgLayout.getVisibility() == View.VISIBLE) {
-//                            bgLayout.setVisibility(View.GONE);
-//                        }
-//                    }
-//                }
-//                stopRefresh();
-//                mlvNewsFeed.onRefreshComplete();
-//                if (flag == PULL_DOWN_REFRESH)
-//                    mlvNewsFeed.getRefreshableView().setSelection(0);
-//            }
-//        });
-//        HashMap<String, String> header = new HashMap<>();
-//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
-//        feedRequest.setRequestHeader(header);
-//        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-//        requestQueue.add(feedRequest);
-//        Logger.e("jigang", "uuid = " + SharedPreManager.mInstance(mContext).getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
+//        Feeddgger.e("jigang", "uuid = " + SharedPreManager.mInstance(mContext).getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
@@ -791,12 +528,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mRefreshTitleBarAnimtation();
 
         }
-        for (Iterator it = result.iterator(); it.hasNext();) {
-            NewsFeed newsFeed = (NewsFeed) it.next();
-            if(newsFeed.getRtype()==3){
-                it.remove();
-            }
-        }
+//        for (Iterator it = result.iterator(); it.hasNext();) {
+//            NewsFeed newsFeed = (NewsFeed) it.next();
+//            if(newsFeed.getRtype()==3){
+//                it.remove();
+//            }
+//        }
         if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
@@ -807,7 +544,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mHomeRetry.setVisibility(View.GONE);
         stopRefresh();
         if (result != null && result.size() > 0) {
-            mSearchPage++;
             switch (flag) {
                 case PULL_DOWN_REFRESH:
                     if (mArrNewsFeed == null)
@@ -815,17 +551,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     else
                         mArrNewsFeed.addAll(0, result);
                     mlvNewsFeed.getRefreshableView().setSelection(0);
-//                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
-//                            mRefreshTitleBar.setVisibility(View.VISIBLE);
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
-//                                        mRefreshTitleBar.setVisibility(View.GONE);
-//                                    }
-//
-//                                }
-//                            }, 1000);
                     break;
                 case PULL_UP_REFRESH:
                     Logger.e("aaa", "===========PULL_UP_REFRESH==========");
@@ -997,12 +722,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        return false;
-    }
-
-
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
 
     public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
@@ -1010,7 +729,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public interface NewsFeedFgtPopWindow {
-        public void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
     }
 
 
@@ -1060,8 +779,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
             mAdapter.notifyDataSetChanged();
         }
-
-
+        if (mstrChannelId.equals("1")) {
+            uploadInformation();
+        }
     }
 
     @Override
@@ -1106,22 +826,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
-//    public void addSP(ArrayList<NewsFeed> result) {
-//        ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
-//        for (NewsFeed bean : result) {
-//            UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-//            uploadLogDataEntity.setN(bean.getNid()+"");
-//            uploadLogDataEntity.setT("0");//需要改成typeID
-//            uploadLogDataEntity.setC(bean.getChannel()+"");
-//            uploadLogDataEntities.add(uploadLogDataEntity);
-//        }
-//        int saveNum = SharedPreManager.mInstance(mContext).upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-//        Logger.e("ccc", "主页的数据====" + SharedPreManager.mInstance(mContext).upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-//    }
-
-
-    //    int lastY = 0;
-//    int MAX_PULL_BOTTOM_HEIGHT = 100;
     public void addHFView(LayoutInflater LayoutInflater) {
 
 //        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
@@ -1193,8 +897,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             Logger.e("aaa", "滑动到底部");
                             isBottom = true;
-
-
                         } else {
                             isBottom = false;
                             Logger.e("aaa", "在33333isBottom ==" + isBottom);
@@ -1211,8 +913,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void mRefreshTitleBarAnimtation() {
-
-
         //初始化
         Animation mStartAlphaAnimation = new AlphaAnimation(0f, 1.0f);
         //设置动画时间
@@ -1266,5 +966,43 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
+    //上传地理位置等信息
+    private void uploadInformation() {
+        try {
+            List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < packages.size(); i++) {
+                PackageInfo packageInfo = packages.get(i);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("an", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
+                jsonObject.put("ac", 1);
+                jsonObject.put("ai", packageInfo.packageName);
+                array.put(jsonObject);
+            }
+            /** 设置品牌 */
+            String brand = Build.BRAND;
+            /** 设置设备型号 */
+            String platform = Build.MODEL;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("b", brand);
+            jsonObject.put("v", platform);
+            jsonObject.put("apps", array);
+            String uid = String.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
+            String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
+            String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
+            String d = TextUtil.getBase64(jsonObject.toString());
+            String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                }
+            }, null);
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

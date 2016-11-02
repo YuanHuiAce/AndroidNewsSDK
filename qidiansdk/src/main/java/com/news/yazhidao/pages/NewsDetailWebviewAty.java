@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,10 +37,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private View mNewsSourcesiteFooterShare;
     private TextView mNewsSourcesiteBlameNum;
     private TextView mNewsSourcesitePraiseNum;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private TextView mNewsSourcesiteBlameNumReduce;
     private TextView mNewsSourcesitePraiseNumIncrease;
-    private int mClickNum=0;
+    private int mClickNum = 0;
     private ProgressBar mNewsSourcesiteProgress;
     private View mLeftBack;
 
@@ -52,26 +53,27 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_layout);
-        mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
+        mNewsSourcesiteProgress = (ProgressBar) findViewById(R.id.mNewsSourcesiteProgress);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.BELOW, R.id.mDetailWebHeader);
         mNewsSourcesiteWebview = new WebView(getApplicationContext());
         mNewsSourcesiteWebview.setLayoutParams(params);
         layout.addView(mNewsSourcesiteWebview);
-        mLeftBack=findViewById(R.id.mLeftBack);
+        mLeftBack = findViewById(R.id.mLeftBack);
         mLeftBack.setOnClickListener(this);
 
-        mNewsSourcesiteFooterPraise=findViewById(R.id.mNewsSourcesiteFooterPraise);
+        mNewsSourcesiteFooterPraise = findViewById(R.id.mNewsSourcesiteFooterPraise);
         mNewsSourcesiteFooterPraise.setOnClickListener(this);
-        mNewsSourcesiteFooterBlame=findViewById(R.id.mNewsSourcesiteFooterBlame);
+        mNewsSourcesiteFooterBlame = findViewById(R.id.mNewsSourcesiteFooterBlame);
         mNewsSourcesiteFooterBlame.setOnClickListener(this);
-        mNewsSourcesiteFooterShare=findViewById(R.id.mNewsSourcesiteFooterShare);
+        mNewsSourcesiteFooterShare = findViewById(R.id.mNewsSourcesiteFooterShare);
         mNewsSourcesiteFooterShare.setOnClickListener(this);
-        mNewsSourcesitePraiseNum= (TextView) findViewById(R.id.mNewsSourcesitePraiseNum);
-        mNewsSourcesiteBlameNum=(TextView)findViewById(R.id.mNewsSourcesiteBlameNum);
-        mNewsSourcesitePraiseNumIncrease= (TextView) findViewById(R.id.mNewsSourcesitePraiseNumIncrease);
-        mNewsSourcesiteBlameNumReduce= (TextView) findViewById(R.id.mNewsSourcesiteBlameNumReduce);
+        mNewsSourcesitePraiseNum = (TextView) findViewById(R.id.mNewsSourcesitePraiseNum);
+        mNewsSourcesiteBlameNum = (TextView) findViewById(R.id.mNewsSourcesiteBlameNum);
+        mNewsSourcesitePraiseNumIncrease = (TextView) findViewById(R.id.mNewsSourcesitePraiseNumIncrease);
+        mNewsSourcesiteBlameNumReduce = (TextView) findViewById(R.id.mNewsSourcesiteBlameNumReduce);
     }
+
     @Override
     public void onClick(View v) {
         int getId = v.getId();
@@ -100,13 +102,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
                 ToastUtil.toastShort("您已经踩过");
             }
 //                break;
-        }else if (getId == R.id.mNewsSourcesiteFooterShare) {
+        } else if (getId == R.id.mNewsSourcesiteFooterShare) {
 //            case R.id.mNewsSourcesiteFooterShare:
-                ToastUtil.toastShort("点击了分享");
+            ToastUtil.toastShort("点击了分享");
 //                break;
         } else if (getId == R.id.mLeftBack) {
 //            case R.id.mLeftBack:
-                finish();
+            finish();
 //                break;
 //            default:
 //                break;
@@ -116,16 +118,17 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     /**
      * 执行动画
+     *
      * @param pView
      */
     private void performAnimator(final View pView) {
         pView.setVisibility(View.VISIBLE);
-        AnimatorSet _AnimatorSet=new AnimatorSet();
+        AnimatorSet _AnimatorSet = new AnimatorSet();
         _AnimatorSet.playTogether(
                 ObjectAnimator.ofFloat(pView, "translationY", -50),
-                ObjectAnimator.ofFloat(pView, "alpha", 1f,0f),
-                ObjectAnimator.ofFloat(pView, "scaleX", 1f,.5f),
-                ObjectAnimator.ofFloat(pView, "scaleY", 1f,.5f)
+                ObjectAnimator.ofFloat(pView, "alpha", 1f, 0f),
+                ObjectAnimator.ofFloat(pView, "scaleX", 1f, .5f),
+                ObjectAnimator.ofFloat(pView, "scaleY", 1f, .5f)
 
         );
         _AnimatorSet.setDuration(800);
@@ -141,12 +144,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void initializeViews() {
 
-        mNewsUrl=getIntent().getStringExtra(KEY_URL);
+        mNewsUrl = getIntent().getStringExtra(KEY_URL);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
         mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+        mNewsSourcesiteWebview.getSettings().setDisplayZoomControls(false);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -197,17 +201,18 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
     }
+
     private class MyWebViewDownLoadListener implements DownloadListener {
 
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
                                     long contentLength) {
-//            Uri uri = Uri.parse(url);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//            startActivity(intent);
-            Intent intent = new Intent(NewsDetailWebviewAty.this, NewsDetailWebviewAty.class);
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+//            Intent intent = new Intent(NewsDetailWebviewAty.this, NewsDetailWebviewAty.class);
 //            String zhihuUrl = relatedItemEntity.getUrl();
-            intent.putExtra(NewsDetailWebviewAty.KEY_URL, url);
+//            intent.putExtra(NewsDetailWebviewAty.KEY_URL, url);
         }
     }
 
@@ -231,10 +236,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void finish() {
+    protected void onDestroy() {
+        super.onDestroy();
         if (mNewsSourcesiteWebview != null) {
-            mNewsSourcesiteWebview.removeAllViews();
+            ((ViewGroup) mNewsSourcesiteWebview.getParent()).removeView(mNewsSourcesiteWebview);
+//            mNewsSourcesiteWebview.removeAllViews();
+            mNewsSourcesiteWebview.destroy();
+            mNewsSourcesiteWebview = null;
         }
-        super.finish();
     }
 }

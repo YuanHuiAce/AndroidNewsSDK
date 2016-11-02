@@ -80,15 +80,15 @@ public class NewsFeedDao {
     public void update(NewsFeed newsFeed) {
         try {
             if (newsFeed != null) {
-                QueryBuilder<NewsFeed, String> queryBuilder = mNewsFeedDao.queryBuilder();
-                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID, newsFeed.getNid());
-                List<NewsFeed> result = queryBuilder.query();
-                if (!TextUtil.isListEmpty(result)) {
-                    NewsFeed feed = result.get(0);
-                    feed.setRead(true);
-                    Dao.CreateOrUpdateStatus orUpdate = mNewsFeedDao.createOrUpdate(feed);
+//                QueryBuilder<NewsFeed, String> queryBuilder = mNewsFeedDao.queryBuilder();
+//                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID, newsFeed.getNid());
+//                List<NewsFeed> result = queryBuilder.query();
+//                if (!TextUtil.isListEmpty(result)) {
+//                    NewsFeed feed = result.get(0);
+//                newsFeed.setRead(true);
+                    Dao.CreateOrUpdateStatus orUpdate = mNewsFeedDao.createOrUpdate(newsFeed);
                     Logger.e("jigang", "update---linechange=" + orUpdate.getNumLinesChanged() + ",isUpdated=" + orUpdate.isUpdated() + "," + orUpdate.isCreated());
-                }
+//                }
                 Logger.e(TAG, "update " + NewsFeed.class.getSimpleName() + " success >>>");
             }
         } catch (SQLException e) {

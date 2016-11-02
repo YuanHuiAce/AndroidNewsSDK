@@ -318,7 +318,7 @@ public class NewsDetailFgt extends BaseFragment {
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         //第1部分的WebView
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
@@ -944,10 +944,11 @@ public class NewsDetailFgt extends BaseFragment {
         super.onDestroy();
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
-            mNewsDetailHeaderView.removeView(mDetailWebView);
+            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
         }
         mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
+        mDetailWebView = null;
     }
 
     public interface ShowCareforLayout {

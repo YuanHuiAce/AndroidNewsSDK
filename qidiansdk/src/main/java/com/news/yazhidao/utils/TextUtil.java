@@ -114,8 +114,10 @@ public class TextUtil {
             }
         }
         Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-        if (url.contains("vid=")){
-            url = url.substring(0,url.indexOf("&"));
+        if (url.contains("vid=")) {
+            if (url.contains("&")) {
+                url = url.substring(0, url.indexOf("&"));
+            }
         }
         return url;
 //        String params = url.substring(url.indexOf("?") + 1);
@@ -231,9 +233,9 @@ public class TextUtil {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
                     int h = (int) (w * 0.75);
                     String url = parseVideoUrl(vid, w, h);
-                    if (url.contains("player.html")){
+                    if (url.contains("player.html")) {
                         contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
-                    }else {
+                    } else {
                         contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><img src=\"" + playImgUrl + "\" style=\"width: 100%;height: auto\"></p>");
                     }
                 }
