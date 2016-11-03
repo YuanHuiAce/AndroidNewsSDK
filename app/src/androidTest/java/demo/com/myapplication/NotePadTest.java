@@ -40,7 +40,16 @@ public class NotePadTest extends ActivityInstrumentationTestCase2<MainActivity> 
 
         PullToRefreshListView pullToRefreshListView = (PullToRefreshListView)solo.getView("id/news_feed_listView");
         ListView listview = pullToRefreshListView.getRefreshableView();
-        solo.scrollListToBottom(listview.getCount()-5);
+//        solo.scrollListToBottom(listview.getCount()-5);
+        for (int i=0;i<30;i++){
+            solo.scrollToSide(Solo.RIGHT);
+            Thread.sleep(1000);
+            solo.scrollDown();
+        }
+        for (int i=0;i<30;i++){
+            solo.scrollToSide(Solo.LEFT);
+        }
+
 //        Thread.sleep(7000);
 //        int location[]=new int[2];
 //        listview.getLocationOnScreen(location);//获取listiew的坐标

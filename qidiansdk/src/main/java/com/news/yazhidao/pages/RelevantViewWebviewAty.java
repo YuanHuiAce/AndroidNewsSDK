@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
@@ -63,6 +62,8 @@ public class RelevantViewWebviewAty extends BaseActivity {
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
 //        mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
         mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+        mNewsSourcesiteWebview.getSettings().setLoadsImagesAutomatically(true);
+        mNewsSourcesiteWebview.getSettings().setBlockNetworkImage(false);
         mNewsSourcesiteWebview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mNewsSourcesiteWebview.getSettings().setDisplayZoomControls(false);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient() {

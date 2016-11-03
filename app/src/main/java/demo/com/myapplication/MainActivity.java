@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.testin.agent.TestinAgent;
+import com.testin.agent.TestinAgentConfig;
 
 public class MainActivity extends AppCompatActivity {
     RelativeLayout newsLayout;
@@ -50,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
         newsLayout.addView(mainView.getNewsView());
+
+
+
+
+        TestinAgent.init(this, "ed9dfab583e76e3825fd0bbdcf513dc8", "qidian");
+        TestinAgentConfig config = new TestinAgentConfig.Builder(this)
+                .withAppKey("ed9dfab583e76e3825fd0bbdcf513dc8")   // 您的应用的 AppKey,如果已经在 Manifest 中配置则此处可略
+                .withAppChannel("qidian")   // 发布应用的渠道,如果已经在 Manifest 中配置则此处可略
+                .withUserInfo("userinfo")   // 用户信息-崩溃分析根据用户记录崩溃信息
+                .withDebugModel(true)   // 输出更多SDK的debug信息
+                .withErrorActivity(true)   // 发生崩溃时采集Activity信息
+                .withCollectNDKCrash(true)   // 收集NDK崩溃信息
+                .withOpenCrash(true)   // 收集崩溃信息开关
+                .withOpenEx(true)   // 是否收集异常信息
+                .withReportOnlyWifi(true)   // 仅在 WiFi 下上报崩溃信息
+                .withReportOnBack(true)   // 当APP在后台运行时,是否采集信息
+                .withQAMaster(true)   // 是否收集摇一摇反馈
+                .withCloseOption(false).withLogCat(true) // 是否在摇一摇菜单展示‘关闭摇一摇选项’
+                .build();  // 是否系统操作信息
+        TestinAgent.init(config);
     }
 
     @Override

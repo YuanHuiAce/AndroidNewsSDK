@@ -968,41 +968,45 @@ public class NewsFeedFgt extends Fragment {
 
     //上传地理位置等信息
     private void uploadInformation() {
-        try {
-            List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
-            JSONArray array = new JSONArray();
-            for (int i = 0; i < packages.size(); i++) {
-                PackageInfo packageInfo = packages.get(i);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("an", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
-                jsonObject.put("ac", 1);
-                jsonObject.put("ai", packageInfo.packageName);
-                array.put(jsonObject);
-            }
-            /** 设置品牌 */
-            String brand = Build.BRAND;
-            /** 设置设备型号 */
-            String platform = Build.MODEL;
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("b", brand);
-            jsonObject.put("v", platform);
-            jsonObject.put("apps", array);
-            String uid = String.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
-            String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
-            String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
-            String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
-            String d = TextUtil.getBase64(jsonObject.toString());
-            String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
-            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-            StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
+        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+            try {
+                List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
+                JSONArray array = new JSONArray();
+                for (int i = 0; i < packages.size(); i++) {
+                    PackageInfo packageInfo = packages.get(i);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("an", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
+                    jsonObject.put("ac", 1);
+                    jsonObject.put("ai", packageInfo.packageName);
+                    array.put(jsonObject);
                 }
-            }, null);
-            requestQueue.add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                /** 设置品牌 */
+                String brand = Build.BRAND;
+                /** 设置设备型号 */
+                String platform = Build.MODEL;
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("b", brand);
+                jsonObject.put("v", platform);
+                jsonObject.put("apps", array);
+                String uid = "";
+                if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+                    uid = String.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+                }
+                String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
+                String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
+                String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
+                String d = TextUtil.getBase64(jsonObject.toString());
+                String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                }, null);
+                requestQueue.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }
