@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.tencent.smtt.sdk.QbSdk;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -17,8 +16,6 @@ public class QiDianApplication {
     public static void initQDApp(Context context) {
         mContext = context;
         mInstance = new QiDianApplication();
-        QbSdk.allowThirdPartyAppDownload(true);
-        QbSdk.initX5Environment(mContext.getApplicationContext(), QbSdk.WebviewInitType.FIRSTUSE_AND_PRELOAD, null);
 //        Fresco.initialize(context);
     }
 

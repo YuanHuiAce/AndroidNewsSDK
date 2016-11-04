@@ -6,21 +6,20 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.x5webview.X5WebView;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 
 public class PlayVideoAty extends BaseActivity {
-    private X5WebView mPlayVideoWebView;
+    private WebView mPlayVideoWebView;
     private String mVideoUrl;
 //    private JavascriptInterface javascriptInterface;
 
@@ -33,24 +32,26 @@ public class PlayVideoAty extends BaseActivity {
     @Override
     protected void setContentView() {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        setContentView(R.layout.activity_play_video);
+        mPlayVideoWebView = new WebView(this);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        mPlayVideoWebView.setLayoutParams(layoutParams);
+        setContentView(mPlayVideoWebView);
     }
 
     @Override
     protected void initializeViews() {
         mVideoUrl = getIntent().getStringExtra(VideoJavaScriptBridge.KEY_VIDEO_URL);
-        if (!TextUtil.isEmptyString(mVideoUrl) && mVideoUrl.contains("&")){
-            mVideoUrl = mVideoUrl.substring(0,mVideoUrl.indexOf("&"));
+        if (!TextUtil.isEmptyString(mVideoUrl) && mVideoUrl.contains("&")) {
+            mVideoUrl = mVideoUrl.substring(0, mVideoUrl.indexOf("&"));
         }
-        mPlayVideoWebView = (X5WebView) findViewById(R.id.mPlayVideoWebView);
 //
-        Logger.e("jigang","aty url =" + mVideoUrl);
+        Logger.e("jigang", "aty url =" + mVideoUrl);
         initWebView();
 
     }
-    public void initWebView(){
 
-        com.tencent.smtt.sdk.WebSettings settings = mPlayVideoWebView.getSettings();
+    public void initWebView() {
+        WebSettings settings = mPlayVideoWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setAllowFileAccess(true);
@@ -71,7 +72,8 @@ public class PlayVideoAty extends BaseActivity {
     }
 
     /**
-     *  Android 模拟点击
+     * Android 模拟点击
+     *
      * @param view
      * @param x
      * @param y
@@ -92,7 +94,6 @@ public class PlayVideoAty extends BaseActivity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -104,11 +105,17 @@ public class PlayVideoAty extends BaseActivity {
         super.onPause();
         mPlayVideoWebView.onPause();
     }
+
     @Override
     public void onDestroy() {
-        mPlayVideoWebView.destroy();
+        if (mPlayVideoWebView != null) {
+            mPlayVideoWebView.removeAllViews();
+            mPlayVideoWebView.destroy();
+            mPlayVideoWebView = null;
+        }
         super.onDestroy();
     }
+
     @Override
     public void onConfigurationChanged(Configuration config) {
 
@@ -128,10 +135,11 @@ public class PlayVideoAty extends BaseActivity {
     }
 
 
-        @Override
+    @Override
     protected void loadData() {
         mPlayVideoWebView.loadUrl(mVideoUrl);
     }
+
     private class InsideWebViewClient extends WebViewClient {
 
         @Override

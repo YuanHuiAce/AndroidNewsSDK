@@ -25,5 +25,4 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.android.support:support-v4:24.0.0'
     compile files('libs/glide-3.6.1.jar')
-    compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
 }

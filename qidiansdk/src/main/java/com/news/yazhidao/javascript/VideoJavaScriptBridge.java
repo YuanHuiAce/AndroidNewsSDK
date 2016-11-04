@@ -6,7 +6,6 @@ import android.webkit.JavascriptInterface;
 
 import com.news.yazhidao.pages.PlayVideoAty;
 import com.news.yazhidao.utils.Logger;
-import com.tencent.smtt.sdk.TbsVideo;
 
 /**
  * Created by fengjigang on 16/6/22.
@@ -40,7 +39,6 @@ public class VideoJavaScriptBridge {
       playAty.putExtra(KEY_VIDEO_URL, url);
 
     } else {
-      Logger.e("jigang", "----canUseTbsPlayer" + TbsVideo.canUseTbsPlayer(mContext));
 //            TbsVideo.openVideo(mContext, url);
       playAty.putExtra(KEY_VIDEO_URL, "http://deeporiginalx.com/play/video.html?src=" + url);
     }
