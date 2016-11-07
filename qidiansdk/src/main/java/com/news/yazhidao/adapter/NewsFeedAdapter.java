@@ -352,9 +352,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     AdIntent.putExtra(KEY_URL, feed.getPurl());
                     mContext.startActivity(AdIntent);
                 } else {
-                    feed.setRead(true);
-                    mNewsFeedDao.update(feed);
-                    notifyDataSetChanged();
+                    if (!feed.isRead()) {
+                        feed.setRead(true);
+                        if (mNewsFeedDao == null) {
+                            mNewsFeedDao = new NewsFeedDao(mContext);
+                        }
+                        mNewsFeedDao.update(feed);
+                        notifyDataSetChanged();
+                    }
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     ArrayList<String> imageList = feed.getImgs();
