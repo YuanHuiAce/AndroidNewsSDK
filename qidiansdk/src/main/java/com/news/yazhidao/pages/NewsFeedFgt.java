@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -340,19 +339,18 @@ public class NewsFeedFgt extends Fragment {
 
         Gson gson = new Gson();
 
-        Activity mActivity = this.getActivity();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */
         adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mActivity) + "");
+        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(mActivity.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
 //        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
         /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
         /** 设置设备品牌 */
         String brand = Build.BRAND;
@@ -366,17 +364,17 @@ public class NewsFeedFgt extends Fragment {
         String version = Build.VERSION.RELEASE;
         adDeviceEntity.setOs_version(version);
         /** 设置屏幕分辨率 */
-        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mActivity));
+        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
         /** 设置IP */
         String ip = "";
-        if (DeviceInfoUtil.isWifiNetWorkState(mActivity)) {
-            ip = DeviceInfoUtil.getIpAddress(mActivity);
+        if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
+            ip = DeviceInfoUtil.getIpAddress(mContext);
         } else {
             ip = DeviceInfoUtil.getLocalIpAddress();
         }
         adDeviceEntity.setIp(ip);
         /** 设置网络环境 */
-        String networkType = DeviceInfoUtil.getNetworkType(mActivity);
+        String networkType = DeviceInfoUtil.getNetworkType(mContext);
         if (TextUtil.isEmptyString(networkType)) {
             adDeviceEntity.setNetwork("0");
         } else {
@@ -397,7 +395,7 @@ public class NewsFeedFgt extends Fragment {
 //        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
 //        adDeviceEntity.setLongitude(locationEntity.get);
         /** 设置横竖屏幕 */
-        if (DeviceInfoUtil.isScreenChange(mActivity)) {//横屏
+        if (DeviceInfoUtil.isScreenChange(mContext)) {//横屏
             adDeviceEntity.setScreen_orientation("2");
         } else {//竖屏
             adDeviceEntity.setScreen_orientation("1");

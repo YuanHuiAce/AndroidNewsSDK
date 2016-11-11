@@ -49,7 +49,7 @@ public class RelevantViewWebviewAty extends BaseActivity {
         mLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                webViewBack();
             }
         });
     }
@@ -89,7 +89,7 @@ public class RelevantViewWebviewAty extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                Logger.e(TAG, "xxxx shouldOverrideUrlLoading"+url);
+                Logger.e(TAG, "xxxx shouldOverrideUrlLoading" + url);
                 return true;
             }
 
@@ -147,6 +147,14 @@ public class RelevantViewWebviewAty extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        webViewBack();
+    }
+
+    public void webViewBack() {
+        if (mNewsSourcesiteWebview.canGoBack()) {
+            mNewsSourcesiteWebview.goBack();
+        } else {
+            finish();
+        }
     }
 }
