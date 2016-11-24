@@ -54,7 +54,7 @@ public final class CommonConstant {
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
     public static final String KEY_LOCATION_PROVINCE="key_location_province";
     public static final String KEY_LOCATION_CITY="key_location_city";
-    public static final String KEY_LOCATION_COUNTY="key_location_county";
+    public static final String KEY_LOCATION_ADDR="key_location_addr";
 
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;

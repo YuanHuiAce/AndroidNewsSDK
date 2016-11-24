@@ -29,9 +29,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
@@ -46,7 +45,6 @@ import com.news.yazhidao.entity.AdEntity;
 import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
@@ -190,7 +188,6 @@ public class NewsFeedFgt extends Fragment {
         mThread = new Runnable() {
             @Override
             public void run() {
-
                 mlvNewsFeed.setRefreshing();
                 isListRefresh = true;
                 isClickHome = false;
@@ -434,7 +431,8 @@ public class NewsFeedFgt extends Fragment {
             }
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
-            requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_PULL_DOWN : HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+//            requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_PULL_DOWN : HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+            requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -446,71 +444,73 @@ public class NewsFeedFgt extends Fragment {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+//                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
                     }
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+//                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
                 }
             } else {
                 mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mFlag = true;
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
                 adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-                requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+//                requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
         Logger.e("jigang", "request url =" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        if ("1".equals(mstrChannelId)) {
-            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
-            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
-            NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
-                @Override
-                public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result, flag);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error, flag);
-                }
-            });
-            HashMap<String, String> header = new HashMap<>();
+//        if ("1".equals(mstrChannelId)) {
+        Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+        Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+        NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+            @Override
+            public void onResponse(final ArrayList<NewsFeed> result) {
+                loadNewFeedSuccess(result, flag);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loadNewFeedError(error, flag);
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
 //        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-            header.put("Content-Type", "application/json");
-            newsFeedRequestPost.setRequestHeaders(header);
-            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(newsFeedRequestPost);
-        } else {
-
-            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
-
-                @Override
-                public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result, flag);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error, flag);
-                }
-            });
+        header.put("Content-Type", "application/json");
+        newsFeedRequestPost.setRequestHeaders(header);
+        newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(newsFeedRequestPost);
+//        } else {
+//
+//            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
+//            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
+//
+//                @Override
+//                public void onResponse(final ArrayList<NewsFeed> result) {
+//                    loadNewFeedSuccess(result, flag);
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    loadNewFeedError(error, flag);
+//                }
+//            });
+////            HashMap<String, String> header = new HashMap<>();
+////        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+////            header.put("Content-Type", "application/json");
+////            feedRequest.setRequestHeaders(header);
 //            HashMap<String, String> header = new HashMap<>();
-//        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-//            header.put("Content-Type", "application/json");
-//            feedRequest.setRequestHeaders(header);
-            HashMap<String, String> header = new HashMap<>();
-            header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
-            feedRequest.setRequestHeader(header);
-            feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(feedRequest);
-        }
-//        Feeddgger.e("jigang", "uuid = " + SharedPreManager.mInstance(mContext).getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
+//            header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+//            feedRequest.setRequestHeader(header);
+//            feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//            requestQueue.add(feedRequest);
+//        }
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
@@ -969,38 +969,47 @@ public class NewsFeedFgt extends Fragment {
         if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
             try {
                 List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
-                JSONArray array = new JSONArray();
+                final JSONArray array = new JSONArray();
                 for (int i = 0; i < packages.size(); i++) {
                     PackageInfo packageInfo = packages.get(i);
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("an", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
-                    jsonObject.put("ac", 1);
-                    jsonObject.put("ai", packageInfo.packageName);
+                    jsonObject.put("app_id", packageInfo.packageName);
+                    jsonObject.put("active", 1);
+                    jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
                     array.put(jsonObject);
                 }
                 /** 设置品牌 */
-                String brand = Build.BRAND;
+                final String brand = Build.BRAND;
                 /** 设置设备型号 */
-                String platform = Build.MODEL;
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("b", brand);
-                jsonObject.put("v", platform);
-                jsonObject.put("apps", array);
-                String uid = "";
-                if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
-                    uid = String.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
-                }
-                String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
-                String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
-                String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
-                String d = TextUtil.getBase64(jsonObject.toString());
-                String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
+                final String platform = Build.MODEL;
+                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                Long uid = null;
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                if (user != null) {
+                    uid = Long.valueOf(user.getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("brand", brand);
+                jsonObject.put("model", platform);
+                jsonObject.put("apps", array);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject jsonObj) {
                     }
-                }, null);
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
                 requestQueue.add(request);
             } catch (JSONException e) {
                 e.printStackTrace();

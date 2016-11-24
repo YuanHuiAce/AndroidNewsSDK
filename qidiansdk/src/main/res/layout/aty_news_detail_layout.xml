@@ -127,7 +127,6 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
         android:background="@color/bg_home_login_header"
         >
 
@@ -150,7 +149,7 @@
             android:paddingBottom="4dp"
             android:paddingLeft="10dp"
             android:paddingTop="4dp"
-            android:text="说一下..."
+            android:text="我来说俩句..."
             android:textColor="@color/user_add_comment_color"
             android:textSize="14sp"
             />
