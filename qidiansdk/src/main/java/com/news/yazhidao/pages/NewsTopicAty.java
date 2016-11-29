@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,13 +51,14 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
-    private RelativeLayout mHomeRetry, bgLayout;
+    private RelativeLayout bgLayout;
     private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private ImageView mTopicLeftBack;
+    private ImageView mTopicLeftBack,mNewsLoadingImg;
     private TextView mTopicRightMore;
+    private View mNewsDetailLoaddingWrapper;
     private ExpandableListView mlvSpecialNewsFeed;
     //    private ExpandableListView mExpandableListView;
     private boolean isListRefresh;
@@ -87,8 +87,16 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
         mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
+        mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
+        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mNewsLoadingImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadData();
+            }
+        });
         mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setAdapter(mAdapter);
         mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
@@ -120,14 +128,6 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             }
         });
 //        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
-        mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
-        mHomeRetry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                mlvSpecialNewsFeed.setRefreshing();
-                mHomeRetry.setVisibility(View.GONE);
-            }
-        });
         mTopicLeftBack = (ImageView) findViewById(R.id.mTopicLeftBack);
         mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +167,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
                 @Override
                 public void onResponse(final NewsTopic result) {
+                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                     mNewTopic = result;
                     mTopicBaseInfo = mNewTopic.getTopicBaseInfo();
                     mTopicTitle.setText(mTopicBaseInfo.getName());
@@ -182,7 +183,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.i("tag", error.toString());
+                    mNewsLoadingImg.setVisibility(View.VISIBLE);
+                    bgLayout.setVisibility(View.GONE);
                 }
             });
             HashMap<String, String> header = new HashMap<>();
@@ -191,6 +193,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             topicRequestGet.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(topicRequestGet);
         } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            mNewsLoadingImg.setVisibility(View.VISIBLE);
             setRefreshComplete();
 //            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
 //            if (TextUtil.isListEmpty(newsFeeds)) {
@@ -544,7 +548,6 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setBottomLine(ImageView ivBottom, int count, int position) {
-            Log.i("tag", count + "====" + position);
             if (count == position + 1) {//去掉最后一条的线
                 ivBottom.setVisibility(View.INVISIBLE);
             } else {
