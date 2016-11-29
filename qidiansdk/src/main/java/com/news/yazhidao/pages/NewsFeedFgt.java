@@ -63,7 +63,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -335,9 +337,9 @@ public class NewsFeedFgt extends Fragment {
     public String getAdMessage() {
 
         Gson gson = new Gson();
-
+        Random random = new Random();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
-        adImpressionEntity.setAid("100");
+        adImpressionEntity.setAid(random.nextInt(2) == 0 ? "98" : "100");
         /** 单图91  三图164 */
         adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
         adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
@@ -410,7 +412,6 @@ public class NewsFeedFgt extends Fragment {
     }
 
     private void loadNewsFeedData(String url, final int flag) {
-
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
         }
@@ -420,8 +421,10 @@ public class NewsFeedFgt extends Fragment {
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
+
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
@@ -429,10 +432,12 @@ public class NewsFeedFgt extends Fragment {
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
+
+//            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
-//            requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_PULL_DOWN : HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
+
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -443,28 +448,30 @@ public class NewsFeedFgt extends Fragment {
                     } else {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
+//                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-//                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
                     }
+//                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-//                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
+
                 }
             } else {
                 mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mFlag = true;
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
+//              requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-//                requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
-        Logger.e("jigang", "request url =" + requestUrl);
+
+        Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
 //        if ("1".equals(mstrChannelId)) {
         Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
@@ -520,6 +527,21 @@ public class NewsFeedFgt extends Fragment {
         }
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
+//                mRefreshTitleBar.setText("已是最新数据");
+//                mRefreshTitleBar.setVisibility(View.VISIBLE);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+//                            mRefreshTitleBar.setVisibility(View.GONE);
+//                        }
+//                    }
+//                }, 1000);
+//                stopRefresh();
+//                mlvNewsFeed.onRefreshComplete();
                 return;
             }
             mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
@@ -544,10 +566,21 @@ public class NewsFeedFgt extends Fragment {
         if (result != null && result.size() > 0) {
             switch (flag) {
                 case PULL_DOWN_REFRESH:
-                    if (mArrNewsFeed == null)
+                    if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
-                    else
+                    } else {
+                        if (result.get(0).getRtype() == 4) {
+                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+                            while (iterator.hasNext()) {
+                                NewsFeed newsFeed = iterator.next();
+                                if (newsFeed.getRtype() == 4 && result.get(0).getNid() == newsFeed.getNid()) {
+                                    iterator.remove();
+                                    break;
+                                }
+                            }
+                        }
                         mArrNewsFeed.addAll(0, result);
+                    }
                     mlvNewsFeed.getRefreshableView().setSelection(0);
                     break;
                 case PULL_UP_REFRESH:
@@ -574,12 +607,12 @@ public class NewsFeedFgt extends Fragment {
                     newsFeed.setChannel(1);
             }
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mNewsFeedDao.insert(result);
-                }
-            }).start();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mNewsFeedDao.insert(result);
+//                }
+//            }).start();
             mAdapter.setNewsFeed(mArrNewsFeed);
             mAdapter.notifyDataSetChanged();
             if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -663,8 +696,6 @@ public class NewsFeedFgt extends Fragment {
 
     public void loadData(final int flag) {
         User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-        Logger.e("aaa", "loaddata -----" + flag);
-        Logger.e("aaa", "loadData:user === " + user);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNotLoadData) {
@@ -675,20 +706,10 @@ public class NewsFeedFgt extends Fragment {
                     startTopRefresh();
                 } else {
                     isNotLoadData = false;
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mlvNewsFeed.onRefreshComplete();
-                        }
-                    }, 500);
+                    setRefreshComplete();
                 }
             } else {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mlvNewsFeed.onRefreshComplete();
-                    }
-                }, 500);
+                setRefreshComplete();
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
@@ -704,12 +725,7 @@ public class NewsFeedFgt extends Fragment {
             }
         } else {
             mHomeRetry.setVisibility(View.VISIBLE);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mlvNewsFeed.onRefreshComplete();
-                }
-            }, 500);
+            setRefreshComplete();
             //请求token
             UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
                 @Override
@@ -718,6 +734,15 @@ public class NewsFeedFgt extends Fragment {
                 }
             });
         }
+    }
+
+    private void setRefreshComplete() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.onRefreshComplete();
+            }
+        }, 500);
     }
 
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;

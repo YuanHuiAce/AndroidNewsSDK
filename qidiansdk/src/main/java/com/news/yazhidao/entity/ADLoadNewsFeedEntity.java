@@ -5,17 +5,22 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2016/9/8.
  */
-public class ADLoadNewsFeedEntity implements Serializable{
+public class ADLoadNewsFeedEntity implements Serializable {
     private long cid;
     private long tcr;
     private long uid;
-    /** 是(1)否(0)模拟实时发布时间(部分新闻的发布时间修改为5分钟以内) */
+    /**
+     * 是(1)否(0)模拟实时发布时间(部分新闻的发布时间修改为5分钟以内)
+     */
     private int tmk;
-    /**这两个值 默认的类型是 long 因为不传，所以改成String*/
+    /**
+     * 这两个值 默认的类型是 long 因为不传，所以改成String
+     */
     private String p;
     private String c;
 
     private String b;
+    private int t;
 
     public ADLoadNewsFeedEntity() {
     }
@@ -97,5 +102,13 @@ public class ADLoadNewsFeedEntity implements Serializable{
 
     public void setB(String b) {
         this.b = b;
+    }
+
+    public int getT() {
+        return t;
+    }
+
+    public void setT(int t) {
+        this.t = t;
     }
 }

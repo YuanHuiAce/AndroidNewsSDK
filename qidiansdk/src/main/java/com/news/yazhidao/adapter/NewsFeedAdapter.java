@@ -33,6 +33,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -77,6 +78,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.qd_ll_news_item_time_line;
 //                    case 4://奇点号Item
 //                        return R.layout.ll_news_search_item;
+                    case 5:
+                        return R.layout.ll_news_item_topic;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -88,7 +91,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 6;
+                return 7;
             }
 
             @Override
@@ -105,6 +108,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.TIME_LINE;
 //                    case 4://奇点号Item
 //                        return NewsFeed.SERRCH_ITEM;
+                    case 5:
+                        return NewsFeed.TOPIC;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -200,6 +205,24 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+        } else if (layoutId == R.layout.ll_news_item_topic) {
+            ImageView ivTopic = holder.getView(R.id.title_img_View);
+            int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
+            lpTopic.width = ivWidth;
+            lpTopic.height = (int) (ivWidth * 76 / 310.0f);
+            ivTopic.setLayoutParams(lpTopic);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+//            if (position == 0) {
+//                holder.getView(R.id.top_image).setVisibility(View.VISIBLE);
+//            } else {
+//                holder.getView(R.id.top_image).setVisibility(View.GONE);
+//            }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -351,6 +374,22 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                     AdIntent.putExtra(KEY_URL, feed.getPurl());
                     mContext.startActivity(AdIntent);
+                } else if (feed.getRtype() == 4) {
+                    if (!feed.isRead()) {
+                        feed.setRead(true);
+                        if (mNewsFeedDao == null) {
+                            mNewsFeedDao = new NewsFeedDao(mContext);
+                        }
+                        mNewsFeedDao.update(feed);
+                        notifyDataSetChanged();
+                    }
+                    Intent AdIntent = new Intent(mContext, NewsTopicAty.class);
+                    AdIntent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivity(AdIntent);
+                    } else {
+                        (mContext).startActivity(AdIntent);
+                    }
                 } else {
                     if (!feed.isRead()) {
                         feed.setRead(true);
@@ -426,6 +465,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             content = "广告";
             tag.setTextColor(mContext.getResources().getColor(R.color.theme_color));
             tag.setBackgroundResource(R.drawable.newstag_ad_shape);
+        } else if (type == 4) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "专题";
+            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
+            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);

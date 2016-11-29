@@ -19,8 +19,9 @@ public class NewsFeed implements Serializable {
     public static final int THREE_PIC = 2;
     public static final int TIME_LINE = 3;
     public static final int SERRCH_ITEM = 4;
-    public static final int BIG_PIC = 4;
-    public static final int EMPTY = 5;
+    public static final int TOPIC = 4;
+    public static final int BIG_PIC = 5;
+    public static final int EMPTY = 6;
 
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
@@ -94,18 +95,6 @@ public class NewsFeed implements Serializable {
     private String descr;
 
     /**
-     * 是(1)否(0)已收藏
-     */
-    private int colflag;
-    /**
-     * 是(1)否(0)已关心
-     */
-    private int conflag;
-    /**
-     * 是(1)否(0)已关心该新闻对应的发布源
-     */
-    private int conpubflag;
-    /**
      * 0普通新闻(不用显示标识)、1热点、2推送、3广告
      */
     @DatabaseField
@@ -119,9 +108,28 @@ public class NewsFeed implements Serializable {
     private boolean isUpload;
 
     /**
+     * 是(1)否(0)已收藏
+     */
+    private int colflag;
+    /**
+     * 是(1)否(0)已关心
+     */
+    private int conflag;
+    /**
+     * 是(1)否(0)已关心该新闻对应的发布源
+     */
+    private int conpubflag;
+
+    /**
      * 搜索频道中的订阅源
      */
     public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
+
+
+    /**
+     * 来源图片
+     */
+    private String icon;
 
 
     @Override
@@ -153,20 +161,20 @@ public class NewsFeed implements Serializable {
                 '}';
     }
 
-    public ArrayList<AttentionListEntity> getAttentionListEntities() {
-        return attentionListEntities;
-    }
-
-    public void setAttentionListEntities(ArrayList<AttentionListEntity> attentionListEntities) {
-        this.attentionListEntities = attentionListEntities;
-    }
-
     public int getRtype() {
         return rtype;
     }
 
     public void setRtype(int rtype) {
         this.rtype = rtype;
+    }
+
+    public ArrayList<AttentionListEntity> getAttentionListEntities() {
+        return attentionListEntities;
+    }
+
+    public void setAttentionListEntities(ArrayList<AttentionListEntity> attentionListEntities) {
+        this.attentionListEntities = attentionListEntities;
     }
 
     public int getConpubflag() {
@@ -367,5 +375,13 @@ public class NewsFeed implements Serializable {
 
     public void setUpload(boolean upload) {
         isUpload = upload;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

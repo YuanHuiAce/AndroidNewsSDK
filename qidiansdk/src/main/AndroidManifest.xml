@@ -32,6 +32,10 @@
         <activity
             android:name=".pages.PlayVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
+            android:name=".pages.NewsTopicAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
     </application>
 
 </manifest>
