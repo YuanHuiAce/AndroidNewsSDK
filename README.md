@@ -1,3 +1,10 @@
+更新内容：
+  1.添加专题频道
+  2.修复图片显示大小错位问题
+  3.更换加载动画
+  4.优化详情页内存问题
+  5.在MianView中调用setLocation方法传入相应地理位置信息可对用户做到更精确的新闻推荐
+  
 # AndroidNewsSDK
  ![Version Status](https://img.shields.io/badge/AndroidNewsSdk-1.0.1-yellow.svg)
  ![Platform](https://img.shields.io/badge/platform-android-brightgreen.svg)
