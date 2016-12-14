@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.NetworkRequest;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -49,7 +47,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.HotLabelsLayout;
 
-import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;

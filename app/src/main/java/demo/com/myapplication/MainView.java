@@ -499,11 +499,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * @param 传入地理坐标，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
-        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE, String.valueOf(location.getLatitude()));
-        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE, String.valueOf(location.getLongitude()));
-        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, province);
-        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
-        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE, String.valueOf(location.getLatitude()));
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE, String.valueOf(location.getLongitude()));
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, province);
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
     }
 
 }

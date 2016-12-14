@@ -2,9 +2,6 @@ package com.news.yazhidao.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
-
-import org.apache.http.util.EncodingUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -409,8 +406,8 @@ public class FileUtils {
         byte [] buffer = new byte[length];
         fis.read(buffer);
 
-       String res = EncodingUtils.getString(buffer, "UTF-8");
-
+//       String res = EncodingUtils.getString(buffer, "UTF-8");
+        String res="";
         fis.close();
         return res;
     }

@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.ChannelItem;
@@ -12,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fengjigang on 15/1/27.
@@ -116,7 +119,15 @@ public class TextUtil {
         Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
         if (url.contains("vid=")) {
             if (url.contains("&")) {
-                url = url.substring(0, url.indexOf("&"));
+//                url = url.substring(0, url.indexOf("&"));
+                Pattern p = Pattern.compile("vid=[a-zA-Z0-9]+");
+                Matcher m = p.matcher(url);
+                ArrayList<String> strs = new ArrayList<>();
+                while (m.find()) {
+                    strs.add(m.group(1));
+                }
+                Log.i("tag","strs"+strs);
+                url = url+"&"+strs;
             }
         }
         return url;

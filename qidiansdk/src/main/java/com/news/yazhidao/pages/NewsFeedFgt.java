@@ -1016,9 +1016,9 @@ public class NewsFeedFgt extends Fragment {
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
-                jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
-                jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 jsonObject.put("brand", brand);
                 jsonObject.put("model", platform);
                 jsonObject.put("apps", array);

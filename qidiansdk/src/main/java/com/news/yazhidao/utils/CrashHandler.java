@@ -11,9 +11,6 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EncodingUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -177,7 +174,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     dir.mkdirs();
                 }
                 FileOutputStream fos = new FileOutputStream(path + File.separator + fileName);
-                fos.write(EncodingUtils.getBytes(sb.toString(), HTTP.UTF_8));
+//                fos.write(EncodingUtils.getBytes(sb.toString(), HTTP.UTF_8));
                 fos.close();
             }
             return fileName;
