@@ -423,6 +423,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
 //        mUrl = "9076124";
+//        mUrl = "9372991";
         User user = SharedPreManager.mInstance(this).getUser(NewsDetailAty2.this);
         if (user != null) {
             mUserId = user.getMuid() + "";

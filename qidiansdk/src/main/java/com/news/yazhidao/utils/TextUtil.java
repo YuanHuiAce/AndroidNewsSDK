@@ -3,7 +3,6 @@ package com.news.yazhidao.utils;
 
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.ChannelItem;
@@ -106,31 +105,43 @@ public class TextUtil {
      * 解析出iframe中的video url
      */
     private static String parseVideoUrl(String videoUrl, int w, int h) {
+//        videoUrl = "http://v.qq.com/iframe/player.html?vid=p0327a7pt4p&width=290&height=217.5&auto=0";
         String[] split = videoUrl.split("\"");
-        String url = "";
-        for (int i = 0; i < split.length; i++) {
-            if (split[i].contains("https:")) {
-                url = split[i].replace("https", "http").replace("\\", "").replace("preview", "player");
-                break;
-            } else if (split[i].contains("http:")) {
-                url = split[i].replace("\\", "");
+        if (videoUrl.contains("https:")&&videoUrl.contains("preview")&&videoUrl.contains("qq.com")){
+            for (int i = 0; i < split.length; i++) {
+                if (split[i].contains("https:")) {
+                    videoUrl = split[i].replace("https", "http").replace("\\", "").replace("preview", "player");
+                    break;
+                } else if (split[i].contains("http:")) {
+                    videoUrl = split[i].replace("\\", "");
+                }
             }
-        }
-        Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-        if (url.contains("vid=")) {
-            if (url.contains("&")) {
+            Logger.e("jigang", "video url=" + videoUrl + ",?=" + videoUrl.indexOf("?"));
+//            if (videoUrl.contains("vid=")) {
+//                if (videoUrl.contains("&")) {
+//                    videoUrl = videoUrl.substring(0, videoUrl.indexOf("&"));
+//                }
+//            }
+//            "<iframe src='http://v.qq.com/iframe/player.html?width=500&height=375&auto=0&vid=i0020zlwtrs'></iframe>";
+            if (videoUrl.contains("&")) {
 //                url = url.substring(0, url.indexOf("&"));
                 Pattern p = Pattern.compile("vid=[a-zA-Z0-9]+");
-                Matcher m = p.matcher(url);
+                Matcher m = p.matcher(videoUrl);
                 ArrayList<String> strs = new ArrayList<>();
                 while (m.find()) {
-                    strs.add(m.group(1));
+                    strs.add(m.group(0));
+                    videoUrl = videoUrl.split("src='")[1].split("\\?")[0]+"?"+strs.get(0);
                 }
-                Log.i("tag","strs"+strs);
-                url = url+"&"+strs;
+            }
+        }else {
+            //        <iframe src='http://player.youku.com/embed/XMTg2MzQxNDMwMA=='></iframe>'
+            Pattern pt = Pattern.compile("src='([^\r\n']+)'");
+            Matcher match = pt.matcher(videoUrl);
+            if (match.find()) {
+               videoUrl = match.group(1);
             }
         }
-        return url;
+        return videoUrl;
 //        String params = url.substring(url.indexOf("?") + 1);
 //        Logger.e("jigang", "params url=" + params);
 //        String[] paramsArr = params.split("=|&");

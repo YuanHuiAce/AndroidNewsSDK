@@ -16,7 +16,6 @@ import android.webkit.WebViewClient;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
 
 public class PlayVideoAty extends BaseActivity {
     private WebView mPlayVideoWebView;
@@ -41,9 +40,9 @@ public class PlayVideoAty extends BaseActivity {
     @Override
     protected void initializeViews() {
         mVideoUrl = getIntent().getStringExtra(VideoJavaScriptBridge.KEY_VIDEO_URL);
-        if (!TextUtil.isEmptyString(mVideoUrl) && mVideoUrl.contains("&")) {
-            mVideoUrl = mVideoUrl.substring(0, mVideoUrl.indexOf("&"));
-        }
+//        if (!TextUtil.isEmptyString(mVideoUrl) && mVideoUrl.contains("&")) {
+//            mVideoUrl = mVideoUrl.substring(0, mVideoUrl.indexOf("&"));
+//        }
 //
         Logger.e("jigang", "aty url =" + mVideoUrl);
         initWebView();

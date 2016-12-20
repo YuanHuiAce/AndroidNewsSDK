@@ -8,6 +8,7 @@
         android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:theme="@style/AppTheme"
         android:supportsRtl="true">
         <activity
             android:name=".pages.MainAty"
@@ -24,6 +25,11 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsDetailWebviewAty"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".pages.NewsWebviewAty"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

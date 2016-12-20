@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -16,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
-    boolean enableNightMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
+                    setEnableNightMode(false);
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
@@ -81,12 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setEnableNightMode(boolean enableNightMode) {
-        this.enableNightMode = enableNightMode;
         if (enableNightMode) {
-            Log.i("tag","123123");
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
-            Log.i("tag","12731827319");
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         recreate();

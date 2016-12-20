@@ -9,12 +9,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -118,6 +121,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isNetWork;
     public boolean isClickMyLike;
     FrameLayout video;
+    View rootView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +149,7 @@ public class NewsDetailFgt extends BaseFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
+        rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
         user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
@@ -345,10 +349,38 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
         mDetailWebView.getSettings().setBlockNetworkImage(false);
+        mDetailWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()), "VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         /** 梁帅：判断图片是不是  不显示 */
+
+
+//        mDetailWebView.loadUrl("http://deeporiginalx.com/content.html?type=0&nid="+mNewID);
+        mDetailWebView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // TODO Auto-generated method stub
+                Log.i("tag", "url===" + url);
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Log.i("tag", description + "===" + failingUrl);
+                //view.loadData("ERROR: " + description,"text/plain","utf8");
+            }
+
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                //handler.cancel(); 默认的处理方式，WebView变成空白页
+//                        //接受证书
+                handler.proceed();
+                //handleMessage(Message msg); 其他处理
+            }
+        });
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
                 SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
@@ -369,8 +401,6 @@ public class NewsDetailFgt extends BaseFragment {
                 }
                 return true;
             }
-
-
         });
         //梁帅：判断图片是不是  不显示
 //        if(SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
