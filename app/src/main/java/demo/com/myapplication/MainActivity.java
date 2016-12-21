@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
-                    setEnableNightMode(false);
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);

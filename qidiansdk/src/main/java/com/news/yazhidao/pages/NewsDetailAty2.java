@@ -456,7 +456,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(result.getComment() + "");
+                        String strText = "";
+                        int num = result.getComment();
+                        if (num >= 10000) {
+                            int i = num % 10000 / 1000;
+                            if (i > 0) {
+                                strText = num / 10000 + "." + String.valueOf(i).substring(0, 1) + "万";
+                            } else {
+                                strText = num / 10000 + "万";
+                            }
+                        }
+                        mDetailCommentNum.setText(strText);
                         mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
