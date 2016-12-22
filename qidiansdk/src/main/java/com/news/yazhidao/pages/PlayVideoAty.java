@@ -57,7 +57,6 @@ public class PlayVideoAty extends BaseActivity {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         InsideWebViewClient mInsideWebViewClient = new InsideWebViewClient();
         mPlayVideoWebView.setWebChromeClient(new WebChromeClient());
         mPlayVideoWebView.setWebViewClient(mInsideWebViewClient);
