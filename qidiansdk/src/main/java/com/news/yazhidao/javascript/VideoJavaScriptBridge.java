@@ -2,7 +2,6 @@ package com.news.yazhidao.javascript;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import com.news.yazhidao.pages.PlayVideoAty;
@@ -33,7 +32,6 @@ public class VideoJavaScriptBridge {
 //        } else {
 //            TbsVideo.openVideo(mContext, "http://video.jiecao.fm/9/6/%E7%83%A8/%E7%9B%B8%E5%A3%B0.mp4");
 //        }
-        Log.i("tag", "url-------" + url);
         Intent playAty = new Intent(mContext, PlayVideoAty.class);
         if (url.contains("player.html")) {
 //            TbsVideo.openVideo(mContext,"http://video.jiecao.fm/9/6/%E7%83%A8/%E7%9B%B8%E5%A3%B0.mp4");

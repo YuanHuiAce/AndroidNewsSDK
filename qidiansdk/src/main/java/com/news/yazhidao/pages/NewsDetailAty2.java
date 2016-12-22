@@ -165,7 +165,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
-        if(SharedPreManager.mInstance(this).getBoolean("showflag","isKeepScreenOn")){
+        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
             /** 梁帅：保持让屏幕常亮*/
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
@@ -260,7 +260,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
 
         upLoadLog();
-        if(SharedPreManager.mInstance(this).getBoolean("showflag","isKeepScreenOn")) {
+        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
             /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
@@ -331,7 +331,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 /** 纪纲、梁帅：重复上传日志error可能为null */
-                if (error ==  null || TextUtil.isEmptyString(error.getMessage())){
+                if (error == null || TextUtil.isEmptyString(error.getMessage())) {
                     return;
                 }
                 if (error.getMessage().contains("302")) {
@@ -465,6 +465,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                             } else {
                                 strText = num / 10000 + "万";
                             }
+                        } else {
+                            strText = num + "评";
                         }
                         mDetailCommentNum.setText(strText);
                         mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
