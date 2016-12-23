@@ -589,20 +589,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
-            if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
-                int num = Integer.valueOf(strText);
-                if (num >= 10000) {
-                    int i = num % 10000 / 1000;
-                    if (i > 0) {
-                        strText = num / 10000 + "." + String.valueOf(i).substring(0, 1) + "万";
-                    } else {
-                        strText = num / 10000 + "万";
-                    }
-                }
-                textView.setText(strText + "评");
-            } else {
-                textView.setText("");
-            }
+            textView.setText(TextUtil.getCommentNum(strText));
         }
 
         private void newsTag(TextViewExtend tag, int type) {

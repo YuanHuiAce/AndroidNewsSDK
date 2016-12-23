@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/red">
+    android:orientation="vertical">
     <!--android:layout_height="wrap_content" 这样写防止底部有大部分的空白-->
     <!--<com.news.yazhidao.widget.webview.LoadWebView-->
         <!--android:id="@+id/mDetailWebView"-->
