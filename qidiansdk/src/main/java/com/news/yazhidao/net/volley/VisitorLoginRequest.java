@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class VisitorLoginRequest extends JsonObjectRequest {
     public VisitorLoginRequest(String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, HttpConstant.URL_VISITOR_LOGIN,requestBody, listener, errorListener);
+        super(Method.POST, HttpConstant.URL_VISITOR_LOGIN, requestBody, listener, errorListener);
     }
 
     @Override
@@ -28,9 +28,9 @@ public class VisitorLoginRequest extends JsonObjectRequest {
                     HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONObject data = new JSONObject();
-            if ("2000".equals(jsonObject.optString("code"))){
+            if ("2000".equals(jsonObject.optString("code"))) {
                 data = jsonObject.getJSONObject("data");
-                data.put("Authorization",response.headers.get("Authorization"));
+                data.put("Authorization", response.headers.get("Authorization"));
             }
             return Response.success(data,
                     HttpHeaderParser.parseCacheHeaders(response));
@@ -40,5 +40,4 @@ public class VisitorLoginRequest extends JsonObjectRequest {
             return Response.error(new ParseError(je));
         }
     }
-
 }

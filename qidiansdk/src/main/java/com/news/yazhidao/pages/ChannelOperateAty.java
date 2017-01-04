@@ -119,8 +119,6 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
             return;
         }
         if (parent.getId() == R.id.userGridView) {
-//		switch (parent.getId()) {
-//			case R.id.userGridView:
             //position为 0，1 的不可以进行任何操作
             if (position != 0) {
                 final ImageView moveImageView = getView(view);
@@ -146,9 +144,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
                     }, 50L);
                 }
             }
-//				break;
         } else if (parent.getId() == R.id.otherGridView) {
-//			case R.id.otherGridView:
             final ImageView moveImageView = getView(view);
             if (moveImageView != null) {
                 TextView newTextView = (TextView) view.findViewById(R.id.text_item);
@@ -171,10 +167,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
                     }
                 }, 50L);
             }
-//				break;
         }
-//			default:
-//				break;
     }
 
 
@@ -290,10 +283,6 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         mDao.deletaForAll();
         mDao.insertSelectedList(userAdapter.getChannnelList());
         mDao.insertNormalList(otherAdapter.getChannnelLst());
-        //统计用户是否编辑了频道
-//		if (selectedChannelList.size() != userAdapter.getChannnelList().size() || TextUtil.isChannelChanged(selectedChannelList,userAdapter.getChannnelList())){
-//			MobclickAgent.onEvent(this,"user_eidted_channel");
-//		}
     }
 
 

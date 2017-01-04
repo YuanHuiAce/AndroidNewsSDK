@@ -440,8 +440,4 @@ public final class SharedPreManager {
         remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
     }
 
-//    public  BDLocation getLocation(){
-//        String locationStr = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-//        return GsonUtil.deSerializedByClass(locationStr,BDLocation.class);
-//    }
 }

@@ -347,7 +347,13 @@ public class NewsFeedFgt extends Fragment {
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
-//        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        if (user != null) {
+            String userId = user.getUserId();
+            if (!TextUtil.isEmptyString(userId)) {
+                adDeviceEntity.setImei(userId);
+            }
+        }
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));

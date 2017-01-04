@@ -453,7 +453,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (result != null) {
                     mNewsFeed = convert2NewsFeed(result);
                     displayDetailAndComment(result);
-                    mDetailHeaderView.updateView(result);
+//                    mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
                         mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));

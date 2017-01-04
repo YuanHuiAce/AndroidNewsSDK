@@ -13,6 +13,7 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,6 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
-import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
@@ -72,7 +72,7 @@ import java.util.List;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailFgt extends BaseFragment {
+public class NewsDetailFgt extends Fragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private LoadWebView mDetailWebView;
     private NewsDetail mResult;
@@ -103,7 +103,7 @@ public class NewsDetailFgt extends BaseFragment {
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
-    private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshPageBroReceiver mRefreshReceiver;
     private boolean isWebSuccess, isCommentSuccess, isCorrelationSuccess;
     private TextView mDetailSharedHotComment;
     boolean isNoHaveBean;
@@ -131,15 +131,14 @@ public class NewsDetailFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
-        Logger.e("aaa", "mTitle==" + mTitle);
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
-        if (mRefreshReceiber == null) {
-            mRefreshReceiber = new RefreshPageBroReceiber();
+        if (mRefreshReceiver == null) {
+            mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-            getActivity().registerReceiver(mRefreshReceiber, filter);
+            getActivity().registerReceiver(mRefreshReceiver, filter);
         }
 
     }
@@ -315,8 +314,8 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mRefreshReceiber != null) {
-            getActivity().unregisterReceiver(mRefreshReceiber);
+        if (mRefreshReceiver != null) {
+            getActivity().unregisterReceiver(mRefreshReceiver);
         }
     }
 
@@ -847,7 +846,7 @@ public class NewsDetailFgt extends BaseFragment {
     /**
      * 通知新闻详情页和评论fragment刷新评论
      */
-    public class RefreshPageBroReceiber extends BroadcastReceiver {
+    public class RefreshPageBroReceiver extends BroadcastReceiver {
 
 
         @Override

@@ -8,16 +8,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -31,17 +29,15 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
-import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.NewsCommentHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.UnsupportedEncodingException;
@@ -59,7 +55,7 @@ import java.util.Date;
  * Created by fengjigang on 16/3/31.
  * 新闻评论页
  */
-public class NewsCommentFgt extends BaseFragment {
+public class NewsCommentFgt extends Fragment {
 
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
@@ -71,33 +67,29 @@ public class NewsCommentFgt extends BaseFragment {
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
-    private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshPageBroReceiver mRefreshReceiver;
     //    private RefreshLikeBroReceiber mRefreshLike;
     private RelativeLayout bgLayout;
     private User mUser;
     private NewsDetailComment mComment;
     private Holder mHolder;
-    private LinearLayout news_comment_NoCommentsLayout;
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
+    private NewsCommentHeaderView mNewsCommentHeaderView;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
      */
-    public class RefreshPageBroReceiber extends BroadcastReceiver {
-
-
+    public class RefreshPageBroReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                Logger.e("aaa", "详情页===文字的改变！！！");
                 mCommentsAdapter.notifyDataSetChanged();
-                news_comment_Title.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
+                mNewsCommentHeaderView.setNewsCommentTitleTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
             } else {
-                Logger.e("jigang", "detailaty refresh br");
 //                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
 //                mComments.add(0, comment);
-                news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                mNewsCommentHeaderView.setNoCommentsLayoutGone();
                 mCommentsAdapter.setData(mComments);
             }
         }
@@ -109,54 +101,26 @@ public class NewsCommentFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
-        if (mRefreshReceiber == null) {
-            mRefreshReceiber = new RefreshPageBroReceiber();
+        if (mRefreshReceiver == null) {
+            mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-            getActivity().registerReceiver(mRefreshReceiber, filter);
+            getActivity().registerReceiver(mRefreshReceiver, filter);
         }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mRefreshReceiber != null) {
-            getActivity().unregisterReceiver(mRefreshReceiber);
-        }
-    }
-
-    private TextView news_comment_Title, news_comment_content;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
         mNewsCommentList.setAdapter(mCommentsAdapter);
-        View mCommentHeaderView = inflater.inflate(R.layout.news_comment_fragment_headerview, null);
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        mCommentHeaderView.setLayoutParams(layoutParams);
+        mNewsCommentHeaderView = new NewsCommentHeaderView(getActivity());
         ListView lv = mNewsCommentList.getRefreshableView();
-        lv.addHeaderView(mCommentHeaderView);
-
-        news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
-        news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
-        news_comment_Title.setText(mNewsFeed.getTitle());
-        if ("0".equals(mNewsFeed.getComment())) {
-            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()));
-        } else {
-            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()) + "  " + TextUtil.getCommentNum(mNewsFeed.getComment() + ""));
-        }
-        news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
-        if ("0".equals(mNewsFeed.getComment())) {
-            news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
-        } else {
-            news_comment_NoCommentsLayout.setVisibility(View.GONE);
-        }
-
+        mNewsCommentHeaderView.setData(mNewsFeed);
+        lv.addHeaderView(mNewsCommentHeaderView);
         mNewsCommentList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -173,39 +137,26 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void loadData() {
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mNewsFeed.getDocid());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
-
-        feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+        NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsDetailRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + (mUser != null ? "&uid=" + SharedPreManager.mInstance(getActivity()).getUser(getActivity()).getMuid() : "") +
                 "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
-
             @Override
             public void onResponse(ArrayList<NewsDetailComment> result) {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
                 mNewsCommentList.onRefreshComplete();
-                Logger.e("jigang", "network success, comment" + result);
-
                 if (!TextUtil.isListEmpty(result)) {
-                    Logger.e("ccc", "1111111111111");
                     mComments.addAll(result);
                     mCommentsAdapter.setData(mComments);
-                    Logger.d("aaa", "评论加载完毕！！！！！！");
-                    news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                    mNewsCommentHeaderView.setNoCommentsLayoutGone();
                 } else {
-                    /** 梁帅:代码要严谨 原来 (mComments.size() == 0) */
-
                     if (!TextUtil.isListEmpty(mComments)) {
-                        Logger.e("ccc", "2222222222222222222");
-                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                        mNewsCommentHeaderView.setNoCommentsLayoutGone();
                     } else {
-                        Logger.e("ccc", "333333333333333333333");
-                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                        mNewsCommentHeaderView.setNoCommentsLayoutVisible();
                     }
-
                 }
             }
         }, new Response.ErrorListener() {
@@ -215,15 +166,21 @@ public class NewsCommentFgt extends BaseFragment {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
-                /** 梁帅:服务器返回空的状态码是 2002 */
                 if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
-                    news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    mNewsCommentHeaderView.setNoCommentsLayoutVisible();
                 }
-                Logger.e("jigang", "NewsCommentFgt  network fail" + error);
             }
         });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRefreshReceiver != null) {
+            getActivity().unregisterReceiver(mRefreshReceiver);
+        }
     }
 
     @Override
@@ -350,11 +307,6 @@ public class NewsCommentFgt extends BaseFragment {
                     tvTime.setText(between * 60 / 3600000 + "分钟前");
                 else
                     tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
-//                if (between / 3600000 / 60 == 0) {
-//                    tvTime.setText("刚刚");
-//                } else {
-//                    tvTime.setText(between / 3600000 / 60 + "分钟前");
-//                }
             }
         } catch (ParseException e) {
             tvTime.setText(updateTime);
@@ -396,7 +348,6 @@ public class NewsCommentFgt extends BaseFragment {
 //        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 //        requestQueue.add(loveRequest);
     }
-
 
     class Holder {
         ImageView ivHeadIcon;

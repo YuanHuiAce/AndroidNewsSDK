@@ -22,6 +22,8 @@
         android:layout_marginRight="8dp"
         android:text="切换到奇点频道" />
 
+
+
     <RelativeLayout
         android:id="@+id/newsLayout"
         android:layout_width="match_parent"

@@ -26,18 +26,18 @@ public class NewsDetailRequest<T> extends GsonRequest<T> {
     public NewsDetailRequest(int method, Type reflectType, String url, Response.Listener successListener, Response.ErrorListener listener) {
         super(method, reflectType, url, successListener, listener);
     }
+
     @Override
-    protected String checkJsonData(String data,NetworkResponse response) {
+    protected String checkJsonData(String data, NetworkResponse response) {
         try {
             JSONObject jsonObject = new JSONObject(data);
             String code = jsonObject.optString("code", "");
-//            String message = jsonObject.optString("message", "");
-            Logger.e("jigang","code = "+code );
-            if ("2000".equals(code) ) {
+            Logger.e("jigang", "code = " + code);
+            if ("2000".equals(code)) {
                 return jsonObject.optString("data", "");
-            }else if("2002".equals(code)){
+            } else if ("2002".equals(code)) {
                 return "2002";
-            }else {
+            } else {
                 return "";
             }
         } catch (JSONException e) {
@@ -45,19 +45,12 @@ public class NewsDetailRequest<T> extends GsonRequest<T> {
         }
         return "";
     }
-//    @Override
-//    public Map<String, String> getHeaders() throws AuthFailureError {
-//        return mHeader;
-//    }
-//    public void setRequestHeader(HashMap header) {
-//        this.mHeader = header;
-//    }
-
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
         return mParams;
     }
+
     public void setRequestParams(HashMap params) {
         this.mParams = params;
     }

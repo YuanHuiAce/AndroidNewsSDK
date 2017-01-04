@@ -28,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
-                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
+//                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
-                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
+                    setEnableNightMode(true);
+//                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
                 }
             }
         });
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        recreate();
+//        recreate();
     }
 
 

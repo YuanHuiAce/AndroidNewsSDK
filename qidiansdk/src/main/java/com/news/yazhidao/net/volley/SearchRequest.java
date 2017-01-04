@@ -31,14 +31,11 @@ public class SearchRequest<T> extends GsonRequest<T> {
 
     protected String checkJsonData(String data, NetworkResponse response) {
         try {
-//            Logger.d("aaa","data = "+data );
-//            JSONArray jsonArray = new JSONArray(data);
-//            Logger.d("aaa", "jsonArray.getString(0 = " + jsonArray.getString(0));
             JSONObject jsonObject = new JSONObject(data);
             String code = jsonObject.optString("code", "");
             String message = jsonObject.optString("message", "");
-            Logger.e("jigang","code = "+code + ",message=" + message);
-            return jsonObject.optString("data","");
+            Logger.e("jigang", "code = " + code + ",message=" + message);
+            return jsonObject.optString("data", "");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -46,15 +43,15 @@ public class SearchRequest<T> extends GsonRequest<T> {
         return "";
     }
 
-    public void  setKeyWordAndPageIndex(String pKeyWord, String pPageIndex){
+    public void setKeyWordAndPageIndex(String pKeyWord, String pPageIndex) {
         this.mKeyWord = pKeyWord;
         this.mPageIndex = pPageIndex;
     }
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
-        HashMap<String,String> params = new HashMap<>();
-        params.put("keyword",this.mKeyWord);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("keyword", this.mKeyWord);
         params.put("page", this.mPageIndex);
         return params;
     }
