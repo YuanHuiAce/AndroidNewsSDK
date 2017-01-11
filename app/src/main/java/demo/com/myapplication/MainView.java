@@ -206,6 +206,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGOUT);
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
+        /**请求系统权限*/
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE},
@@ -215,6 +216,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }
     }
 
+    /**
+     * 权限回调
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
@@ -224,6 +228,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }
     }
 
+    /**
+     * 保存设置IMEI
+     */
     private void getDeviceImei() {
         if (activity != null) {
             mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);

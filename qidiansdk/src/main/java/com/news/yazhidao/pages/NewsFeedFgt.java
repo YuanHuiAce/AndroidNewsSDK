@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -366,7 +365,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         /** 设置IMEI */
         String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
-        Log.i("tag", "imei" + imei);
         adDeviceEntity.setImei(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);

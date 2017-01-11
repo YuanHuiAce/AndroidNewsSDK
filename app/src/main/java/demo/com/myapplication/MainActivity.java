@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.setTheme();
     }
 
+
+    /**日夜间模式切换方法*/
     public void changeDayNightMode() {
         ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
                 ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
