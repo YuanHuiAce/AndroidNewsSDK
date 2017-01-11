@@ -122,12 +122,14 @@ public class NewsDetailFgt extends Fragment {
     public boolean isClickMyLike;
     FrameLayout video;
     View rootView;
+    private Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        MobclickAgent.onEvent(getActivity(),"yazhidao_user_enter_detail_page");
         Bundle arguments = getArguments();
+        mContext = getActivity();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
@@ -155,6 +157,7 @@ public class NewsDetailFgt extends Fragment {
         // 声明video，把之后的视频放到这里面去
 //        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.white);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -333,8 +336,7 @@ public class NewsDetailFgt extends Fragment {
                 Logger.e("aaa", "webView的点击");
             }
         });
-
-
+//        TextUtil.setLayoutBgColor(mContext,mNewsDetailHeaderView,R.color.color7);
         mDetailWebView = new LoadWebView(getActivity().getApplicationContext());
         mDetailWebView.setLayoutParams(params);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
@@ -506,7 +508,9 @@ public class NewsDetailFgt extends Fragment {
         });
 
         detail_shared_hotComment.setText("相关观点");
-
+        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.white);
+        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.white);
+        TextUtil.setTextColor(mContext, detail_shared_hotComment, R.color.newsFeed_titleColor);
 
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);

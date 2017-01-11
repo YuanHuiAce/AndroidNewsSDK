@@ -351,4 +351,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		addView(view, index, params);
 	}
 
+	public void setHeaderLoadingView(){
+		mHeaderLoadingView.setDayNightMode();
+	}
+
 }

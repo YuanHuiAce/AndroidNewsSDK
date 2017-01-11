@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -199,7 +200,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
-        mDetailHeader = findViewById(R.id.mDetailHeader);
+        mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
+        TextUtil.setLayoutBgColor(this, (RelativeLayout) mDetailHeader, R.color.white);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
 //        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
@@ -401,6 +403,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailViewPager.setAdapter(pagerAdapter);
     }
 
+    long iii;
+
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -445,6 +449,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onResponse(NewsDetail result) {
+                iii = System.currentTimeMillis();
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
@@ -463,6 +468,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     ToastUtil.toastShort("此新闻暂时无法查看!");
                     NewsDetailAty2.this.finish();
                 }
+                Log.i("tag", System.currentTimeMillis() - iii + "tag");
             }
         }, new Response.ErrorListener() {
             @Override

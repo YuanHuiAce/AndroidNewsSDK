@@ -28,6 +28,7 @@ import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.NewsTopic;
 import com.news.yazhidao.entity.TopicBaseInfo;
@@ -56,7 +57,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private ImageView mTopicLeftBack,mNewsLoadingImg;
+    private ImageView mTopicLeftBack, mNewsLoadingImg;
     private TextView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper;
     private ExpandableListView mlvSpecialNewsFeed;
@@ -70,6 +71,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private int mScreenWidth, mCardWidth, mCardHeight;
     private NewsTopicHeaderView mSpecialNewsHeaderView;
     private TextView mTopicTitle;
+    private RelativeLayout mTopicHeader;
 
     @Override
     protected void setContentView() {
@@ -87,6 +89,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
         mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
+        mTopicHeader = (RelativeLayout) findViewById(R.id.mTopicHeader);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
@@ -100,6 +103,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setAdapter(mAdapter);
         mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
+        TextUtil.setLayoutBgColor(mContext,mTopicHeader,R.color.white);
+        TextUtil.setTextColor(mContext,mTopicTitle,R.color.new_color7);
 //        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
 //        mlvSpecialNewsFeed.setMainFooterView(true);
 //        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
@@ -353,7 +358,10 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else {
                 groupHolder = (GroupHolder) convertView.getTag();
             }
+            TextUtil.setLayoutBgResource(mContext, (ImageView) convertView.findViewById(R.id.line_bottom_imageView), R.drawable.list_divider);
+            TextUtil.setLayoutBgColor(mContext, (LinearLayout) convertView.findViewById(R.id.content_layout), R.color.white);
             groupHolder.tvTitle.setText(topicClassBaseInfo.getName());
+            TextUtil.setTextColor(mContext, groupHolder.tvTitle, R.color.new_color3);
             groupHolder.ivColor.setBackgroundColor(getResources().getColor(R.color.new_color2));
             convertView.setOnClickListener(null);
             return convertView;
@@ -515,6 +523,11 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 } else {
                     uri = Uri.parse(strImg);
                 }
+                if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+                    draweeView.setAlpha(0.5f);
+                } else {
+                    draweeView.setAlpha(1.0f);
+                }
                 Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
             }
         }
@@ -539,15 +552,16 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 tvTitle.setText(strTitle);
                 tvTitle.setLineSpacing(0, 1.1f);
                 if (isRead) {
-                    tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
                 } else {
-                    tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
                 }
                 tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             }
         }
 
         private void setBottomLine(ImageView ivBottom, int count, int position) {
+            TextUtil.setLayoutBgResource(mContext, ivBottom, R.drawable.list_divider);
             if (count == position + 1) {//去掉最后一条的线
                 ivBottom.setVisibility(View.INVISIBLE);
             } else {
@@ -556,6 +570,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
+            TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
             rlNewsContent.setOnClickListener(new View.OnClickListener() {
                 long firstClick = 0;
 
@@ -585,11 +600,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         private void setSourceViewText(TextViewExtend textView, String strText) {
             if (!TextUtil.isEmptyString(strText)) {
                 textView.setText(strText);
+                TextUtil.setTextColor(mContext, textView, R.color.new_color3);
             }
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
             textView.setText(TextUtil.getCommentNum(strText));
+            TextUtil.setTextColor(mContext, textView, R.color.new_color3);
+        }
+
+        private void setBottomLineColor(ImageView imageView) {
+            TextUtil.setLayoutBgResource(mContext, imageView, R.drawable.list_divider);
         }
 
         private void newsTag(TextViewExtend tag, int type) {

@@ -76,6 +76,7 @@ public class NewsCommentFgt extends Fragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private NewsCommentHeaderView mNewsCommentHeaderView;
+    private Context mContext;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -98,6 +99,7 @@ public class NewsCommentFgt extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity();
         Bundle arguments = getArguments();
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
@@ -113,6 +115,7 @@ public class NewsCommentFgt extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
+        TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.white);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
@@ -237,6 +240,9 @@ public class NewsCommentFgt extends Fragment {
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            TextUtil.setTextColor(mContext, holder.tvName, R.color.new_color2);
+            TextUtil.setTextColor(mContext, holder.tvContent, R.color.new_color3);
+            TextUtil.setLayoutBgResource(mContext, (ImageView) convertView.findViewById(R.id.mSelectCommentDivider), R.color.new_color4);
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
             final User user = SharedPreManager.mInstance(getActivity()).getUser(mContext);

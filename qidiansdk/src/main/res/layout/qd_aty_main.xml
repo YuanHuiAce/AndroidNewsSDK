@@ -1,18 +1,14 @@
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    >
+    android:layout_height="fill_parent">
 
 
     <LinearLayout
         android:id="@+id/mChannelLayout"
         android:layout_width="fill_parent"
         android:layout_height="41dp"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <!--<com.facebook.drawee.view.SimpleDraweeView-->
         <!--android:id="@+id/mUserCenter"-->
@@ -27,52 +23,48 @@
 
         <!--/>-->
         <com.news.yazhidao.widget.channel.ChannelTabStrip
-            android:layout_marginLeft="4dp"
             android:id="@+id/mChannelTabStrip"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:overScrollMode="never"
-            />
+            android:overScrollMode="never" />
 
         <ImageView
             android:id="@+id/mChannelExpand"
             android:layout_width="41dp"
             android:layout_height="41dp"
             android:layout_gravity="center_vertical"
-            android:padding="12dp"
             android:layout_marginRight="4dp"
-            android:src="@drawable/channel_more_selector"
             android:background="@color/channeltabstrip_bg"
-            />
+            android:padding="12dp"
+            android:src="@drawable/channel_more_selector" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/mNetWorkBar"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:background="@color/white80"
-        android:textColor="@color/new_color2"
-        android:text="无法连接到网络,请检查网络设置>"
         android:layout_below="@id/mChannelLayout"
-        android:textSize="@dimen/font4"
+        android:background="@color/white80"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:text="无法连接到网络,请检查网络设置>"
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/font4"
+        android:visibility="gone" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mNetWorkBar"/>
+        android:layout_below="@id/mNetWorkBar" />
 
     <com.news.yazhidao.widget.FeedDislikePopupWindow
         android:id="@+id/feedDislike_popupWindow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        ></com.news.yazhidao.widget.FeedDislikePopupWindow>
+        android:visibility="gone"></com.news.yazhidao.widget.FeedDislikePopupWindow>
 
 
 </RelativeLayout>

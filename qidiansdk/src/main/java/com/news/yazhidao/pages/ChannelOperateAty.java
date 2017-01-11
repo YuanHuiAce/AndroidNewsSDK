@@ -1,7 +1,6 @@
 package com.news.yazhidao.pages;
 
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.view.View;
@@ -16,14 +15,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.ChannelNormalAdapter;
 import com.news.yazhidao.adapter.ChannelSelectedAdapter;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.channel.NormalGridView;
 import com.news.yazhidao.widget.channel.SelectedGridView;
 
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 /**
  * 新闻频道管理
  */
-public class ChannelOperateAty extends BaseActivity implements OnItemClickListener {
+public class ChannelOperateAty extends BaseActivity implements OnItemClickListener, ThemeManager.OnThemeChangeListener {
     public static final String KEY_USER_SELECT = "key_user_select";
     /**
      * 用户栏目的GRIDVIEW
@@ -68,7 +70,10 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     private ChannelItemDao mDao = new ChannelItemDao(this);
 
     private View mDetailLeftBack;
-
+    private LinearLayout bgLayout;
+    private LinearLayout bgMyChannel, bgMoreChannel;
+    private TextView tvCategory, tvMoreCategory ,tvTitle;
+    private RelativeLayout rlTitle;
 
     @Override
     protected boolean translucentStatus() {
@@ -82,8 +87,15 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
     @Override
     protected void initializeViews() {
+        bgLayout = (LinearLayout) findViewById(R.id.subscribe_main_layout);
+        rlTitle = (RelativeLayout) findViewById(R.id.title_bar);
+        bgMyChannel = (LinearLayout) findViewById(R.id.my_channel_layout);
+        bgMoreChannel = (LinearLayout) findViewById(R.id.more_channel_layout);
         userGridView = (SelectedGridView) findViewById(R.id.userGridView);
         otherGridView = (NormalGridView) findViewById(R.id.otherGridView);
+        tvTitle = (TextView) findViewById(R.id.title);
+        tvCategory = (TextView) findViewById(R.id.my_category_text);
+        tvMoreCategory = (TextView) findViewById(R.id.more_category_text);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +104,14 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
                 ChannelOperateAty.this.finish();
             }
         });
+        ThemeManager.registerThemeChangeListener(this);
+        TextUtil.setLayoutBgResource(this, rlTitle, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.white);
+        TextUtil.setTextColor(this, tvCategory, R.color.new_color7);
+        TextUtil.setTextColor(this, tvMoreCategory, R.color.new_color7);
+        TextUtil.setTextColor(this, tvTitle, R.color.newsFeed_titleColor);
     }
 
     @Override
@@ -108,6 +128,18 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         userGridView.setOnItemClickListener(this);
     }
 
+    @Override
+    public void onThemeChanged() {
+        TextUtil.setLayoutBgResource(this, rlTitle, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.white);
+        TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.white);
+        TextUtil.setTextColor(this, tvCategory, R.color.new_color7);
+        TextUtil.setTextColor(this, tvMoreCategory, R.color.new_color7);
+        TextUtil.setTextColor(this, tvTitle, R.color.newsFeed_titleColor);
+        userAdapter.notifyDataSetChanged();
+        otherAdapter.notifyDataSetChanged();
+    }
 
     /**
      * GRIDVIEW对应的ITEM点击监听接口
@@ -288,31 +320,40 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
     @Override
     public void onBackPressed() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    saveChannel();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
-        if (selectedChannelListCurrent.size() != channelItems.size()) {
-            Intent data = new Intent();
-            data.putExtra(KEY_USER_SELECT, channelItems);
-            setResult(MainAty.REQUEST_CODE, data);
-        } else {
-            for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
-                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
-                    Intent data = new Intent();
-                    data.putExtra(KEY_USER_SELECT, channelItems);
-                    setResult(MainAty.REQUEST_CODE, data);
-                    break;
-                }
-            }
-        }
-        super.onBackPressed();
+        ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    saveChannel();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//        ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
+//        if (selectedChannelListCurrent.size() != channelItems.size()) {
+//            Intent data = new Intent();
+//            data.putExtra(KEY_USER_SELECT, channelItems);
+//            setResult(MainAty.REQUEST_CODE, data);
+//        } else {
+//            for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
+//                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
+//                    Intent data = new Intent();
+//                    data.putExtra(KEY_USER_SELECT, channelItems);
+//                    setResult(MainAty.REQUEST_CODE, data);
+//                    break;
+//                }
+//            }
+//        }
+//        super.onBackPressed();
     }
+
+    @Override
+    protected void onDestroy() {
+        ThemeManager.unregisterThemeChangeListener(this);
+        super.onDestroy();
+    }
+
 }

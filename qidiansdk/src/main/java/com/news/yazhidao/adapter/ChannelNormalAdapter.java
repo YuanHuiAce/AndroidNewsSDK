@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.ChannelItem;
+import com.news.yazhidao.utils.TextUtil;
 
 import java.util.List;
 
@@ -70,8 +72,9 @@ public class ChannelNormalAdapter extends BaseAdapter {
 		RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
 		rlItemText.topMargin = height / 2;
 		item_text.setLayoutParams(rlItemText);
+		item_text.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, R.drawable.subscribe_item_bg));
+		TextUtil.setTextColor(context, item_text, R.color.newsFeed_titleColor);
 		icon.setVisibility(View.VISIBLE);
-
 		ChannelItem channel = getItem(position);
 		item_text.setText(channel.getName());
 		if (isChanged && (position == holdPosition) && !isItemShow) {

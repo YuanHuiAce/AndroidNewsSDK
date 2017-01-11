@@ -3,15 +3,15 @@ package demo.com.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
-//                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
+                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
-                    setEnableNightMode(true);
-//                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
+                    mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_BIG);
                 }
             }
         });
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
         newsLayout.addView(mainView.getNewsView());
+        ThemeManager.registerThemeChangeListener(this);
     }
 
     @Override
@@ -75,18 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        ThemeManager.unregisterThemeChangeListener(this);
         mainView.unregisterNetWorkReceiver();
         super.onDestroy();
     }
 
-    public void setEnableNightMode(boolean enableNightMode) {
-        if (enableNightMode) {
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
-//        recreate();
+    @Override
+    public void onThemeChanged() {
+        mainView.setTheme();
     }
-
-
 }

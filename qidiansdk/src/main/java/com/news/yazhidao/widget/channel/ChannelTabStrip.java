@@ -12,13 +12,17 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.DensityUtil;
-import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
+
+import static com.news.yazhidao.R.id.category_text;
 
 public class ChannelTabStrip extends HorizontalScrollView {
     private Context mContext;
@@ -53,6 +57,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
     private TextDrawable[] drawables;
     private Drawable left_edge;
     private Drawable right_edge;
+    private FrameLayout bgFrameLayout;
 
     public ChannelTabStrip(Context context) {
         this(context, null);
@@ -65,7 +70,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
     public ChannelTabStrip(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.mContext = context;
-        setBackgroundColor(context.getResources().getColor(R.color.channeltabstrip_bg));
+        setBackgroundColor(getResources().getColor(R.color.channeltabstrip_bg));
         mLayoutInflater = LayoutInflater.from(context);
         drawables = new TextDrawable[3];
         int i = 0;
@@ -92,11 +97,13 @@ public class ChannelTabStrip extends HorizontalScrollView {
         defaultTabLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         // 绘制高亮区域作为滑动分页指示器
         indicator = getResources().getDrawable(R.drawable.bg_category_indicator);
-        sliderDrawable = getResources().getDrawable(R.drawable.bg_category_slider);
+        sliderDrawable = getResources().getDrawable(ThemeManager.getCurrentThemeRes(context, R.drawable.bg_category_slider));
 
         // 左右边界阴影效果
-        left_edge = getResources().getDrawable(R.drawable.ic_channel_bar_left_shadow);
-        right_edge = getResources().getDrawable(R.drawable.ic_channel_bar_right_shadow);
+//        left_edge = getResources().getDrawable(R.drawable.ic_channel_bar_left_shadow);
+        left_edge = getResources().getDrawable(R.drawable.bg_category_indicator);
+//        right_edge = getResources().getDrawable(R.drawable.ic_channel_bar_right_shadow);
+        right_edge = getResources().getDrawable(R.drawable.bg_category_indicator);
     }
 
     // 绑定与CategoryTabStrip控件对应的ViewPager控件，实现联动
@@ -111,25 +118,29 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
     // 当附加在ViewPager适配器上的数据发生变化时,应该调用该方法通知CategoryTabStrip刷新数据
     public void notifyDataSetChanged() {
+        sliderDrawable = getResources().getDrawable(ThemeManager.getCurrentThemeRes(mContext, R.drawable.bg_category_slider));
         tabsContainer.removeAllViews();
         tabCount = pager.getAdapter().getCount();
         for (int i = 0; i < tabCount; i++) {
             addTab(i, pager.getAdapter().getPageTitle(i).toString());
         }
+        TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
 //        if (tabCount > 0) {
 //            ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(0);
 //            TextView child = (TextView) tab.findViewById(R.id.category_text);
 //            child.setTextColor(getResources().getColor(R.color.new_color2));
 //        }
+        setBackgroundColor(getResources().getColor(R.color.channeltabstrip_bg));
+//        tabsContainer.setBackgroundColor(ThemeManager.getCurrentThemeRes(mContext, R.color.white));
         if (tabCount > 0) {
             int position = pager.getCurrentItem();
             for (int i = 0; i < tabCount; i++) {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
-                TextView child = (TextView) tab.findViewById(R.id.category_text);
+                TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
-                    child.setTextColor(getResources().getColor(R.color.new_color2));
+                    TextUtil.setTextColor(mContext, child, R.color.new_color2);
                 } else {
-                    child.setTextColor(getResources().getColor(R.color.new_color1));
+                    TextUtil.setTextColor(mContext, child, R.color.new_color1);
                 }
             }
         }
@@ -138,12 +149,15 @@ public class ChannelTabStrip extends HorizontalScrollView {
     // 添加一个标签到导航菜单
     private void addTab(final int position, String title) {
         ViewGroup tab = (ViewGroup) mLayoutInflater.inflate(R.layout.channel_tab, this, false);
+        bgFrameLayout = (FrameLayout) tab.findViewById(R.id.bgLayout);
+        TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
         TextView category_text = (TextView) tab.findViewById(R.id.category_text);
         category_text.setText(title);
 //        category_text.setGravity(Gravity.CENTER);
         category_text.setSingleLine();
         category_text.setFocusable(true);
-        category_text.setTextColor(getResources().getColor(R.color.new_color1));
+        TextUtil.setTextColor(mContext, category_text, R.color.new_color1);
+//        category_text.setTextColor(getResources().getColor(R.color.new_color1));
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,8 +189,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
         rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
                 ((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
-        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,12), getHeight() - DensityUtil.dip2px(mContext,2),
-                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,12), getHeight());
+        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext, 12), getHeight() - DensityUtil.dip2px(mContext, 2),
+                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext, 12), getHeight());
 //		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
     }
 
@@ -185,8 +199,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
         return getChildCount() > 0 ? Math.max(0, getChildAt(0).getWidth() - getWidth() + getPaddingLeft() + getPaddingRight()) : 0;
     }
 
-    public void scrollToFirstItem(){
-        scrollTo(0,0);
+    public void scrollToFirstItem() {
+        scrollTo(0, 0);
     }
 
     // CategoryTabStrip与ViewPager联动逻辑
@@ -282,7 +296,6 @@ public class ChannelTabStrip extends HorizontalScrollView {
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             currentPosition = position;
             currentPositionOffset = positionOffset;
-
             scrollToChild(position, 0);
             invalidate();
         }
@@ -299,22 +312,19 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 } else {
                     scrollToChild(pager.getCurrentItem(), 0);
                 }
-//				Logger.e("jigang","onPageScrollStateChanged = ");
             }
-//			Logger.e("jigang","onPageScrollStateChanged ==== ");
         }
 
         @Override
         public void onPageSelected(int position) {
-            Logger.e("jigang", "onPageSelected = " + position + tabCount);
             //此时设置其他所有的item的字体
             for (int i = 0; i < tabCount; i++) {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
-                TextView child = (TextView) tab.findViewById(R.id.category_text);
+                TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
-                    child.setTextColor(getResources().getColor(R.color.new_color2));
+                    TextUtil.setTextColor(mContext, child, R.color.new_color2);
                 } else {
-                    child.setTextColor(getResources().getColor(R.color.new_color1));
+                    TextUtil.setTextColor(mContext, child, R.color.new_color1);
                 }
             }
         }

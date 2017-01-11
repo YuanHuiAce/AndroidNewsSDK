@@ -20,6 +20,7 @@ public class NewsTopicHeaderView extends RelativeLayout {
     private ImageView mTopicView;
     private Context mContext;
     private TopicBaseInfo mTopicBaseInfo;
+    private RelativeLayout mHeaderLayout;
 
     //新闻标题,新闻时间,新闻描述
     public NewsTopicHeaderView(Context context) {
@@ -38,6 +39,8 @@ public class NewsTopicHeaderView extends RelativeLayout {
         View root = View.inflate(context, R.layout.aty_news_topic_hearder_view, this);
         mTopicDetail = (TextView) root.findViewById(R.id.mTopicDetail);
         mTopicView = (ImageView) root.findViewById(R.id.mTopicView);
+        mHeaderLayout = (RelativeLayout) root.findViewById(R.id.mHeaderDivider);
+        TextUtil.setLayoutBgColor(mContext, mHeaderLayout, R.color.white);
     }
 
     public void setHeaderViewData(TopicBaseInfo topicBaseInfo, int screenWidth) {
@@ -67,7 +70,7 @@ public class NewsTopicHeaderView extends RelativeLayout {
 ////size  为0 即采用原始的正常的 size大小
 //            spanBuilder.setSpan(new TextAppearanceSpan(null, 0, 60, redColors, null), 0, 3, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             mTopicDetail.setText(description);
-        }else {
+        } else {
             mTopicDetail.setVisibility(GONE);
         }
     }

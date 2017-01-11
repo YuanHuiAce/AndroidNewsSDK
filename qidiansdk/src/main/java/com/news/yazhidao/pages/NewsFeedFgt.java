@@ -38,6 +38,7 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.AdDeviceEntity;
@@ -67,7 +68,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class NewsFeedFgt extends Fragment {
+public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
@@ -105,6 +106,20 @@ public class NewsFeedFgt extends Fragment {
     private ProgressBar footView_progressbar;
     private boolean isBottom;
     private RefreshReceiver mRefreshReciver;
+    private LinearLayout footerView;
+
+    @Override
+    public void onThemeChanged() {
+        initTheme();
+    }
+
+    public void initTheme() {
+        TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
+        mlvNewsFeed.setHeaderLoadingView();
+        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.white);
+        TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
+        mAdapter.notifyDataSetChanged();
+    }
 
 
     public interface NewsSaveDataCallBack {
@@ -208,6 +223,7 @@ public class NewsFeedFgt extends Fragment {
         mRefreshReciver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
         mContext.registerReceiver(mRefreshReciver, intentFilter);
+        ThemeManager.registerThemeChangeListener(this);
     }
 
 
@@ -220,6 +236,7 @@ public class NewsFeedFgt extends Fragment {
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
+        TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,7 +288,6 @@ public class NewsFeedFgt extends Fragment {
                     loadData(PULL_UP_REFRESH);
                 }
                 isListRefresh = false;
-
             }
         };
         int delay = 1500;
@@ -294,6 +310,7 @@ public class NewsFeedFgt extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ThemeManager.unregisterThemeChangeListener(this);
         if (mRefreshReciver != null) {
             mContext.unregisterReceiver(mRefreshReciver);
         }
@@ -613,12 +630,12 @@ public class NewsFeedFgt extends Fragment {
                     newsFeed.setChannel(1);
             }
 
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mNewsFeedDao.insert(result);
-//                }
-//            }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewsFeedDao.insert(result);
+                }
+            }).start();
             mAdapter.setNewsFeed(mArrNewsFeed);
             mAdapter.notifyDataSetChanged();
             if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -766,9 +783,9 @@ public class NewsFeedFgt extends Fragment {
 
     @Override
     public void onResume() {
-        mHomeWatcher = new HomeWatcher(this.getActivity());
-        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
-        mHomeWatcher.startWatch();
+//        mHomeWatcher = new HomeWatcher(this.getActivity());
+//        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+//        mHomeWatcher.startWatch();
         super.onResume();
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
@@ -811,13 +828,6 @@ public class NewsFeedFgt extends Fragment {
         if (mstrChannelId.equals("1")) {
             uploadInformation();
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mHomeWatcher.setOnHomePressedListener(null);
-        mHomeWatcher.stopWatch();
     }
 
     long homeTime;
@@ -871,8 +881,9 @@ public class NewsFeedFgt extends Fragment {
 //                getActivity().startActivity(in);
 //            }
 //        });
-        final LinearLayout footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
+        footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
+        TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
 
@@ -917,6 +928,7 @@ public class NewsFeedFgt extends Fragment {
 
         // 监听listview滚到最底部
         mlvNewsFeed.setOnScrollListener(new AbsListView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {
@@ -939,6 +951,8 @@ public class NewsFeedFgt extends Fragment {
                                  int visibleItemCount, int totalItemCount) {
             }
         });
+
+
     }
 
     public void mRefreshTitleBarAnimtation() {

@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -142,6 +143,11 @@ public class CommonViewHolder {
                     uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
                 } else {
                     uri = Uri.parse(strImg);
+                }
+                if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+                    imageView.setAlpha(0.5f);
+                } else {
+                    imageView.setAlpha(1.0f);
                 }
                 Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);

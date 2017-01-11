@@ -11,12 +11,16 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.TextUtil;
 
+import static com.news.yazhidao.R.id.content_layout;
+
 public class NewsCommentHeaderView extends LinearLayout {
 
     private TextView mtvNewsCommentTitle;
     private TextView mtvNewsCommentContent;
     private LinearLayout mllNewsCommentNoCommentsLayout;
+    private LinearLayout mllContentLayout;
     private NewsFeed mNewsFeed;
+    private Context mContext;
 
     //新闻标题,新闻时间,新闻描述
     public NewsCommentHeaderView(Context context) {
@@ -29,10 +33,12 @@ public class NewsCommentHeaderView extends LinearLayout {
 
     public NewsCommentHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         View rootView = View.inflate(context, R.layout.news_comment_fragment_headerview, this);
         mtvNewsCommentTitle = (TextView) rootView.findViewById(R.id.news_comment_Title);
         mtvNewsCommentContent = (TextView) rootView.findViewById(R.id.news_comment_content);
         mllNewsCommentNoCommentsLayout = (LinearLayout) rootView.findViewById(R.id.news_comment_NoCommentsLayout);
+        mllContentLayout = (LinearLayout) rootView.findViewById(content_layout);
     }
 
     public void setData(NewsFeed newsFeed) {
@@ -41,10 +47,14 @@ public class NewsCommentHeaderView extends LinearLayout {
     }
 
     private void updateView() {
+        TextUtil.setLayoutBgColor(mContext, mllContentLayout, R.color.white);
+        TextUtil.setLayoutBgColor(mContext, mllNewsCommentNoCommentsLayout, R.color.white);
+        TextUtil.setTextColor(mContext, mtvNewsCommentTitle, R.color.newsFeed_titleColor);
+        TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.new_color3);
         if (mNewsFeed != null) {
             String title = mNewsFeed.getTitle();
 //            if (!TextUtil.isEmptyString(title)) {
-                mtvNewsCommentTitle.setText(mNewsFeed.getTitle());
+            mtvNewsCommentTitle.setText(mNewsFeed.getTitle());
 //            }
             int comment = mNewsFeed.getComment();
             String pname = mNewsFeed.getPname();

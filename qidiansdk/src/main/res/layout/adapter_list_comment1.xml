@@ -84,7 +84,7 @@
         android:textColor="@color/new_color1"
         android:textSize="@dimen/new_font10"/>
 
-    <View
+    <ImageView
         android:id="@+id/mSelectCommentDivider"
         android:layout_width="match_parent"
         android:layout_height="1px"

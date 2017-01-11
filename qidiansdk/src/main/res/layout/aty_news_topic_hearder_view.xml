@@ -8,12 +8,12 @@
         android:id="@+id/mTopicView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
+        android:id="@+id/mHeaderDivider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/mTopicDetail"
@@ -24,7 +24,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:textColor="@color/new_color1"
+            android:textColor="@color/new_color3"
             android:textSize="@dimen/new_font5" />
     </RelativeLayout>
 </LinearLayout>

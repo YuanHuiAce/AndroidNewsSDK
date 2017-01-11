@@ -36,7 +36,6 @@
         android:layout_marginRight="@dimen/usual_margin"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="@color/white"
         android:textSize="@dimen/font3"
         android:visibility="visible"
         android:background="@color/black50"

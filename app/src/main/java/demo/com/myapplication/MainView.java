@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
@@ -67,6 +68,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ConnectivityManager mConnectivityManager;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
+    private RelativeLayout mMainView;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -132,6 +134,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //        MobclickAgent.onEvent(this,"bainews_user_assess_app");
         activity = mContext;
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
+        mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
+        TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
         mChannelItemDao = new ChannelItemDao(mContext);
         mSelChannelItems = new ArrayList<>();
         mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
@@ -244,6 +248,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     public View getNewsView() {
         return this.view;
+    }
+
+    public int getListViewScrollY() {
+
+        return 0;
     }
 
     /**
@@ -453,6 +462,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }
 
     };
+
+    public void setTheme() {
+//        TextUtil.setLayoutBgColor(activity,mChannelTabStrip.ge,R.color.white);
+        TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
+        mChannelTabStrip.setBackgroundColor(ThemeManager.getCurrentThemeRes(activity, R.color.channeltabstrip_bg));
+        mChannelTabStrip.notifyDataSetChanged();
+    }
 
     /**
      * 梁帅：隐藏不喜欢窗口的方法

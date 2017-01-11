@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop" />
     <!--fresco:actualImageScaleType="centerCrop"-->
     <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
     <!--fresco:placeholderImageScaleType="centerCrop"-->

@@ -1,12 +1,21 @@
 package com.news.yazhidao.utils;
 
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.widget.EllipsizeEndTextView;
+import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -178,9 +187,15 @@ public class TextUtil {
      * 生成新闻详情中的css样式
      */
     public static String generateCSS() {
+        String bgColor = "f6f6f6";
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+            bgColor = "f6f6f6";
+        } else {
+            bgColor = "202124";
+        }
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
-                "body { margin: 14px 18px 18px 18px; background-color: #f6f6f6;} " +
+                "body { margin: 14px 18px 18px 18px; background-color: #" + bgColor + ";} " +
                 "h3 { margin: 0px; } " +
                 ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
@@ -219,16 +234,22 @@ public class TextUtil {
             commentTextSize = 22;
             contentTextSize = 22;
         }
+        String titleColor = "333333";
+        String commentColor = "999999";
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            titleColor = "e0e0e0";
+            commentColor = "969696";
+        }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() + generateJs() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #333333;\">" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #" + titleColor + ";\">" +
                 detail.getTitle() +
-                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #999999;\" class=\"top\"><span>" +
+                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #" + commentColor + ";\" class=\"top\"><span>" +
                 detail.getPname() + "</span>" +
-                "&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #999999\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
+                "&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #" + commentColor + "\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
         if (detail.getCommentSize() != 0) {
-            contentBuilder.append("&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #999999\">" + detail.getCommentSize() + "评论" + "</span>");
+            contentBuilder.append("&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #" + commentColor + "\">" + detail.getCommentSize() + "评论" + "</span>");
         }
         contentBuilder.append("</div><div class=\"content\">");
 
@@ -244,7 +265,7 @@ public class TextUtil {
                 String imgUrl = "file:///android_asset/deail_default.png";
                 String playImgUrl = "file:///android_asset/detail_play_default.png";
                 if (!TextUtil.isEmptyString(txt)) {
-                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
+                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #" + commentColor + ";\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);
@@ -284,4 +305,49 @@ public class TextUtil {
             return "";
         }
     }
+
+    public static void setTextColor(Context context, EllipsizeEndTextView textView, int textColor) {
+        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+    public static void setTextColor(Context context, TextViewExtend textView, int textColor) {
+        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+    public static void setTextColor(Context context, TextView textView, int textColor) {
+        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+    public static void setLayoutBgColor(Context context, FrameLayout layout, int bgColor) {
+        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
+    }
+
+    public static void setLayoutBgColor(Context context, LinearLayout layout, int bgColor) {
+        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
+    }
+
+    public static void setLayoutBgColor(Context context, TextView layout, int bgColor) {
+        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
+    }
+
+    public static void setLayoutBgColor(Context context, RelativeLayout layout, int bgColor) {
+        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
+    }
+
+    public static void setLayoutBgResource(Context context, ImageView imageView, int bgColor) {
+        imageView.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
+    public static void setLayoutBgResource(Context context, RelativeLayout layout, int bgColor) {
+        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
+    public static void setLayoutBgResource(Context context, FrameLayout layout, int bgColor) {
+        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
+    public static void setLayoutBgResource(Context context, LinearLayout layout, int bgColor) {
+        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
 }
