@@ -1,7 +1,7 @@
 ##1.3更新内容：
-    1.能够正确获取IMEI
-    2.增加日夜间切换模式
-    3.修复图片显示大小错位问题
+    1.能够正确获取IMEI\n
+    2.增加日夜间切换模式\n
+    3.修复图片显示大小错位问题\n
 IMEI获取方法：在mainview中的initializeViews()方法中申请获取权限当用户允许权限后通过getDeviceImei()方法获取IMEI并存入SharedPreManager中，在NewsFeedFgt类中调用getAdMessage()方法，在其中设置IMEI值从而获得广告
 
 
