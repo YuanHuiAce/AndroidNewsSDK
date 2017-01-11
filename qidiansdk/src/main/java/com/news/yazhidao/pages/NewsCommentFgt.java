@@ -241,7 +241,7 @@ public class NewsCommentFgt extends Fragment {
                 holder = (Holder) convertView.getTag();
             }
             TextUtil.setTextColor(mContext, holder.tvName, R.color.new_color2);
-            TextUtil.setTextColor(mContext, holder.tvContent, R.color.new_color3);
+            TextUtil.setTextColor(mContext, holder.tvContent, R.color.new_color1);
             TextUtil.setLayoutBgResource(mContext, (ImageView) convertView.findViewById(R.id.mSelectCommentDivider), R.color.new_color4);
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);

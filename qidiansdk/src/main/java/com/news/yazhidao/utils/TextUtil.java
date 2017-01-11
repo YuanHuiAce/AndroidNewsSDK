@@ -265,7 +265,7 @@ public class TextUtil {
                 String imgUrl = "file:///android_asset/deail_default.png";
                 String playImgUrl = "file:///android_asset/detail_play_default.png";
                 if (!TextUtil.isEmptyString(txt)) {
-                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #" + commentColor + ";\">" + txt + "</p>");
+                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #" + titleColor + ";\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);

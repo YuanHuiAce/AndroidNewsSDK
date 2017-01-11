@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.view.View;
@@ -72,7 +73,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     private View mDetailLeftBack;
     private LinearLayout bgLayout;
     private LinearLayout bgMyChannel, bgMoreChannel;
-    private TextView tvCategory, tvMoreCategory ,tvTitle;
+    private TextView tvCategory, tvMoreCategory, tvTitle;
     private RelativeLayout rlTitle;
 
     @Override
@@ -320,34 +321,32 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
     @Override
     public void onBackPressed() {
-        ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    saveChannel();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//        ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
-//        if (selectedChannelListCurrent.size() != channelItems.size()) {
-//            Intent data = new Intent();
-//            data.putExtra(KEY_USER_SELECT, channelItems);
-//            setResult(MainAty.REQUEST_CODE, data);
-//        } else {
-//            for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
-//                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
-//                    Intent data = new Intent();
-//                    data.putExtra(KEY_USER_SELECT, channelItems);
-//                    setResult(MainAty.REQUEST_CODE, data);
-//                    break;
-//                }
-//            }
-//        }
-//        super.onBackPressed();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    saveChannel();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
+        if (selectedChannelListCurrent.size() != channelItems.size()) {
+            Intent data = new Intent();
+            data.putExtra(KEY_USER_SELECT, channelItems);
+            setResult(MainAty.REQUEST_CODE, data);
+        } else {
+            for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
+                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
+                    Intent data = new Intent();
+                    data.putExtra(KEY_USER_SELECT, channelItems);
+                    setResult(MainAty.REQUEST_CODE, data);
+                    break;
+                }
+            }
+        }
+        super.onBackPressed();
     }
 
     @Override

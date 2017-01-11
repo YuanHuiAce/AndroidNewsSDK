@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +67,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
@@ -362,15 +364,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
-        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-        if (user != null) {
-            String userId = user.getUserId();
-            if (!TextUtil.isEmptyString(userId)) {
-                adDeviceEntity.setImei(userId);
-            }
-        }
+        String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+        Log.i("tag", "imei" + imei);
+        adDeviceEntity.setImei(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
@@ -440,10 +437,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid();
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + mInstance(mContext).getUser(mContext).getMuid();
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
-        adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setUid(mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
@@ -686,9 +683,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }, 1000);
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-            User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
+            User user = mInstance(mContext).getUser(getActivity());
             user.setUtype("2");
-            SharedPreManager.mInstance(mContext).saveUser(user);
+            mInstance(mContext).saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
             UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
@@ -718,7 +715,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void loadData(final int flag) {
-        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        User user = mInstance(mContext).getUser(mContext);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNotLoadData) {
@@ -1011,7 +1008,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //上传地理位置等信息
     private void uploadInformation() {
-        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+        if (mInstance(mContext).getUser(mContext) != null) {
             try {
                 List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
                 final JSONArray array = new JSONArray();
@@ -1030,15 +1027,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 Long uid = null;
-                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                User user = mInstance(mContext).getUser(mContext);
                 if (user != null) {
                     uid = Long.valueOf(user.getMuid());
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
-                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
-                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("province", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 jsonObject.put("brand", brand);
                 jsonObject.put("model", platform);
                 jsonObject.put("apps", array);

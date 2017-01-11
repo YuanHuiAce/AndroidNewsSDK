@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
@@ -85,5 +83,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     @Override
     public void onThemeChanged() {
         mainView.setTheme();
+    }
+
+    public void changeDayNightMode() {
+        ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
     }
 }

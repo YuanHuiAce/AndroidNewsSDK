@@ -1,19 +1,24 @@
 package demo.com.myapplication;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +52,7 @@ import java.util.HashMap;
  * Created by fengjigang on 15/10/28.
  * 主界面view
  */
-public class MainView extends View implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
+public class MainView extends View implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
@@ -69,6 +74,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
+    private TelephonyManager mTelephonyManager;
+    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -199,6 +206,32 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGOUT);
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        } else {
+            getDeviceImei();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getDeviceImei();
+        }
+    }
+
+    private void getDeviceImei() {
+        if (activity != null) {
+            mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+            if (mTelephonyManager != null) {
+                String deviceid = mTelephonyManager.getDeviceId();
+                SharedPreManager.mInstance(activity).save("flag", "imei", deviceid);
+            }
+        }
     }
 
     private class UserLoginReceiver extends BroadcastReceiver {
