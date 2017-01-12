@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class AdDeviceEntity implements Serializable {
     /** 用户终端的 IMEI，15 位数字，md5 加密 */
     private String imei;
+    private String imeiori;
     /** 用户终端的eth0接口的MAC地址（大写去除冒号分隔符），md5 加密 */
     private String mac;
     /** 用户终端的 eth0 接口的 MAC 地址（大写且保留冒号分隔符），md5 加密 */
@@ -245,5 +246,13 @@ public class AdDeviceEntity implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getImeiori() {
+        return imeiori;
+    }
+
+    public void setImeiori(String imeiori) {
+        this.imeiori = imeiori;
     }
 }

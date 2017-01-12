@@ -366,6 +366,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         /** 设置IMEI */
         String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
         adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
+        adDeviceEntity.setImeiori(imei);
+//        String mac = SharedPreManager.mInstance(mContext).get("flag", "mac");
+//        adDeviceEntity.setMac(DeviceInfoUtil.generateMD5(mac));
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));

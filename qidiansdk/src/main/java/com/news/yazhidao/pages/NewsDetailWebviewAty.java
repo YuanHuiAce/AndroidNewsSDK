@@ -7,7 +7,9 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,6 +143,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         _AnimatorSet.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void initializeViews() {
 
@@ -173,8 +176,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                Logger.e(TAG, "xxxx shouldOverrideUrlLoading");
+                if (url.startsWith("http:")||(url.startsWith("https:"))){
+                    view.loadUrl(url);
+                    return false;
+                }
                 return true;
             }
 
@@ -197,7 +202,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 //                }
             }
         });
-
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
     }

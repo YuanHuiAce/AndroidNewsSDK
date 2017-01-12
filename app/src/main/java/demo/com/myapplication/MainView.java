@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -18,7 +20,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,6 +214,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     PERMISSIONS_REQUEST_READ_PHONE_STATE);
         } else {
             getDeviceImei();
+//            getLocalMacAddress();
         }
     }
 
@@ -239,6 +241,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 SharedPreManager.mInstance(activity).save("flag", "imei", deviceid);
             }
         }
+    }
+
+    public String getLocalMacAddress() {
+        WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifi.getConnectionInfo();
+        SharedPreManager.mInstance(activity).save("flag", "mac", info.getMacAddress());
+        return info.getMacAddress();
     }
 
     private class UserLoginReceiver extends BroadcastReceiver {

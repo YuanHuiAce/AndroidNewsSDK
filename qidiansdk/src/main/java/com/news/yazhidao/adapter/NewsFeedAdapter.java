@@ -360,7 +360,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         TextUtil.setTextColor(mContext, textView, R.color.new_color3);
     }
 
-    private void setBottomLineColor(ImageView imageView){
+    private void setBottomLineColor(ImageView imageView) {
         TextUtil.setLayoutBgResource(mContext, imageView, R.drawable.list_divider);
     }
 
