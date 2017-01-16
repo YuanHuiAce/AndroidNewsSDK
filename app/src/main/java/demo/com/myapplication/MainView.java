@@ -53,7 +53,7 @@ import java.util.HashMap;
  * Created by fengjigang on 15/10/28.
  * 主界面view
  */
-public class MainView extends View implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainView extends View implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
@@ -208,25 +208,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
         /**请求系统权限*/
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE},
-                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        } else {
+        try {
             getDeviceImei();
-//            getLocalMacAddress();
-        }
-    }
-
-    /**
-     * 权限回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getDeviceImei();
+        } catch (Exception e) {
+            SharedPreManager.save("flag", "imei", "");
         }
     }
 

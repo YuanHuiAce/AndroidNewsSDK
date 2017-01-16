@@ -7,9 +7,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,7 +141,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         _AnimatorSet.start();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void initializeViews() {
 

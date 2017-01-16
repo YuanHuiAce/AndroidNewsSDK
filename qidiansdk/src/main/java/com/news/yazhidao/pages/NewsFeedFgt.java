@@ -48,6 +48,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.CrashHandler;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -825,6 +826,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         if (mstrChannelId.equals("1")) {
             uploadInformation();
+            uploadChannelInformation();
         }
     }
 
@@ -1055,6 +1057,49 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 });
                 requestQueue.add(request);
             } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadChannelInformation() {
+        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+            try {
+                final String requestUrl = HttpConstant.URL_UPLOAD_CHANNEL_INFORMATION;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+                    uid = Long.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext)));
+                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                /**
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 */
+                jsonObject.put("ctype", 3);
+                /**
+                 * 1.ios 2.android 3.网页 4.无法识别
+                 */
+                jsonObject.put("ptype", 2);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+                requestQueue.add(request);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

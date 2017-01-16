@@ -180,4 +180,9 @@ public class HttpConstant {
      */
     public static final String URL_NEWS_TOPIC = URL_SERVER_HOST + "/ns/tdq?";
 
+    /**
+     * 手机渠道信息上传
+     */
+    public static final String URL_UPLOAD_CHANNEL_INFORMATION = URL_SERVER_HOST + "/au/phone";
+
 }
