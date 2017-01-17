@@ -28,6 +28,7 @@ public class AdUtil {
             /** 设置IMEI */
             String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
             adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
+            adDeviceEntity.setImeiori(imei);
             /** 设置AndroidID */
             String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
             adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
