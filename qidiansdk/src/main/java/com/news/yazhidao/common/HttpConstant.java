@@ -185,4 +185,9 @@ public class HttpConstant {
      */
     public static final String URL_UPLOAD_CHANNEL_INFORMATION = URL_SERVER_HOST + "/au/phone";
 
+    /**
+     * 详情页广告
+     */
+    public static final String URL_NEWS_DETAIL_AD = URL_SERVER_HOST + "/ns/ad";
+
 }

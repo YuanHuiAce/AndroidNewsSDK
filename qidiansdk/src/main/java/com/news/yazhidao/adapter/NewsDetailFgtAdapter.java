@@ -2,6 +2,7 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.UrlQuerySanitizer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,7 +13,8 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.RelatedItemEntity;
-import com.news.yazhidao.pages.RelevantViewWebviewAty;
+import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -81,9 +83,14 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, RelevantViewWebviewAty.class);
-                String zhihuUrl = relatedItemEntity.getUrl();
-                intent.putExtra(RelevantViewWebviewAty.KEY_URL, zhihuUrl);
+//                Intent intent = new Intent(mContext, RelevantViewWebviewAty.class);
+//                String zhihuUrl = relatedItemEntity.getUrl();
+//                intent.putExtra(RelevantViewWebviewAty.KEY_URL, zhihuUrl);
+//                mContext.startActivity(intent);
+                UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(relatedItemEntity.getUrl());
+                String value = sanitizer.getValue("nid");
+                Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, value);
                 mContext.startActivity(intent);
 //                Pattern p = Pattern.compile("<font color='#0091fa' >([^<]*)</font>");
 //                Matcher m = p.matcher(title);

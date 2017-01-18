@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -77,6 +78,7 @@ public class NewsCommentFgt extends Fragment {
     private SharedPreferences mSharedPreferences;
     private NewsCommentHeaderView mNewsCommentHeaderView;
     private Context mContext;
+    private RequestManager mRequestManager;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -100,6 +102,7 @@ public class NewsCommentFgt extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        mRequestManager = Glide.with(this);
         Bundle arguments = getArguments();
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
@@ -250,9 +253,9 @@ public class NewsCommentFgt extends Fragment {
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             } else {
-                Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             //梁帅：点赞功能注释掉

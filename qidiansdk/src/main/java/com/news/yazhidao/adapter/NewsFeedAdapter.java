@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -18,15 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
-import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
@@ -34,10 +28,10 @@ import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 
@@ -138,7 +132,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
         //广告
-        upLoadAd(feed);
+        AdUtil.upLoadAd(feed);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -240,32 +234,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void upLoadAd(NewsFeed feed) {
-        if (feed.getRtype() == 3) {
-            String url = null;
-            ArrayList<String> arrUrl = feed.getAdimpression();
-            if (!TextUtil.isListEmpty(arrUrl)) {
-                url = arrUrl.get(0);
-            }
-            //广告
-            if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
-                feed.setUpload(true);
-                //获取经纬度
-                String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                String[] realUrl = url.split("&lon");
-                final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
-                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("tag", "response");
-                    }
-                }, null);
-                requestQueue.add(request);
-            }
-        }
-    }
 
     private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();

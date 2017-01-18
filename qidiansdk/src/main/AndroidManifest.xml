@@ -19,7 +19,6 @@
         <!--/**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/-->
         <activity
             android:name=".pages.NewsDetailAty2"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />

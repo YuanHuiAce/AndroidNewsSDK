@@ -113,12 +113,20 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/adLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f6f6f6"
+        android:paddingBottom="34dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp" />
+
+    <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="14dp">
+        android:layout_marginRight="16dp">
 
         <ImageView
             android:id="@+id/detail_point"
@@ -138,22 +146,22 @@
             android:textSize="@dimen/new_font3" />
 
         <!--<View-->
-            <!--android:id="@+id/detail_shared_hotComment_Line1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_alignRight="@id/detail_shared_hotComment"-->
-            <!--android:layout_below="@id/detail_shared_hotComment"-->
-            <!--android:layout_marginTop="6dp"-->
-            <!--android:background="@color/new_color2" />-->
+        <!--android:id="@+id/detail_shared_hotComment_Line1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignRight="@id/detail_shared_hotComment"-->
+        <!--android:layout_below="@id/detail_shared_hotComment"-->
+        <!--android:layout_marginTop="6dp"-->
+        <!--android:background="@color/new_color2" />-->
 
         <!--<View-->
-            <!--android:id="@+id/detail_shared_hotComment_Line2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:layout_below="@id/detail_shared_hotComment"-->
-            <!--android:layout_marginTop="6dp"-->
-            <!--android:layout_toRightOf="@id/detail_shared_hotComment_Line1"-->
-            <!--android:background="@color/new_color4" />-->
+        <!--android:id="@+id/detail_shared_hotComment_Line2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_below="@id/detail_shared_hotComment"-->
+        <!--android:layout_marginTop="6dp"-->
+        <!--android:layout_toRightOf="@id/detail_shared_hotComment_Line1"-->
+        <!--android:background="@color/new_color4" />-->
     </RelativeLayout>
 
 </LinearLayout>

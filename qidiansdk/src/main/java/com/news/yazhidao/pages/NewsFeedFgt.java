@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,18 +39,13 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
-import com.news.yazhidao.entity.AdDeviceEntity;
-import com.news.yazhidao.entity.AdEntity;
-import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.AdUtil;
-import com.news.yazhidao.utils.CrashHandler;
 import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -66,9 +60,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-
-import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
@@ -353,99 +344,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void stopRefresh() {
     }
 
-    public String getAdMessage() {
-
-        Gson gson = new Gson();
-        Random random = new Random();
-        AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
-        adImpressionEntity.setAid(random.nextInt(2) == 0 ? "98" : "100");
-        /** 单图91  三图164 */
-        adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
-
-        AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        /** 设置IMEI */
-        String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
-        adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
-        adDeviceEntity.setImeiori(imei);
-//        String mac = SharedPreManager.mInstance(mContext).get("flag", "mac");
-//        adDeviceEntity.setMac(DeviceInfoUtil.generateMD5(mac));
-        /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
-        /** 设置设备品牌 */
-        String brand = Build.BRAND;
-        adDeviceEntity.setBrand(brand);
-        /** 设置设备型号 */
-        String platform = Build.MODEL;
-        adDeviceEntity.setPlatform(platform);
-        /** 设置操作系统 */
-        adDeviceEntity.setOs("1");
-        /** 设置操作系统版本号 */
-        String version = Build.VERSION.RELEASE;
-        adDeviceEntity.setOs_version(version);
-        /** 设置屏幕分辨率 */
-        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
-        /** 设置IP */
-        String ip = "";
-        if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
-            ip = DeviceInfoUtil.getIpAddress(mContext);
-        } else {
-            ip = DeviceInfoUtil.getLocalIpAddress();
-        }
-        adDeviceEntity.setIp(ip);
-        /** 设置网络环境 */
-        String networkType = DeviceInfoUtil.getNetworkType(mContext);
-        if (TextUtil.isEmptyString(networkType)) {
-            adDeviceEntity.setNetwork("0");
-        } else {
-            if ("wifi".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("1");
-            } else if ("2G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("2");
-            } else if ("3G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("3");
-            } else if ("4G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("4");
-            } else {
-                adDeviceEntity.setNetwork("0");
-            }
-        }
-        /** 设置经度 纬度 */
-//        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-//        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-//        adDeviceEntity.setLongitude(locationEntity.get);
-        /** 设置横竖屏幕 */
-        if (DeviceInfoUtil.isScreenChange(mContext)) {//横屏
-            adDeviceEntity.setScreen_orientation("2");
-        } else {//竖屏
-            adDeviceEntity.setScreen_orientation("1");
-        }
-
-
-        AdEntity adEntity = new AdEntity();
-        adEntity.setTs((System.currentTimeMillis() / 1000) + "");
-        adEntity.setDevice(adDeviceEntity);
-        adEntity.getImpression().add(adImpressionEntity);
-
-
-        return gson.toJson(adEntity);
-
-    }
-
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + mInstance(mContext).getUser(mContext).getMuid();
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid();
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
-        adLoadNewsFeedEntity.setUid(mInstance(mContext).getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
+        //加入feed流广告位id
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "253")));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -685,9 +597,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }, 1000);
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-            User user = mInstance(mContext).getUser(getActivity());
+            User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
             user.setUtype("2");
-            mInstance(mContext).saveUser(user);
+            SharedPreManager.mInstance(mContext).saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
             UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
@@ -717,7 +629,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void loadData(final int flag) {
-        User user = mInstance(mContext).getUser(mContext);
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNotLoadData) {
@@ -1011,7 +923,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //上传地理位置等信息
     private void uploadInformation() {
-        if (mInstance(mContext).getUser(mContext) != null) {
+        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
             try {
                 List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
                 final JSONArray array = new JSONArray();
@@ -1030,15 +942,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 Long uid = null;
-                User user = mInstance(mContext).getUser(mContext);
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
                 if (user != null) {
                     uid = Long.valueOf(user.getMuid());
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("province", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
-                jsonObject.put("city", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
-                jsonObject.put("area", mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 jsonObject.put("brand", brand);
                 jsonObject.put("model", platform);
                 jsonObject.put("apps", array);
@@ -1073,7 +985,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext)));
+                //加入广告位id
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, "238")));
                 jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));

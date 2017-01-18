@@ -38,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -48,13 +49,19 @@ import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
+import com.news.yazhidao.net.volley.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -67,7 +74,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+
+import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -99,7 +109,7 @@ public class NewsDetailFgt extends Fragment {
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
-            detail_shared_ViewPointTitleLayout;
+            detail_shared_ViewPointTitleLayout, adLayout;
     private ImageView detail_shared_AttentionImage;
     private int CommentType = 0;
     private LayoutInflater inflater;
@@ -125,6 +135,7 @@ public class NewsDetailFgt extends Fragment {
     View rootView;
     private Context mContext;
     private RequestManager mRequestManager;
+    private int mScreenWidth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +146,7 @@ public class NewsDetailFgt extends Fragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
+        mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
@@ -283,7 +295,7 @@ public class NewsDetailFgt extends Fragment {
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
-
+        loadADData();
         return rootView;
     }
 
@@ -385,7 +397,7 @@ public class NewsDetailFgt extends Fragment {
             }
         });
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+                mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -492,7 +504,7 @@ public class NewsDetailFgt extends Fragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-
+        adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.GONE);
@@ -599,6 +611,15 @@ public class NewsDetailFgt extends Fragment {
                         Logger.e("jigang", "URL_NEWS_RELATED  network success~~" + relatedItemEntities.toString());
                         isCorrelationSuccess = true;
                         isBgLayoutSuccess();
+                        /**去掉跳转到h5
+                         */
+                        Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
+                        while (iterator.hasNext()) {
+                            RelatedItemEntity relatedItemEntity = iterator.next();
+                            if (!relatedItemEntity.getUrl().contains("deeporiginalx.com")) {
+                                iterator.remove();
+                            }
+                        }
 //                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
 //                            Logger.e("jigang", "network success RelatedEntity~~" + response);
 
@@ -910,9 +931,9 @@ public class NewsDetailFgt extends Fragment {
         final User user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         } else {
-            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1052,5 +1073,53 @@ public class NewsDetailFgt extends Fragment {
 
     }
 
-
+    private void loadADData() {
+        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+            String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            Gson gson = new Gson();
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+            NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+                @Override
+                public void onResponse(final ArrayList<NewsFeed> result) {
+                    adLayout.setVisibility(View.VISIBLE);
+                    final NewsFeed newsFeed = result.get(0);
+                    if (newsFeed != null) {
+                        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+                        TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+                        title.setText(newsFeed.getTitle());
+                        ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+                        layoutParams.width = imageWidth;
+                        layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+                        imageView.setLayoutParams(layoutParams);
+                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        adLayout.addView(layout);
+                        adLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                mContext.startActivity(AdIntent);
+                            }
+                        });
+                        AdUtil.upLoadAd(result.get(0));
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    adLayout.setVisibility(View.GONE);
+                }
+            });
+            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(newsFeedRequestPost);
+        }
+    }
 }
