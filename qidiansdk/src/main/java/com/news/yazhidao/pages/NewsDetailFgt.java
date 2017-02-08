@@ -642,7 +642,7 @@ public class NewsDetailFgt extends Fragment {
         //热门评论  不添加
         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.GONE);
-//        feedRequest.setRetryPolicy、(new DefaultRetryPolicy(15000, 0, 0));
+//        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 
 
@@ -1093,13 +1093,18 @@ public class NewsDetailFgt extends Fragment {
                         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
                         TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
                         title.setText(newsFeed.getTitle());
-                        ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
                         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
+                            }
+                        });
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1109,7 +1114,7 @@ public class NewsDetailFgt extends Fragment {
                                 mContext.startActivity(AdIntent);
                             }
                         });
-                        AdUtil.upLoadAd(result.get(0));
+                        AdUtil.upLoadAd(newsFeed);
                     }
                 }
             }, new Response.ErrorListener() {

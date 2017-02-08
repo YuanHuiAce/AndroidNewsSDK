@@ -28,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -247,6 +248,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 isListRefresh = true;
                 Logger.e("aaa", "刷新");
                 loadData(PULL_DOWN_REFRESH);
+                scrollAd();
             }
 
             @Override
@@ -254,6 +256,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 isListRefresh = true;
                 Logger.e("aaa", "加载");
                 loadData(PULL_UP_REFRESH);
+                scrollAd();
             }
         });
         addHFView(LayoutInflater);
@@ -991,7 +994,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 /**
-                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
                  */
                 jsonObject.put("ctype", 3);
                 /**
@@ -1015,6 +1018,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 广告滑动接口
+     */
+    private void scrollAd() {
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        if (user != null) {
+            int uid = user.getMuid();
+            //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
+            int ctype = 3;
+            //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
+            int ptype = 2;
+            String requestUrl = HttpConstant.URL_SCROLL_AD + "?nid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype;
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                }
+            }, null);
+            requestQueue.add(request);
         }
     }
 }

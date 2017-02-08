@@ -190,4 +190,8 @@ public class HttpConstant {
      */
     public static final String URL_NEWS_DETAIL_AD = URL_SERVER_HOST + "/ns/ad";
 
+    /**
+     * 滑动接口
+     */
+    public static final String URL_SCROLL_AD = URL_SERVER_HOST + "/sl/ins";
 }

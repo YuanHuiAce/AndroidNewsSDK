@@ -13,6 +13,8 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:textColor="@color/newsFeed_titleColor"
         android:textSize="@dimen/new_font1" />
 
