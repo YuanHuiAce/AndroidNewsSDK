@@ -61,4 +61,13 @@ public final class CommonConstant {
     public static final int TEXT_SIZE_BIG = 20;
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
+
+    public static final String APPID = "app_id";
+    public static final String BannerPosID = "banner_pos_id";
+    public static final String APPWallPosID = "app_wall_pos_id";
+    public static final String InterteristalPosID = "interteristalposid";
+    public static final String SplashPosID = "splash_pos_id";
+    public static final String GridAppWallPosID = "grid_app_wall_pos_id";
+    public static final String NativePosID = "native_pos_id";
+    public static final String NativeVideoPosID = "native_video_pos_id";
 }

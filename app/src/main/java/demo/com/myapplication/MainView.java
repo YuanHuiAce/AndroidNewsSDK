@@ -1,11 +1,9 @@
 package demo.com.myapplication;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,7 +11,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -213,6 +210,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         } catch (Exception e) {
             SharedPreManager.save("flag", "imei", "");
         }
+        /**设置广告id*/
+        setADAppId("1105847205", "2000611873536900");
     }
 
     /**
@@ -546,7 +545,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-     * @param 传入地理坐标，省，市，县
+     * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
         if (location != null) {
@@ -556,6 +555,14 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, province);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
+    }
+
+    /**
+     * @param appId,nativePosID
+     */
+    public void setADAppId(String appId, String nativePosID) {
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID, appId);
+        SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID, nativePosID);
     }
 
 }

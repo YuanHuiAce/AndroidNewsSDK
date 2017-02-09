@@ -3,7 +3,6 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -112,7 +111,6 @@ public class AdUtil {
                 StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("tag", "response");
                     }
                 }, null);
                 requestQueue.add(request);

@@ -67,6 +67,8 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -83,7 +85,7 @@ import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailFgt extends Fragment {
+public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private LoadWebView mDetailWebView;
     private NewsDetail mResult;
@@ -136,6 +138,8 @@ public class NewsDetailFgt extends Fragment {
     private Context mContext;
     private RequestManager mRequestManager;
     private int mScreenWidth;
+    private NativeAD mNativeAD;
+    private String mAppId, mNativePosID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,7 +160,7 @@ public class NewsDetailFgt extends Fragment {
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiver, filter);
         }
-
+        initNativeVideoAD();
     }
 
 
@@ -295,7 +299,11 @@ public class NewsDetailFgt extends Fragment {
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
-        loadADData();
+        if (mNativeAD != null) {
+            mNativeAD.loadAD(1);
+        } else {
+            loadADData();
+        }
         return rootView;
     }
 
@@ -1082,8 +1090,6 @@ public class NewsDetailFgt extends Fragment {
             //加入详情页广告位id
             adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
-            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override
                 public void onResponse(final ArrayList<NewsFeed> result) {
@@ -1125,6 +1131,61 @@ public class NewsDetailFgt extends Fragment {
             });
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(newsFeedRequestPost);
+        }
+    }
+
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        adLayout.setVisibility(View.VISIBLE);
+        final NativeADDataRef dataRef = list.get(0);
+        if (dataRef != null) {
+            final RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+            TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+            title.setText(dataRef.getTitle());
+            final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+            int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+            layoutParams.width = imageWidth;
+            layoutParams.height = (int) (imageWidth * 9 / 16.0f);
+            imageView.setLayoutParams(layoutParams);
+            imageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRequestManager.load(dataRef.getImgUrl()).into(imageView);
+                }
+            });
+            dataRef.onExposured(layout);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataRef.onClicked(layout);
+                }
+            });
+            adLayout.addView(layout);
+        }
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    private void initNativeVideoAD() {
+        mAppId = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID);
+        mNativePosID = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID);
+        if (!TextUtil.isEmptyString(mAppId)) {
+            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), mAppId, mNativePosID, this);
         }
     }
 }

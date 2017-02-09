@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_feed_list_select">
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:textColor="@color/newsFeed_titleColor"
+        android:textSize="@dimen/font3" />
+
+
+    <ImageView
+        android:id="@+id/title_img_View"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_textView"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="@dimen/usual_margin"
+        android:layout_marginTop="9dp" />
+
+
+    <include
+        android:id="@+id/source_content_linearLayout"
+        layout="@layout/ll_news_item_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_img_View"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/source_content_linearLayout"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/list_divider" />
+</RelativeLayout>

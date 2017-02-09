@@ -34,6 +34,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,6 +79,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 12:
                     case 13:
                         return R.layout.ll_news_big_pic2;
+                    case 50:
+                        return R.layout.ad_ll_news_item_one_pic;
+                    case 51:
+                        return R.layout.ad_ll_news_big_pic2;
                     default:
                         return R.layout.ll_news_item_empty;
                 }
@@ -85,7 +90,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 7;
+                return 9;
             }
 
             @Override
@@ -108,6 +113,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 12:
                     case 13:
                         return NewsFeed.BIG_PIC;
+                    case 50:
+                        return NewsFeed.AD_ONE_PIC;
+                    case 51:
+                        return NewsFeed.AD_BIG_PIC;
                     default:
                         return NewsFeed.EMPTY;
                 }
@@ -164,6 +173,31 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
+            final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
+            tvTitle.post(new Runnable() {
+                @Override
+                public void run() {
+                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
+                    RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
+                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
+                    int lineCount = tvTitle.getLineCount();
+                    if (lineCount >= 3) {
+                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
+                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
+                    } else {
+                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
+                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
+                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
+                    }
+                    llSourceOnePic.setLayoutParams(lpSourceContent);
+                    ivBottomLine.setLayoutParams(lpBottomLine);
+                }
+            });
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -231,6 +265,47 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     mNewsFeedFgt.refreshData();
                 }
             });
+        } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
+            int cardWidth = (int) (mCardWidth * 145 / 110.0f);
+            int cardHeight = (int) (cardWidth * 9 / 16.0f);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
+            final String strTitle = feed.getTitle();
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
+            ImageView ivCard = holder.getView(R.id.title_img_View);
+            RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+            lpCard.width = cardWidth;
+            lpCard.height = cardHeight;
+            ivCard.setLayoutParams(lpCard);
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+            setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null) {
+                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
+            }
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+        } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
+            ArrayList<String> strArrBigImgUrl = feed.getImgs();
+            int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            int height = (int) (with * 9 / 16.0f);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(0), with, height, feed.getRtype());
+            ImageView ivBigPic = holder.getView(R.id.title_img_View);
+            RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();
+            lpBigPic.width = with;
+            lpBigPic.height = height;
+            ivBigPic.setLayoutParams(lpBigPic);
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+            LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
+            setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
+            setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+            if (feed.getPtime() != null)
+                setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
+            llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         }
     }
 
@@ -278,7 +353,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
-            tvTitle.setMaxLines(2);
+            tvTitle.setMaxLines(3);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
@@ -315,6 +390,25 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
+    private void setTitleTextByADBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            } else {
+                tvTitle.setText(strTitle);
+                tvTitle.setLineSpacing(0, 1.1f);
+            }
+            if (isRead) {
+                TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
+            } else {
+                TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
+            }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+        }
+    }
+
 
     private void setSourceViewText(TextViewExtend textView, String strText) {
         if (strText != null && !"".equals(strText)) {
@@ -338,14 +432,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      * @param rlNewsContent
      * @param feed
      */
-    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
             public void onClick(View paramAnonymousView) {
+
                 if (System.currentTimeMillis() - firstClick <= 1500L) {
                     firstClick = System.currentTimeMillis();
+                    return;
+                }
+                if (feed.getDataRef() != null) {
+                    NativeADDataRef dataRef = feed.getDataRef();
+                    dataRef.onExposured(rlNewsContent);
+                    dataRef.onClicked(rlNewsContent);
                     return;
                 }
                 firstClick = System.currentTimeMillis();
@@ -442,7 +543,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "广告";
-            tag.setTextColor(mContext.getResources().getColor(R.color.theme_color));
+            tag.setTextColor(mContext.getResources().getColor(R.color.new_color3));
             tag.setBackgroundResource(R.drawable.newstag_ad_shape);
         } else if (type == 4) {
             if (tag.getVisibility() == View.GONE) {

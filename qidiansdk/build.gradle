@@ -26,4 +26,5 @@ dependencies {
     compile files('libs/glide-3.6.1.jar')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
+    compile files('libs/GDTUnionSDK.TBS.4.9.542.min.jar')
 }

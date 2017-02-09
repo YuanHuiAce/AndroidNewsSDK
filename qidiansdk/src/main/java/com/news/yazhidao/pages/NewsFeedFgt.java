@@ -52,6 +52,9 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeAD.NativeAdListener;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +65,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
+
+public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAdListener {
 
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
@@ -91,6 +95,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private View mHomeRetry;
     private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
+    private boolean isADRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
     private boolean isNeedAddSP = true;
     private Handler mHandler;
@@ -101,6 +106,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isBottom;
     private RefreshReceiver mRefreshReciver;
     private LinearLayout footerView;
+    private NativeAD mNativeAD;
+    private String mAppId, mNativePosID;
+    private List<NativeADDataRef> mADs;
+    public static final int AD_COUNT = 1;                        // 本示例中加载1条广告
+    public static final int AD_POSITION = 1;                     // 插在ListView数据集的第2个位置
 
     @Override
     public void onThemeChanged() {
@@ -218,6 +228,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
         mContext.registerReceiver(mRefreshReciver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
+        initNativeVideoAD();
     }
 
 
@@ -360,7 +371,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
         //加入feed流广告位id
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "238")));
+        String AdId = "238";
+        if (mNativeAD != null) {
+            AdId = "-1";
+        }
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, AdId)));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -576,9 +591,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 bgLayout.setVisibility(View.GONE);
             }
         }
-
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
+        loadAD();
     }
 
     private void loadNewFeedError(VolleyError error, final int flag) {
@@ -924,6 +939,73 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
+    private void loadAD() {
+        if (mNativeAD != null && !isADRefresh) {
+            mNativeAD.loadAD(AD_COUNT);
+            isADRefresh = true;
+        }
+    }
+
+    private void initNativeVideoAD() {
+        mAppId = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID);
+        mNativePosID = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID);
+        if (!TextUtil.isEmptyString(mAppId)) {
+            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), mAppId, mNativePosID, this);
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        if (list.size() > 0) {
+            mADs = list;
+            if (mADs != null && mAdapter != null && mADs.size() > 0) {
+                for (int i = 0; i < mADs.size(); i++) {
+                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
+                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
+//                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
+                    NativeADDataRef data = mADs.get(i);
+                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
+                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+                        NewsFeed newsFeed = new NewsFeed();
+                        newsFeed.setTitle(data.getTitle());
+                        newsFeed.setRtype(3);
+                        ArrayList<String> imgs = new ArrayList<>();
+                        imgs.add(data.getImgUrl());
+                        newsFeed.setImgs(imgs);
+                        newsFeed.setPname(data.getDesc());
+                        int style = newsFeedFirst.getStyle();
+                        if (style == 11 || style == 12 || style == 13 || style == 5) {
+                            newsFeed.setStyle(50);
+                        } else {
+                            newsFeed.setStyle(51);
+                        }
+                        newsFeed.setDataRef(data);
+                        mArrNewsFeed.add(2, newsFeed);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+        getADButtonText(nativeADDataRef);
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        isADRefresh = false;
+    }
+
     //上传地理位置等信息
     private void uploadInformation() {
         if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -1040,6 +1122,35 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }, null);
             requestQueue.add(request);
+        }
+    }
+
+    /**
+     * App类广告安装、下载状态的更新（普链广告没有此状态，其值为-1） 返回的AppStatus含义如下： 0：未下载 1：已安装 2：已安装旧版本 4：下载中（可获取下载进度“0-100”）
+     * 8：下载完成 16：下载失败
+     */
+    private String getADButtonText(NativeADDataRef adItem) {
+        if (adItem == null) {
+            return "……";
+        }
+        if (!adItem.isAPP()) {
+            return "查看详情";
+        }
+        switch (adItem.getAPPStatus()) {
+            case 0:
+                return "点击下载";
+            case 1:
+                return "点击启动";
+            case 2:
+                return "点击更新";
+            case 4:
+                return adItem.getProgress() > 0 ? "下载中" + adItem.getProgress()+ "%" : "下载中"; // 特别注意：当进度小于0时，不要使用进度来渲染界面
+            case 8:
+                return "下载完成";
+            case 16:
+                return "下载失败,点击重试";
+            default:
+                return "查看详情";
         }
     }
 }
