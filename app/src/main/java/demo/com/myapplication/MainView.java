@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
@@ -228,7 +229,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     public String getLocalMacAddress() {
-        WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) QiDianApplication.getInstance().getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         SharedPreManager.mInstance(activity).save("flag", "mac", info.getMacAddress());
         return info.getMacAddress();

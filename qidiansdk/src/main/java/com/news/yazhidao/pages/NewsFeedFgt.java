@@ -373,7 +373,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         //加入feed流广告位id
         String AdId = "238";
         if (mNativeAD != null) {
-            AdId = "-1";
+            AdId = "";
         }
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, AdId)));
 
@@ -1071,7 +1071,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
                 //加入广告位id
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, "238")));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, "")));
                 jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
