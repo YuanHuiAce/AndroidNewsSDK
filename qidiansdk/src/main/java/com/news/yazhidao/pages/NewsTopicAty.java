@@ -548,6 +548,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
+            tvTitle.setMaxLines(2);
             if (strTitle != null && !"".equals(strTitle)) {
                 tvTitle.setText(strTitle);
                 tvTitle.setLineSpacing(0, 1.1f);
