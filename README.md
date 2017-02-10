@@ -1,3 +1,11 @@
+##1.4更新内容：
+    1.加入广点通广告
+    2.修复专题页面新闻展示位置问题
+
+传入地理位置信息方法：在mainview中的setLocation()传入，经纬度，省，市，县。      
+设置广告位id：在mainview中的setADAppId()传入，appId,nativePosID。      
+添加广点通代码混淆：app目录下proguard-rules.pro中##广点通。
+
 ##1.3更新内容：
     1.能够正确获取IMEI
     2.增加日夜间切换模式
