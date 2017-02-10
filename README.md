@@ -4,7 +4,7 @@
 
 传入地理位置信息方法：在mainview中的setLocation()传入，经纬度，省，市，县。
 设置广告位id：在mainview中的setADAppId()传入，appId,nativePosID。
-添加广点通代码混淆：app目录下proguard-rules.pro中##广点通
+添加广点通代码混淆：app目录下proguard-rules.pro中##广点通。
 
 ##1.3更新内容：
     1.能够正确获取IMEI
