@@ -111,6 +111,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private List<NativeADDataRef> mADs;
     public static final int AD_COUNT = 1;                        // 本示例中加载1条广告
     public static final int AD_POSITION = 1;                     // 插在ListView数据集的第2个位置
+    private boolean isPullDown = false;
 
     @Override
     public void onThemeChanged() {
@@ -257,6 +258,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                isPullDown = true;
                 Logger.e("aaa", "刷新");
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
@@ -265,6 +267,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                isPullDown = false;
                 Logger.e("aaa", "加载");
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
@@ -980,7 +983,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             newsFeed.setStyle(51);
                         }
                         newsFeed.setDataRef(data);
-                        mArrNewsFeed.add(2, newsFeed);
+                        if (isPullDown) {
+                            mArrNewsFeed.add(2, newsFeed);
+                        } else {
+                            if (mArrNewsFeed.size() >= 14) {
+                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                            } else {
+                                mArrNewsFeed.add(2, newsFeed);
+                            }
+                        }
                         mAdapter.notifyDataSetChanged();
                     }
                 }
@@ -1144,7 +1155,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             case 2:
                 return "点击更新";
             case 4:
-                return adItem.getProgress() > 0 ? "下载中" + adItem.getProgress()+ "%" : "下载中"; // 特别注意：当进度小于0时，不要使用进度来渲染界面
+                return adItem.getProgress() > 0 ? "下载中" + adItem.getProgress() + "%" : "下载中"; // 特别注意：当进度小于0时，不要使用进度来渲染界面
             case 8:
                 return "下载完成";
             case 16:
