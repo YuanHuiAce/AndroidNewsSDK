@@ -606,8 +606,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
-            textView.setText(TextUtil.getCommentNum(strText));
-            TextUtil.setTextColor(mContext, textView, R.color.new_color3);
+//            textView.setText(TextUtil.getCommentNum(strText));
+//            TextUtil.setTextColor(mContext, textView, R.color.new_color3);
         }
 
         private void setBottomLineColor(ImageView imageView) {
