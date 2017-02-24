@@ -141,7 +141,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
         //广告
-        AdUtil.upLoadAd(feed);
+        AdUtil.upLoadAd(feed,mContext);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());

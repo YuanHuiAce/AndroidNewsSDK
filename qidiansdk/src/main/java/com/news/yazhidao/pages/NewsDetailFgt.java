@@ -1120,7 +1120,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 mContext.startActivity(AdIntent);
                             }
                         });
-                        AdUtil.upLoadAd(newsFeed);
+                        AdUtil.upLoadAd(newsFeed, mContext);
                     }
                 }
             }, new Response.ErrorListener() {
