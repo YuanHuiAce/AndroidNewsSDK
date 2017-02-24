@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private final NewsFeedFgt mNewsFeedFgt;
@@ -383,6 +382,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         lat = "%%LAT%%";
                         lon = "%%LON%%";
                     }
+                    url = url + "&lat=" + lat + "&lon" + lon;
                     Log.i("tag", url);
                     AdIntent.putExtra(KEY_URL, feed.getPurl());
                     mContext.startActivity(AdIntent);
