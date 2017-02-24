@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 
@@ -39,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -132,7 +136,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
         //广告
-        AdUtil.upLoadAd(feed);
+        AdUtil.upLoadAd(feed, mContext);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -340,6 +344,26 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      */
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
+        final float[] down_x = new float[1];
+        final float[] down_y = new float[1];
+        final float[] up_x = new float[1];
+        final float[] up_y = new float[1];
+        rlNewsContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        down_x[0] = motionEvent.getRawX();
+                        down_y[0] = motionEvent.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        up_x[0] = motionEvent.getRawX();
+                        up_y[0] = motionEvent.getRawY();
+                        break;
+                }
+                return false;
+            }
+        });
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
@@ -348,9 +372,18 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
+                Log.i("tag", down_x[0] + down_y[0] + up_x[0] + up_y[0] + "");
                 firstClick = System.currentTimeMillis();
                 if (feed.getRtype() == 3) {
                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                    String url = feed.getPurl();
+                    String lat = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                    String lon = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                    if (TextUtil.isEmptyString(lat)) {
+                        lat = "%%LAT%%";
+                        lon = "%%LON%%";
+                    }
+                    Log.i("tag", url);
                     AdIntent.putExtra(KEY_URL, feed.getPurl());
                     mContext.startActivity(AdIntent);
                 } else if (feed.getRtype() == 4) {

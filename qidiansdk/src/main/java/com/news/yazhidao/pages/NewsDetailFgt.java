@@ -1114,7 +1114,7 @@ public class NewsDetailFgt extends Fragment {
                                 mContext.startActivity(AdIntent);
                             }
                         });
-                        AdUtil.upLoadAd(newsFeed);
+                        AdUtil.upLoadAd(newsFeed, mContext);
                     }
                 }
             }, new Response.ErrorListener() {
