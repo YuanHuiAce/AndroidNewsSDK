@@ -209,7 +209,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         try {
             getDeviceImei();
         } catch (Exception e) {
-            SharedPreManager.save("flag", "imei", "");
+            SharedPreManager.mInstance(activity).save("flag", "imei", "");
         }
         /**设置广告id*/
         setADAppId("1105847205", "2000611873536900");
