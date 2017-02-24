@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -341,7 +340,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      * @param rlNewsContent
      * @param feed
      */
-    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
         final float[] down_x = new float[1];
         final float[] down_y = new float[1];
@@ -350,15 +349,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         rlNewsContent.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        down_x[0] = motionEvent.getRawX();
-                        down_y[0] = motionEvent.getRawY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        up_x[0] = motionEvent.getRawX();
-                        up_y[0] = motionEvent.getRawY();
-                        break;
+                if (feed.getRtype() == 3) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            down_x[0] = motionEvent.getX(0);
+                            down_y[0] = rlNewsContent.getY() + motionEvent.getY(0);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            up_x[0] = motionEvent.getX(0);
+                            up_y[0] = rlNewsContent.getY() + motionEvent.getY(0);
+                            break;
+                    }
                 }
                 return false;
             }
@@ -371,20 +372,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
-                Log.i("tag", down_x[0] + down_y[0] + up_x[0] + up_y[0] + "");
                 firstClick = System.currentTimeMillis();
                 if (feed.getRtype() == 3) {
                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                     String url = feed.getPurl();
                     String lat = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
                     String lon = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                    if (TextUtil.isEmptyString(lat)) {
-                        lat = "%%LAT%%";
-                        lon = "%%LON%%";
+                    if (!TextUtil.isEmptyString(lat)) {
+                        url = url + "&lat=" + lat + "&lon=" + lon;
                     }
-                    url = url + "&lat=" + lat + "&lon" + lon;
-                    Log.i("tag", url);
-                    AdIntent.putExtra(KEY_URL, feed.getPurl());
+                    url = url.replace("\"down_x\":-999", "\"down_x\":" + down_x[0]).replace("\"down_y\":-999", "\"down_y\":" + down_y[0]).replace("\"up_x\":-999", "\"up_x\":" + up_x[0]).replace("\"up_y\":-999", "\"up_y\":" + up_y[0]);
+                    AdIntent.putExtra(KEY_URL, url);
                     mContext.startActivity(AdIntent);
                 } else if (feed.getRtype() == 4) {
                     if (!feed.isRead()) {

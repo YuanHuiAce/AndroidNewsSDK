@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -378,14 +377,12 @@ public class NewsDetailFgt extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // TODO Auto-generated method stub
-                Log.i("tag", "url===" + url);
                 view.loadUrl(url);
                 return true;
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Log.i("tag", description + "===" + failingUrl);
                 //view.loadData("ERROR: " + description,"text/plain","utf8");
             }
 

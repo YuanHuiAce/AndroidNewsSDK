@@ -94,7 +94,7 @@ public class AdUtil {
         }
     }
 
-    public static void upLoadAd(NewsFeed feed, Context mContext) {
+    public static void upLoadAd(NewsFeed feed, Context context) {
         if (feed.getRtype() == 3) {
             String url = null;
             ArrayList<String> arrUrl = feed.getAdimpression();
@@ -105,14 +105,13 @@ public class AdUtil {
             if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
                 feed.setUpload(true);
                 //获取经纬度
-                String lat = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                String lon = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                String lat = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                String lon = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
                 String[] realUrl = url.split("&lon");
-                if (TextUtil.isEmptyString(lat)) {
-                    lat = "%%LAT%%";
-                    lon = "%%LON%%";
+                String requestUrl = realUrl[0];
+                if (!TextUtil.isEmptyString(lat)) {
+                    requestUrl = requestUrl + "&lon=" + lon + "&lat=" + lat;
                 }
-                final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                     @Override
