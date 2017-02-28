@@ -1,11 +1,9 @@
 package demo.com.myapplication;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,7 +11,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -92,9 +89,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     FragmentActivity activity;
-    //baidu Map
-//    public LocationClient mLocationClient = null;
-//    public BDLocationListener myListener = new MyLocationListener();
 //    private SimpleDraweeView mUserCenter;
 
     /**

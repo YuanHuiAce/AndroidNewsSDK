@@ -220,7 +220,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         ThemeManager.registerThemeChangeListener(this);
     }
 
-
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -240,7 +239,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
-        mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
+        mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mlvNewsFeed.setMainFooterView(true);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -853,6 +852,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             Logger.e("aaa", "滑动到底部");
                             isBottom = true;
+                            isListRefresh = true;
+                            loadData(PULL_UP_REFRESH);
                         } else {
                             isBottom = false;
                             Logger.e("aaa", "在33333isBottom ==" + isBottom);
@@ -1032,7 +1033,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             int ctype = 3;
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
             int ptype = 2;
-            String requestUrl = HttpConstant.URL_SCROLL_AD + "?nid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype;
+            //mid
+            String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+            String requestUrl = HttpConstant.URL_SCROLL_AD + "?uid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype + "&mid=" + imei;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                 @Override

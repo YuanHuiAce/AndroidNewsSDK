@@ -131,6 +131,15 @@ public class NewsFeed implements Serializable {
      */
     private String icon;
 
+    private AdDetailEntity adresponse;
+
+    public AdDetailEntity getAdDetailEntity() {
+        return adresponse;
+    }
+
+    public void setAdDetailEntity(AdDetailEntity adDetailEntity) {
+        this.adresponse = adDetailEntity;
+    }
 
     @Override
     public String toString() {

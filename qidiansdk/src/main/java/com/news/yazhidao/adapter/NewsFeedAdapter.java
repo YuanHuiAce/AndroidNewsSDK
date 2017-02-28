@@ -26,14 +26,12 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 
@@ -374,16 +372,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 firstClick = System.currentTimeMillis();
                 if (feed.getRtype() == 3) {
-                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    String url = feed.getPurl();
-                    String lat = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                    String lon = SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                    if (!TextUtil.isEmptyString(lat)) {
-                        url = url + "&lat=" + lat + "&lon=" + lon;
-                    }
-                    url = url.replace("\"down_x\":-999", "\"down_x\":" + down_x[0]).replace("\"down_y\":-999", "\"down_y\":" + down_y[0]).replace("\"up_x\":-999", "\"up_x\":" + up_x[0]).replace("\"up_y\":-999", "\"up_y\":" + up_y[0]);
-                    AdIntent.putExtra(KEY_URL, url);
-                    mContext.startActivity(AdIntent);
+                    AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (feed.getRtype() == 4) {
                     if (!feed.isRead()) {
                         feed.setRead(true);
