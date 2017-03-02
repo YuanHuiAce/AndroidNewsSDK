@@ -42,7 +42,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static {
         /**默认用户选择的频道*/
         mChannels.add(new ChannelItem("1", "推荐", 1, true));
-        mChannels.add(new ChannelItem("3", "娱乐", 2, true));
+        mChannels.add(new ChannelItem("3", "娱乐", 17, true));
+        mChannels.add(new ChannelItem("44","视频",2,true));
         mChannels.add(new ChannelItem("6", "体育", 3, true));
         mChannels.add(new ChannelItem("5", "汽车", 4, true));
         mChannels.add(new ChannelItem("21", "搞笑", 5, true));

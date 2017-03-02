@@ -42,6 +42,10 @@
             android:name=".pages.NewsTopicAty"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
+        <activity android:name=".pages.NewsDetailVideoAty"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            />
     </application>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 

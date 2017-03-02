@@ -9,6 +9,7 @@ public class ADLoadNewsFeedEntity implements Serializable {
     private long cid;
     private long tcr;
     private long uid;
+    private int v;
     /**
      * 是(1)否(0)模拟实时发布时间(部分新闻的发布时间修改为5分钟以内)
      */
@@ -21,6 +22,7 @@ public class ADLoadNewsFeedEntity implements Serializable {
 
     private String b;
     private int t;
+    private int nid;
 
     public ADLoadNewsFeedEntity() {
     }
@@ -33,6 +35,14 @@ public class ADLoadNewsFeedEntity implements Serializable {
         this.p = p;
         this.c = c;
         this.b = b;
+    }
+
+    public int getV() {
+        return v;
+    }
+
+    public void setV(int v) {
+        this.v = v;
     }
 
     @Override
@@ -110,5 +120,13 @@ public class ADLoadNewsFeedEntity implements Serializable {
 
     public void setT(int t) {
         this.t = t;
+    }
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
     }
 }
