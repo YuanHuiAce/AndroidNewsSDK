@@ -208,3 +208,5 @@ java.lang.Object readResolve();
   **[] $VALUES;
   public *;
 }
+##视频
+-keep class tv.danmaku.ijk.media.** { *; }

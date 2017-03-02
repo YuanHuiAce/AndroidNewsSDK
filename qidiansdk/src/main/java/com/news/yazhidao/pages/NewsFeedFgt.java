@@ -114,6 +114,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private RefreshReceiver mRefreshReciver;
     private LinearLayout footerView;
     private ViewGroup vPlayerContainer;
+    private RelativeLayout mHomeRelative;
 
 
     @Override
@@ -255,6 +256,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
+
+        mHomeRelative = (RelativeLayout) rootView.findViewById(R.id.mHomeRelative);
 
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1132,6 +1135,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 vPlayerContainer.removeView(vPlayer);
+                mHomeRelative.setVisibility(View.VISIBLE);
                 int position = getPlayItemPosition();
                 if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
 
@@ -1145,17 +1149,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                         vPlayer.showBottomControl(false);
                 }
-                mlvNewsFeed.setVisibility(View.VISIBLE);
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mlvNewsFeed.setVisibility(View.VISIBLE);
+//                        mlvNewsFeed.setVisibility(View.VISIBLE);
+
                     }
-                },50);
+                },10);
 
 
             } else {
-                mlvNewsFeed.setVisibility(View.GONE);
+                mHomeRelative.setVisibility(View.GONE);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeView(vPlayer);
@@ -1169,15 +1174,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         }
                     }
                 }
-//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-//                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                vPlayerContainer.addView(vPlayer);
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                vPlayerContainer.addView(vPlayer,lp);
                 if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                     vPlayer.showBottomControl(false);
             }
         } else {
-//            mAdapter.notifyDataSetChanged();
-//            mlvNewsFeed.setVisibility(View.VISIBLE);
+            mAdapter.notifyDataSetChanged();
+            mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
 

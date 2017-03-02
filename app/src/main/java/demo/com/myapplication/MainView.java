@@ -105,7 +105,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public MainView(FragmentActivity context) {
         super(context);
         initializeViews(context);
-        vPlayPlayer= PlayerManager.getPlayerManager().initialize(context);
+
 
 //        QiDianApplication.vPlayPlayer=new VPlayPlayer(context);
     }
@@ -146,7 +146,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         activity = mContext;
 //        vPlayPlayer = new VPlayPlayer(mContext);
-
+        vPlayPlayer= PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
