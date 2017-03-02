@@ -166,7 +166,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
 
-        if (vPlayer != null && !isVisibleToUser)
+        if (vPlayer!= null && !isVisibleToUser)
         {
             VideoVisibleControl();
         }
@@ -1116,7 +1116,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mContext = activity;
-        if (PlayerManager.videoPlayView != null&&"44".equals(mstrChannelId))
+        if (PlayerManager.videoPlayView != null)
             vPlayer = PlayerManager.videoPlayView;
 //        vPlayer= PlayerManager.getPlayerManager().initialize(mContext);
 
