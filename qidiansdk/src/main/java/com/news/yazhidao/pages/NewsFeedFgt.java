@@ -359,7 +359,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
         //加入feed流广告位id
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "238")));
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -990,18 +990,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
                 //加入广告位id
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, "238")));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
                 jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 /**
                  * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
                  */
-                jsonObject.put("ctype", 3);
+                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
                 /**
                  * 1.ios 2.android 3.网页 4.无法识别
                  */
-                jsonObject.put("ptype", 2);
+                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.POST, requestUrl,
                         jsonObject, new Response.Listener<JSONObject>() {
@@ -1030,9 +1030,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (user != null) {
             int uid = user.getMuid();
             //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
-            int ctype = 3;
+            int ctype = CommonConstant.NEWS_CTYPE;
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
-            int ptype = 2;
+            int ptype = CommonConstant.NEWS_PTYPE;
             //mid
             String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
             String requestUrl = HttpConstant.URL_SCROLL_AD + "?uid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype + "&mid=" + imei;

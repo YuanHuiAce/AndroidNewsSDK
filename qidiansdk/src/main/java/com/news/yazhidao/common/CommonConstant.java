@@ -61,4 +61,15 @@ public final class CommonConstant {
     public static final int TEXT_SIZE_BIG = 20;
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
+
+    //feed流广告位id
+    public static final String NEWS_FEED_AD_ID = "238";
+    //详情页广告位id
+    public static final String NEWS_DETAIL_AD_ID = "237";
+    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
+    public static final int NEWS_CTYPE = 3;
+    //平台1.ios 2.android 3.网页 4.无法识别
+    public static final int NEWS_PTYPE = 2;
+
+
 }

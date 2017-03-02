@@ -1077,7 +1077,7 @@ public class NewsDetailFgt extends Fragment {
             adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
             Gson gson = new Gson();
             //加入详情页广告位id
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
             Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
