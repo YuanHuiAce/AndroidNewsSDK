@@ -73,6 +73,9 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+import static com.news.yazhidao.utils.CommonUtil.getActionBarHeight;
+import static com.news.yazhidao.utils.CommonUtil.getStatusBarHeight;
+
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
     public static final String TAG = "NewsFeedFgt";
@@ -1126,41 +1129,76 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private int lastPostion = -1;
     private VPlayPlayer vPlayer;
     private boolean hasStarted = false;
+    protected int[] mListItemRect;//当前item框的屏幕位置
+
+    protected int[] mListItemSize;//当前item的大小
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "执行了几次");
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                vPlayerContainer.removeView(vPlayer);
-                mHomeRelative.setVisibility(View.VISIBLE);
-                int position = getPlayItemPosition();
-                if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
-
-                    FrameLayout playItemView = getPlayItemView(position);
-                    View itemView = (View) playItemView.getParent();
-                    if (itemView != null) {
-                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-                    }
-                    playItemView.removeAllViews();
-                    playItemView.addView(vPlayer);
-                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                        vPlayer.showBottomControl(false);
-                }
-
-                new Handler().postDelayed(new Runnable() {
+                mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        mlvNewsFeed.setVisibility(View.VISIBLE);
+//                        TransitionManager.beginDelayedTransition(vPlayerContainer);
+                        vPlayer.onChanged(newConfig);
+                        vPlayerContainer.removeView(vPlayer);
+                        int position = getPlayItemPosition();
+                        if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
 
+                            FrameLayout playItemView = getPlayItemView(position);
+                            View itemView = (View) playItemView.getParent();
+                            if (itemView != null) {
+                                itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+                            }
+                            playItemView.removeAllViews();
+                            playItemView.addView(vPlayer);
+
+                            if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                                vPlayer.showBottomControl(false);
+                        }
                     }
-                },10);
+                }, 300);
 
 
             } else {
-                mHomeRelative.setVisibility(View.GONE);
+//                mListItemRect = new int[2];
+//                mListItemSize = new int[2];
+//                saveLocationStatus(mContext,true,true);
+//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(vPlayer.getWidth(), vPlayer.getHeight());
+//                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
+//                mHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        TransitionManager.beginDelayedTransition(vPlayer);
+//                        vPlayer.onChanged(newConfig);
+//                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                        if (frameLayout != null) {
+//                            frameLayout.removeView(vPlayer);
+////                    frameLayout.removeAllViews();
+//                            View itemView = (View) frameLayout.getParent();
+//                            if (itemView != null) {
+////                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+//                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+//                                if (videoSHow != null) {
+//                                    videoSHow.setVisibility(View.VISIBLE);
+//                                }
+//                            }
+//                        }
+//                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+//                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                        vPlayerContainer.addView(vPlayer, lp);
+//                        if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+//                            vPlayer.showBottomControl(false);
+//
+//                    }
+//
+//                }, 300);
+//            }
+                vPlayer.onChanged(newConfig);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeView(vPlayer);
@@ -1176,15 +1214,39 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                vPlayerContainer.addView(vPlayer,lp);
+                vPlayerContainer.addView(vPlayer, lp);
                 if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                     vPlayer.showBottomControl(false);
+
+
             }
+
         } else {
             mAdapter.notifyDataSetChanged();
             mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
+
+
+
+
+    /**
+     * 保存大小和状态
+     */
+    private void saveLocationStatus(Context context, boolean statusBar, boolean actionBar) {
+        vPlayer.getLocationOnScreen(mListItemRect);
+        int statusBarH = getStatusBarHeight(context);
+        int actionBerH = getActionBarHeight((Activity) context);
+        if (statusBar) {
+            mListItemRect[1] = mListItemRect[1] - statusBarH;
+        }
+        if (actionBar) {
+            mListItemRect[1] = mListItemRect[1] - actionBerH;
+        }
+        mListItemSize[0] = vPlayer.getWidth();
+        mListItemSize[1] = vPlayer.getHeight();
+    }
+
 
     /**
      * 视频播放控制

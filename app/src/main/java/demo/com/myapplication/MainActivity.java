@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     protected void onDestroy() {
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.unregisterNetWorkReceiver();
+        if (PlayerManager.videoPlayView!=null)
+            PlayerManager.videoPlayView.onDestory();
         super.onDestroy();
     }
 

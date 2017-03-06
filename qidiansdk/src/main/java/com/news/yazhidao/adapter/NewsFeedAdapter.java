@@ -487,6 +487,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         (mContext).startActivity(AdIntent);
                     }
                 } else if (feed.getRtype() == 6) {
+                    if (!feed.isRead()) {
+                        feed.setRead(true);
+                        if (mNewsFeedDao == null) {
+                            mNewsFeedDao = new NewsFeedDao(mContext);
+                        }
+                        mNewsFeedDao.update(feed);
+                        notifyDataSetChanged();
+                    }
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
                     }
