@@ -266,7 +266,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
             int cardWidth = (int) (mCardWidth * 145 / 110.0f);
             int cardHeight = (int) (cardWidth * 9 / 16.0f);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             final String strTitle = feed.getTitle();
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
@@ -274,6 +273,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpCard.width = cardWidth;
             lpCard.height = cardHeight;
             ivCard.setLayoutParams(lpCard);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null) {
@@ -287,12 +287,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             int height = (int) (with * 9 / 16.0f);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(0), with, height, feed.getRtype());
             ImageView ivBigPic = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
+            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(0), with, height, feed.getRtype());
             setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
