@@ -28,7 +28,6 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
-import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -140,6 +139,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
+        //广告
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
