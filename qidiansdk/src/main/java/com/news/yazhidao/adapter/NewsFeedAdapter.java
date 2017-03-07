@@ -371,9 +371,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                if (feed.getRtype() == 3) {
+                int type = feed.getRtype();
+                if (type == 3) {
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
-                } else if (feed.getRtype() == 4) {
+                } else if (type == 4) {
                     if (!feed.isRead()) {
                         feed.setRead(true);
                         if (mNewsFeedDao == null) {

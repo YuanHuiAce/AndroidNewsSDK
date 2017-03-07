@@ -133,7 +133,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
 
     protected void initializeViews(final FragmentActivity mContext) {
-//        MobclickAgent.onEvent(this,"bainews_user_assess_app");
         activity = mContext;
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
@@ -169,7 +168,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             public void itemClick(int position) {
                 switch (position) {
                     case 0://不喜欢
-//
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
 //                        newsFeedFgt.disLikeItem();
                     case 1://重复、旧闻
@@ -178,11 +176,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(mContext);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        }, 100);
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                            }
+//                        }, 100);
                         break;
                 }
             }
@@ -220,13 +218,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 SharedPreManager.mInstance(activity).save("flag", "imei", deviceid);
             }
         }
-    }
-
-    public String getLocalMacAddress() {
-        WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifi.getConnectionInfo();
-        SharedPreManager.mInstance(activity).save("flag", "mac", info.getMacAddress());
-        return info.getMacAddress();
     }
 
     private class UserLoginReceiver extends BroadcastReceiver {

@@ -92,7 +92,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
-    private boolean isNeedAddSP = true;
     private Handler mHandler;
     private Runnable mThread;
     private boolean isClickHome;
@@ -149,16 +148,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
-        if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
-//            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
-
-            isNeedAddSP = false;
-        }
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
         }
-
-
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
 //            mHandler.removeCallbacks(mRunnable);
@@ -173,7 +165,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                mIsFirst = false;
 //            }
 //        }
-
     }
 
     public void getFirstPosition() {
@@ -357,6 +348,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
+        adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
         //加入feed流广告位id
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
@@ -364,16 +356,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
+                for (int i = 0; i < mArrNewsFeed.size(); i++) {
+                    NewsFeed newsFeed = mArrNewsFeed.get(i);
+                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                        break;
+                    }
+                }
                 tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
-
 //            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
-
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -406,8 +403,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
-
-        Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
 //        if ("1".equals(mstrChannelId)) {
         Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
@@ -430,7 +425,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(newsFeedRequestPost);
 //        } else {
-//
 //            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
 //            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
 //
@@ -521,13 +515,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     break;
                 case PULL_UP_REFRESH:
                     Logger.e("aaa", "===========PULL_UP_REFRESH==========");
-                    if (isNewVisity) {//首次进入加入他
-//                                addSP(result);
-                        isNeedAddSP = false;
-                    }
                     if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
-
                     } else {
                         mArrNewsFeed.addAll(result);
                     }
@@ -575,7 +564,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 bgLayout.setVisibility(View.GONE);
             }
         }
-
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
     }
