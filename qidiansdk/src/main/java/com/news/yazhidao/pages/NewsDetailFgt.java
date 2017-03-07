@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -144,7 +144,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        MobclickAgent.onEvent(getActivity(),"yazhidao_user_enter_detail_page");
         Bundle arguments = getArguments();
         mContext = getActivity();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
@@ -152,13 +151,13 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
-        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-            getActivity().registerReceiver(mRefreshReceiver, filter);
+            mContext.registerReceiver(mRefreshReceiver, filter);
         }
         initNativeVideoAD();
     }
@@ -171,7 +170,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
-        user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
+        user = SharedPreManager.mInstance(mContext).getUser(mContext);
         // 声明video，把之后的视频放到这里面去
 //        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
@@ -294,8 +293,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 //                oldLastPositon = lastPositon;
             }
         });
-        mAdapter = new NewsDetailFgtAdapter(getActivity());
-
+        mAdapter = new NewsDetailFgtAdapter(mContext);
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
@@ -340,7 +338,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     public void onDetach() {
         super.onDetach();
         if (mRefreshReceiver != null) {
-            getActivity().unregisterReceiver(mRefreshReceiver);
+            mContext.unregisterReceiver(mRefreshReceiver);
         }
     }
 
@@ -359,14 +357,14 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             }
         });
 //        TextUtil.setLayoutBgColor(mContext,mNewsDetailHeaderView,R.color.color7);
-        mDetailWebView = new LoadWebView(getActivity().getApplicationContext());
+        mDetailWebView = new LoadWebView(mContext.getApplicationContext());
         mDetailWebView.setLayoutParams(params);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 //        } else {
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //        }
-        mDetailWebView.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
+        mDetailWebView.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
@@ -375,25 +373,21 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mDetailWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()), "VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((NewsDetailAty2) mContext), "VideoJavaScriptBridge");
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         /** 梁帅：判断图片是不是  不显示 */
-
-
 //        mDetailWebView.loadUrl("http://deeporiginalx.com/content.html?type=0&nid="+mNewID);
         mDetailWebView.setWebViewClient(new WebViewClient() {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // TODO Auto-generated method stub
-                Log.i("tag", "url===" + url);
                 view.loadUrl(url);
                 return true;
             }
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Log.i("tag", description + "===" + failingUrl);
                 //view.loadData("ERROR: " + description,"text/plain","utf8");
             }
 
@@ -405,14 +399,14 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             }
         });
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+                mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 Logger.i("TAG", url);
                 // view.loadUrl(url);
-                if (openWithWevView(url)) {//如果是超链接，执行此方法
+                if (openWithWebView(url)) {//如果是超链接，执行此方法
                     startIntentBrowser("com.lieying.browser", url);
                 } else {
                     Intent intent = new Intent();
@@ -519,7 +513,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewsDetailAty2 mActivity = (NewsDetailAty2) getActivity();
+                NewsDetailAty2 mActivity = (NewsDetailAty2) mContext;
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
@@ -684,7 +678,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             for (int i = 0; i < commentNum; i++) {
                 commentIds[i] = mComments.get(i).getComment_id();
             }
-            mNewsDetailCommentDao = new NewsDetailCommentDao(getActivity());
+            mNewsDetailCommentDao = new NewsDetailCommentDao(mContext);
             newsDetailCommentItems = mNewsDetailCommentDao.qureyByIds(commentIds);
             if (newsDetailCommentItems == null || newsDetailCommentItems.size() == 0) {
                 return;
@@ -892,7 +886,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 /** 梁帅：判断图片是不是  不显示 */
                 mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                        SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+                        SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                         "text/html", "utf-8", null);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 mDetailWebView.setLayoutParams(params);
@@ -936,7 +930,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
-        final User user = SharedPreManager.mInstance(getActivity()).getUser(getActivity());
+        final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
             mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
@@ -1027,7 +1021,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mShowCareforLayout = showCareforLayout;
     }
 
-    protected boolean openWithWevView(String url) {//处理判断url的合法性
+    protected boolean openWithWebView(String url) {//处理判断url的合法性
         // TODO Auto-generated method stub
         if (url.startsWith("http:") || url.startsWith("https:")) {
             return true;
@@ -1044,7 +1038,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
      */
     public void startIntentBrowser(String packageName, String url) {
         boolean existLY = false;
-        PackageManager packageManager = getActivity().getPackageManager();
+        PackageManager packageManager = mContext.getPackageManager();
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
         for (PackageInfo packageinfo : packageInfos) {
             String stemp = packageinfo.packageName;
@@ -1088,7 +1082,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
             Gson gson = new Gson();
             //加入详情页广告位id
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override
@@ -1105,12 +1099,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        imageView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
-                            }
-                        });
+                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1120,7 +1109,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 mContext.startActivity(AdIntent);
                             }
                         });
-                        AdUtil.upLoadAd(newsFeed, mContext);
                     }
                 }
             }, new Response.ErrorListener() {

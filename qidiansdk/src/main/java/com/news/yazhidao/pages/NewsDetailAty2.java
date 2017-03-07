@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -468,7 +467,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     ToastUtil.toastShort("此新闻暂时无法查看!");
                     NewsDetailAty2.this.finish();
                 }
-                Log.i("tag", System.currentTimeMillis() - iii + "tag");
             }
         }, new Response.ErrorListener() {
             @Override

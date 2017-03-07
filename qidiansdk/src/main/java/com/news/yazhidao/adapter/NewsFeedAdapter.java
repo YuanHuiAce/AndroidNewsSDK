@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -25,7 +26,6 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.utils.AdUtil;
@@ -140,8 +140,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
-        //广告
-        AdUtil.upLoadAd(feed,mContext);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -222,12 +220,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
-            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
-            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
-            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
+            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
@@ -434,6 +432,28 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      */
     private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
+        final float[] down_x = new float[1];
+        final float[] down_y = new float[1];
+        final float[] up_x = new float[1];
+        final float[] up_y = new float[1];
+        rlNewsContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (feed.getRtype() == 3) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            down_x[0] = motionEvent.getX(0);
+                            down_y[0] = rlNewsContent.getY() + motionEvent.getY(0);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            up_x[0] = motionEvent.getX(0);
+                            up_y[0] = rlNewsContent.getY() + motionEvent.getY(0);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
@@ -450,11 +470,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                if (feed.getRtype() == 3) {
-                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    AdIntent.putExtra(KEY_URL, feed.getPurl());
-                    mContext.startActivity(AdIntent);
-                } else if (feed.getRtype() == 4) {
+                int type = feed.getRtype();
+                if (type == 4) {
                     if (!feed.isRead()) {
                         feed.setRead(true);
                         if (mNewsFeedDao == null) {

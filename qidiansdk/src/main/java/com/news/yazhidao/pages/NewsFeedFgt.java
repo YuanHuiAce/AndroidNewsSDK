@@ -97,7 +97,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isListRefresh = false;
     private boolean isADRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
-    private boolean isNeedAddSP = true;
     private Handler mHandler;
     private Runnable mThread;
     private boolean isClickHome;
@@ -160,16 +159,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
-        if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
-//            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
-
-            isNeedAddSP = false;
-        }
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
         }
-
-
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
 //            mHandler.removeCallbacks(mRunnable);
@@ -184,7 +176,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                mIsFirst = false;
 //            }
 //        }
-
     }
 
     public void getFirstPosition() {
@@ -232,7 +223,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         initNativeVideoAD();
     }
 
-
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -252,7 +242,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
-        mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
+        mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mlvNewsFeed.setMainFooterView(true);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -274,7 +264,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         });
         addHFView(LayoutInflater);
-        mAdapter = new NewsFeedAdapter(getActivity(), this, null);
+        mAdapter = new NewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
         mlvNewsFeed.setAdapter(mAdapter);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
@@ -372,27 +362,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
+        adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
         //加入feed流广告位id
-        String AdId = "238";
-        if (mNativeAD != null) {
-            AdId = "";
-        }
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, AdId)));
-
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
+                for (int i = 0; i < mArrNewsFeed.size(); i++) {
+                    NewsFeed newsFeed = mArrNewsFeed.get(i);
+                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                        break;
+                    }
+                }
                 tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
-
 //            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
-
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -425,8 +416,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
-
-        Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
 //        if ("1".equals(mstrChannelId)) {
         Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
@@ -449,7 +438,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(newsFeedRequestPost);
 //        } else {
-//
 //            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
 //            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
 //
@@ -540,13 +528,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     break;
                 case PULL_UP_REFRESH:
                     Logger.e("aaa", "===========PULL_UP_REFRESH==========");
-                    if (isNewVisity) {//首次进入加入他
-//                                addSP(result);
-                        isNeedAddSP = false;
-                    }
                     if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
-
                     } else {
                         mArrNewsFeed.addAll(result);
                     }
@@ -618,12 +601,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }, 1000);
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-            User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
+            User user = SharedPreManager.mInstance(mContext).getUser(mContext);
             user.setUtype("2");
             SharedPreManager.mInstance(mContext).saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
 //                    startActivityForResult(loginAty, REQUEST_CODE);
-            UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+            UserManager.registerVisitor(mContext, new UserManager.RegisterVisitorListener() {
                 @Override
                 public void registeSuccess() {
                     mlvNewsFeed.onRefreshComplete();
@@ -682,7 +665,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRetry.setVisibility(View.VISIBLE);
             setRefreshComplete();
             //请求token
-            UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+            UserManager.registerVisitor(mContext, new UserManager.RegisterVisitorListener() {
                 @Override
                 public void registeSuccess() {
                     loadData(flag);
@@ -871,6 +854,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             Logger.e("aaa", "滑动到底部");
                             isBottom = true;
+                            isListRefresh = true;
+                            loadData(PULL_UP_REFRESH);
                         } else {
                             isBottom = false;
                             Logger.e("aaa", "在33333isBottom ==" + isBottom);
@@ -1082,18 +1067,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
                 //加入广告位id
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, "")));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
                 jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 /**
                  * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
                  */
-                jsonObject.put("ctype", 3);
+                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
                 /**
                  * 1.ios 2.android 3.网页 4.无法识别
                  */
-                jsonObject.put("ptype", 2);
+                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.POST, requestUrl,
                         jsonObject, new Response.Listener<JSONObject>() {
@@ -1122,10 +1107,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (user != null) {
             int uid = user.getMuid();
             //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
-            int ctype = 3;
+            int ctype = CommonConstant.NEWS_CTYPE;
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
-            int ptype = 2;
-            String requestUrl = HttpConstant.URL_SCROLL_AD + "?nid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype;
+            int ptype = CommonConstant.NEWS_PTYPE;
+            //mid
+            String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+            String requestUrl = HttpConstant.URL_SCROLL_AD + "?uid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype + "&mid=" + imei;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                 @Override

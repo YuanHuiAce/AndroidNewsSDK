@@ -1,23 +1,33 @@
 package com.news.yazhidao.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.AdDetailEntity;
 import com.news.yazhidao.entity.AdDeviceEntity;
 import com.news.yazhidao.entity.AdEntity;
 import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class AdUtil {
 
@@ -35,15 +45,24 @@ public class AdUtil {
             String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
             adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
             adDeviceEntity.setImeiori(imei);
+            /** 设置MAC */
+            String mac = DeviceInfoUtil.getMacAddress();
+            String mac1 = mac.replace(":", "");
+            adDeviceEntity.setMac(TextUtil.isEmptyString(mac1) ? null : DeviceInfoUtil.generateMD5(mac1));
+            adDeviceEntity.setMacori(mac1);
+            adDeviceEntity.setMac1(TextUtil.isEmptyString(mac) ? null : DeviceInfoUtil.generateMD5(mac));
             /** 设置AndroidID */
             String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
             adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
+            adDeviceEntity.setAnidori(TextUtil.isEmptyString(androidId) ? null : androidId);
             /** 设置设备品牌 */
             String brand = Build.BRAND;
             adDeviceEntity.setBrand(brand);
             /** 设置设备型号 */
             String platform = Build.MODEL;
             adDeviceEntity.setPlatform(platform);
+            /** 设置运营商号 */
+            adDeviceEntity.setOperator(NetUtil.getSimOperatorInfo(mContext));
             /** 设置操作系统 */
             adDeviceEntity.setOs("1");
             /** 设置操作系统版本号 */
@@ -89,36 +108,6 @@ public class AdUtil {
             return gson.toJson(adEntity);
         } else {
             return "";
-        }
-    }
-
-    public static void upLoadAd(NewsFeed feed, Context context) {
-        if (feed.getRtype() == 3) {
-            String url = null;
-            ArrayList<String> arrUrl = feed.getAdimpression();
-            if (!TextUtil.isListEmpty(arrUrl)) {
-                url = arrUrl.get(0);
-            }
-            //广告
-            if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
-                feed.setUpload(true);
-                //获取经纬度
-                String lat = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                String lon = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                String[] realUrl = url.split("&lon");
-                if (TextUtil.isEmptyString(lat)) {
-                    lat = "%%LAT%%";
-                    lon = "%%LON%%";
-                }
-                final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
-                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                    }
-                }, null);
-                requestQueue.add(request);
-            }
         }
     }
 }
