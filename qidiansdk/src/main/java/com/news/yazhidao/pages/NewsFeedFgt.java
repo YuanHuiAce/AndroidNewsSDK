@@ -86,7 +86,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
     private boolean mIsFirst = true;
-    private int mDeleteIndex;
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRetry;
     private RelativeLayout bgLayout;
@@ -451,10 +450,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
-        if (mDeleteIndex != 0) {
-            mArrNewsFeed.remove(mDeleteIndex);
-            mDeleteIndex = 0;
-        }
+        removePrompt();
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -488,7 +484,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
             result.add(newsFeed);
-            mDeleteIndex = result.size() - 1;
         }
 
         mHomeRetry.setVisibility(View.GONE);
@@ -570,11 +565,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     private void loadNewFeedError(VolleyError error, final int flag) {
         if (error.toString().contains("2002")) {
-            if (mDeleteIndex != 0) {
-                mArrNewsFeed.remove(mDeleteIndex);
-                mDeleteIndex = 0;
-                mAdapter.notifyDataSetChanged();
-            }
+            removePrompt();
             mRefreshTitleBar.setText("已是最新数据");
             mRefreshTitleBar.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
@@ -905,6 +896,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         });
 
+    }
+
+    private void removePrompt() {
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+            while (iterator.hasNext()) {
+                NewsFeed newsFeed = iterator.next();
+                if (newsFeed.getStyle() == 900) {
+                    iterator.remove();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
     }
 
     public void setTextSize() {
