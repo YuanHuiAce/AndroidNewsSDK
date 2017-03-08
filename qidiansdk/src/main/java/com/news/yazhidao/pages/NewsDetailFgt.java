@@ -1099,7 +1099,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1109,6 +1108,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 mContext.startActivity(AdIntent);
                             }
                         });
+                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -1137,12 +1137,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             layoutParams.width = imageWidth;
             layoutParams.height = (int) (imageWidth * 9 / 16.0f);
             imageView.setLayoutParams(layoutParams);
-            imageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRequestManager.load(dataRef.getImgUrl()).into(imageView);
-                }
-            });
             dataRef.onExposured(layout);
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1151,6 +1145,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 }
             });
             adLayout.addView(layout);
+            mRequestManager.load(dataRef.getImgUrl()).into(imageView);
         }
     }
 
