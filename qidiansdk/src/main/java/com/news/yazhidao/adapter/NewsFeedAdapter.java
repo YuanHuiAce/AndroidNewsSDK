@@ -267,7 +267,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             int cardWidth = (int) (mCardWidth * 145 / 110.0f);
             int cardHeight = (int) (cardWidth * 9 / 16.0f);
             final String strTitle = feed.getTitle();
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = cardWidth;
@@ -350,6 +350,26 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            tvTitle.setMaxLines(3);
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            } else {
+                tvTitle.setText(strTitle);
+//                tvTitle.setLineSpacing(0, 1f);
+            }
+            if (isRead) {
+                TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
+            } else {
+                TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
+            }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+        }
+    }
+
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             tvTitle.setMaxLines(3);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
