@@ -912,13 +912,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     }
 
-    private void removePrompt(){
-        if(!TextUtil.isListEmpty(mArrNewsFeed)) {
+    private void removePrompt() {
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
             Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
             while (iterator.hasNext()) {
                 NewsFeed newsFeed = iterator.next();
                 if (newsFeed.getStyle() == 900) {
                     iterator.remove();
+                    mAdapter.notifyDataSetChanged();
                     break;
                 }
             }
