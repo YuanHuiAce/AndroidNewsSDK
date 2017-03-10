@@ -58,10 +58,11 @@ public class DeviceInfoUtil {
 
     /**
      * 获取手机屏幕宽度,此方法有效防止空指针
+     *
      * @param pContext
      * @return
      */
-    public static int getScreenWidth(Context pContext){
+    public static int getScreenWidth(Context pContext) {
         WindowManager wm = (WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
@@ -70,10 +71,11 @@ public class DeviceInfoUtil {
 
     /**
      * 获取手机屏幕高度,此方法有效防止空指针
+     *
      * @param pContext
      * @return
      */
-    public static int getScreenHeight(Context pContext){
+    public static int getScreenHeight(Context pContext) {
         WindowManager wm = (WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
@@ -89,14 +91,15 @@ public class DeviceInfoUtil {
 
     /**
      * 获取状态栏的高度
+     *
      * @param mContext
      * @return
      */
-    public static int getStatusBarHeight(Context mContext){
+    public static int getStatusBarHeight(Context mContext) {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
-        int x = 0, barHeight = DensityUtil.dip2px(mContext,25);//默认为25dp，貌似大部分是这样的
+        int x = 0, barHeight = DensityUtil.dip2px(mContext, 25);//默认为25dp，貌似大部分是这样的
 
         try {
             c = Class.forName("com.android.internal.R$dimen");
@@ -110,6 +113,7 @@ public class DeviceInfoUtil {
         }
         return barHeight;
     }
+
     /**
      * 获取当前网络状态(wifi)的ip地址
      *
@@ -223,10 +227,11 @@ public class DeviceInfoUtil {
 
     /**
      * 获取当前应用的包名
+     *
      * @param pContext
      * @return
      */
-    public static String getApkPackageName(Context pContext){
+    public static String getApkPackageName(Context pContext) {
         PackageInfo info = null;
         String packageName = null;
         try {
@@ -240,6 +245,7 @@ public class DeviceInfoUtil {
 
     /**
      * 网络是否连接
+     *
      * @param context
      * @return
      */
@@ -255,6 +261,7 @@ public class DeviceInfoUtil {
 
     /**
      * 判断手机是否是wifi连接
+     *
      * @param context
      * @return
      */
@@ -273,6 +280,7 @@ public class DeviceInfoUtil {
 
     /**
      * 判断手机是否是数据网络连接
+     *
      * @param context
      * @return
      */
@@ -288,6 +296,7 @@ public class DeviceInfoUtil {
         }
         return false;
     }
+
     /**
      * 获取ManifestMetaData 中meta中的值
      *
@@ -310,6 +319,7 @@ public class DeviceInfoUtil {
 
     /**
      * 获取当前显示的activity的ClassName
+     *
      * @param mContext
      * @return
      */
@@ -326,16 +336,17 @@ public class DeviceInfoUtil {
 
     /**
      * 判断activity是否在栈顶
+     *
      * @param mContext
      * @param simpleClassName
      * @return
      */
-    public static boolean isRunningForeground(Context mContext, String simpleClassName){
+    public static boolean isRunningForeground(Context mContext, String simpleClassName) {
         String packageName = mContext.getPackageName();
         String topActivityName = getTopActivityName(mContext);
-        if(packageName!=null&&topActivityName!=null){
+        if (packageName != null && topActivityName != null) {
             return topActivityName.endsWith(simpleClassName);
-        }else{
+        } else {
             return false;
         }
     }
@@ -388,7 +399,7 @@ public class DeviceInfoUtil {
      */
     public static String getUUID() {
         TelephonyManager telephonyManager = (TelephonyManager) QiDianApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = Build.PRODUCT+getMacAddress(QiDianApplication.getAppContext())+getDeviceSerial()+ Settings.Secure.getString(QiDianApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String uuid = Build.PRODUCT + getMacAddress(QiDianApplication.getAppContext()) + getDeviceSerial() + Settings.Secure.getString(QiDianApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         return generateMD5(uuid);
     }
 
@@ -420,12 +431,13 @@ public class DeviceInfoUtil {
 
     /**
      * 把字符串MD5
+     *
      * @param original
      * @return
      */
     public static String generateMD5(String original) {
         try {
-            Logger.d(TAG,"before MD5 "+original);
+            Logger.d(TAG, "before MD5 " + original);
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(original.getBytes());
             byte[] digest = md.digest();
@@ -433,7 +445,7 @@ public class DeviceInfoUtil {
             for (byte b : digest) {
                 sb.append(String.format("%02x", b & 0xff));
             }
-            Logger.d(TAG,"after MD5 "+sb.toString());
+            Logger.d(TAG, "after MD5 " + sb.toString());
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -453,7 +465,7 @@ public class DeviceInfoUtil {
             // if()里的值如果<=0则为自己装的程序，否则为系统工程自带
             if ((pak.applicationInfo.flags & pak.applicationInfo.FLAG_SYSTEM) <= 0) {
                 // 添加自己已经安装的应用程序
-                if(pak.packageName.equals("com.tencent.mm")) {
+                if (pak.packageName.equals("com.tencent.mm")) {
                     return true;
                 }
             }
@@ -464,6 +476,7 @@ public class DeviceInfoUtil {
 
     /**
      * 判断是否是魅族系统
+     *
      * @return
      */
     public static boolean isFlyme() {
@@ -475,6 +488,7 @@ public class DeviceInfoUtil {
             return false;
         }
     }
+
     public static int getDpi(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         DisplayMetrics dm = new DisplayMetrics();
@@ -492,16 +506,18 @@ public class DeviceInfoUtil {
         }
         return height;
     }
+
     public static int[] getScreenWH(Context poCotext) {
         WindowManager wm = (WindowManager) poCotext
                 .getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
         int height = wm.getDefaultDisplay().getHeight();
-        return new int[] { width, height };
+        return new int[]{width, height};
     }
 
     /**
      * 获取非魅族手机底部虚拟键的高度
+     *
      * @param poCotext
      * @return
      */
@@ -514,35 +530,32 @@ public class DeviceInfoUtil {
 
     /**
      * 判断横竖屏幕
+     *
      * @return
      */
     public static boolean isScreenChange(Context mContext) {
 
         Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
-        int ori = mConfiguration.orientation ; //获取屏幕方向
+        int ori = mConfiguration.orientation; //获取屏幕方向
 
-        if(ori == mConfiguration.ORIENTATION_LANDSCAPE){
+        if (ori == mConfiguration.ORIENTATION_LANDSCAPE) {
             //横屏
             return true;
-        }else if(ori == mConfiguration.ORIENTATION_PORTRAIT){
+        } else if (ori == mConfiguration.ORIENTATION_PORTRAIT) {
             //竖屏
             return false;
         }
         return false;
     }
+
     /**
      * 获取mac地址
+     *
      * @return
      */
-    public static String getMacAddress(){
- /*获取mac地址有一点需要注意的就是android 6.0版本后，以下注释方法不再适用，不管任何手机都会返回"02:00:00:00:00:00"这个默认的mac地址，这是googel官方为了加强权限管理而禁用了getSYstemService(Context.WIFI_SERVICE)方法来获得mac地址。*/
-        //        String macAddress= "";
-//        WifiManager wifiManager = (WifiManager) MyApp.getContext().getSystemService(Context.WIFI_SERVICE);
-//        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-//        macAddress = wifiInfo.getMacAddress();
-//        return macAddress;
-
-        String macAddress = null;
+    public static String getMacAddress() {
+        /*获取mac地址有一点需要注意的就是android 6.0版本后，以下注释方法不再适用，不管任何手机都会返回"02:00:00:00:00:00"这个默认的mac地址，这是googel官方为了加强权限管理而禁用了getSYstemService(Context.WIFI_SERVICE)方法来获得mac地址。*/
+        String macAddress;
         StringBuffer buf = new StringBuffer();
         NetworkInterface networkInterface = null;
         try {
@@ -566,5 +579,23 @@ public class DeviceInfoUtil {
             return "02:00:00:00:00:02";
         }
         return macAddress;
+    }
+
+    /**
+     * 保存设置IMEI
+     */
+    public static String getDeviceImei(Context context) {
+        try {
+            if (context != null) {
+                TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                if (mTelephonyManager != null) {
+                    String deviceid = mTelephonyManager.getDeviceId();
+                    return deviceid;
+                }
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
     }
 }

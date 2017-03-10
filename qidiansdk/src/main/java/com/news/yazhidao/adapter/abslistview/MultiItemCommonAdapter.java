@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.news.yazhidao.utils.Logger;
-
 import java.util.ArrayList;
 
 public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
@@ -47,7 +45,6 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
         CommonViewHolder viewHolder = CommonViewHolder.get(mContext, convertView, parent,
                 layoutId, position);
         convert(viewHolder, getItem(position),position);
-        Logger.e("jigang","consume time="+(System.currentTimeMillis()-start));
         return viewHolder.getConvertView();
     }
 

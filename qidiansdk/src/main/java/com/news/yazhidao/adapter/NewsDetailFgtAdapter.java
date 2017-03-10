@@ -21,9 +21,6 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 
-import static com.news.yazhidao.R.id.attentionlayout;
-
-//import com.news.yazhidao.pages.NewsDetailWebviewAty;
 
 /**
  * Created by Administrator on 2016/4/22.
@@ -49,7 +46,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         if (relatedItemEntity.getUrl().equals("-1")) {//没有数据时也可以让listView滑动
             Logger.e("aaa", "没有数据时的状况！！！！！！！！！！！！！");
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(0, 0);
-            holder.getView(attentionlayout).setLayoutParams(layoutParams);
+            holder.getView(R.id.attentionlayout).setLayoutParams(layoutParams);
             return;
         }
         TextViewExtend tvTitle = holder.getView(R.id.attention_Title);
@@ -60,8 +57,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         } else {
             tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
         }
-        onAttentionItemClickListener((RelativeLayout) holder.getView(attentionlayout), relatedItemEntity, tvTitle);
-        TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(attentionlayout), R.drawable.bg_feed_list_select);
+        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity, tvTitle);
+        TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.attentionlayout), R.drawable.bg_feed_list_select);
         String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
         tvTitle.setText(strTitle);
         TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);

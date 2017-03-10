@@ -548,7 +548,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
 
     private void loadData() {
-
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
@@ -1100,6 +1099,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
                         adLayout.addView(layout);
+                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

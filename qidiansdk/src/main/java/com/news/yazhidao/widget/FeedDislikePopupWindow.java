@@ -39,7 +39,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
     int mTriangleHeight = 27;
     int mInPopMargin = 24;
     int mTitleHeight;
-
+    int mNewsId;
 
     //图片的方向 true向上，false向下
     boolean isDirection = true;
@@ -227,4 +227,12 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mContainer.setItemClickListener(listerer);
     }
 
+
+    public int getNewsId() {
+        return mNewsId;
+    }
+
+    public void setNewsId(int mNewsId) {
+        this.mNewsId = mNewsId;
+    }
 }

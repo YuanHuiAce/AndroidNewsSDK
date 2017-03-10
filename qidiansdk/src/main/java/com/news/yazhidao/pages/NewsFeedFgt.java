@@ -47,6 +47,7 @@ import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -301,7 +302,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             if (mNewsFeedFgtPopWindow != null) {
-                mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
+                String pName = feed.getPname();
+                mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
             }
         }
     };
@@ -681,7 +683,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, int newsId, NewsFeedAdapter mAdapter);
     }
 
 
@@ -1116,7 +1118,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
             int ptype = CommonConstant.NEWS_PTYPE;
             //mid
-            String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+            String imei = DeviceInfoUtil.getDeviceImei(mContext);
             String requestUrl = HttpConstant.URL_SCROLL_AD + "?uid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype + "&mid=" + imei;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
