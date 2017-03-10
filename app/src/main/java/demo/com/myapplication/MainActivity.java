@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.unregisterNetWorkReceiver();
         if (PlayerManager.videoPlayView!=null)
             PlayerManager.videoPlayView.onDestory();
+        PlayerManager.videoPlayView=null;
         super.onDestroy();
     }
 

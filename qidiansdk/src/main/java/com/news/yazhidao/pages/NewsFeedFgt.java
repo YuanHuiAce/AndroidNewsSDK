@@ -1301,8 +1301,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
-                vPlayer.stop();
-                vPlayer.release();
+                if (vPlayer!=null) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
                 removeViews();
                 lastPostion = -1;
             }

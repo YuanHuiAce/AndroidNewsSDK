@@ -210,3 +210,4 @@ java.lang.Object readResolve();
 }
 ##视频
 -keep class tv.danmaku.ijk.media.** { *; }
+-dontwarn tv.danmaku.ijk.**
