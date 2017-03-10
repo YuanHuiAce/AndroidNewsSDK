@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.jinsedeyuzhou.PlayerManager;
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.CommonConstant;
@@ -74,6 +76,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private RelativeLayout mMainView;
     private TelephonyManager mTelephonyManager;
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
+    private VPlayPlayer vPlayPlayer;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -99,6 +102,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public MainView(FragmentActivity context) {
         super(context);
         initializeViews(context);
+
+
+//        QiDianApplication.vPlayPlayer=new VPlayPlayer(context);
     }
 
 
@@ -134,7 +140,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
 //        MobclickAgent.onEvent(this,"bainews_user_assess_app");
+
         activity = mContext;
+//        vPlayPlayer = new VPlayPlayer(mContext);
+        vPlayPlayer= PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -221,7 +230,12 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         }
     }
-
+//    NewsFeedFgt.InitVideoPlayer initVideoPlayer=new NewsFeedFgt.InitVideoPlayer() {
+//        @Override
+//        public void setPlayer(VPlayPlayer vPlayer) {
+//            vPlayer=vPlayPlayer;
+//        }
+//    };
     public String getLocalMacAddress() {
         WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
@@ -491,6 +505,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     };
 
+
     public void setTheme() {
 //        TextUtil.setLayoutBgColor(activity,mChannelTabStrip.ge,R.color.white);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -540,7 +555,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-     * @param 传入地理坐标，省，市，县
+     * 传入地理坐标
+     * @param ，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
         if (location != null) {
@@ -551,5 +567,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
     }
+
 
 }

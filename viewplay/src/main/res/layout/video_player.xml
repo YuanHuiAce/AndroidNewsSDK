@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:touchscreenBlocksFocus="true"
+    android:background="@android:color/black"
+    >
+
+    <com.github.jinsedeyuzhou.media.IjkVideoView
+        android:id="@+id/main_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <!-- status-->
+    <LinearLayout
+        android:id="@+id/app_video_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_dark"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/app_video_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/small_problem"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!--网络提示-->
+    <LinearLayout
+        android:id="@+id/app_video_netTie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/tips_not_wifi"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/app_video_netTie_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/network_player_btn"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/tips_not_wifi_confirm"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/app_video_replay"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="#000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/pause_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:src="@mipmap/video_play_btn"
+            />
+    </RelativeLayout>
+
+
+
+    <include
+        android:id="@+id/media_contoller"
+        layout="@layout/player_controlbar"/>
+
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/progressbar"
+        android:visibility="gone" />
+
+    <include layout="@layout/player_gesture_touch"/>
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:textColor="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:textSize="16dp"
+        android:id="@+id/seekTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <include layout="@layout/player_toolbar"
+        />
+
+    <ProgressBar
+        android:id="@+id/bottom_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_alignParentBottom="true"
+        android:max="1000"
+        android:progressDrawable="@drawable/bg_seek"/>
+
+</RelativeLayout>
+

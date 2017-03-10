@@ -72,7 +72,10 @@ public class HttpConstant {
      * 获取新闻详情 api
      */
     public static final String URL_POST_NEWS_DETAIL = URL_SERVER_HOST + "/news/baijia/fetchDetail";
-
+    /**
+     * 获取视频详情页
+     */
+    public static final String URL_VIDEO_CONTENT = URL_SERVER_HOST + "/vi/con?";
     /**
      * feed流上拉加载更多
      */

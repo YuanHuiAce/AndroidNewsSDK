@@ -56,8 +56,31 @@ public class NewsDetail implements Serializable {
     /** 评论数 */
     private int comment;
 
+    /**
+     * 播放视频地址
+     */
+    private String videourl;
+    /**
+     * 背景图片
+     */
+    private String thumbnail;
 
 
+    public String getVideourl() {
+        return videourl;
+    }
+
+    public void setVideourl(String videourl) {
+        this.videourl = videourl;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     public int getNid() {
         return nid;

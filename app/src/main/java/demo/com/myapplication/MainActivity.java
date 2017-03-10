@@ -8,10 +8,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.jinsedeyuzhou.PlayerManager;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
+    private static final String TAG ="MainActivity";
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
@@ -69,14 +71,31 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             if (mainView != null && mainView.closePopWindow()) {
                 return true;
             }
+
+            if (PlayerManager.videoPlayView != null) {
+                if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
+                    return true;
+            }
         }
+
         return super.onKeyDown(keyCode, event);
     }
+
+
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//    }
+
+
 
     @Override
     protected void onDestroy() {
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.unregisterNetWorkReceiver();
+        if (PlayerManager.videoPlayView!=null)
+            PlayerManager.videoPlayView.onDestory();
+        PlayerManager.videoPlayView=null;
         super.onDestroy();
     }
 
