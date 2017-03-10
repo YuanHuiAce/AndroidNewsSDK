@@ -27,7 +27,6 @@ public class QiDianApplication {
 //        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig
 //                .newBuilder(mContext).setDownsampleEnabled(true)
 //                .build();
-//        Fresco.initialize(mContext, imagePipelineConfig);
     }
 
     //    public void onCreate() {

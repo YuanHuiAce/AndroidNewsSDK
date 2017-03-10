@@ -196,7 +196,7 @@ public class TextUtil {
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
                 "body { margin: 14px 18px 18px 18px; background-color: #" + bgColor + ";} " +
-                "h3 { margin: 0px; } " +
+                "h3 { margin: 0px; } h1, h2, h3, h4, h5, h6 { line-height: 100%;}" +
                 ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
                 ".content img { width: 100%; }" +
@@ -265,6 +265,7 @@ public class TextUtil {
                 String imgUrl = "file:///android_asset/deail_default.png";
                 String playImgUrl = "file:///android_asset/detail_play_default.png";
                 if (!TextUtil.isEmptyString(txt)) {
+//                    txt = "<h1>" + txt + "</h1>";
                     contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #" + titleColor + ";\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {

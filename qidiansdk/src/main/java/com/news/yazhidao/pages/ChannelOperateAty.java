@@ -154,6 +154,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         if (parent.getId() == R.id.userGridView) {
             //position为 0，1 的不可以进行任何操作
             if (position != 0) {
+                isMove = true;
                 final ImageView moveImageView = getView(view);
                 if (moveImageView != null) {
                     TextView newTextView = (TextView) view.findViewById(R.id.text_item);
@@ -180,6 +181,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         } else if (parent.getId() == R.id.otherGridView) {
             final ImageView moveImageView = getView(view);
             if (moveImageView != null) {
+                isMove = true;
                 TextView newTextView = (TextView) view.findViewById(R.id.text_item);
                 final int[] startLocation = new int[2];
                 newTextView.getLocationInWindow(startLocation);

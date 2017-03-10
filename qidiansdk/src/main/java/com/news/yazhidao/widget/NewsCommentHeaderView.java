@@ -53,9 +53,9 @@ public class NewsCommentHeaderView extends LinearLayout {
         TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.new_color3);
         if (mNewsFeed != null) {
             String title = mNewsFeed.getTitle();
-//            if (!TextUtil.isEmptyString(title)) {
-            mtvNewsCommentTitle.setText(mNewsFeed.getTitle());
-//            }
+            if (!TextUtil.isEmptyString(title)) {
+                mtvNewsCommentTitle.setText(title);
+            }
             int comment = mNewsFeed.getComment();
             String pname = mNewsFeed.getPname();
             String ptime = mNewsFeed.getPtime();

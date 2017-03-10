@@ -112,7 +112,10 @@ public class HttpConstant {
      * 获取新闻详情页
      */
     public static final String URL_FETCH_CONTENT = URL_SERVER_HOST + "/ns/con?";
-
+    /**
+     * 不感兴趣记录
+     */
+    public static final String URL_DISSLIKE_RECORD = URL_SERVER_HOST + "/ns/hate";
     /**
      * 新闻普通评论列表
      */

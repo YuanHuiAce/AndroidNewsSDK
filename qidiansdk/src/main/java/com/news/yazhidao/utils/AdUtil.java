@@ -43,7 +43,7 @@ public class AdUtil {
 
             AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
             /** 设置IMEI */
-            String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+            String imei = SharedPreManager.get("flag", "imei");
             adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
             adDeviceEntity.setImeiori(imei);
             /** 设置MAC */

@@ -1,6 +1,6 @@
 package com.news.yazhidao.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.UrlQuerySanitizer;
 import android.view.View;
@@ -21,21 +21,18 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 
-import static com.news.yazhidao.R.id.attentionlayout;
-
-//import com.news.yazhidao.pages.NewsDetailWebviewAty;
 
 /**
  * Created by Administrator on 2016/4/22.
  */
 public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 
-    private Activity mContext;
+    private Context mContext;
     public static final int REQUEST_CODE = 1030;
     private int mCardWidth, mCardHeight;
     private int mScreenWidth;
 
-    public NewsDetailFgtAdapter(Activity context) {
+    public NewsDetailFgtAdapter(Context context) {
         super(R.layout.item_news_detail_relate_attention, context, null);
         this.mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
@@ -49,15 +46,22 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         if (relatedItemEntity.getUrl().equals("-1")) {//没有数据时也可以让listView滑动
             Logger.e("aaa", "没有数据时的状况！！！！！！！！！！！！！");
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(0, 0);
-            holder.getView(attentionlayout).setLayoutParams(layoutParams);
+            holder.getView(R.id.attentionlayout).setLayoutParams(layoutParams);
             return;
         }
-        onAttentionItemClickListener((RelativeLayout) holder.getView(attentionlayout), relatedItemEntity);
-        TextUtil.setLayoutBgResource(mContext,  (RelativeLayout) holder.getView(attentionlayout), R.drawable.bg_feed_list_select);
-        TextViewExtend title = holder.getView(R.id.attention_Title);
+        TextViewExtend tvTitle = holder.getView(R.id.attention_Title);
+        //用来判断是不是读过
+        boolean isRead = relatedItemEntity.isRead();
+        if (isRead) {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+        } else {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+        }
+        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity, tvTitle);
+        TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.attentionlayout), R.drawable.bg_feed_list_select);
         String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
-        title.setText(strTitle);
-        TextUtil.setTextColor(mContext, title, R.color.newsFeed_titleColor);
+        tvTitle.setText(strTitle);
+        TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
         TextUtil.setTextColor(mContext, (TextViewExtend) holder.getView(R.id.attention_Source), R.color.new_color3);
         if (getCount() == position + 1) {//去掉最后一条的线
@@ -79,7 +83,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         }
     }
 
-    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity) {
+    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity, final TextViewExtend textView) {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +91,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 //                String zhihuUrl = relatedItemEntity.getUrl();
 //                intent.putExtra(RelevantViewWebviewAty.KEY_URL, zhihuUrl);
 //                mContext.startActivity(intent);
+                relatedItemEntity.setRead(true);
+                textView.setTextColor(mContext.getResources().getColor(R.color.new_color3));
                 UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(relatedItemEntity.getUrl());
                 String value = sanitizer.getValue("nid");
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);

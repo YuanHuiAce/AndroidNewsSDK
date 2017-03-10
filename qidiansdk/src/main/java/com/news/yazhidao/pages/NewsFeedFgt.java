@@ -56,6 +56,7 @@ import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -101,7 +102,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
     private boolean mIsFirst = true;
-    private int mDeleteIndex;
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRetry;
     private RelativeLayout bgLayout;
@@ -182,8 +182,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
         }
-
-
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
 //            mHandler.removeCallbacks(mRunnable);
@@ -198,7 +196,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                mIsFirst = false;
 //            }
 //        }
-
     }
 
     public void getFirstPosition() {
@@ -335,7 +332,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             if (mNewsFeedFgtPopWindow != null) {
-                mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
+                String pName = feed.getPname();
+                mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
             }
         }
     };
@@ -400,7 +398,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         Gson gson = new Gson();
         //加入feed流广告位id
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
-
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
@@ -411,16 +408,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                        break;
 //                    }
 //                }
+                for (int i = 0; i < mArrNewsFeed.size(); i++) {
+                    NewsFeed newsFeed = mArrNewsFeed.get(i);
+                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                        break;
+                    }
+                }
                 tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
-
 //            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
-
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -454,8 +456,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
-
-        Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
 //        if ("1".equals(mstrChannelId)) {
         Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
@@ -478,7 +478,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(newsFeedRequestPost);
 //        } else {
-//
 //            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
 //            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
 //
@@ -505,10 +504,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
-        if (mDeleteIndex != 0) {
-            mArrNewsFeed.remove(mDeleteIndex);
-            mDeleteIndex = 0;
-        }
+        removePrompt();
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -542,7 +538,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
             result.add(newsFeed);
-            mDeleteIndex = result.size() - 1;
         }
 
         mHomeRetry.setVisibility(View.GONE);
@@ -569,13 +564,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     break;
                 case PULL_UP_REFRESH:
                     Logger.e("aaa", "===========PULL_UP_REFRESH==========");
-                    if (isNewVisity) {//首次进入加入他
-//                                addSP(result);
-                        isNeedAddSP = false;
-                    }
                     if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
-
                     } else {
                         mArrNewsFeed.addAll(result);
                     }
@@ -634,18 +624,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 bgLayout.setVisibility(View.GONE);
             }
         }
-
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
     }
 
     private void loadNewFeedError(VolleyError error, final int flag) {
         if (error.toString().contains("2002")) {
-            if (mDeleteIndex != 0) {
-                mArrNewsFeed.remove(mDeleteIndex);
-                mDeleteIndex = 0;
-                mAdapter.notifyDataSetChanged();
-            }
+            removePrompt();
             mRefreshTitleBar.setText("已是最新数据");
             mRefreshTitleBar.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
@@ -747,7 +732,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, int newsId, NewsFeedAdapter mAdapter);
     }
 
 
@@ -987,6 +972,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     }
 
+    private void removePrompt() {
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+            while (iterator.hasNext()) {
+                NewsFeed newsFeed = iterator.next();
+                if (newsFeed.getStyle() == 900) {
+                    iterator.remove();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
+    }
+
     public void setTextSize() {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -1102,7 +1101,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
             int ptype = CommonConstant.NEWS_PTYPE;
             //mid
-            String imei = SharedPreManager.mInstance(mContext).get("flag", "imei");
+            String imei = DeviceInfoUtil.getDeviceImei(mContext);
             String requestUrl = HttpConstant.URL_SCROLL_AD + "?uid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype + "&mid=" + imei;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
