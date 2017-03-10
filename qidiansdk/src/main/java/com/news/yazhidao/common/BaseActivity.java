@@ -22,9 +22,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (isNeedAnimation()) {
             overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
         }
-//        PushAgent mPushAgent = PushAgent.getInstance(this);
-//        mPushAgent.enable();
-//        PushAgent.getInstance(this).onAppStart();
         //fixed:Android 4.4 以上通知栏沉浸式，兼容xiaomi 4.1.2 和华为 4.1.2 系统等
         if (translucentStatus()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

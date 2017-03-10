@@ -540,7 +540,6 @@ public class NewsDetailFgt extends Fragment {
 
 
     private void loadData() {
-
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;

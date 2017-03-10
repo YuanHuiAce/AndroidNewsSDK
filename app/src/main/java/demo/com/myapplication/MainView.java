@@ -199,26 +199,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGOUT);
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
-        /**请求系统权限*/
-        try {
-            getDeviceImei();
-        } catch (Exception e) {
-            SharedPreManager.save("flag", "imei", "");
-        }
+        UserManager.registerVisitor(mContext, null);
     }
 
-    /**
-     * 保存设置IMEI
-     */
-    private void getDeviceImei() {
-        if (activity != null) {
-            mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            if (mTelephonyManager != null) {
-                String deviceid = mTelephonyManager.getDeviceId();
-                SharedPreManager.mInstance(activity).save("flag", "imei", deviceid);
-            }
-        }
-    }
+
 
     private class UserLoginReceiver extends BroadcastReceiver {
 

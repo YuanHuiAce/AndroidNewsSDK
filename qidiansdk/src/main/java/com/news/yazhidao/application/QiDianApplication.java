@@ -16,7 +16,6 @@ public class QiDianApplication {
     public static void initQDApp(Context context) {
         mContext = context;
         mInstance = new QiDianApplication();
-//        Fresco.initialize(context);
     }
 
     QiDianApplication() {
@@ -24,7 +23,6 @@ public class QiDianApplication {
 //        ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig
 //                .newBuilder(mContext).setDownsampleEnabled(true)
 //                .build();
-//        Fresco.initialize(mContext, imagePipelineConfig);
     }
 
     //    public void onCreate() {

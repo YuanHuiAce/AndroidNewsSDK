@@ -51,8 +51,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//import com.news.yazhidao.widget.SharePopupWindow;
-//import com.news.yazhidao.widget.UserCommentDialog;
 
 /**
  * Created by fengjigang on 15/9/6.

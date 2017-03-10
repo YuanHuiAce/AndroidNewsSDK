@@ -48,9 +48,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-//import com.news.yazhidao.net.volley.NewsCommentRequest;
-
-//import com.news.yazhidao.widget.UserCommentDialog;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -69,7 +66,6 @@ public class NewsCommentFgt extends Fragment {
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiver mRefreshReceiver;
-    //    private RefreshLikeBroReceiber mRefreshLike;
     private RelativeLayout bgLayout;
     private User mUser;
     private NewsDetailComment mComment;

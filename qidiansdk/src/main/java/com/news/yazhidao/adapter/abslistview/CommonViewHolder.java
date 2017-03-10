@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.news.yazhidao.R;
-import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.TextUtil;
@@ -155,90 +153,6 @@ public class CommonViewHolder {
         }
     }
 
-
-    public static class GlideTransform extends BitmapTransformation {
-
-        private float radius = 1f;
-
-        public GlideTransform(Context context, int px) {
-            super(context);
-            this.radius = px;
-        }
-
-
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            return roundCrop(pool, toTransform);
-        }
-
-        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-            if (source == null) return null;
-
-            Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            }
-
-            Canvas canvas = new Canvas(result);
-            Paint paint = new Paint();
-//            paint.setAntiAlias(true);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(QiDianApplication.getAppContext().getResources().getColor(R.color.new_color4));
-            paint.setStrokeWidth(radius);
-            RectF rectF = new RectF(0, 0, source.getWidth(), source.getHeight());
-            canvas.drawRect(rectF, paint);
-
-            Paint paint1 = new Paint();
-            paint1.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            RectF rectF1 = new RectF(radius / 2.0f, radius / 2.0f, source.getWidth() - radius / 2.0f, source.getHeight() - radius / 2.0f);
-            canvas.drawRect(rectF1, paint1);
-            return result;
-        }
-
-        @Override
-        public String getId() {
-            return getClass().getName();
-        }
-    }
-
-    public static class GlideRoundTransform extends BitmapTransformation {
-        private float radius = 1f;
-
-        public GlideRoundTransform(Context context) {
-            this(context, 4);
-        }
-
-        public GlideRoundTransform(Context context, int dp) {
-            super(context);
-            this.radius = Resources.getSystem().getDisplayMetrics().density * dp;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            return roundCrop(pool, toTransform);
-        }
-
-        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-            if (source == null) return null;
-
-            Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-            }
-            Canvas canvas = new Canvas(result);
-            Paint paint = new Paint();
-            paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-            paint.setAntiAlias(true);
-            RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
-            canvas.drawRoundRect(rectF, radius, radius, paint);
-            return result;
-        }
-
-        @Override
-        public String getId() {
-            return getClass().getName() + Math.round(radius);
-        }
-    }
-
     public static class GlideCircleTransform extends BitmapTransformation {
 
         private Paint mBorderPaint;
@@ -295,20 +209,4 @@ public class CommonViewHolder {
             return getClass().getName();
         }
     }
-
-
-//    public void setIsShowImagesSimpleDraweeViewURI(Context mContext,int draweeView, String strImg) {
-//        SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
-//        if (!TextUtil.isEmptyString(strImg)) {
-//            //梁帅：判断图片是不是  不显示
-//            if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
-//                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
-//            }else{
-//                imageView.setImageURI(Uri.parse(strImg));
-//            }
-//
-//
-//            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-//        }
-//    }
 }
