@@ -1075,8 +1075,6 @@ public class NewsDetailFgt extends Fragment {
             //加入详情页广告位id
             adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
-            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override
                 public void onResponse(final ArrayList<NewsFeed> result) {
@@ -1092,8 +1090,8 @@ public class NewsDetailFgt extends Fragment {
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.addView(layout);
+                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
