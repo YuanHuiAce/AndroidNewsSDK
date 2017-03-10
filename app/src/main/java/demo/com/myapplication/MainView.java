@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -24,13 +22,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.Logger;
@@ -42,8 +50,11 @@ import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -162,10 +173,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //        dislikePopupWindow.setVisibility(View.GONE);
 
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
-            Handler mHandler = new Handler();
-
             @Override
-            public void itemClick(int position) {
+            public void itemClick(int position){
                 switch (position) {
                     case 0://不喜欢
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -173,14 +182,39 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     case 1://重复、旧闻
                     case 2://内容质量差
                     case 3://不喜欢
+                        final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                        if (user != null) {
+                            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                            Map<String, Integer> map = new HashMap<>();
+                            map.put("nid", dislikePopupWindow.getNewsId());
+                            map.put("uid", user.getMuid());
+                            map.put("reason", position);
+                            JSONObject jsonObject = new JSONObject(map);
+                            JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_DISSLIKE_RECORD, jsonObject,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                }
+                            }) {
+                                @Override
+                                public Map<String, String> getHeaders() {
+                                    HashMap<String, String> header = new HashMap<>();
+                                    header.put("Authorization", "Basic " + user.getAuthorToken());
+                                    header.put("Content-Type", "application/json");
+                                    header.put("X-Requested-With", "*");
+                                    return header;
+                                }
+                            };
+                            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+                            requestQueue.add(request);
+                        }
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(mContext);
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                            }
-//                        }, 100);
                         break;
                 }
             }
@@ -454,16 +488,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, int newsId, NewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             view.getLocationInWindow(LocationInWindow);
-
+            dislikePopupWindow.setNewsId(newsId);
             dislikePopupWindow.setSourceList("来源：" + PubName);
             dislikePopupWindow.showView(x, y - LocationInWindow[1]);
-
-
         }
-
     };
 
     public void setTheme() {
@@ -515,7 +546,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-     * @param 传入地理坐标，省，市，县
+     * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
         if (location != null) {

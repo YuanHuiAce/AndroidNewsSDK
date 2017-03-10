@@ -288,7 +288,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             if (mNewsFeedFgtPopWindow != null) {
-                mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
+                String pName = feed.getPname();
+                mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
             }
         }
     };
@@ -668,7 +669,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, int newsId, NewsFeedAdapter mAdapter);
     }
 
 

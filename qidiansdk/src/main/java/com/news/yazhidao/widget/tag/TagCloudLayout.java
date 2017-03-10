@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.android.volley.AuthFailureError;
+
 /**
  * 标签流容器
  *
@@ -134,7 +136,11 @@ public class TagCloudLayout extends ViewGroup {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.itemClick(position);
+                        try {
+                            mListener.itemClick(position);
+                        } catch (AuthFailureError authFailureError) {
+                            authFailureError.printStackTrace();
+                        }
                     }
                 }
             });
@@ -239,7 +245,7 @@ public class TagCloudLayout extends ViewGroup {
     }
 
     public interface TagItemClickListener {
-        void itemClick(int position);
+        void itemClick(int position) throws AuthFailureError;
     }
 
     class DataChangeObserver extends DataSetObserver {
