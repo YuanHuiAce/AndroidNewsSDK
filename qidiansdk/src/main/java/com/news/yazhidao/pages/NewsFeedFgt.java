@@ -169,8 +169,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
 
-        if (vPlayer!= null && !isVisibleToUser)
-        {
+        if (vPlayer != null && !isVisibleToUser) {
             VideoVisibleControl();
         }
 
@@ -401,13 +400,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
-//                for (int i = 0; i < mArrNewsFeed.size(); i++) {
-//                    NewsFeed newsFeed = mArrNewsFeed.get(i);
-//                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
-//                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
-//                        break;
-//                    }
-//                }
                 for (int i = 0; i < mArrNewsFeed.size(); i++) {
                     NewsFeed newsFeed = mArrNewsFeed.get(i);
                     if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
@@ -589,7 +581,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         newsFeed.setChannel(44);
                     }
                 }
-//                    newsFeed.setChannel(1);
             }
 
             new Thread(new Runnable() {
@@ -917,7 +908,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                  int visibleItemCount, int totalItemCount) {
                 Log.v(TAG, "onScroll");
                 if ("44".equals(mstrChannelId))
-                   VideoVisibleControl();
+                    VideoVisibleControl();
             }
         });
 
@@ -1230,8 +1221,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
 
-
-
     /**
      * 保存大小和状态
      */
@@ -1303,7 +1292,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
-                if (vPlayer!=null) {
+                if (vPlayer != null) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
@@ -1311,8 +1300,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 lastPostion = -1;
             }
         });
-
-
     }
 
     public void changePlayView(final NewsFeed feed) {
@@ -1346,7 +1333,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             View item = lv.getChildAt(cPosition);
             return (FrameLayout) item.findViewById(R.id.layout_item_video);
         }
-
         return null;
     }
 
@@ -1357,8 +1343,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             View itemView = (View) frameLayout.getParent();
             if (itemView != null) {
                 View show = itemView.findViewById(R.id.rl_video_show);
-                if (show!=null)
-                     show.setVisibility(View.VISIBLE);
+                if (show != null)
+                    show.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -1366,7 +1352,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     private void VideoVisibleControl() {
         try {
-
             if (vPlayer == null)
                 return;
             if (getPlayItemPosition() == -1) {
@@ -1383,10 +1368,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         }
 
                     }
-
                 }
             }
-
         } catch (Exception e) {
             Log.v(TAG, e.toString());
         }
