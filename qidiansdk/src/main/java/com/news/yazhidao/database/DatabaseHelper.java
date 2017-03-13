@@ -58,6 +58,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("9", "国际", 15, true));
         mChannels.add(new ChannelItem("10", "时尚", 16, true));
         mChannels.add(new ChannelItem("3", "娱乐", 17, true));
+        mChannels.add(new ChannelItem("18", "故事", 18, true));
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("31", "奇闻", 1, false));
         mChannels.add(new ChannelItem("12", "旅游", 2, false));
@@ -73,7 +74,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("13", "历史", 12, false));
         mChannels.add(new ChannelItem("16", "育儿", 13, false));
         mChannels.add(new ChannelItem("14", "探索", 14, false));
-        mChannels.add(new ChannelItem("29", "外媒", 15, false));
         mChannels.add(new ChannelItem("36", "自媒体", 16, false));
         mChannels.add(new ChannelItem("35", "APP", 17, false));
     }
