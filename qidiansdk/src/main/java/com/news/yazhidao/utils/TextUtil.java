@@ -86,7 +86,7 @@ public class TextUtil {
         }
         StringBuilder sb = new StringBuilder("");
         for (ChannelItem item : list) {
-            sb.append(item.getName()).append(",");
+            sb.append(item.getCname()).append(",");
         }
         return sb.deleteCharAt(sb.length() - 1).toString();
     }

@@ -397,13 +397,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
-//                for (int i = 0; i < mArrNewsFeed.size(); i++) {
-//                    NewsFeed newsFeed = mArrNewsFeed.get(i);
-//                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
-//                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
-//                        break;
-//                    }
-//                }
                 for (int i = 0; i < mArrNewsFeed.size(); i++) {
                     NewsFeed newsFeed = mArrNewsFeed.get(i);
                     if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
@@ -585,7 +578,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         newsFeed.setChannel(44);
                     }
                 }
-//                    newsFeed.setChannel(1);
             }
 
             new Thread(new Runnable() {
@@ -1194,6 +1186,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
+
     /**
      * 视频播放控制
      */
@@ -1254,8 +1247,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 lastPostion = -1;
             }
         });
-
-
     }
 
     /**
@@ -1289,7 +1280,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             View item = lv.getChildAt(cPosition);
             return (FrameLayout) item.findViewById(R.id.layout_item_video);
         }
-
         return null;
     }
 
@@ -1315,7 +1305,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     private void VideoVisibleControl() {
         try {
-
             if (vPlayer == null)
                 return;
             if (getPlayItemPosition() == -1) {
@@ -1332,10 +1321,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         }
 
                     }
-
                 }
             }
-
         } catch (Exception e) {
             Log.v(TAG, e.toString());
         }

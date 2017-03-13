@@ -37,12 +37,14 @@ public class HttpConstant {
     public static final String URL_GET_HISTORY_MESSAGE = URL_SERVER_HOST + "/news/baijia/fetchImContent?";
 
     public static final String URL_GET_MESSAGE_LIST = URL_SERVER_HOST + "/news/baijia/fetchImList?";
-
+    /**
+    * 获取频道列表接口
+    */
+    public static final String URL_FETCH_CHANNEL_LIST = URL_SERVER_HOST + "/ns/chs?";
     /**
      * 获取专辑列表接口
      */
     public static final String URL_FETCH_ALBUM_LIST = URL_SERVER_HOST + "/news/baijia/fetchAlbumList?";
-
     /**
      * 挖掘机创建专辑接口
      */

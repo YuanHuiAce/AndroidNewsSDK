@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
@@ -43,6 +43,7 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.Logger;
@@ -59,7 +60,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 /**
@@ -80,7 +80,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private MyViewPagerAdapter mViewPagerAdapter;
     private ImageView mChannelExpand;
     private ChannelItemDao mChannelItemDao;
-    private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
     private TextView mtvNewWorkBar;
@@ -88,8 +87,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
-    private TelephonyManager mTelephonyManager;
-    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
     private VPlayPlayer vPlayPlayer;
 
     public enum FONTSIZE {
@@ -150,10 +147,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
 
     protected void initializeViews(final FragmentActivity mContext) {
-//        MobclickAgent.onEvent(this,"bainews_user_assess_app");
-
         activity = mContext;
-        vPlayPlayer= PlayerManager.getPlayerManager().initialize(mContext);
+        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -183,7 +178,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
             @Override
-            public void itemClick(int position){
+            public void itemClick(int position) {
                 switch (position) {
                     case 0://不喜欢
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -243,19 +238,39 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
         UserManager.registerVisitor(mContext, null);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setChannelList();
+            }
+        }, 2000);
     }
 
-    /**
-     * 保存设置IMEI
-     */
-    private void getDeviceImei() {
-        if (activity != null) {
-            mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-            if (mTelephonyManager != null) {
-                String deviceid = mTelephonyManager.getDeviceId();
-                SharedPreManager.mInstance(activity).save("flag", "imei", deviceid);
+    private void setChannelList() {
+        final boolean[] isChannelChanged = {false};
+        final ArrayList<ChannelItem> localChannelItems = mChannelItemDao.queryForAll();
+        ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
+        }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
+            @Override
+            public void onResponse(final ArrayList<ChannelItem> result) {
+                for (ChannelItem item : result) {
+                    String id = item.getId();
+                    for (ChannelItem localChannelItem : localChannelItems) {
+                        if (!id.equals("1") && id.equals(localChannelItem.getId()) && !item.getCname().equals(localChannelItem.getCname())) {
+                            localChannelItem.setCname(item.getCname());
+                            mChannelItemDao.update(localChannelItem);
+                            isChannelChanged[0] = true;
+                        }
+                    }
+                }
+                if (isChannelChanged[0]) {
+                    mSelChannelItems = mChannelItemDao.queryForSelected();
+                    mUnSelChannelItems = mChannelItemDao.queryForNormal();
+                    mChannelTabStrip.notifyDataSetChanged();
+                }
             }
-        }
+        }, null);
+        QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
     public String getLocalMacAddress() {
         WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
@@ -314,11 +329,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         return this.view;
     }
 
-    public int getListViewScrollY() {
-
-        return 0;
-    }
-
     /**
      * 开始顶部 progress 刷新动画
      */
@@ -330,26 +340,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 停止顶部 progress 刷新动画
      */
     public void stopTopRefresh() {
-    }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        if (mReceiver != null) {
-//            unregisterReceiver(mReceiver);
-//        }
-//    }
-
-    protected void loadData() {
-
-        UserManager.registerVisitor(activity, null);
-        //    mHandler.postDelayed(new Runnable() {
-        //       @Override
-//public void run() {
-        //             UmengUpdateAgent.setUpdateAutoPopup(true);
-        //            UmengUpdateAgent.update(MainAty.this);
-        //        }
-        //}, 2000);
     }
 
 
@@ -397,7 +387,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     ArrayList<ChannelItem> channelItems;
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == REQUEST_CODE) {
             channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
             int currPosition = mViewPager.getCurrentItem();
@@ -449,7 +438,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mSelChannelItems.get(position).getName();
+            return mSelChannelItems.get(position).getCname();
         }
 
         @Override
@@ -575,6 +564,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     /**
      * 传入地理坐标
+     *
      * @param ，省，市，县
      * @param location，省，市，县
      */
@@ -587,6 +577,5 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
     }
-
 
 }

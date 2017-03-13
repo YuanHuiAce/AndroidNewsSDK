@@ -94,7 +94,7 @@ public class ChannelSelectedAdapter extends BaseAdapter {
         item_text.setLayoutParams(rlItemText);
         item_text.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, R.drawable.subscribe_item_bg));
         ChannelItem channel = getItem(position);
-        item_text.setText(channel.getName());
+        item_text.setText(channel.getCname());
         if (position == 0) {
 //            item_text.setTextColor(context.getResources().getColor(R.color.subscribe_item_drag_stroke));
             TextUtil.setTextColor(context, item_text, R.color.subscribe_item_drag_stroke);

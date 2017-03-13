@@ -76,7 +76,7 @@ public class ChannelNormalAdapter extends BaseAdapter {
 		TextUtil.setTextColor(context, item_text, R.color.newsFeed_titleColor);
 		icon.setVisibility(View.VISIBLE);
 		ChannelItem channel = getItem(position);
-		item_text.setText(channel.getName());
+		item_text.setText(channel.getCname());
 		if (isChanged && (position == holdPosition) && !isItemShow) {
 			item_text.setText("");
 			item_text.setSelected(true);
