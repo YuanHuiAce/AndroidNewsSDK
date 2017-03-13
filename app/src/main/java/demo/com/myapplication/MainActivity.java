@@ -82,20 +82,16 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     }
 
 
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//    }
-
 
 
     @Override
     protected void onDestroy() {
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.unregisterNetWorkReceiver();
-        if (PlayerManager.videoPlayView!=null)
+        if (PlayerManager.videoPlayView!=null) {
             PlayerManager.videoPlayView.onDestory();
-        PlayerManager.videoPlayView=null;
+            PlayerManager.videoPlayView = null;
+        }
         super.onDestroy();
     }
 

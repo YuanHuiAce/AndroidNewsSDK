@@ -1,1 +1,1 @@
-include ':app', ':qidiansdk',':viewplay'
+include ':app', ':qidiansdk','viewplay'

@@ -116,9 +116,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public MainView(FragmentActivity context) {
         super(context);
         initializeViews(context);
-
-
-//        QiDianApplication.vPlayPlayer=new VPlayPlayer(context);
     }
 
 
@@ -156,7 +153,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 //        MobclickAgent.onEvent(this,"bainews_user_assess_app");
 
         activity = mContext;
-//        vPlayPlayer = new VPlayPlayer(mContext);
         vPlayPlayer= PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
@@ -261,12 +257,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         }
     }
-//    NewsFeedFgt.InitVideoPlayer initVideoPlayer=new NewsFeedFgt.InitVideoPlayer() {
-//        @Override
-//        public void setPlayer(VPlayPlayer vPlayer) {
-//            vPlayer=vPlayPlayer;
-//        }
-//    };
     public String getLocalMacAddress() {
         WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
@@ -584,12 +574,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
-<<<<<<< HEAD
      * 传入地理坐标
      * @param ，省，市，县
-=======
      * @param location，省，市，县
->>>>>>> 43e0465e7e2a175aa0596a84658d67fbf44c6f50
      */
     public void setLocation(Location location, String province, String city, String address) {
         if (location != null) {

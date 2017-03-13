@@ -74,9 +74,6 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-import static com.news.yazhidao.utils.CommonUtil.getActionBarHeight;
-import static com.news.yazhidao.utils.CommonUtil.getStatusBarHeight;
-
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
     public static final String TAG = "NewsFeedFgt";
@@ -169,8 +166,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
 
-        if (vPlayer!= null && !isVisibleToUser)
-        {
+        if (vPlayer != null && !isVisibleToUser) {
             VideoVisibleControl();
         }
 
@@ -741,7 +737,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onPause() {
         super.onPause();
-        VideoVisibleControl();
+        if (!portrait) {
+            if (vPlayer!=null)
+                vPlayer.onPause();
+        } else {
+            VideoVisibleControl();
+        }
     }
 
     @Override
@@ -917,7 +918,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                  int visibleItemCount, int totalItemCount) {
                 Log.v(TAG, "onScroll");
                 if ("44".equals(mstrChannelId))
-                   VideoVisibleControl();
+                    VideoVisibleControl();
             }
         });
 
@@ -1123,29 +1124,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mContext = activity;
         if (PlayerManager.videoPlayView != null)
             vPlayer = PlayerManager.videoPlayView;
-//        vPlayer= PlayerManager.getPlayerManager().initialize(mContext);
-
     }
 
     public int cPostion = -1;
     private int lastPostion = -1;
     private VPlayPlayer vPlayer;
-    private boolean hasStarted = false;
-    protected int[] mListItemRect;//当前item框的屏幕位置
+    private boolean portrait = true;
 
-    protected int[] mListItemSize;//当前item的大小
-
+    /**
+     * 横竖屏切换
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.v(TAG, "执行了几次");
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                portrait = true;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        TransitionManager.beginDelayedTransition(vPlayerContainer);
                         vPlayer.onChanged(newConfig);
                         vPlayerContainer.removeView(vPlayer);
                         int position = getPlayItemPosition();
@@ -1167,47 +1167,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
             } else {
-//                mListItemRect = new int[2];
-//                mListItemSize = new int[2];
-//                saveLocationStatus(mContext,true,true);
-//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(vPlayer.getWidth(), vPlayer.getHeight());
-//                lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
-//                mHandler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        TransitionManager.beginDelayedTransition(vPlayer);
-//                        vPlayer.onChanged(newConfig);
-//                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-//                        if (frameLayout != null) {
-//                            frameLayout.removeView(vPlayer);
-////                    frameLayout.removeAllViews();
-//                            View itemView = (View) frameLayout.getParent();
-//                            if (itemView != null) {
-////                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-//                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
-//                                if (videoSHow != null) {
-//                                    videoSHow.setVisibility(View.VISIBLE);
-//                                }
-//                            }
-//                        }
-//                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-//                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                        vPlayerContainer.addView(vPlayer, lp);
-//                        if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-//                            vPlayer.showBottomControl(false);
-//
-//                    }
-//
-//                }, 300);
-//            }
+                portrait = false;
                 vPlayer.onChanged(newConfig);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeView(vPlayer);
-//                    frameLayout.removeAllViews();
                     View itemView = (View) frameLayout.getParent();
                     if (itemView != null) {
-//                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
                         View videoSHow = itemView.findViewById(R.id.rl_video_show);
                         if (videoSHow != null) {
                             videoSHow.setVisibility(View.VISIBLE);
@@ -1220,7 +1186,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                     vPlayer.showBottomControl(false);
 
-
             }
 
         } else {
@@ -1228,27 +1193,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
-
-
-
-
-    /**
-     * 保存大小和状态
-     */
-    private void saveLocationStatus(Context context, boolean statusBar, boolean actionBar) {
-        vPlayer.getLocationOnScreen(mListItemRect);
-        int statusBarH = getStatusBarHeight(context);
-        int actionBerH = getActionBarHeight((Activity) context);
-        if (statusBar) {
-            mListItemRect[1] = mListItemRect[1] - statusBarH;
-        }
-        if (actionBar) {
-            mListItemRect[1] = mListItemRect[1] - actionBerH;
-        }
-        mListItemSize[0] = vPlayer.getWidth();
-        mListItemSize[1] = vPlayer.getHeight();
-    }
-
 
     /**
      * 视频播放控制
@@ -1285,7 +1229,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (feed == null)
                     return;
                 cPostion = feed.getNid();
-//        mainAty.newsFeedVideo = feed;
                 if (cPostion != lastPostion && lastPostion != -1) {
                     vPlayer.stop();
                     vPlayer.release();
@@ -1303,7 +1246,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
-                if (vPlayer!=null) {
+                if (vPlayer != null) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
@@ -1315,17 +1258,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     }
 
-    public void changePlayView(final NewsFeed feed) {
-        cPostion = feed.getNid();
-//        mainAty.newsFeedVideo = feed;
-        if (cPostion != lastPostion && lastPostion != -1) {
-            vPlayer.stop();
-            vPlayer.release();
-            removeViews();
-        }
-    }
-
-
+    /**
+     * 判断当前播放item是否可见，-1 不可见
+     *
+     * @return
+     */
     public int getPlayItemPosition() {
         ListView lv = mlvNewsFeed.getRefreshableView();
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
@@ -1340,6 +1277,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         return -1;
     }
 
+    /**
+     * 根据位置获取当前可见item 对象
+     *
+     * @param cPosition
+     * @return
+     */
     public FrameLayout getPlayItemView(int cPosition) {
         ListView lv = mlvNewsFeed.getRefreshableView();
         if (cPosition != -1) {
@@ -1350,6 +1293,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         return null;
     }
 
+    /**
+     * 移除播放器
+     */
     public void removeViews() {
         ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
         if (frameLayout != null && frameLayout.getChildCount() > 0) {
@@ -1357,13 +1303,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             View itemView = (View) frameLayout.getParent();
             if (itemView != null) {
                 View show = itemView.findViewById(R.id.rl_video_show);
-                if (show!=null)
-                     show.setVisibility(View.VISIBLE);
+                if (show != null)
+                    show.setVisibility(View.VISIBLE);
             }
         }
     }
 
 
+    /**
+     * 滑动控制视频是否播放
+     */
     private void VideoVisibleControl() {
         try {
 
