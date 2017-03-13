@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -236,34 +235,67 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
         UserManager.registerVisitor(mContext, null);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setChannelList();
-            }
-        }, 2000);
+        setChannelList();
     }
 
     private void setChannelList() {
-        final boolean[] isChannelChanged = {false};
         final ArrayList<ChannelItem> localChannelItems = mChannelItemDao.queryForAll();
         ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
         }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
             @Override
             public void onResponse(final ArrayList<ChannelItem> result) {
+                boolean isChannelChanged = false;
+                boolean isChangedList = false;
                 for (ChannelItem item : result) {
+                    boolean isHaveSameItem = false;
                     String id = item.getId();
                     for (ChannelItem localChannelItem : localChannelItems) {
                         if (!id.equals("1") && id.equals(localChannelItem.getId()) && !item.getCname().equals(localChannelItem.getCname())) {
                             localChannelItem.setCname(item.getCname());
                             mChannelItemDao.update(localChannelItem);
-                            isChannelChanged[0] = true;
+                            isChannelChanged = true;
+                        }
+                        if (result.size() != localChannelItems.size() && id.equals(localChannelItem.getId())) {
+                            isHaveSameItem = true;
                         }
                     }
+                    if (!isHaveSameItem) {
+                        isChangedList = true;
+                        isChannelChanged = true;
+                        ChannelItem channelItem = new ChannelItem();
+                        channelItem.setOrderId(mChannelItemDao.queryForSelected().size() + 1);
+                        channelItem.setSelected(true);
+                        channelItem.setCname(item.getCname());
+                        channelItem.setId(item.getId());
+                        mChannelItemDao.insert(channelItem);
+                    }
                 }
-                if (isChannelChanged[0]) {
-                    mSelChannelItems = mChannelItemDao.queryForSelected();
-                    mUnSelChannelItems = mChannelItemDao.queryForNormal();
+                if (isChannelChanged) {
+                    if (isChangedList) {
+                        channelItems = mChannelItemDao.queryForSelected();
+                        int currPosition = mViewPager.getCurrentItem();
+                        item1 = mSelChannelItems.get(currPosition);
+                        int index = -1;
+                        for (int i = 0; i < channelItems.size(); i++) {
+                            ChannelItem item = channelItems.get(i);
+                            if (item1.getId().equals(item.getId())) {
+                                index = i;
+                            }
+                        }
+                        if (index == -1) {
+                            Logger.e("jigang", "index = " + index);
+                            index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
+                        }
+                        mViewPager.setCurrentItem(index);
+                        Fragment item = mViewPagerAdapter.getItem(index);
+                        if (item != null) {
+                            ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
+                        }
+                        mViewPagerAdapter.setmChannelItems(channelItems);
+
+                        mViewPagerAdapter.notifyDataSetChanged();
+                    }
+                    mChannelTabStrip.setViewPager(mViewPager);
                     mChannelTabStrip.notifyDataSetChanged();
                 }
             }
