@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:text="papi"
         android:textSize="@dimen/new_font7"
         android:visibility="gone" />
 

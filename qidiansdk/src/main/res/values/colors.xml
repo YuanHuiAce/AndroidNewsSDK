@@ -280,5 +280,12 @@
     <color name="channeltabstrip_divider">#f0f0f0</color>
 
     <color name="newsfeed_red" >#fff83b3b</color>
-
+    <color name="news_type_color1" >#ff7d68</color>
+    <color name="news_type_color2" >#b3e0ff</color>
+    <color name="news_type_color3" >#dddddd</color>
+    <color name="news_type_color4" >#fac535</color>
+    <color name="news_type_color5" >#ff8d9b</color>
+    <color name="news_type_color6" >#fab37f</color>
+    <color name="news_type_color7" >#97bcf8</color>
+    <color name="news_type_color8" >#dddddd</color>
 </resources>

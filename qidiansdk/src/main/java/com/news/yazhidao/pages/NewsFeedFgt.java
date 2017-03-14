@@ -104,14 +104,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
-    private boolean isNeedAddSP = true;
     private Handler mHandler;
     private Runnable mThread;
     private boolean isClickHome;
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
-    private RefreshReceiver mRefreshReciver;
+    private RefreshReceiver mRefreshReceiver;
     private LinearLayout footerView;
     private ViewGroup vPlayerContainer;
     private RelativeLayout mHomeRelative;
@@ -165,15 +164,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
-
         if (vPlayer != null && !isVisibleToUser) {
             VideoVisibleControl();
-        }
-
-        if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
-//            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
-
-            isNeedAddSP = false;
         }
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
@@ -232,9 +224,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
         /** 梁帅：注册修改字体大小的广播*/
-        mRefreshReciver = new RefreshReceiver();
+        mRefreshReceiver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
-        mContext.registerReceiver(mRefreshReciver, intentFilter);
+        mContext.registerReceiver(mRefreshReceiver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
     }
 
@@ -245,15 +237,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
         vPlayerContainer = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
-
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
-
         mHomeRelative = (RelativeLayout) rootView.findViewById(R.id.mHomeRelative);
-
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -338,8 +327,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onDestroy() {
         super.onDestroy();
         ThemeManager.unregisterThemeChangeListener(this);
-        if (mRefreshReciver != null) {
-            mContext.unregisterReceiver(mRefreshReciver);
+        if (mRefreshReceiver != null) {
+            mContext.unregisterReceiver(mRefreshReceiver);
         }
     }
 

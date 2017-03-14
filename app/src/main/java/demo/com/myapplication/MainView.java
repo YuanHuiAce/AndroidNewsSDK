@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -304,12 +302,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }, null);
         QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
-    public String getLocalMacAddress() {
-        WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifi.getConnectionInfo();
-        SharedPreManager.mInstance(activity).save("flag", "mac", info.getMacAddress());
-        return info.getMacAddress();
-    }
 
 
     private class UserLoginReceiver extends BroadcastReceiver {
@@ -452,16 +444,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             super(fm);
             mSelChannelItems = mChannelItemDao.queryForSelected();
             mUnSelChannelItems = mChannelItemDao.queryForNormal();
-
             //统计用户频道订阅/非订阅 频道数
             HashMap<String, String> unSubChannel = new HashMap<>();
             unSubChannel.put("unsubscribed_channels", TextUtil.List2String(mUnSelChannelItems));
-//            MobclickAgent.onEventValue(MainAty.this, "user_unsubscribe_channels", unSubChannel, mUnSelChannelItems.size());
-
             HashMap<String, String> subChannel = new HashMap<>();
             subChannel.put("subscribed_channels", TextUtil.List2String(mSelChannelItems));
-//            MobclickAgent.onEventValue(MainAty.this, "user_subscribed_channels", subChannel, mSelChannelItems.size());
-
         }
 
         public void setmChannelItems(ArrayList<ChannelItem> pChannelItems) {
@@ -596,8 +583,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     /**
      * 传入地理坐标
-     *
-     * @param ，省，市，县
      * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
