@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -302,6 +304,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }, null);
         QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
+    public String getLocalMacAddress() {
+        WifiManager wifi = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifi.getConnectionInfo();
+        SharedPreManager.mInstance(activity).save("flag", "mac", info.getMacAddress());
+        return info.getMacAddress();
+    }
+
 
     private class UserLoginReceiver extends BroadcastReceiver {
 
