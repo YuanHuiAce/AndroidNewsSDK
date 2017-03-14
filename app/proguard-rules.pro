@@ -215,3 +215,6 @@ java.lang.Object readResolve();
 -keep class android.support.v4.app.NotificationCompat**{
     public *;
 }
+##视频
+-keep class tv.danmaku.ijk.media.** { *; }
+-dontwarn tv.danmaku.ijk.**

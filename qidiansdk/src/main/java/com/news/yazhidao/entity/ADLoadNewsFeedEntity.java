@@ -37,6 +37,7 @@ public class ADLoadNewsFeedEntity implements Serializable {
         this.b = b;
     }
 
+
     @Override
     public String toString() {
         return "ADLoadNewsFeedEntity{" +

@@ -25,7 +25,8 @@ public class NewsFeed implements Serializable {
     public static final int EMPTY = 6;
     public static final int AD_ONE_PIC = 7;
     public static final int AD_BIG_PIC = 8;
-
+    public static final int VIDEO_PLAYER = 9;
+    public static final int VIDEO_SMALL = 10;
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
     public static final String COLUMN_UPDATE_TIME = "ptime";
@@ -143,6 +144,19 @@ public class NewsFeed implements Serializable {
     public void setDataRef(NativeADDataRef dataRef) {
         this.dataRef = dataRef;
     }
+    /**
+     * 视频播放地址
+     */
+    @DatabaseField
+    private String videourl;
+    /**
+     * 视频背景图
+     */
+    @DatabaseField
+    private String thumbnail;
+
+    @DatabaseField
+    private int duration;
 
     @Override
     public String toString() {
@@ -395,5 +409,29 @@ public class NewsFeed implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getVideourl() {
+        return videourl;
+    }
+
+    public void setVideourl(String videourl) {
+        this.videourl = videourl;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }

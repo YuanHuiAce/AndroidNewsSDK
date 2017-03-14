@@ -7,14 +7,12 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.github.jinsedeyuzhou.PlayerManager;
+import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
@@ -39,6 +40,7 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.Logger;
@@ -75,7 +77,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private MyViewPagerAdapter mViewPagerAdapter;
     private ImageView mChannelExpand;
     private ChannelItemDao mChannelItemDao;
-    private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
     private TextView mtvNewWorkBar;
@@ -83,8 +84,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
-    private TelephonyManager mTelephonyManager;
-    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
+    private VPlayPlayer vPlayPlayer;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -145,6 +145,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
+        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -174,7 +175,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
             @Override
-            public void itemClick(int position){
+            public void itemClick(int position) {
                 switch (position) {
                     case 0://不喜欢
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -236,8 +237,73 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         /**设置广告id*/
         setADAppId("1105847205", "2000611873536900");
         UserManager.registerVisitor(mContext, null);
+        setChannelList();
     }
 
+    private void setChannelList() {
+        final ArrayList<ChannelItem> localChannelItems = mChannelItemDao.queryForAll();
+        ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
+        }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
+            @Override
+            public void onResponse(final ArrayList<ChannelItem> result) {
+                boolean isChannelChanged = false;
+                boolean isChangedList = false;
+                for (ChannelItem item : result) {
+                    boolean isHaveSameItem = false;
+                    String id = item.getId();
+                    for (ChannelItem localChannelItem : localChannelItems) {
+                        if (!id.equals("1") && id.equals(localChannelItem.getId()) && !item.getCname().equals(localChannelItem.getCname())) {
+                            localChannelItem.setCname(item.getCname());
+                            mChannelItemDao.update(localChannelItem);
+                            isChannelChanged = true;
+                        }
+                        if (result.size() != localChannelItems.size() && id.equals(localChannelItem.getId())) {
+                            isHaveSameItem = true;
+                        }
+                    }
+                    if (!isHaveSameItem) {
+                        isChangedList = true;
+                        isChannelChanged = true;
+                        ChannelItem channelItem = new ChannelItem();
+                        channelItem.setOrderId(mChannelItemDao.queryForSelected().size() + 1);
+                        channelItem.setSelected(true);
+                        channelItem.setCname(item.getCname());
+                        channelItem.setId(item.getId());
+                        mChannelItemDao.insert(channelItem);
+                    }
+                }
+                if (isChannelChanged) {
+                    if (isChangedList) {
+                        channelItems = mChannelItemDao.queryForSelected();
+                        int currPosition = mViewPager.getCurrentItem();
+                        item1 = mSelChannelItems.get(currPosition);
+                        int index = -1;
+                        for (int i = 0; i < channelItems.size(); i++) {
+                            ChannelItem item = channelItems.get(i);
+                            if (item1.getId().equals(item.getId())) {
+                                index = i;
+                            }
+                        }
+                        if (index == -1) {
+                            Logger.e("jigang", "index = " + index);
+                            index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
+                        }
+                        mViewPager.setCurrentItem(index);
+                        Fragment item = mViewPagerAdapter.getItem(index);
+                        if (item != null) {
+                            ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
+                        }
+                        mViewPagerAdapter.setmChannelItems(channelItems);
+
+                        mViewPagerAdapter.notifyDataSetChanged();
+                    }
+                    mChannelTabStrip.setViewPager(mViewPager);
+                    mChannelTabStrip.notifyDataSetChanged();
+                }
+            }
+        }, null);
+        QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
+    }
 
 
     private class UserLoginReceiver extends BroadcastReceiver {
@@ -289,11 +355,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         return this.view;
     }
 
-    public int getListViewScrollY() {
-
-        return 0;
-    }
-
     /**
      * 开始顶部 progress 刷新动画
      */
@@ -305,26 +366,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 停止顶部 progress 刷新动画
      */
     public void stopTopRefresh() {
-    }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        if (mReceiver != null) {
-//            unregisterReceiver(mReceiver);
-//        }
-//    }
-
-    protected void loadData() {
-
-        UserManager.registerVisitor(activity, null);
-        //    mHandler.postDelayed(new Runnable() {
-        //       @Override
-//public void run() {
-        //             UmengUpdateAgent.setUpdateAutoPopup(true);
-        //            UmengUpdateAgent.update(MainAty.this);
-        //        }
-        //}, 2000);
     }
 
 
@@ -372,7 +413,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     ArrayList<ChannelItem> channelItems;
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == REQUEST_CODE) {
             channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
             int currPosition = mViewPager.getCurrentItem();
@@ -406,16 +446,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             super(fm);
             mSelChannelItems = mChannelItemDao.queryForSelected();
             mUnSelChannelItems = mChannelItemDao.queryForNormal();
-
             //统计用户频道订阅/非订阅 频道数
             HashMap<String, String> unSubChannel = new HashMap<>();
             unSubChannel.put("unsubscribed_channels", TextUtil.List2String(mUnSelChannelItems));
-//            MobclickAgent.onEventValue(MainAty.this, "user_unsubscribe_channels", unSubChannel, mUnSelChannelItems.size());
-
             HashMap<String, String> subChannel = new HashMap<>();
             subChannel.put("subscribed_channels", TextUtil.List2String(mSelChannelItems));
-//            MobclickAgent.onEventValue(MainAty.this, "user_subscribed_channels", subChannel, mSelChannelItems.size());
-
         }
 
         public void setmChannelItems(ArrayList<ChannelItem> pChannelItems) {
@@ -424,7 +459,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mSelChannelItems.get(position).getName();
+            return mSelChannelItems.get(position).getCname();
         }
 
         @Override
@@ -499,6 +534,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }
     };
 
+
     public void setTheme() {
 //        TextUtil.setLayoutBgColor(activity,mChannelTabStrip.ge,R.color.white);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -548,6 +584,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     /**
+     * 传入地理坐标
      * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {

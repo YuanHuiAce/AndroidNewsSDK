@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.github.jinsedeyuzhou.PlayerApplication;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -12,10 +13,13 @@ public class QiDianApplication {
     private static Context mContext;
     private static QiDianApplication mInstance;
     private RequestQueue mRequestQueue;
+//    public static VPlayPlayer vPlayPlayer;
 
     public static void initQDApp(Context context) {
         mContext = context;
         mInstance = new QiDianApplication();
+        PlayerApplication.initApp(context);
+//        Fresco.initialize(context);
     }
 
     QiDianApplication() {

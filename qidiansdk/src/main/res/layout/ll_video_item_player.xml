@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_feed_list_select">
+
+    <com.news.yazhidao.widget.EllipsizeEndTextView
+        android:id="@+id/tv_video_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="#333333"
+        android:textSize="15sp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/type_textView"
+        android:layout_width="28dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/newstag_newhotspot_shape"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/layout_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_video_title">
+
+        <com.news.yazhidao.widget.VideoItemContainer
+            android:id="@+id/layout_item_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_video_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/image_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/video_play" />
+
+            <TextView
+                android:id="@+id/tv_video_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="#30000000"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="15:00"
+                android:textColor="@color/white"
+                android:textSize="11sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/item_bottom_video"
+        layout="@layout/item_bottom_video" />
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/item_bottom_video"
+        android:background="#f8f8f8" />
+</RelativeLayout>

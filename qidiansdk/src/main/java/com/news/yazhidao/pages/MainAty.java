@@ -345,7 +345,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mSelChannelItems.get(position).getName();
+            return mSelChannelItems.get(position).getCname();
         }
 
         @Override

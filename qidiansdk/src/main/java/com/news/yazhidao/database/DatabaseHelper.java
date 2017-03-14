@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 31;
+    private static int DATABASE_VERSION = 33;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -42,7 +42,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static {
         /**默认用户选择的频道*/
         mChannels.add(new ChannelItem("1", "推荐", 1, true));
-        mChannels.add(new ChannelItem("3", "娱乐", 2, true));
+        mChannels.add(new ChannelItem("44", "视频", 2, true));
         mChannels.add(new ChannelItem("6", "体育", 3, true));
         mChannels.add(new ChannelItem("5", "汽车", 4, true));
         mChannels.add(new ChannelItem("21", "搞笑", 5, true));
@@ -57,6 +57,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("23", "趣图", 14, true));
         mChannels.add(new ChannelItem("9", "国际", 15, true));
         mChannels.add(new ChannelItem("10", "时尚", 16, true));
+        mChannels.add(new ChannelItem("3", "娱乐", 17, true));
+        mChannels.add(new ChannelItem("18", "故事", 18, true));
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("31", "奇闻", 1, false));
         mChannels.add(new ChannelItem("12", "旅游", 2, false));
@@ -72,7 +74,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("13", "历史", 12, false));
         mChannels.add(new ChannelItem("16", "育儿", 13, false));
         mChannels.add(new ChannelItem("14", "探索", 14, false));
-        mChannels.add(new ChannelItem("29", "外媒", 15, false));
         mChannels.add(new ChannelItem("36", "自媒体", 16, false));
         mChannels.add(new ChannelItem("35", "APP", 17, false));
     }
@@ -81,7 +82,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);

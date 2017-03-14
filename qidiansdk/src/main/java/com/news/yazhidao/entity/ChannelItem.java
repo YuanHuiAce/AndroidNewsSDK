@@ -49,6 +49,11 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
      */
     @DatabaseField
     private boolean selected;
+    /**
+     * 栏目是否上线,1表示上线
+     */
+    @DatabaseField
+    private String state;
 
     public ChannelItem() {
     }
@@ -88,10 +93,6 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
         return adrImg;
     }
 
-    public String getName() {
-        return cname;
-    }
-
     public String getDes() {
         return des;
     }
@@ -100,9 +101,25 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
         return online;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCname() {
+        return cname;
+    }
+
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
     public String toString() {
         return "ChannelItem [id=" + this.id + ",orderId = " + this.orderId + " cname=" + this.cname
-                + ", selected=" + this.selected + ", online=" + this.online +"]";
+                + ", selected=" + this.selected + ", online=" + this.online + "]";
     }
 
     @Override
