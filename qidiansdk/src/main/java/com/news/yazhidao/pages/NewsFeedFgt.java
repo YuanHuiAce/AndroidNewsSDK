@@ -110,7 +110,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
-    private RefreshReceiver mRefreshReciver;
+    private RefreshReceiver mRefreshReceiver;
     private LinearLayout footerView;
     private ViewGroup vPlayerContainer;
     private RelativeLayout mHomeRelative;
@@ -224,9 +224,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
         /** 梁帅：注册修改字体大小的广播*/
-        mRefreshReciver = new RefreshReceiver();
+        mRefreshReceiver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
-        mContext.registerReceiver(mRefreshReciver, intentFilter);
+        mContext.registerReceiver(mRefreshReceiver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
     }
 
@@ -327,8 +327,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onDestroy() {
         super.onDestroy();
         ThemeManager.unregisterThemeChangeListener(this);
-        if (mRefreshReciver != null) {
-            mContext.unregisterReceiver(mRefreshReciver);
+        if (mRefreshReceiver != null) {
+            mContext.unregisterReceiver(mRefreshReceiver);
         }
     }
 
