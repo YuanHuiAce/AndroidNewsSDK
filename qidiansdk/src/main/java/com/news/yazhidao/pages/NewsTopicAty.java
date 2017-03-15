@@ -403,7 +403,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setCommentViewText(childNoPicHolderHolder.tvCommentNum, feed.getComment() + "");
                 setNewsContentClick(childNoPicHolderHolder.rlContent, feed);
                 newsTag(childNoPicHolderHolder.tvType, feed.getRtype());
-                childNoPicHolderHolder.ivDelete.setVisibility(View.INVISIBLE);
+                childNoPicHolderHolder.ivDelete.setVisibility(View.GONE);
                 setBottomLine(childNoPicHolderHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
             } else if (currentType == NewsFeed.ONE_AND_TWO_PIC) {
                 if (convertView == null) {
@@ -434,7 +434,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setCommentViewText(childOnePicHolder.tvCommentNum, feed.getComment() + "");
                 setNewsContentClick(childOnePicHolder.rlContent, feed);
                 newsTag(childOnePicHolder.tvType, feed.getRtype());
-                childOnePicHolder.ivDelete.setVisibility(View.INVISIBLE);
+                childOnePicHolder.ivDelete.setVisibility(View.GONE);
                 setBottomLine(childOnePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
             } else if (currentType == NewsFeed.THREE_PIC) {
                 if (convertView == null) {
@@ -456,18 +456,18 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     childThreePicHolder = (ChildThreePicHolder) convertView.getTag();
                 }
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-                setImageUri(childThreePicHolder.ivPicture1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
-                setImageUri(childThreePicHolder.ivPicture2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
-                setImageUri(childThreePicHolder.ivPicture3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
                 setCardMargin(childThreePicHolder.ivPicture1, 15, 1, 3);
                 setCardMargin(childThreePicHolder.ivPicture2, 1, 1, 3);
                 setCardMargin(childThreePicHolder.ivPicture3, 1, 15, 3);
+                setImageUri(childThreePicHolder.ivPicture1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+                setImageUri(childThreePicHolder.ivPicture2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+                setImageUri(childThreePicHolder.ivPicture3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
                 setTitleTextBySpannable(childThreePicHolder.tvTitle, feed.getTitle(), false);
                 setSourceViewText(childThreePicHolder.tvSource, feed.getPname());
                 setCommentViewText(childThreePicHolder.tvCommentNum, feed.getComment() + "");
                 setNewsContentClick(childThreePicHolder.rlContent, feed);
                 newsTag(childThreePicHolder.tvType, feed.getRtype());
-                childThreePicHolder.ivDelete.setVisibility(View.INVISIBLE);
+                childThreePicHolder.ivDelete.setVisibility(View.GONE);
                 setBottomLine(childThreePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
             } else if (currentType == NewsFeed.BIG_PIC) {
                 if (convertView == null) {
@@ -498,7 +498,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setCommentViewText(childBigPicHolder.tvCommentNum, feed.getComment() + "");
                 setNewsContentClick(childBigPicHolder.rlContent, feed);
                 newsTag(childBigPicHolder.tvType, feed.getRtype());
-                childBigPicHolder.ivDelete.setVisibility(View.INVISIBLE);
+                childBigPicHolder.ivDelete.setVisibility(View.GONE);
             } else if (currentType == NewsFeed.EMPTY) {
                 if (convertView == null) {
                     childNoPicHolderHolder = new ChildNoPicHolder();
@@ -517,7 +517,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         private void setImageUri(ImageView draweeView, String strImg, int width, int height, int rType) {
             if (!TextUtil.isEmptyString(strImg)) {
                 Uri uri;
-                if (rType != 3) {
+                if (rType != 3 && rType != 4 && rType != 6 && rType != 50 && rType != 51) {
                     String img = strImg.replace("bdp-", "pro-");
                     uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
                 } else {

@@ -360,6 +360,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             durationView.setText("");
         }
     }
+
     private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -426,7 +427,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
-            tvTitle.setMaxLines(3);
+            tvTitle.setMaxLines(2);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
@@ -446,6 +447,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setTitleTextByBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
+            tvTitle.setMaxLines(1);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
@@ -529,15 +531,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-                        notifyDataSetChanged();
+//                        notifyDataSetChanged();
                     }
                     Intent AdIntent = new Intent(mContext, NewsTopicAty.class);
                     AdIntent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
-                    if (mNewsFeedFgt != null) {
-                        mNewsFeedFgt.startActivity(AdIntent);
-                    } else {
-                        (mContext).startActivity(AdIntent);
-                    }
+                    mContext.startActivity(AdIntent);
                 } else if (feed.getRtype() == 6) {
                     if (!feed.isRead()) {
                         feed.setRead(true);
@@ -545,7 +543,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-                        notifyDataSetChanged();
+//                        notifyDataSetChanged();
                     }
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
@@ -557,7 +555,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-                        notifyDataSetChanged();
+//                        notifyDataSetChanged();
                     }
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
