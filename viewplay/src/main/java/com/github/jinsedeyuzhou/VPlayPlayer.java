@@ -624,6 +624,8 @@ public class VPlayPlayer extends FrameLayout {
             handler.removeCallbacks(null);
         } else if (newStatus == PlayStateParams.STATE_PREPARING) {
             Log.d(TAG, "STATE_PREPARING");
+            if (mVideoStaus.getVisibility()==View.VISIBLE)
+                mVideoStaus.setVisibility(View.GONE);
             play.setVisibility(View.GONE);
             isShowContoller = false;
             if (progressBar.getVisibility() == View.GONE)
@@ -1217,7 +1219,6 @@ public class VPlayPlayer extends FrameLayout {
     private void start() {
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
-        mVideoStaus.setVisibility(View.GONE);
         if (PlayerApplication.getInstance().isSound)
             sound.setImageResource(R.mipmap.sound_mult_icon);
         else
@@ -1457,6 +1458,7 @@ public class VPlayPlayer extends FrameLayout {
             mVideoNetTie.setVisibility(View.VISIBLE);
         } else {
             if (playerSupport) {
+                start();
                 progressBar.setVisibility(View.VISIBLE);
                 releaseBitmap();
                 mVideoView.setVideoPath(url);
