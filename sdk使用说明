@@ -1,0 +1,105 @@
+
+
+###SDK使用说明
+**导入视频sdk **   
+######方法一（推荐）
+将viewplay库拷贝到qidiansdk同级目录下，在setting里面 添加 ':qidiansdk','viewplay'；
+
+######方法二
+将viewplay.arr 复制到qidiansdk库和应用中libs目录下 在app中的build.gradle添加一下内容  
+
+![](pageone.png)
+
+		buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+	}
+
+		allprojects {
+    repositories {
+        jcenter()
+        //添加内容
+            flatDir {
+                dirs 'libs'
+            }
+    }
+	}
+
+导入sdk后
+ 
+1. 自定义类继承Application  
+
+		public class DemoApplication extends Application {
+   			 @Override
+		    public void onCreate() {
+        super.onCreate();
+        //初始化QiDianApplication对象
+        QiDianApplication.initQDApp(this);
+ 			   }
+		}
+
+2. 清单文件 AndroidManifest.xml  
+添加MainView的Activity 需要设置configChanges属性；设置自定义application
+
+	 	<application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        //设置application
+        android:name=".DemoApplication"
+        >
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            //添加configChanges
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+3. 生命周期方法
+
+		@Override
+ 	   public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mainView != null && mainView.closePopWindow()) {
+                return true;
+            }
+			//视频全屏返回键处理
+            if (PlayerManager.videoPlayView != null) {
+                if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
+                    return true;
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
+  		  }
+
+
+
+
+ 	   @Override
+   		 protected void onDestroy() {
+      	//程序退出释放资源
+        if (PlayerManager.videoPlayView!=null)
+            PlayerManager.videoPlayView.onDestory();
+        PlayerManager.videoPlayView=null;
+        super.onDestroy();
+  		  }
+4. 混淆文件  
+	##视频  在app混淆文件里加入一下内容  
+	-keep class tv.danmaku.ijk.media.** { *; }  
+	-dontwarn tv.danmaku.ijk.**；
