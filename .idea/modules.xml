@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidNewsSDK.iml" filepath="$PROJECT_DIR$/AndroidNewsSDK.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android_SDK.iml" filepath="$PROJECT_DIR$/android_SDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/qidiansdk/qidiansdk.iml" filepath="$PROJECT_DIR$/qidiansdk/qidiansdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/viewplay/viewplay.iml" filepath="$PROJECT_DIR$/viewplay/viewplay.iml" />

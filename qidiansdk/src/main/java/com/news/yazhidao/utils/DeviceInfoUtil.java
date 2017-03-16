@@ -17,11 +17,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
 import com.news.yazhidao.application.QiDianApplication;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -590,7 +592,7 @@ public class DeviceInfoUtil {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
                     String deviceid = mTelephonyManager.getDeviceId();
-                    return deviceid;
+                    return TextUtils.isEmpty(deviceid)?SharedPreManager.get("flag", "imei"):deviceid;
                 }
             }
         } catch (Exception e) {
