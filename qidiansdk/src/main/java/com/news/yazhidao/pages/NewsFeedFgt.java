@@ -485,7 +485,22 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                it.remove();
 //            }
 //        }
-        if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
+        //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+        if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
+            for (NewsFeed newsFeed : result) {
+                if ("1".equals(mstrChannelId)) {
+                    newsFeed.setChannel(1);
+                    if (newsFeed.getStyle() == 6) {
+                        newsFeed.setStyle(8);
+                    }
+                } else if ("35".equals(mstrChannelId)) {
+                    newsFeed.setChannel(35);
+                } else if ("44".equals(mstrChannelId)) {
+                    newsFeed.setChannel(44);
+                }
+            }
+        }
+        if (flag == PULL_DOWN_REFRESH && !mIsFirst && !TextUtil.isListEmpty(result)) {
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
             result.add(newsFeed);
@@ -523,21 +538,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
             if (mNewsSaveCallBack != null) {
                 mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
-            }
-            //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-            if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
-                for (NewsFeed newsFeed : result) {
-                    if ("1".equals(mstrChannelId)) {
-                        newsFeed.setChannel(1);
-                        if (newsFeed.getStyle() == 6) {
-                            newsFeed.setStyle(8);
-                        }
-                    } else if ("35".equals(mstrChannelId)) {
-                        newsFeed.setChannel(35);
-                    } else if ("44".equals(mstrChannelId)) {
-                        newsFeed.setChannel(44);
-                    }
-                }
             }
             new Thread(new Runnable() {
                 @Override

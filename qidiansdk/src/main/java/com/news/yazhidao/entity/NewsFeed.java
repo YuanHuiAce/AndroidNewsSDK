@@ -156,6 +156,11 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private int duration;
 
+    private int logtype;
+
+    private int logchid;
+
+
     @Override
     public String toString() {
         return "NewsFeed{" +
@@ -431,5 +436,21 @@ public class NewsFeed implements Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public int getLogtype() {
+        return logtype;
+    }
+
+    public void setLogtype(int logtype) {
+        this.logtype = logtype;
+    }
+
+    public int getLogchid() {
+        return logchid;
+    }
+
+    public void setLogchid(int logchid) {
+        this.logchid = logchid;
     }
 }

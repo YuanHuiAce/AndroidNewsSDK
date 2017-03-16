@@ -6,63 +6,67 @@ import java.io.Serializable;
  * Created by Administrator on 2016/4/18.
  */
 public class UploadLogDataEntity implements Serializable{
-    private String n;
-    private String c;
-    private String t;
-    private String s;
-    private String f;
+    private Long n;
+    private int c;
+    private int t;
+    private int s;
+    private int f;
+    private int lt;
+    private int lc;
 
-    public UploadLogDataEntity(String n, String c, String t, String s, String sltime, String f) {
-        this.n = n;
-        this.c = c;
-        this.t = t;
-        this.s = s;
-        this.f = f;
-    }
-
-    public UploadLogDataEntity() {
-    }
-
-
-
-    public String getN() {
+    public Long getN() {
         return n;
     }
 
-    public void setN(String n) {
+    public void setN(Long n) {
         this.n = n;
     }
 
-    public String getC() {
+    public int getC() {
         return c;
     }
 
-    public void setC(String c) {
+    public void setC(int c) {
         this.c = c;
     }
 
-    public String getT() {
+    public int getT() {
         return t;
     }
 
-    public void setT(String t) {
+    public void setT(int t) {
         this.t = t;
     }
 
-    public String getS() {
+    public int getS() {
         return s;
     }
 
-    public void setS(String s) {
+    public void setS(int s) {
         this.s = s;
     }
 
-
-    public String getF() {
+    public int getF() {
         return f;
     }
 
-    public void setF(String f) {
+    public void setF(int f) {
         this.f = f;
+    }
+
+    public int getLt() {
+        return lt;
+    }
+
+    public void setLt(int lt) {
+        this.lt = lt;
+    }
+
+    public int getLc() {
+        return lc;
+    }
+
+    public void setLc(int lc) {
+        this.lc = lc;
     }
 }

@@ -531,11 +531,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
                     }
-                    Intent AdIntent = new Intent(mContext, NewsTopicAty.class);
-                    AdIntent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
-                    mContext.startActivity(AdIntent);
+                    Intent intent = new Intent(mContext, NewsTopicAty.class);
+                    intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                    mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
                     if (!feed.isRead()) {
                         feed.setRead(true);
@@ -543,7 +543,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
                     }
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
@@ -555,7 +554,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             mNewsFeedDao = new NewsFeedDao(mContext);
                         }
                         mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
                     }
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
