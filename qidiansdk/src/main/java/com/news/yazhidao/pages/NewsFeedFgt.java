@@ -479,27 +479,29 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
             mRefreshTitleBarAnimtation();
         }
+        //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+        if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
+            for (NewsFeed newsFeed : result) {
+                if ("1".equals(mstrChannelId)) {
+                    newsFeed.setChannel_id(1);
+                    if (newsFeed.getStyle() == 6) {
+                        newsFeed.setStyle(8);
+                    }
+                } else if ("35".equals(mstrChannelId)) {
+                    newsFeed.setChannel_id(35);
+                } else if ("44".equals(mstrChannelId)) {
+                    newsFeed.setChannel_id(44);
+                } else {
+                    newsFeed.setChannel_id(newsFeed.getChannel());
+                }
+            }
+        }
 //        for (Iterator it = result.iterator(); it.hasNext();) {
 //            NewsFeed newsFeed = (NewsFeed) it.next();
 //            if(newsFeed.getRtype()==3){
 //                it.remove();
 //            }
 //        }
-        //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-        if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
-            for (NewsFeed newsFeed : result) {
-                if ("1".equals(mstrChannelId)) {
-                    newsFeed.setChannel(1);
-                    if (newsFeed.getStyle() == 6) {
-                        newsFeed.setStyle(8);
-                    }
-                } else if ("35".equals(mstrChannelId)) {
-                    newsFeed.setChannel(35);
-                } else if ("44".equals(mstrChannelId)) {
-                    newsFeed.setChannel(44);
-                }
-            }
-        }
         if (flag == PULL_DOWN_REFRESH && !mIsFirst && !TextUtil.isListEmpty(result)) {
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
@@ -1006,6 +1008,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
+                jsonObject.put("appversion", mContext.getString(R.string.version_name));
                 //加入广告位id
                 jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
                 jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
