@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class UserManager {
 
     public interface RegisterVisitorListener {
-        void registeSuccess();
+        void registerSuccess();
     }
 
     /**
@@ -55,7 +55,7 @@ public class UserManager {
                     }
                     SharedPreManager.mInstance(mContext).saveUser(user);
                     if (mListener != null){
-                        mListener.registeSuccess();
+                        mListener.registerSuccess();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -84,7 +84,7 @@ public class UserManager {
                             user.setPassword(response.optString("password"));
                             SharedPreManager.mInstance(mContext).saveUser(user);
                             if (mListener != null){
-                                mListener.registeSuccess();
+                                mListener.registerSuccess();
                             }
                         }
                     }, new Response.ErrorListener() {

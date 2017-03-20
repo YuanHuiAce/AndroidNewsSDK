@@ -27,7 +27,7 @@ public class NewsFeed implements Serializable {
     public static final int AD_BIG_PIC = 8;
     public static final int VIDEO_PLAYER = 9;
     public static final int VIDEO_SMALL = 10;
-    public static final String COLUMN_CHANNEL_ID = "channel";
+    public static final String COLUMN_CHANNEL_ID = "channel_id";
     public static final String COLUMN_NEWS_ID = "nid";
     public static final String COLUMN_UPDATE_TIME = "ptime";
     /**
@@ -79,6 +79,8 @@ public class NewsFeed implements Serializable {
     private int collect;
     @DatabaseField
     private int concern;
+    @DatabaseField
+    private int channel_id;
     /**
      * 这个参数是收藏用的单张图
      */
@@ -157,6 +159,11 @@ public class NewsFeed implements Serializable {
 
     @DatabaseField
     private int duration;
+
+    private int logtype;
+
+    private int logchid;
+
 
     @Override
     public String toString() {
@@ -434,4 +441,29 @@ public class NewsFeed implements Serializable {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+    public int getLogtype() {
+        return logtype;
+    }
+
+    public void setLogtype(int logtype) {
+        this.logtype = logtype;
+    }
+
+    public int getLogchid() {
+        return logchid;
+    }
+
+    public void setLogchid(int logchid) {
+        this.logchid = logchid;
+    }
+
+    public int getChannel_id() {
+        return channel_id;
+    }
+
+    public void setChannel_id(int channel_id) {
+        this.channel_id = channel_id;
+    }
+
 }
