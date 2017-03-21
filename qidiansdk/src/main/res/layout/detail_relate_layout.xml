@@ -79,11 +79,68 @@
         android:visibility="gone" />
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f6f6f6">
+
+        <include
+            android:id="@+id/adLayout"
+            layout="@layout/ll_ad_item_big"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/detail_Hot_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/detail_hotComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="热门评论"
+            android:textColor="@color/detail_share_TopTitleColor"
+            android:textSize="@dimen/new_font4" />
+
+        <View
+            android:id="@+id/detail_shared_hotComment_Line1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignRight="@id/detail_hotComment"
+            android:layout_below="@id/detail_hotComment"
+            android:layout_marginTop="6dp"
+            android:background="@color/new_color2" />
+
+        <View
+            android:id="@+id/detail_shared_hotComment_Line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/detail_hotComment"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/detail_shared_hotComment_Line1"
+            android:background="@color/new_color4" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/detail_CommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <RelativeLayout
         android:id="@+id/detail_shared_MoreComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="17dp"
         android:layout_marginRight="17dp"
+        android:layout_marginTop="17dp"
         android:background="@drawable/bg_select_comment_more"
         android:visibility="gone">
 
@@ -113,15 +170,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/adLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#f6f6f6"
-        android:paddingBottom="22dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="18dp" />
-
-    <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,8 +189,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
+            android:text="相关推荐"
             android:layout_toRightOf="@+id/detail_point"
-            android:textColor="@color/new_color1"
+            android:textColor="@color/newsFeed_titleColor"
             android:textSize="@dimen/new_font3" />
 
         <!--<View-->

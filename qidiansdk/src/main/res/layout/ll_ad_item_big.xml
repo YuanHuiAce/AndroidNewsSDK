@@ -40,6 +40,6 @@
         android:background="@drawable/tag_detail_ad_shape"
         android:gravity="center"
         android:text="广告"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:textSize="10sp"/>
 </RelativeLayout>

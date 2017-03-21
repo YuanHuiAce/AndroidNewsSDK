@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,7 +95,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic, mDetailFavorite, carefor_Image;
     public ViewPager mNewsDetailViewPager;
-    private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshPageBroReceiver mRefreshReceiver;
     //    private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
     private String mSource, mImageUrl;
@@ -112,7 +111,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     /**
      * 通知新闻详情页和评论fragment刷新评论
      */
-    public class RefreshPageBroReceiber extends BroadcastReceiver {
+    public class RefreshPageBroReceiver extends BroadcastReceiver {
 
 
         @Override
@@ -156,13 +155,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
-        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
-            /** 梁帅：保持让屏幕常亮*/
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
-
-
-//        Log.e("aaa", "获取Sp数据：" + SharedPreManager.mInstance(this).get("flag", "text1"));
+//        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
+//            /** 梁帅：保持让屏幕常亮*/
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        }
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
@@ -228,11 +224,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         Logger.e("aaa", "===========================onResume====================");
         nowTime = System.currentTimeMillis();
         mDurationStart = System.currentTimeMillis();
-        if (mRefreshReceiber == null) {
-            mRefreshReceiber = new RefreshPageBroReceiber();
+        if (mRefreshReceiver == null) {
+            mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(ACTION_REFRESH_COMMENT);
 //            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-            registerReceiver(mRefreshReceiber, filter);
+            registerReceiver(mRefreshReceiver, filter);
         }
     }
 
@@ -245,16 +241,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         lastTime = System.currentTimeMillis();
-        if (mRefreshReceiber != null) {
-            unregisterReceiver(mRefreshReceiber);
-            mRefreshReceiber = null;
+        if (mRefreshReceiver != null) {
+            unregisterReceiver(mRefreshReceiver);
+            mRefreshReceiver = null;
         }
         //上报日志
         LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
-        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
-            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+//        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
+//            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
+//            getWindow().clearFlags(WindowManager.LayoutParams.
+// );
+//        }
         super.onDestroy();
     }
 
