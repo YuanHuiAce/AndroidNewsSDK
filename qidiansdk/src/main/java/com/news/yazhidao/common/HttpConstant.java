@@ -202,4 +202,9 @@ public class HttpConstant {
      * 滑动接口
      */
     public static final String URL_SCROLL_AD = URL_SERVER_HOST + "/sl/ins";
+
+    /**
+     * 用户映射接口
+     */
+    public static final String URL_AUTHORIZED_USER = URL_SERVER_HOST + "/au/sin/s";
 }

@@ -10,8 +10,10 @@
         android:id="@+id/detail_shared_ShareImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:background="#f6f6f6"
+        android:paddingBottom="17dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -189,8 +191,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
-            android:text="相关推荐"
             android:layout_toRightOf="@+id/detail_point"
+            android:text="相关推荐"
             android:textColor="@color/newsFeed_titleColor"
             android:textSize="@dimen/new_font3" />
 

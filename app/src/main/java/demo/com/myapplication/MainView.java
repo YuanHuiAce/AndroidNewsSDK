@@ -37,12 +37,14 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
+import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -583,6 +585,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     /**
      * 传入地理坐标
+     *
      * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {
@@ -593,6 +596,15 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, province);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
+    }
+
+    /**
+     * 授权用户映射
+     *
+     * @param
+     */
+    public void setAuthorizedUser(AuthorizedUser authorizedUser) {
+        AuthorizedUserUtil.AuthorizedUser(authorizedUser,activity);
     }
 
 }
