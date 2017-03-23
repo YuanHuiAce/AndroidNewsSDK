@@ -1,6 +1,7 @@
 package com.news.yazhidao.utils;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,6 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.QiDianApplication;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.User;
@@ -24,7 +26,7 @@ import java.util.Map;
 
 public class AuthorizedUserUtil {
 
-    public static void AuthorizedUser(AuthorizedUser authorizedUser, final Context context) {
+    public static void authorizedUser(AuthorizedUser authorizedUser, final Context context) {
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_AUTHORIZED_USER, new Gson().toJson(authorizedUser),
                 new Response.Listener<JSONObject>() {
@@ -60,5 +62,12 @@ public class AuthorizedUserUtil {
             }
         };
         requestQueue.add(jsonRequest);
+    }
+
+    public static void sendUserLoginBroadcast(Context context){
+        ToastUtil.toastLong("请先登录");
+        Intent intent = new Intent();
+        intent.setAction(CommonConstant.USER_LOGIN_ACTION);
+        context.sendBroadcast(intent);
     }
 }

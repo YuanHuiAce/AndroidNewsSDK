@@ -38,8 +38,8 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsCommentHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -54,25 +54,18 @@ import java.util.HashMap;
 
 
 /**
- * Created by fengjigang on 16/3/31.
  * 新闻评论页
  */
 public class NewsCommentFgt extends Fragment {
 
     public static final int REQUEST_CODE = 1030;
-    public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
-    public static final String ACTION_REFRESH_CTD = "com.news.yazhidao.ACTION_REFRESH_CTD";
-    public static final String LIKETYPE = "liketype";
-    public static final String LIKEBEAN = "likebean";
     private PullToRefreshListView mNewsCommentList;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiver mRefreshReceiver;
     private RelativeLayout bgLayout;
-    private User mUser;
-    private NewsDetailComment mComment;
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private NewsCommentHeaderView mNewsCommentHeaderView;
@@ -143,42 +136,45 @@ public class NewsCommentFgt extends Fragment {
     }
 
     private void loadData() {
-        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsDetailRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + (mUser != null ? "&uid=" + SharedPreManager.mInstance(getActivity()).getUser(getActivity()).getMuid() : "") +
-                "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
-            @Override
-            public void onResponse(ArrayList<NewsDetailComment> result) {
-                if (bgLayout.getVisibility() == View.VISIBLE) {
-                    bgLayout.setVisibility(View.GONE);
-                }
-                mNewsCommentList.onRefreshComplete();
-                if (!TextUtil.isListEmpty(result)) {
-                    mComments.addAll(result);
-                    mCommentsAdapter.setData(mComments);
-                    mNewsCommentHeaderView.setNoCommentsLayoutGone();
-                } else {
-                    if (!TextUtil.isListEmpty(mComments)) {
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        if (user != null) {
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsDetailRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + "&uid=" + user.getMuid() +
+                    "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+                @Override
+                public void onResponse(ArrayList<NewsDetailComment> result) {
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
+                        bgLayout.setVisibility(View.GONE);
+                    }
+                    mNewsCommentList.onRefreshComplete();
+                    if (!TextUtil.isListEmpty(result)) {
+                        mComments.addAll(result);
+                        mCommentsAdapter.setData(mComments);
                         mNewsCommentHeaderView.setNoCommentsLayoutGone();
                     } else {
+                        if (!TextUtil.isListEmpty(mComments)) {
+                            mNewsCommentHeaderView.setNoCommentsLayoutGone();
+                        } else {
+                            mNewsCommentHeaderView.setNoCommentsLayoutVisible();
+                        }
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    mNewsCommentList.onRefreshComplete();
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
+                        bgLayout.setVisibility(View.GONE);
+                    }
+                    if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
                         mNewsCommentHeaderView.setNoCommentsLayoutVisible();
                     }
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mNewsCommentList.onRefreshComplete();
-                if (bgLayout.getVisibility() == View.VISIBLE) {
-                    bgLayout.setVisibility(View.GONE);
-                }
-                if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
-                    mNewsCommentHeaderView.setNoCommentsLayoutVisible();
-                }
-            }
-        });
-        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(feedRequest);
+            });
+            feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(feedRequest);
+        }
     }
 
     @Override
@@ -188,7 +184,6 @@ public class NewsCommentFgt extends Fragment {
             getActivity().unregisterReceiver(mRefreshReceiver);
         }
     }
-
 
     class CommentsAdapter extends BaseAdapter {
 
@@ -270,8 +265,7 @@ public class NewsCommentFgt extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (user != null && user.isVisitor()) {
-//                        Intent loginAty = new Intent(mContext, LoginAty.class);
-//                        startActivityForResult(loginAty, REQUEST_CODE);
+                        AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                     } else {
                         if ((user.getMuid() + "").equals(comment.getUid())) {
                             Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
@@ -332,25 +326,12 @@ public class NewsCommentFgt extends Fragment {
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
                 if (!TextUtil.isEmptyString(data)) {
-//                    if (isAdd) {
-//                        mComments.get(position).setUpflag(1);
-//                    } else {
-//                        mComments.get(position).setUpflag(0);
-//                    }
-//                    mComments.get(position).setCommend(Integer.parseInt(data));
-//                    mCommentsAdapter.notifyDataSetChanged();
-//                    Intent intent = new Intent(ACTION_REFRESH_CTD);
-//                    intent.putExtra(LIKETYPE, isAdd);
-//                    intent.putExtra(LIKEBEAN, mComments.get(position));
-//                    getActivity().sendBroadcast(intent);
-                    ToastUtil.toastLong("111");
                     isRefresh = false;
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ToastUtil.toastLong("222");
                 isRefresh = false;
             }
         });

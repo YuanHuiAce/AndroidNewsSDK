@@ -13,45 +13,49 @@
         android:layout_marginTop="14dp"
         android:scaleType="centerCrop" />
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_user_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/iv_user_icon"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/new_color2"
-        android:textSize="@dimen/new_font3" />
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_user_name"
-        android:layout_below="@+id/tv_user_name"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="3dp"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font5" />
-
     <ImageView
         android:id="@+id/iv_praise"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="15dp"
         android:layout_alignParentRight="true"
         android:scaleType="centerInside"
         android:src="@drawable/bg_normal_praise" />
 
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/iv_user_icon"
+        android:layout_toLeftOf="@+id/iv_praise"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/new_color2"
+            android:textSize="@dimen/new_font3" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_praise_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font5" />
+    </LinearLayout>
+
     <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_praise_count"
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tv_user_name"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/iv_praise"
+        android:layout_alignLeft="@+id/layout"
+        android:layout_below="@+id/layout"
         android:textColor="@color/new_color3"
         android:textSize="@dimen/new_font5" />
 
@@ -59,10 +63,10 @@
         android:id="@+id/tv_comment_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tv_user_name"
-        android:layout_below="@+id/iv_user_icon"
+        android:layout_alignLeft="@+id/layout"
+        android:layout_below="@+id/layout"
         android:layout_marginRight="26dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="15dp"
         android:lineSpacingMultiplier="1.15"
         android:textColor="@color/new_color1"
         android:textSize="@dimen/new_font10" />

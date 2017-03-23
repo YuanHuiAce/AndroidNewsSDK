@@ -45,7 +45,6 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.NewsDetailHeaderView2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +73,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<View> mImageViews;
     private ArrayList<HashMap<String, String>> mImages;
-    private NewsDetailHeaderView2 mDetailHeaderView;
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     /**
      * 返回上一级,全文评论,分享
@@ -197,7 +195,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
-        mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setOnClickListener(this);

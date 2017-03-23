@@ -142,7 +142,6 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 }
                 submitComment(user);
             }
-
         }
     }
 
@@ -178,12 +177,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         DetailOperateRequest request = new DetailOperateRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Logger.e("jigang", "add comment success =" + response.toString());
                 try {
                     String code = response.getString("code");
                     if ("2000".equals(code)) {
                         String data = response.optString("data");
-                        Logger.e("jigang", "comment_id" + comment_id);
                         ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
                         NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid + "");

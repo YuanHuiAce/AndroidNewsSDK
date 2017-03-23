@@ -1,6 +1,9 @@
 package demo.com.myapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -9,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.jinsedeyuzhou.PlayerManager;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.User;
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
+    private UserLoginReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
+        //注册登录监听广播
+        mReceiver = new UserLoginReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CommonConstant.USER_LOGIN_ACTION);
+        registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
     }
@@ -124,9 +134,20 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         user.setCity("郑州市");
         user.setDistrict("二七区");
         //授权用户映射
-        AuthorizedUserUtil.AuthorizedUser(user, this);
+        AuthorizedUserUtil.authorizedUser(user, this);
     }
 
+    private class UserLoginReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (CommonConstant.USER_LOGIN_ACTION.equals(action)) {
+                //调用登录界面 授权成功后
+                setAuthorizedUserInformation();
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -157,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     @Override
     protected void onDestroy() {
         ThemeManager.unregisterThemeChangeListener(this);
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
         mainView.unregisterNetWorkReceiver();
         if (PlayerManager.videoPlayView != null) {
             PlayerManager.videoPlayView.onDestory();

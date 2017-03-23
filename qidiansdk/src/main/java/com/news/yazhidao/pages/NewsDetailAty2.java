@@ -31,13 +31,12 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.LogUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.UserCommentDialog;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import java.util.HashMap;
 
 
 /**
- * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
 public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
@@ -64,7 +62,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<View> mImageViews;
     private ArrayList<HashMap<String, String>> mImages;
-    private NewsDetailHeaderView2 mDetailHeaderView;
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     /**
      * 返回上一级,全文评论,分享
@@ -105,24 +102,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      */
     public class RefreshPageBroReceiver extends BroadcastReceiver {
 
-
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang", "comment fgt refresh br");
-
-//            NewsDetailComment newsDetailComment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-//            newsDetailComment.setNewsFeed(mNewsFeed);
-//            newsDetailComment.setOriginal(mNewsFeed.getTitle());
-//            newsDetailCommentDao.add(newsDetailComment);
-
-//            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-//            newsDetailComment.setNewsFeed(mNewsFeed);
-//            newsDetailComment.setOriginal(mNewsFeed.getTitle());
-//            newsDetailCommentDao.add(newsDetailComment);
-
-
-//            } else {
-
             int number = 0;
             try {
                 number = Integer.valueOf(mDetailCommentNum.getText().toString());
@@ -131,8 +112,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
             mDetailCommentNum.setText(number + 1 + "");
             mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-
-//            }
         }
     }
 
@@ -167,7 +146,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
-        mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setOnClickListener(this);
@@ -322,7 +300,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     if (result != null) {
                         mNewsFeed = convert2NewsFeed(result);
                         displayDetailAndComment(result);
-//                    mDetailHeaderView.updateView(result);
                         if (result.getComment() != 0) {
                             mDetailCommentNum.setVisibility(View.VISIBLE);
                             mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
@@ -341,38 +318,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     bgLayout.setVisibility(View.GONE);
                 }
             });
-
-//        NewsDetailRequest<RelatedEntity> related = new NewsDetailRequest<RelatedEntity>(Request.Method.GET,
-//                new TypeToken<RelatedEntity>() {
-//                }.getType(),
-//                HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(newsId),
-//                new Response.Listener<RelatedEntity>() {
-//                    @Override
-//                    public void onResponse(RelatedEntity response) {
-//                        Logger.e("jigang", "network success RelatedEntity~~" + response);
-//                        ArrayList<RelatedItemEntity> list = response.getSearchItems();
-//                        Logger.e("aaa","time:================比较前=================");
-//                        for(int i=0;i<list.size();i++){
-//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
-//                        }
-//                        Collections.sort(list);
-//                        Logger.e("aaa","time:================比较====后=================");
-//                        for(int i=0;i<list.size();i++){
-//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
-//                        }
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Logger.e("jigang", "network error~~");
-//                    }
-//                });
-
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
-//        requestQueue.add(related);
         }
     }
 
@@ -388,17 +335,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
         mNewsFeed.setNid(result.getNid());
-
         return mNewsFeed;
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mCommentDialog != null && mCommentDialog.isVisible()) {
-                mCommentDialog.dismiss();
-                return true;
-            }
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
@@ -428,6 +370,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //
 //                }
         else if (getId == R.id.mDetailAddComment) {
+            User user = SharedPreManager.mInstance(NewsDetailAty2.this).getUser(NewsDetailAty2.this);
+            if (user != null && user.isVisitor()) {
+                AuthorizedUserUtil.sendUserLoginBroadcast(NewsDetailAty2.this);
+                return;
+            }
             if (mNewsFeed != null) {
                 mCommentDialog = new UserCommentDialog();
                 mCommentDialog.setDocid(mNewsFeed.getDocid());
