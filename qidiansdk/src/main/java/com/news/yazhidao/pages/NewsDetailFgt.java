@@ -79,7 +79,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import static android.view.View.GONE;
 
 /**
  * 新闻详情页
@@ -111,7 +110,7 @@ public class NewsDetailFgt extends Fragment {
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiver mRefreshReceiver;
-    private boolean isWebSuccess, isCommentSuccess, isCorrelationSuccess;
+    private boolean isWebSuccess;
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
     private TextView footView_tv;
@@ -125,6 +124,7 @@ public class NewsDetailFgt extends Fragment {
     private int mScreenWidth;
     private TextViewExtend adtvTitle;
     private ImageView adImageView;
+    private int viewpointPage = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class NewsDetailFgt extends Fragment {
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        bgLayout.setVisibility(GONE);
+        bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -165,26 +165,8 @@ public class NewsDetailFgt extends Fragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                if (isLoadDate) {
-                    return;
-                }
-                isLoadDate = true;
-                if (MAXPage > viewpointPage) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            beanList.addAll(beanPageList.get(viewpointPage));
-                            viewpointPage++;
-                            mAdapter.setNewsFeed(beanList);
-                            mAdapter.notifyDataSetChanged();
-                            mNewsDetailList.onRefreshComplete();
-                            if (MAXPage <= viewpointPage) {
-                                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-                                footView_tv.setText("内容加载完毕");
-                            }
-                            isLoadDate = false;
-                        }
-                    }, 1000);
+                if (!isLoadDate) {
+                    loadRelatedData();
                 }
             }
         });
@@ -220,7 +202,7 @@ public class NewsDetailFgt extends Fragment {
                 if (isVisisyProgressBar) {
                     footView_progressbar.setVisibility(View.VISIBLE);
                 } else {
-                    footView_progressbar.setVisibility(GONE);
+                    footView_progressbar.setVisibility(View.GONE);
                 }
                 mNewsDetailList.setFooterViewInvisible();
             }
@@ -250,8 +232,13 @@ public class NewsDetailFgt extends Fragment {
         mAdapter = new NewsDetailFgtAdapter(mContext);
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
-        loadData();
-        loadADData();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+                loadADData();
+            }
+        }, 1500);
         return rootView;
     }
 
@@ -390,7 +377,7 @@ public class NewsDetailFgt extends Fragment {
             public void run() {
                 mNewsDetailHeaderView.addView(mViewPointLayout);
             }
-        }, 1500);
+        }, 1000);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
@@ -413,7 +400,7 @@ public class NewsDetailFgt extends Fragment {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mActivity.mDetailCommentNum.setVisibility(GONE);
+                    mActivity.mDetailCommentNum.setVisibility(View.GONE);
                 }
             }
         });
@@ -424,7 +411,7 @@ public class NewsDetailFgt extends Fragment {
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
-        footerView_layout.setVisibility(GONE);
+        footerView_layout.setVisibility(View.GONE);
     }
 
     private void loadData() {
@@ -432,39 +419,43 @@ public class NewsDetailFgt extends Fragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsDetailRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
                 (mUser != null ? "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid() : "") +
-                "&p=" + (1) + "&c=" + (20), new Response.Listener<ArrayList<NewsDetailComment>>() {
+                "&p=" + (1) + "&c=" + (4), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
             @Override
             public void onResponse(ArrayList<NewsDetailComment> result) {
-                isCommentSuccess = true;
-                isBgLayoutSuccess();
                 if (!TextUtil.isListEmpty(result)) {
                     //同步服务器上的评论数据到本地数据库
                     //  addCommentInfoToSql(mComments);
                     addCommentContent(result);
                 } else {
-                    detail_shared_MoreComment.setVisibility(GONE);
-                    detail_Hot_Layout.setVisibility(GONE);
+                    detail_shared_MoreComment.setVisibility(View.GONE);
+                    detail_Hot_Layout.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                isCommentSuccess = true;
-                isBgLayoutSuccess();
-                detail_shared_MoreComment.setVisibility(GONE);
-                detail_Hot_Layout.setVisibility(GONE);
+                detail_shared_MoreComment.setVisibility(View.GONE);
+                detail_Hot_Layout.setVisibility(View.GONE);
             }
         });
-        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
+        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(feedRequest);
+        loadRelatedData();
+    }
+
+    private void loadRelatedData() {
+        isLoadDate = true;
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<>(Request.Method.GET,
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
+                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID + "&p=" + viewpointPage + "&c=" + (6),
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
-                        isCorrelationSuccess = true;
-                        isBgLayoutSuccess();
+                        isLoadDate = false;
+                        viewpointPage++;
                         //去掉跳转到h5
                         Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
                         while (iterator.hasNext()) {
@@ -473,6 +464,7 @@ public class NewsDetailFgt extends Fragment {
                                 iterator.remove();
                             }
                         }
+                        mNewsDetailList.onRefreshComplete();
                         if (!TextUtil.isListEmpty(relatedItemEntities)) {
                             setBeanPageList(relatedItemEntities);
                         } else {
@@ -483,23 +475,28 @@ public class NewsDetailFgt extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        isCorrelationSuccess = true;
-                        isBgLayoutSuccess();
+                        isLoadDate = false;
+                        mNewsDetailList.onRefreshComplete();
                         setNoRelatedDate();
                     }
                 });
-        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(feedRequest);
         requestQueue.add(related);
     }
 
     public void setNoRelatedDate() {
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-        mAdapter.setNewsFeed(null);
-        mAdapter.notifyDataSetChanged();
-        if (footerView_layout.getVisibility() == View.VISIBLE) {
-            footerView_layout.setVisibility(GONE);
+        if (viewpointPage > 1) {
+            if (footerView_layout.getVisibility() == View.GONE) {
+                footerView_layout.setVisibility(View.VISIBLE);
+            }
+            footView_tv.setText("内容加载完毕");
+        } else {
+            mAdapter.setNewsFeed(null);
+            mAdapter.notifyDataSetChanged();
+            if (footerView_layout.getVisibility() == View.VISIBLE) {
+                footerView_layout.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -523,59 +520,19 @@ public class NewsDetailFgt extends Fragment {
         }
     }
 
-    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<>();
-    ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
-    int viewpointPage = 0;
-    int pageSize = 6;
-    int MAXPage;
+    ArrayList<RelatedItemEntity> beanList = new ArrayList<>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
-        int listSize = relatedItemEntities.size();
-        int page = (listSize / pageSize) + (listSize % pageSize == 0 ? 0 : 1);
-        MAXPage = page;
-        beanPageList.add(relatedItemEntities);
-        int mYear = 0;
-        for (int i = 0; i < page; i++) {
-            ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
-            for (int j = 0; j < pageSize; j++) {
-                int itemPosition = j + i * pageSize;
-                if (itemPosition + 1 > listSize) {
-                    break;
-                }
-//                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
-//
-//                int thisYear = calendar.get(Calendar.YEAR);//获取年份
-//                if (thisYear != mYear) {
-//                    mYear = thisYear;
-//                    relatedItemEntities.get(itemPosition).setYearFrist(true);
-//                }
-//
-                listBean.add(relatedItemEntities.get(itemPosition));
-            }
-            beanPageList.add(listBean);
+        beanList.addAll(relatedItemEntities);
+        mAdapter.setNewsFeed(beanList);
+        mAdapter.notifyDataSetChanged();
+        if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
+            mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                beanList.addAll(beanPageList.get(viewpointPage));
-                viewpointPage++;
-                mAdapter.setNewsFeed(beanList);
-                mAdapter.notifyDataSetChanged();
-                if (MAXPage <= viewpointPage) {
-                    mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-                    footView_tv.setText("内容加载完毕");
-                } else {
-                    if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
-                        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                    }
-                }
-                if (footerView_layout.getVisibility() == GONE) {
-                    footerView_layout.setVisibility(View.VISIBLE);
-                }
-                detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
-            }
-        }, 500);
-
+        if (footerView_layout.getVisibility() == View.GONE) {
+            footerView_layout.setVisibility(View.VISIBLE);
+        }
+        detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
     }
 
     public void addCommentContent(final ArrayList<NewsDetailComment> result) {
@@ -587,7 +544,7 @@ public class NewsDetailFgt extends Fragment {
             detail_shared_MoreComment.setVisibility(View.VISIBLE);
         } else {
             num = size;
-            detail_shared_MoreComment.setVisibility(GONE);
+            detail_shared_MoreComment.setVisibility(View.GONE);
         }
         for (int i = 0; i < num; i++) {
             RelativeLayout ccView = (RelativeLayout) inflater.inflate(R.layout.adapter_list_comment1, container, false);
@@ -596,7 +553,7 @@ public class NewsDetailFgt extends Fragment {
             NewsDetailComment comment = result.get(i);
             UpdateCCView(holder, comment);
             if (num - 1 == i) {
-                mSelectCommentDivider.setVisibility(GONE);
+                mSelectCommentDivider.setVisibility(View.GONE);
             }
             mCommentLayout.addView(ccView);
         }
@@ -747,8 +704,8 @@ public class NewsDetailFgt extends Fragment {
     }
 
     public void isBgLayoutSuccess() {
-        if (isCommentSuccess && isWebSuccess && isCorrelationSuccess && bgLayout.getVisibility() == View.VISIBLE) {
-            bgLayout.setVisibility(GONE);
+        if (isWebSuccess && bgLayout.getVisibility() == View.VISIBLE) {
+            bgLayout.setVisibility(View.GONE);
         }
     }
 
@@ -874,7 +831,7 @@ public class NewsDetailFgt extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    adLayout.setVisibility(GONE);
+                    adLayout.setVisibility(View.GONE);
                 }
             });
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
