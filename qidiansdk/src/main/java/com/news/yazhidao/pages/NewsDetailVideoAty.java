@@ -29,31 +29,23 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.jinsedeyuzhou.VPlayPlayer;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.NewsDetailHeaderView2;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -81,7 +73,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<View> mImageViews;
     private ArrayList<HashMap<String, String>> mImages;
-    private NewsDetailHeaderView2 mDetailHeaderView;
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     /**
      * 返回上一级,全文评论,分享
@@ -204,7 +195,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
-        mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setOnClickListener(this);
@@ -287,94 +277,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
-
-        upLoadLog();
+        lastTime = System.currentTimeMillis();
+        //上报日志
+        LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
         if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
             /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-    }
-
-    /**
-     * 上报日志
-     *
-     * @throws IOException
-     */
-    private void upLoadLog() {
-        Logger.e("aaa", "开始上传日志！");
-        if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
-            return;
-        }
-        final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-        uploadLogDataEntity.setN(mNewsFeed.getNid() + "");
-        uploadLogDataEntity.setC(mNewsFeed.getChannel() + "");
-        uploadLogDataEntity.setT("0");
-        uploadLogDataEntity.setS(lastTime / 1000 + "");
-        uploadLogDataEntity.setF("0");
-        final String locationJsonString = SharedPreManager.mInstance(this).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        final String LogData = SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
-        LocationEntity locationEntity = null;
-        Gson gson = new Gson();
-        locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-        if (!TextUtil.isEmptyString(LogData)) {
-            SharedPreManager.mInstance(this).upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-        }
-
-//        Logger.e("ccc", "详情页的数据====" + SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-//        if (saveNum >= 5) {
-        Logger.e("aaa", "确认上传日志！");
-
-
-        final RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        String userid = null, p = null, t = null, i = null;
-        try {
-            userid = URLEncoder.encode(mUserId + "", "utf-8");
-            if (locationEntity != null) {
-                if (locationEntity.getProvince() != null)
-                    p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
-                if (locationEntity.getCity() != null)
-                    t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                if (locationEntity.getDistrict() != null)
-                    i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.mInstance(this).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-        Logger.d("aaa", "url===" + url);
-
-
-        final UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (!TextUtil.isEmptyString(LogData)) {
-                    SharedPreManager.mInstance(NewsDetailVideoAty.this).upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
-                }
-                Logger.e("aaa", "上传日志成功！");
-                /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
-//                System.exit(0);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                /** 纪纲、梁帅：重复上传日志error可能为null */
-                if (error == null || TextUtil.isEmptyString(error.getMessage())) {
-                    return;
-                }
-                if (error.getMessage().contains("302")) {
-                    if (!TextUtil.isEmptyString(LogData)) {
-                        SharedPreManager.mInstance(NewsDetailVideoAty.this).upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
-                    }
-                }
-                Logger.e("aaa", "上传日志失败！" + error.getMessage());
-                /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
-//                System.exit(0);
-            }
-        });
-        requestQueue.add(request);
-//        }
     }
 
     FragmentPagerAdapter pagerAdapter;

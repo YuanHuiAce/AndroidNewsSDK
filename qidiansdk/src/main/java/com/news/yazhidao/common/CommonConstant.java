@@ -62,6 +62,8 @@ public final class CommonConstant {
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
 
+    //通知登录action
+    public static final String USER_LOGIN_ACTION="sdk_user_login_action";
     //feed流广告位id
     public static final String NEWS_FEED_AD_ID = "238";
     //详情页广告位id

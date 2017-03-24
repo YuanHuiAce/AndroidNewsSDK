@@ -58,7 +58,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
             tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity, tvTitle);
-        TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.attentionlayout), R.drawable.bg_feed_list_select);
+        TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.attentionlayout), R.drawable.bg_detail_view_point_select);
         String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
         tvTitle.setText(strTitle);
         TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);

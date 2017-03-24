@@ -525,38 +525,18 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (type == 3) {
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
-                    }
-                    Intent AdIntent = new Intent(mContext, NewsTopicAty.class);
-                    AdIntent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
-                    mContext.startActivity(AdIntent);
+                    setNewsFeedRead(feed);
+                    Intent intent = new Intent(mContext, NewsTopicAty.class);
+                    intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                    mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
-                    }
+                    setNewsFeedRead(feed);
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
                     }
                 } else {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-//                        notifyDataSetChanged();
-                    }
+                    setNewsFeedRead(feed);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     ArrayList<String> imageList = feed.getImgs();
@@ -592,6 +572,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         feed);
             }
         });
+    }
+
+    private void setNewsFeedRead(NewsFeed feed) {
+        if (!feed.isRead()) {
+            feed.setRead(true);
+            if (mNewsFeedDao == null) {
+                mNewsFeedDao = new NewsFeedDao(mContext);
+            }
+            mNewsFeedDao.update(feed);
+        }
     }
 
     /**

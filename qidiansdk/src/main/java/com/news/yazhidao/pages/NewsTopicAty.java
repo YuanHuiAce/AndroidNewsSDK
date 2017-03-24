@@ -36,6 +36,7 @@ import com.news.yazhidao.entity.TopicClass;
 import com.news.yazhidao.net.volley.NewsTopicRequestGet;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -72,6 +73,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private NewsTopicHeaderView mSpecialNewsHeaderView;
     private TextView mTopicTitle;
     private RelativeLayout mTopicHeader;
+    private NewsFeed mUsedNewsFeed;
+    long lastTime, nowTime;
 
     @Override
     protected void setContentView() {
@@ -82,6 +85,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initializeViews() {
         mtid = getIntent().getIntExtra(KEY_NID, 0);
+        mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
@@ -103,8 +107,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setAdapter(mAdapter);
         mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
-        TextUtil.setLayoutBgColor(mContext,mTopicHeader,R.color.white);
-        TextUtil.setTextColor(mContext,mTopicTitle,R.color.new_color7);
+        TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.white);
+        TextUtil.setTextColor(mContext, mTopicTitle, R.color.new_color7);
 //        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
 //        mlvSpecialNewsFeed.setMainFooterView(true);
 //        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
@@ -218,6 +222,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        nowTime = System.currentTimeMillis();
     }
 
     private void setRefreshComplete() {
@@ -258,6 +263,14 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        lastTime = System.currentTimeMillis();
+        //上报日志
+        LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
+        super.onDestroy();
     }
 
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {
@@ -584,7 +597,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     if (feed.getRtype() == 3) {
                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                         AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
-                        startActivityForResult(AdIntent, REQUEST_CODE);
+                        startActivity(AdIntent);
                     } else {
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -592,7 +605,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                         if (imageList != null && imageList.size() != 0) {
                             intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
                         }
-                        startActivityForResult(intent, REQUEST_CODE);
+                        startActivity(intent);
                     }
                 }
             });
@@ -606,6 +619,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
+            textView.setVisibility(View.GONE);
             textView.setText(TextUtil.getCommentNum(strText));
             TextUtil.setTextColor(mContext, textView, R.color.new_color3);
         }
