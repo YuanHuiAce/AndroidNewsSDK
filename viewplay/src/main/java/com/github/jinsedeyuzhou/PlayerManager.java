@@ -4,6 +4,7 @@ import android.content.Context;
 
 /**
  * Created by Berkeley on 12/19/16.
+ * 这样写有问题
  */
 public class PlayerManager {
 

@@ -1087,37 +1087,43 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
+        if (!"44".equals(mstrChannelId))
+            return;
         super.onConfigurationChanged(newConfig);
+
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
                 portrait = true;
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        vPlayer.onChanged(newConfig);
-                        vPlayerContainer.removeView(vPlayer);
-                        int position = getPlayItemPosition();
-                        if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
+//                mHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        vPlayer.onChanged(newConfig);
+                vPlayerContainer.removeView(vPlayer);
+                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+                int position = getPlayItemPosition();
+                if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
 
-                            FrameLayout playItemView = getPlayItemView(position);
-                            View itemView = (View) playItemView.getParent();
-                            if (itemView != null) {
-                                itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-                            }
-                            playItemView.removeAllViews();
-                            playItemView.addView(vPlayer);
-
-                            if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                                vPlayer.showBottomControl(false);
-                        }
+                    FrameLayout playItemView = getPlayItemView(position);
+                    View itemView = (View) playItemView.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
                     }
-                }, 300);
+                    playItemView.removeAllViews();
+                    playItemView.addView(vPlayer);
+
+                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vPlayer.showBottomControl(false);
+                }
+//                    }
+//                }, 300);
 
 
             } else {
                 portrait = false;
-                vPlayer.onChanged(newConfig);
+                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+//                vPlayer.onChanged(newConfig);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeView(vPlayer);
