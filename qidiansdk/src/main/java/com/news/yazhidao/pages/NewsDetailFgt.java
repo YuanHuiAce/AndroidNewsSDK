@@ -532,6 +532,10 @@ public class NewsDetailFgt extends Fragment {
         if (footerView_layout.getVisibility() == View.GONE) {
             footerView_layout.setVisibility(View.VISIBLE);
         }
+        if (relatedItemEntities.size() < 6) {
+            footView_tv.setText("内容加载完毕");
+            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+        }
         detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
     }
 
