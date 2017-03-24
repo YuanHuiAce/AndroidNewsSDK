@@ -238,7 +238,7 @@ public class NewsDetailFgt extends Fragment {
                 loadData();
                 loadADData();
             }
-        }, 1500);
+        }, 1000);
         return rootView;
     }
 
@@ -814,6 +814,7 @@ public class NewsDetailFgt extends Fragment {
                         adtvTitle.setText(newsFeed.getTitle());
                         final ArrayList<String> imgs = newsFeed.getImgs();
                         if (!TextUtil.isListEmpty(imgs)) {
+                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
                             adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                                 @Override
                                 public void onGlobalLayout() {
