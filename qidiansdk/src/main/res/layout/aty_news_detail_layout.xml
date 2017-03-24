@@ -138,15 +138,13 @@
                 android:id="@+id/mDetailCommentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/bg_news_detail_commit_num"
+                android:layout_gravity="top|right"
                 android:gravity="center"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="8sp"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/new_color2"
+                android:textSize="10sp"
                 android:visibility="gone" />
+            <!--android:background="@drawable/bg_news_detail_commit_num"-->
         </FrameLayout>
 
         <TextView

@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -37,9 +38,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -63,12 +61,10 @@ import com.news.yazhidao.net.volley.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
-import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
@@ -79,11 +75,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+import static android.view.View.GONE;
 
 /**
  * 新闻详情页
@@ -95,7 +91,7 @@ public class NewsDetailFgt extends Fragment {
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
-    private User user;
+    private User mUser;
     private RelativeLayout bgLayout;
     private String mDocid, mTitle, mNewID;
     private ArrayList<NewsDetailComment> mComments;
@@ -108,7 +104,6 @@ public class NewsDetailFgt extends Fragment {
             mCommentLayout,
             mNewsDetailHeaderView;
 
-    private TextView detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_Hot_Layout,
             detail_shared_ViewPointTitleLayout, adLayout;
@@ -156,11 +151,11 @@ public class NewsDetailFgt extends Fragment {
         rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
-        user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.white);
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        bgLayout.setVisibility(View.GONE);
+        bgLayout.setVisibility(GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -225,7 +220,7 @@ public class NewsDetailFgt extends Fragment {
                 if (isVisisyProgressBar) {
                     footView_progressbar.setVisibility(View.VISIBLE);
                 } else {
-                    footView_progressbar.setVisibility(View.GONE);
+                    footView_progressbar.setVisibility(GONE);
                 }
                 mNewsDetailList.setFooterViewInvisible();
             }
@@ -398,7 +393,6 @@ public class NewsDetailFgt extends Fragment {
         }, 1500);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
-        detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
         detail_Hot_Layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
@@ -419,26 +413,25 @@ public class NewsDetailFgt extends Fragment {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                    mActivity.mDetailCommentNum.setVisibility(GONE);
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.white);
-        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.white);
-        TextUtil.setTextColor(mContext, detail_shared_hotComment, R.color.newsFeed_titleColor);
+        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
+        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
-        footerView_layout.setVisibility(View.GONE);
+        footerView_layout.setVisibility(GONE);
     }
 
     private void loadData() {
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsDetailRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                (user != null ? "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid() : "") +
+                (mUser != null ? "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid() : "") +
                 "&p=" + (1) + "&c=" + (20), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
             @Override
@@ -450,8 +443,8 @@ public class NewsDetailFgt extends Fragment {
                     //  addCommentInfoToSql(mComments);
                     addCommentContent(result);
                 } else {
-                    detail_shared_MoreComment.setVisibility(View.GONE);
-                    detail_Hot_Layout.setVisibility(View.GONE);
+                    detail_shared_MoreComment.setVisibility(GONE);
+                    detail_Hot_Layout.setVisibility(GONE);
                 }
             }
         }, new Response.ErrorListener() {
@@ -459,8 +452,8 @@ public class NewsDetailFgt extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 isCommentSuccess = true;
                 isBgLayoutSuccess();
-                detail_shared_MoreComment.setVisibility(View.GONE);
-                detail_Hot_Layout.setVisibility(View.GONE);
+                detail_shared_MoreComment.setVisibility(GONE);
+                detail_Hot_Layout.setVisibility(GONE);
             }
         });
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
@@ -506,7 +499,7 @@ public class NewsDetailFgt extends Fragment {
         mAdapter.setNewsFeed(null);
         mAdapter.notifyDataSetChanged();
         if (footerView_layout.getVisibility() == View.VISIBLE) {
-            footerView_layout.setVisibility(View.GONE);
+            footerView_layout.setVisibility(GONE);
         }
     }
 
@@ -530,23 +523,17 @@ public class NewsDetailFgt extends Fragment {
         }
     }
 
-    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
+    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<>();
     ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
     int viewpointPage = 0;
     int pageSize = 6;
     int MAXPage;
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
-        for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
-        }
-        Collections.sort(relatedItemEntities);
-        for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
-        }
         int listSize = relatedItemEntities.size();
         int page = (listSize / pageSize) + (listSize % pageSize == 0 ? 0 : 1);
         MAXPage = page;
+        beanPageList.add(relatedItemEntities);
         int mYear = 0;
         for (int i = 0; i < page; i++) {
             ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
@@ -555,14 +542,14 @@ public class NewsDetailFgt extends Fragment {
                 if (itemPosition + 1 > listSize) {
                     break;
                 }
-                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
-
-                int thisYear = calendar.get(Calendar.YEAR);//获取年份
-                if (thisYear != mYear) {
-                    mYear = thisYear;
-                    relatedItemEntities.get(itemPosition).setYearFrist(true);
-                }
-
+//                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
+//
+//                int thisYear = calendar.get(Calendar.YEAR);//获取年份
+//                if (thisYear != mYear) {
+//                    mYear = thisYear;
+//                    relatedItemEntities.get(itemPosition).setYearFrist(true);
+//                }
+//
                 listBean.add(relatedItemEntities.get(itemPosition));
             }
             beanPageList.add(listBean);
@@ -582,7 +569,7 @@ public class NewsDetailFgt extends Fragment {
                         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                     }
                 }
-                if (footerView_layout.getVisibility() == View.GONE) {
+                if (footerView_layout.getVisibility() == GONE) {
                     footerView_layout.setVisibility(View.VISIBLE);
                 }
                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
@@ -600,7 +587,7 @@ public class NewsDetailFgt extends Fragment {
             detail_shared_MoreComment.setVisibility(View.VISIBLE);
         } else {
             num = size;
-            detail_shared_MoreComment.setVisibility(View.GONE);
+            detail_shared_MoreComment.setVisibility(GONE);
         }
         for (int i = 0; i < num; i++) {
             RelativeLayout ccView = (RelativeLayout) inflater.inflate(R.layout.adapter_list_comment1, container, false);
@@ -609,7 +596,7 @@ public class NewsDetailFgt extends Fragment {
             NewsDetailComment comment = result.get(i);
             UpdateCCView(holder, comment);
             if (num - 1 == i) {
-                mSelectCommentDivider.setVisibility(View.GONE);
+                mSelectCommentDivider.setVisibility(GONE);
             }
             mCommentLayout.addView(ccView);
         }
@@ -653,7 +640,6 @@ public class NewsDetailFgt extends Fragment {
     }
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment) {
-        final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
             mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
@@ -679,6 +665,7 @@ public class NewsDetailFgt extends Fragment {
         holder.ivPraise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
                 if (user != null && user.isVisitor()) {
                     AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                 } else {
@@ -741,7 +728,6 @@ public class NewsDetailFgt extends Fragment {
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
                 if (!TextUtil.isEmptyString(data)) {
-                    ToastUtil.toastLong("点赞成功");
                     isRefresh = false;
                 }
             }
@@ -762,7 +748,7 @@ public class NewsDetailFgt extends Fragment {
 
     public void isBgLayoutSuccess() {
         if (isCommentSuccess && isWebSuccess && isCorrelationSuccess && bgLayout.getVisibility() == View.VISIBLE) {
-            bgLayout.setVisibility(View.GONE);
+            bgLayout.setVisibility(GONE);
         }
     }
 
@@ -848,8 +834,6 @@ public class NewsDetailFgt extends Fragment {
             intent.setData(Uri.parse(url));
             startActivity(intent);
         }
-
-
     }
 
     private void loadADData() {
@@ -867,13 +851,12 @@ public class NewsDetailFgt extends Fragment {
                     final NewsFeed newsFeed = result.get(0);
                     if (newsFeed != null) {
                         adtvTitle.setText(newsFeed.getTitle());
-                        ArrayList<String> imgs = newsFeed.getImgs();
+                        final ArrayList<String> imgs = newsFeed.getImgs();
                         if (!TextUtil.isListEmpty(imgs)) {
-                            mRequestManager.load(imgs.get(0)).into(new SimpleTarget<GlideDrawable>() {
+                            adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                                 @Override
-                                public void onResourceReady(GlideDrawable resource,
-                                                            GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                    adImageView.setImageDrawable(resource);
+                                public void onGlobalLayout() {
+                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
                                 }
                             });
                         }
@@ -891,7 +874,7 @@ public class NewsDetailFgt extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    adLayout.setVisibility(View.GONE);
+                    adLayout.setVisibility(GONE);
                 }
             });
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));

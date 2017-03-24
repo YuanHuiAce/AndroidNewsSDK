@@ -190,7 +190,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
-
     @Override
     protected void onDestroy() {
         lastTime = System.currentTimeMillis();

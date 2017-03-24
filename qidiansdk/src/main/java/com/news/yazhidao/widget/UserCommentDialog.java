@@ -85,6 +85,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         mCommentContent = (CommentEditText) rootView.findViewById(R.id.mCommentContent);
         mCommentCommit = (TextView) rootView.findViewById(R.id.mCommentCommit);
         mCommentContent.addTextChangedListener(new CommentTextWatcher());
+        mCommentContent.setOnCancelDialogImp(new CommentEditText.OnCancelDialogImp() {
+            @Override
+            public void onCancelDialog() {
+                if (UserCommentDialog.this != null) {
+                    UserCommentDialog.this.dismiss();
+                }
+            }
+        });
         return rootView;
     }
 
@@ -100,13 +108,29 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    UserCommentDialog.this.dismiss();
+                if ((keyCode == android.view.KeyEvent.KEYCODE_BACK)) {
+                    //This is the filter
+                    if (event.getAction() != KeyEvent.ACTION_DOWN)
+                        return true;
+                    else {
+                        //Hide your keyboard here!!!!!!
+                        InputMethodManager imm = (InputMethodManager) mCommentContent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                UserCommentDialog.this.dismiss();
+                            }
+                        }, 50);
+                        return true; // pretend we've processed it
+                    }
+                } else {
+                    return false; // pass on to be processed as normal
                 }
-                return false;
             }
         });
     }
+
 
     @Override
     public void onDismiss(DialogInterface dialog) {
