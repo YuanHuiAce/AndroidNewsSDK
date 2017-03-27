@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -543,7 +544,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     if (imageList != null && imageList.size() != 0) {
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
                     }
-                    mContext.startActivity(intent);
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
+                    }
                 }
             }
         });

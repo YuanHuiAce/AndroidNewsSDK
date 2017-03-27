@@ -110,26 +110,39 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 
     public void setAuthorizedUserInformation() {
         AuthorizedUser user = new AuthorizedUser();
+        //游客合并三方时提供该字段
         user.setMuid(SharedPreManager.mInstance(MainActivity.this).getUser(MainActivity.this).getMuid());
+        //三方之间进行合并时提供该字段
         user.setMsuid("");
+        //用户类型 - 本地注册用户:1, 游客用户:2 ,微博三方用户:3 ,微信三方用户:4, 黄历天气:12, 纹字锁频:13, 猎鹰浏览器:14, 白牌:15
         user.setUtype(3);
-        user.setPlatform(1);
-        user.setSuid("123456");
-        user.setStoken("234566");
+        //平台类型 - IOS:1, 安卓:2, 网页:3, 无法识别:4
+        user.setPlatform(2);
+        //第三方用户id
+        user.setSuid("12345678");
+        //第三方登录token
+        user.setStoken("23456699");
+        //过期时间
         user.setSexpires("2016-4-27 17:37:22");
+        //用户名
         user.setUname("zhang");
-        user.setGender(1);
+        //性别 0:男 1:女
+        user.setGender(0);
+        //头像地址
         user.setAvatar("http://tva4.sinaimg.cn/crop.106.0.819.819.1024/d869d439jw8etv9fxkb1uj20rt0mrwh7.jpg");
+        //用户屏蔽字段列表  没有可以不填
         ArrayList<String> averse = new ArrayList<>();
         averse.add("政治");
         averse.add("战争");
         averse.add("腐败");
         user.setAverse(averse);
+        //用户偏好字段列表 没有可以不填
         ArrayList<String> prefer = new ArrayList<>();
         prefer.add("体育");
         prefer.add("音乐");
         prefer.add("杂志");
         user.setAverse(prefer);
+        //用户地理位置信息 没有可以不填
         user.setProvince("河南省");
         user.setCity("郑州市");
         user.setDistrict("二七区");

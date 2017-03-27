@@ -217,6 +217,23 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mHandler.postDelayed(mThread, 1000);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CommonConstant.INTENT_REQUEST_COMMENT) {
+            int newsId = data.getIntExtra(CommonConstant.NEWS_ID, 0);
+            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                for (NewsFeed newsFeed : mArrNewsFeed) {
+                    if (newsFeed.getNid() == newsId) {
+                        int num = data.getIntExtra(CommonConstant.NEWS_COMMENT_NUM, 0);
+                        newsFeed.setComment(num);
+                        mAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mContext = getActivity();
