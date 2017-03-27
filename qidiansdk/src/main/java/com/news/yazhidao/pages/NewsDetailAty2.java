@@ -296,7 +296,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //            mNid = "14369644";
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-            }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mNid, new Response.Listener<NewsDetail>() {
+            }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mNid + "&uid=" + mUserId, new Response.Listener<NewsDetail>() {
 
                 @Override
                 public void onResponse(NewsDetail result) {
