@@ -39,6 +39,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsCommentHeaderView;
@@ -60,6 +61,7 @@ public class NewsCommentFgt extends Fragment {
 
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_TOP_MARGIN = "key_top_margin";
     private PullToRefreshListView mNewsCommentList;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
@@ -72,6 +74,7 @@ public class NewsCommentFgt extends Fragment {
     private Context mContext;
     private RequestManager mRequestManager;
     private boolean isRefresh;
+    private boolean isTopMargin;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -99,6 +102,7 @@ public class NewsCommentFgt extends Fragment {
         Bundle arguments = getArguments();
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
+        isTopMargin = arguments.getBoolean(KEY_TOP_MARGIN);
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
@@ -111,6 +115,11 @@ public class NewsCommentFgt extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
+        if (isTopMargin) {
+            RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) mNewsCommentList.getLayoutParams();
+            layout.topMargin = DensityUtil.dip2px(mContext, 48);
+            mNewsCommentList.setLayoutParams(layout);
+        }
         TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.white);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);

@@ -40,6 +40,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsCommentHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.UserCommentDialog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -90,8 +91,8 @@ public class NewsCommentVideoFgt extends Fragment {
                 mCommentsAdapter.notifyDataSetChanged();
                 mNewsCommentHeaderView.setNewsCommentTitleTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
             } else {
-//                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-//                mComments.add(0, comment);
+                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+                mComments.add(0, comment);
                 mNewsCommentHeaderView.setNoCommentsLayoutGone();
                 mCommentsAdapter.setData(mComments);
             }

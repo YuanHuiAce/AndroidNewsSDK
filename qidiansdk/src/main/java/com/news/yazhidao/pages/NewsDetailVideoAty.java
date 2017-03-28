@@ -298,14 +298,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
-                    NewsCommentVideoFgt commentFgt = new NewsCommentVideoFgt();
+                    NewsCommentFgt commentFgt = new NewsCommentFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
+                    args.putBoolean(NewsCommentFgt.KEY_TOP_MARGIN, true);
                     commentFgt.setArguments(args);
-//                    NewsCommentFgt commentFgt = new NewsCommentFgt();
-//                    Bundle args = new Bundle();
-//                    args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
-//                    commentFgt.setArguments(args);
                     return commentFgt;
                 }
             }
