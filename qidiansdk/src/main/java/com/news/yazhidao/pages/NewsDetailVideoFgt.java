@@ -62,13 +62,11 @@ import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.VideoContainer;
-import com.news.yazhidao.widget.webview.LoadWebView;
 
 import org.json.JSONObject;
 
@@ -87,15 +85,13 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  */
 public class NewsDetailVideoFgt extends Fragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
-    private LoadWebView mDetailWebView;
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailVideoFgtAdapter mAdapter;
-    private boolean isListRefresh;
     private RelativeLayout bgLayout;
-    private String mDocid, mTitle, mPubName, mPubTime, mCommentCount, mNewID;
-    private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
+    private String mDocid, mTitle, mNewID;
+    private ArrayList<NewsDetailComment> mComments;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_ID = "key_news_id";
     public static final String KEY_NEWS_TITLE = "key_news_title";
@@ -104,30 +100,21 @@ public class NewsDetailVideoFgt extends Fragment {
             detail_shared_CareForLayout,
             mCommentLayout,
             mNewsDetailHeaderView;
-    private TextViewExtend adtvTitle;
-    private ImageView adImageView;
     private RelativeLayout detail_hot_layout;
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
-            detail_shared_CommentTitleLayout,
+            detail_Hot_Layout,
             detail_shared_ViewPointTitleLayout, adLayout;
     private ImageView detail_shared_AttentionImage;
-    private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiver mRefreshReceiver;
-    private boolean isWebSuccess, isCommentSuccess, isCorrelationSuccess;
-    private TextView mDetailSharedHotComment;
-    boolean isNoHaveBean;
-    private final int LOAD_MORE = 0;
-    private final int LOAD_BOTTOM = 1;
+    private boolean isWebSuccess;
     private static final int VIDEO_SMALL = 2;
     private static final int VIDEO_FULLSCREEN = 3;
     private static final int VIDEO_NORMAL = 5;
-    private int oldLastPositon;
-
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
 
@@ -135,16 +122,11 @@ public class NewsDetailVideoFgt extends Fragment {
     private ProgressBar footView_progressbar;
     private LinearLayout footerView_layout;
     private boolean isBottom;
-
     private boolean isLoadDate;
-    private boolean isNetWork;
-    public boolean isClickMyLike;
-    FrameLayout video;
     View rootView;
     private Context mContext;
     private RequestManager mRequestManager;
     private int mScreenWidth;
-
     private RelativeLayout mDetailContainer;
     private ImageView mDetailBg;
     private VideoContainer mFullScreen;
@@ -160,7 +142,10 @@ public class NewsDetailVideoFgt extends Fragment {
     private NewsDetailVideoAty mNewsDetailVideoAty;
     private TextView mDetailVideoTitle;
     private User mUser;
-
+    //广告
+    private TextViewExtend adtvTitle;
+    private ImageView adImageView;
+    private int viewpointPage = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -172,15 +157,14 @@ public class NewsDetailVideoFgt extends Fragment {
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
-        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-            getActivity().registerReceiver(mRefreshReceiver, filter);
+            mContext.registerReceiver(mRefreshReceiver, filter);
         }
-
     }
 
 
@@ -254,13 +238,9 @@ public class NewsDetailVideoFgt extends Fragment {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
-
-
                         } else {
                             isBottom = false;
-                            Logger.e("aaa", "在33333isBottom ==" + isBottom);
                         }
                         break;
                 }
@@ -296,13 +276,12 @@ public class NewsDetailVideoFgt extends Fragment {
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
 
-//        //第1部分的CommentTitle
+        //第1部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
@@ -318,7 +297,6 @@ public class NewsDetailVideoFgt extends Fragment {
                 mNewsDetailHeaderView.addView(mViewPointLayout);
             }
         }, 1000);
-
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
 //        detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -326,7 +304,6 @@ public class NewsDetailVideoFgt extends Fragment {
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
         detail_hot_layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
-
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
@@ -348,18 +325,14 @@ public class NewsDetailVideoFgt extends Fragment {
                 }
             }
         });
-
         TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.white);
         TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.white);
-
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
         footerView_layout.setVisibility(View.GONE);
-
-
     }
 
     private void loadData() {
@@ -398,7 +371,7 @@ public class NewsDetailVideoFgt extends Fragment {
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<>(Request.Method.GET,
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
+                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID + "&p=" + viewpointPage + "&c=" + (6),
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -428,7 +401,6 @@ public class NewsDetailVideoFgt extends Fragment {
                         setNoRelatedDate();
                     }
                 });
-
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(related);
     }
@@ -469,11 +441,7 @@ public class NewsDetailVideoFgt extends Fragment {
         }
     }
 
-    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
     ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
-    int viewpointPage = 0;
-    int pageSize = 6;
-    int MAXPage;
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
         beanList.addAll(relatedItemEntities);
@@ -491,11 +459,6 @@ public class NewsDetailVideoFgt extends Fragment {
         }
         detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
     }
-
-
-    ArrayList<CommentHolder> holderList = new ArrayList<CommentHolder>();
-    ArrayList<View> viewList = new ArrayList<View>();
-    private View mCCView;
 
     public void addCommentContent(final ArrayList<NewsDetailComment> result) {
         detail_hot_layout.setVisibility(View.VISIBLE);
@@ -520,8 +483,6 @@ public class NewsDetailVideoFgt extends Fragment {
             mCommentLayout.addView(ccView);
         }
     }
-
-
 
     class CommentHolder {
         ImageView ivHeadIcon;
@@ -549,17 +510,10 @@ public class NewsDetailVideoFgt extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                /** 梁帅：判断图片是不是  不显示 */
-                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                        SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
-                        "text/html", "utf-8", null);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                mDetailWebView.setLayoutParams(params);
                 mAdapter.notifyDataSetChanged();
             }
         }
     }
-
 
 
     public void UpdateCCView(final NewsDetailVideoFgt.CommentHolder holder, final NewsDetailComment comment) {
@@ -627,6 +581,7 @@ public class NewsDetailVideoFgt extends Fragment {
             }
         });
     }
+
     private boolean isRefresh;
 
     private void addNewsLove(User user, NewsDetailComment comment, final boolean isAdd) {
@@ -669,14 +624,9 @@ public class NewsDetailVideoFgt extends Fragment {
     }
 
     public void isBgLayoutSuccess() {
-        if (isCommentSuccess && isWebSuccess && isCorrelationSuccess && bgLayout.getVisibility() == View.VISIBLE) {
+        if (isWebSuccess && bgLayout.getVisibility() == View.VISIBLE) {
             bgLayout.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -690,7 +640,6 @@ public class NewsDetailVideoFgt extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         if (vplayer != null) {
             if (vplayer.getParent() != null)
                 ((ViewGroup) vplayer.getParent()).removeAllViews();
@@ -708,16 +657,6 @@ public class NewsDetailVideoFgt extends Fragment {
     public void setShowCareforLayout(ShowCareforLayout showCareforLayout) {
         mShowCareforLayout = showCareforLayout;
     }
-
-    protected boolean openWithWevView(String url) {//处理判断url的合法性
-        // TODO Auto-generated method stub
-        if (url.startsWith("http:") || url.startsWith("https:")) {
-            return true;
-        }
-        return false;
-
-    }
-
 
     private void loadADData() {
         if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -770,7 +709,6 @@ public class NewsDetailVideoFgt extends Fragment {
 
 
     private void initPlayer() {
-
         //=====================================视频==================================//
         mDetailContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_detail_container);
         mDetailBg = (ImageView) rootView.findViewById(R.id.detail_image_bg);
@@ -793,14 +731,12 @@ public class NewsDetailVideoFgt extends Fragment {
                 vplayer.setTitle(mResult.getTitle());
                 mDetailVideo.addView(vplayer);
                 vplayer.play(mResult.getVideourl(), position);
-
             }
         });
         mSmallLayout.setClickable(true);
         mSmallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
                 if (mActivity.isCommentPage) {
                     mActivity.isCommentPage = false;
