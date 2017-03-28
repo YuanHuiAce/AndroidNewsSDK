@@ -224,20 +224,19 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        if (vPlayPlayer != null)
-            if (mSmallLayout.getVisibility() == View.VISIBLE) {
-                mSmallLayout.setVisibility(View.GONE);
-                mSmallScreen.removeAllViews();
-                vPlayPlayer.stop();
-                vPlayPlayer.release();
-
-            }
+//        if (vPlayPlayer != null&&mSmallLayout.getVisibility() == View.VISIBLE){
+//                mSmallLayout.setVisibility(View.GONE);
+//                mSmallScreen.removeAllViews();
+//                vPlayPlayer.stop();
+//                vPlayPlayer.release();
+//
+//            }
         Logger.e("aaa", "===========================onPause====================");
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         vPlayPlayer.onDestory();
         vPlayPlayer = null;
         Logger.e("aaa", "===========================onDestroy====================");
@@ -252,6 +251,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
 //            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        }
+        super.onDestroy();
     }
 
     FragmentPagerAdapter pagerAdapter;
@@ -419,6 +419,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             //视频全屏退出
             if (vPlayPlayer.onKeyDown(keyCode, event))
                 return true;
+
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
@@ -426,6 +427,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 return true;
             }
+
         }
         //系统音量键控制
         else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
@@ -439,6 +441,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         int getId = v.getId();
         if (getId == R.id.mDetailLeftBack) {
+            if (isCommentPage) {
+                isCommentPage = false;
+                mNewsDetailViewPager.setCurrentItem(0, true);
+                return;
+            }
             onBackPressed();
         } else if (getId == R.id.mDetailAddComment) {
             if (mNewsFeed != null) {

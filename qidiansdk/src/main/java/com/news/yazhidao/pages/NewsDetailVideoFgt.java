@@ -690,7 +690,6 @@ public class NewsDetailVideoFgt extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         if (vplayer != null) {
             if (vplayer.getParent() != null)
                 ((ViewGroup) vplayer.getParent()).removeAllViews();
