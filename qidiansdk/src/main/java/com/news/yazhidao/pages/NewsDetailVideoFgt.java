@@ -344,6 +344,8 @@ public class NewsDetailVideoFgt extends Fragment {
 
             @Override
             public void onResponse(ArrayList<NewsDetailComment> result) {
+                isWebSuccess = true;
+                isBgLayoutSuccess();
                 if (!TextUtil.isListEmpty(result)) {
                     //同步服务器上的评论数据到本地数据库
                     //  addCommentInfoToSql(mComments);
@@ -356,6 +358,8 @@ public class NewsDetailVideoFgt extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                isWebSuccess = true;
+                isBgLayoutSuccess();
                 detail_shared_MoreComment.setVisibility(View.GONE);
                 detail_hot_layout.setVisibility(View.GONE);
             }

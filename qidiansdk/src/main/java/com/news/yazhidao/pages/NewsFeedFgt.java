@@ -219,7 +219,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CommonConstant.INTENT_REQUEST_COMMENT) {
+        if (requestCode == CommonConstant.INTENT_REQUEST_COMMENT && data != null) {
             int newsId = data.getIntExtra(CommonConstant.NEWS_ID, 0);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed newsFeed : mArrNewsFeed) {
@@ -499,7 +499,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
         if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
             for (NewsFeed newsFeed : result) {
-                Log.i("tag",newsFeed.toString());
+                Log.i("tag", newsFeed.toString());
                 if ("1".equals(mstrChannelId)) {
                     newsFeed.setChannel_id(1);
                     if (newsFeed.getStyle() == 6) {
