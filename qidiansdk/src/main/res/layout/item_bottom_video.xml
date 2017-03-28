@@ -22,4 +22,39 @@
         android:layout_toLeftOf="@+id/iv_video_share"
         android:textColor="#bebebe"
         android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/iv_video_source_avatarHd"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_user_comment_default"
+        android:layout_marginLeft="15dp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tve_video_source_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/iv_video_source_avatarHd"
+        android:lines="1"
+        android:text="体育频道"
+        android:textColor="#9a9a9a"
+        android:textSize="12sp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tve_video_source_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/tve_video_source_username"
+        android:lines="1"
+        android:gravity="center_vertical"
+        android:background="@drawable/tag_video_shape"
+        android:text="#孙悦#"
+        android:textColor="#837c78"
+        android:textSize="12sp" />
 </RelativeLayout>

@@ -96,62 +96,12 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:background="@color/bg_home_login_header"
-            android:visibility="gone">
+           >
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#e4e4e4" />
-
-            <TextView
-                android:id="@+id/mDetailAddComment"
-                android:layout_width="match_parent"
-                android:layout_height="27dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="16dp"
-
-                android:layout_weight="30"
-                android:background="@drawable/user_add_comment"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="4dp"
-                android:text="我来说俩句..."
-                android:textColor="@color/user_add_comment_color"
-                android:textSize="14sp" />
-
-            <!--<FrameLayout-->
-            <!--android:id="@+id/mDetailComment"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_toLeftOf="@+id/mDetailFavorite">-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/mDetailCommentPic"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:contentDescription="评论"-->
-            <!--android:scaleType="centerInside"-->
-            <!--android:src="@drawable/btn_detail_no_comment"-->
-            <!--/>-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/mDetailCommentNum"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:layout_marginBottom="4dp"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:background="@drawable/bg_news_detail_commit_num"-->
-            <!--android:gravity="center"-->
-            <!--android:text=""-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="8sp"-->
-            <!--android:visibility="gone"-->
-            <!--/>-->
-            <!--</FrameLayout>-->
-
             <ImageView
                 android:id="@+id/mDetailFavorite"
                 android:layout_width="40dp"
@@ -161,7 +111,9 @@
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/mDetailShare"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_favorite_normal" />
+                android:src="@drawable/btn_detail_favorite_normal"
+                android:visibility="gone"
+                />
 
             <ImageView
                 android:id="@+id/mDetailShare"
@@ -173,6 +125,51 @@
                 android:contentDescription="分享"
                 android:scaleType="centerInside"
                 android:src="@drawable/btn_detail_share" />
+
+            <FrameLayout
+                android:id="@+id/mDetailComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/mDetailShare">
+
+                <ImageView
+                    android:id="@+id/mDetailCommentPic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="评论"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/btn_detail_no_comment" />
+
+                <TextView
+                    android:id="@+id/mDetailCommentNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|right"
+                    android:gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/new_color2"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+                <!--android:background="@drawable/bg_news_detail_commit_num"-->
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/mDetailAddComment"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/mDetailComment"
+                android:background="@drawable/user_add_comment"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:text="我来说俩句..."
+                android:textColor="@color/user_add_comment_color"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -216,6 +213,7 @@
         android:id="@+id/detai_small_layout"
         android:layout_width="200dp"
         android:layout_height="120dp"
+        android:layout_marginBottom="48dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:visibility="gone">
