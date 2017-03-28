@@ -57,8 +57,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     //滑动关闭当前activity布局
 //    private SwipeBackLayout mSwipeBackLayout;
     private String mUserId = "";
-    private String mPlatformType = "";
-    private String uuid;
     private ImageView mivShareBg;
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<View> mImageViews;
@@ -150,7 +148,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
-        TextUtil.setLayoutBgColor(this, (RelativeLayout) mDetailHeader, R.color.white);
+        TextUtil.setLayoutBgColor(this, mDetailHeader, R.color.white);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
 //        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
@@ -285,7 +283,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             User user = SharedPreManager.mInstance(this).getUser(NewsDetailAty2.this);
             if (user != null) {
                 mUserId = user.getMuid() + "";
-                mPlatformType = user.getPlatformType();
             }
 //        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mNid);
 //        if (isFavorite) {
