@@ -3,7 +3,8 @@
     android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/bg_detail"
+    >
 
     <RelativeLayout
         android:id="@+id/rl_detail_container"
@@ -60,8 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             >
-
-
             <RelativeLayout
                 android:id="@+id/mDetailHeader"
                 android:layout_width="match_parent"

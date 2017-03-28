@@ -167,7 +167,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
-        TextUtil.setLayoutBgColor(this, mDetailHeader, R.color.white);
+//        TextUtil.setLayoutBgColor(this, mDetailHeader, R.color.white);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
@@ -212,14 +212,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        if (vPlayPlayer != null) {
-            if (mSmallLayout.getVisibility() == View.VISIBLE) {
-                mSmallLayout.setVisibility(View.GONE);
-                mSmallScreen.removeAllViews();
-                vPlayPlayer.stop();
-                vPlayPlayer.release();
-            }
-        }
+        Logger.e("aaa", "===========================onPause====================");
     }
 
     @Override
@@ -235,7 +228,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         vPlayPlayer.onDestory();
         vPlayPlayer = null;
         lastTime = System.currentTimeMillis();
@@ -249,6 +242,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
 //            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        }
+        super.onDestroy();
     }
 
     FragmentPagerAdapter pagerAdapter;
@@ -273,9 +267,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     mDetailLeftBack.setCompoundDrawables(drawable, null, null, null);
-                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
-                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
-                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
+//                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
+//                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
+//                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
+                    mDetailRightMore.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
@@ -303,14 +298,14 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
-//                    NewsCommentVideoFgt commentFgt = new NewsCommentVideoFgt();
-//                    Bundle args = new Bundle();
-//                    args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
-//                    commentFgt.setArguments(args);
-                    NewsCommentFgt commentFgt = new NewsCommentFgt();
+                    NewsCommentVideoFgt commentFgt = new NewsCommentVideoFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
                     commentFgt.setArguments(args);
+//                    NewsCommentFgt commentFgt = new NewsCommentFgt();
+//                    Bundle args = new Bundle();
+//                    args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
+//                    commentFgt.setArguments(args);
                     return commentFgt;
                 }
             }
@@ -402,6 +397,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             //视频全屏退出
             if (vPlayPlayer.onKeyDown(keyCode, event))
                 return true;
+
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
@@ -409,6 +405,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 return true;
             }
+
         }
         //系统音量键控制
         else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
@@ -422,6 +419,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         int getId = v.getId();
         if (getId == R.id.mDetailLeftBack) {
+            if (isCommentPage) {
+                isCommentPage = false;
+                mNewsDetailViewPager.setCurrentItem(0, true);
+                return;
+            }
             onBackPressed();
         } else if (getId == R.id.mDetailAddComment) {
             User user = SharedPreManager.mInstance(NewsDetailVideoAty.this).getUser(NewsDetailVideoAty.this);
