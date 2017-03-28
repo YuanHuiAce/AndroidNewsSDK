@@ -1212,8 +1212,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                mContext.startActivity(intent);
-
+                NewsFeedFgt.this.startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
                 lastPostion = cPostion;
             }
         });

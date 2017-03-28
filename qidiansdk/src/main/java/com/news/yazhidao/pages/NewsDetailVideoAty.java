@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
@@ -219,6 +220,17 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 vPlayPlayer.release();
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        if (mNewsFeed != null) {
+            Intent intent = new Intent();
+            intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
+            intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
+            setResult(CommonConstant.INTENT_RESULT_COMMENT, intent);
+        }
+        super.finish();
     }
 
     @Override
