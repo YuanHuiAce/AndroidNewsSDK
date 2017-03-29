@@ -146,6 +146,8 @@ public class NewsDetailVideoFgt extends Fragment {
     private TextViewExtend adtvTitle;
     private ImageView adImageView;
     private int viewpointPage = 1;
+    private LinearLayout mVideoDetailFootView;
+    private LinearLayout footerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -278,8 +280,11 @@ public class NewsDetailVideoFgt extends Fragment {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
+        mVideoDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_video_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
+        mVideoDetailFootView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
+        lv.addFooterView(mVideoDetailFootView);
 
         //第1部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
@@ -294,22 +299,25 @@ public class NewsDetailVideoFgt extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mNewsDetailHeaderView.addView(mViewPointLayout);
+                mVideoDetailFootView.addView(footerView);
+                mVideoDetailFootView.addView(mViewPointLayout);
+
             }
         }, 1000);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
 //        detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
 //        detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
-        detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
+        detail_shared_ViewPointTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         detail_hot_layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
+
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
-        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
         adLayoutParams.width = imageWidth;
         adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         adImageView.setLayoutParams(adLayoutParams);
@@ -325,10 +333,12 @@ public class NewsDetailVideoFgt extends Fragment {
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.white);
-        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.white);
-        final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
-        lv.addFooterView(footerView);
+        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
+        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
+
+        footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
+//        lv.addFooterView(footerView);
+
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
@@ -632,6 +642,7 @@ public class NewsDetailVideoFgt extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        mHandler.removeCallbacks(null);
         if (vplayer != null) {
             vplayer.onPause();
         }

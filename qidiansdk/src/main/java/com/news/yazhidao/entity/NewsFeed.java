@@ -133,6 +133,7 @@ public class NewsFeed implements Serializable {
     /**
      * 来源图片
      */
+    @DatabaseField
     private String icon;
 
     private AdDetailEntity adresponse;

@@ -283,6 +283,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setCommentClick(feed);
                 }
             });
+            setSourceViewText((TextViewExtend)holder.getView(R.id.tve_video_source_username),feed.getPname());
+            holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd,feed.getIcon());
             //视频播放
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
@@ -340,6 +342,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             });
         }
     }
+
 
 
     private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {

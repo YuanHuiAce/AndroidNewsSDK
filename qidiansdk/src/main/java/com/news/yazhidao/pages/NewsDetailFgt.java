@@ -406,6 +406,7 @@ public class NewsDetailFgt extends Fragment {
         });
         TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
         TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
+
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);

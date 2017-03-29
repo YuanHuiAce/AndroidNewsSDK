@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             if (mainView != null && mainView.closePopWindow()) {
                 return true;
             }
-
             if (PlayerManager.videoPlayView != null) {
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
