@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.net.volley.RelatePointRequestPost;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
@@ -69,11 +71,13 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,6 +99,8 @@ public class NewsDetailFgt extends Fragment {
     private String mDocid, mTitle, mNewID;
     private ArrayList<NewsDetailComment> mComments;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
+    public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_NEWS_IMAGE = "key_news_image";
     public static final String KEY_NEWS_ID = "key_news_id";
     public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
@@ -121,10 +127,11 @@ public class NewsDetailFgt extends Fragment {
     View rootView;
     private Context mContext;
     private RequestManager mRequestManager;
-    private int mScreenWidth;
+    private int mScreenWidth, mScreenHeight;
     private TextViewExtend adtvTitle;
     private ImageView adImageView;
     private int viewpointPage = 1;
+    private int mIntScorllY;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +142,7 @@ public class NewsDetailFgt extends Fragment {
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
@@ -209,6 +217,9 @@ public class NewsDetailFgt extends Fragment {
         });
 
         mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private SparseArray recordSp = new SparseArray(0);
+            private int mCurrentfirstVisibleItem = 0;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {
@@ -226,10 +237,37 @@ public class NewsDetailFgt extends Fragment {
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                mCurrentfirstVisibleItem = firstVisibleItem;
+                View firstView = absListView.getChildAt(0);
+                if (null != firstView) {
+                    ItemRecod itemRecord = (ItemRecod) recordSp.get(firstVisibleItem);
+                    if (null == itemRecord) {
+                        itemRecord = new ItemRecod();
+                    }
+                    itemRecord.height = firstView.getHeight();
+                    itemRecord.top = firstView.getTop();
+                    recordSp.append(firstVisibleItem, itemRecord);
+                }
+                if (mIntScorllY < getScrollY()) {
+                    mIntScorllY = getScrollY();
+                }
+            }
 
+
+            private int getScrollY() {
+                int height = 0;
+                for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
+                    ItemRecod itemRecod = (ItemRecod) recordSp.get(i);
+                    height += itemRecod.height;
+                }
+                ItemRecod itemRecod = (ItemRecod) recordSp.get(mCurrentfirstVisibleItem);
+                if (null == itemRecod) {
+                    itemRecod = new ItemRecod();
+                }
+                return height - itemRecod.top;
             }
         });
-        mAdapter = new NewsDetailFgtAdapter(mContext);
+        mAdapter = new NewsDetailFgtAdapter(mContext, null);
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         new Handler().postDelayed(new Runnable() {
@@ -240,6 +278,28 @@ public class NewsDetailFgt extends Fragment {
             }
         }, 1000);
         return rootView;
+    }
+
+    class ItemRecod {
+        int height = 0;
+        int top = 0;
+    }
+
+    public String getPercent() {
+        NumberFormat nt = NumberFormat.getPercentInstance();
+        //设置百分数精确度2即保留两位小数
+        nt.setMinimumFractionDigits(2);
+        float percent = 0;
+        if (mDetailWebView != null) {
+            float webViewHeight = mDetailWebView.getHeight();
+            if (webViewHeight != 0) {
+                percent = (float) (mIntScorllY + mScreenHeight) / (float) mDetailWebView.getHeight();
+                if (percent >= 1.00f) {
+                    percent = 1.00f;
+                }
+            }
+        }
+        return nt.format(percent);
     }
 
     @Override
@@ -388,7 +448,7 @@ public class NewsDetailFgt extends Fragment {
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
-        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 36);
         adLayoutParams.width = imageWidth;
         adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         adImageView.setLayoutParams(adLayoutParams);
@@ -446,43 +506,56 @@ public class NewsDetailFgt extends Fragment {
     }
 
     private void loadRelatedData() {
-        isLoadDate = true;
-        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<>(Request.Method.GET,
-                new TypeToken<ArrayList<RelatedItemEntity>>() {
-                }.getType(),
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID + "&p=" + viewpointPage + "&c=" + (6),
-                new Response.Listener<ArrayList<RelatedItemEntity>>() {
-                    @Override
-                    public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
-                        isLoadDate = false;
-                        viewpointPage++;
-                        //去掉跳转到h5
-                        Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
-                        while (iterator.hasNext()) {
-                            RelatedItemEntity relatedItemEntity = iterator.next();
-                            if (!relatedItemEntity.getUrl().contains("deeporiginalx.com")) {
-                                iterator.remove();
-                            }
-                        }
-                        mNewsDetailList.onRefreshComplete();
-                        if (!TextUtil.isListEmpty(relatedItemEntities)) {
-                            setBeanPageList(relatedItemEntities);
-                        } else {
-                            setNoRelatedDate();
+        if (!TextUtil.isEmptyString(mNewID)) {
+            isLoadDate = true;
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            String requestUrl = HttpConstant.URL_NEWS_RELATED;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("nid", Integer.valueOf(mNewID));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
+                jsonObject.put("p", viewpointPage);
+                jsonObject.put("c", (6));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+            RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
+                @Override
+                public void onResponse(final ArrayList<RelatedItemEntity> relatedItemEntities) {
+                    isLoadDate = false;
+                    viewpointPage++;
+                    //去掉跳转到h5
+                    Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
+                    while (iterator.hasNext()) {
+                        RelatedItemEntity relatedItemEntity = iterator.next();
+                        String url = relatedItemEntity.getUrl();
+                        if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
+                            iterator.remove();
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        isLoadDate = false;
-                        mNewsDetailList.onRefreshComplete();
+                    mNewsDetailList.onRefreshComplete();
+                    if (!TextUtil.isListEmpty(relatedItemEntities)) {
+                        setBeanPageList(relatedItemEntities);
+                    } else {
                         setNoRelatedDate();
                     }
-                });
-        related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(related);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    isLoadDate = false;
+                    mNewsDetailList.onRefreshComplete();
+                    setNoRelatedDate();
+                }
+            });
+            relateRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(relateRequestPost);
+        }
     }
 
     public void setNoRelatedDate() {
@@ -728,7 +801,6 @@ public class NewsDetailFgt extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
@@ -736,6 +808,7 @@ public class NewsDetailFgt extends Fragment {
         mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
         mDetailWebView = null;
+        super.onDestroy();
     }
 
     public interface ShowCareforLayout {

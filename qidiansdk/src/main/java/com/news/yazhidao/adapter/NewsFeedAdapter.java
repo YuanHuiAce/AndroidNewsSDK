@@ -283,8 +283,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setCommentClick(feed);
                 }
             });
-            setSourceViewText((TextViewExtend)holder.getView(R.id.tve_video_source_username),feed.getPname());
-            holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd,feed.getIcon());
+            setSourceViewText((TextViewExtend) holder.getView(R.id.tve_video_source_username), feed.getPname());
+            holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd, feed.getIcon());
             //视频播放
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
@@ -313,7 +313,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
@@ -342,7 +341,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             });
         }
     }
-
 
 
     private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
