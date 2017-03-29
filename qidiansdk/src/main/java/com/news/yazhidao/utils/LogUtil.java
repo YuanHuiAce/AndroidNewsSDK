@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 
 public class LogUtil {
 
-    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime) {
+    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent, String version ,boolean isUserComment) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         String mUserId = "";
         if (user != null) {
@@ -32,6 +32,7 @@ public class LogUtil {
         }
         Logger.e("aaa", "开始上传日志！");
         if (newsFeed == null || TextUtil.isEmptyString(mUserId)) {
+            Log.i("tag","percent kong");
             return;
         }
         final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
@@ -66,8 +67,8 @@ public class LogUtil {
             e.printStackTrace();
         }
         String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(gson.toJson(uploadLogDataEntity));
-        final UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(gson.toJson(uploadLogDataEntity)) + "&pe=" + percent + "&v=" + version;
+        final UpLoadLogRequest<String> request = new UpLoadLogRequest<>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("aaa", "上传日志成功！");

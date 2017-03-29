@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -121,10 +123,11 @@ public class NewsDetailFgt extends Fragment {
     View rootView;
     private Context mContext;
     private RequestManager mRequestManager;
-    private int mScreenWidth;
+    private int mScreenWidth, mScreenHeight;
     private TextViewExtend adtvTitle;
     private ImageView adImageView;
     private int viewpointPage = 1;
+    private int mIntScorllY;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +138,7 @@ public class NewsDetailFgt extends Fragment {
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
@@ -209,6 +213,9 @@ public class NewsDetailFgt extends Fragment {
         });
 
         mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private SparseArray recordSp = new SparseArray(0);
+            private int mCurrentfirstVisibleItem = 0;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {
@@ -226,7 +233,34 @@ public class NewsDetailFgt extends Fragment {
 
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                mCurrentfirstVisibleItem = firstVisibleItem;
+                View firstView = absListView.getChildAt(0);
+                if (null != firstView) {
+                    ItemRecod itemRecord = (ItemRecod) recordSp.get(firstVisibleItem);
+                    if (null == itemRecord) {
+                        itemRecord = new ItemRecod();
+                    }
+                    itemRecord.height = firstView.getHeight();
+                    itemRecord.top = firstView.getTop();
+                    recordSp.append(firstVisibleItem, itemRecord);
+                }
+                if (mIntScorllY < getScrollY()) {
+                    mIntScorllY = getScrollY();
+                }
+            }
 
+
+            private int getScrollY() {
+                int height = 0;
+                for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
+                    ItemRecod itemRecod = (ItemRecod) recordSp.get(i);
+                    height += itemRecod.height;
+                }
+                ItemRecod itemRecod = (ItemRecod) recordSp.get(mCurrentfirstVisibleItem);
+                if (null == itemRecod) {
+                    itemRecod = new ItemRecod();
+                }
+                return height - itemRecod.top;
             }
         });
         mAdapter = new NewsDetailFgtAdapter(mContext);
@@ -240,6 +274,28 @@ public class NewsDetailFgt extends Fragment {
             }
         }, 1000);
         return rootView;
+    }
+
+    class ItemRecod {
+        int height = 0;
+        int top = 0;
+    }
+
+    public String getPercent() {
+        NumberFormat nt = NumberFormat.getPercentInstance();
+        //设置百分数精确度2即保留两位小数
+        nt.setMinimumFractionDigits(2);
+        float percent = 0;
+        if (mDetailWebView != null) {
+            float webViewHeight = mDetailWebView.getHeight();
+            if (webViewHeight != 0) {
+                percent = (float) (mIntScorllY + mScreenHeight) / (float) mDetailWebView.getHeight();
+                if (percent >= 1.00f) {
+                    percent = 1.00f;
+                }
+            }
+        }
+        return nt.format(percent);
     }
 
     @Override

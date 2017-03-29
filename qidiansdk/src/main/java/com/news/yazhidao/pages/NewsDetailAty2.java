@@ -96,6 +96,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsFeed mUsedNewsFeed;
     long lastTime, nowTime;
     private int mCommentNum;
+    private NewsDetailFgt mDetailFgt;
+    private NewsCommentFgt mCommentFgt;
+    private boolean isUserComment;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -104,6 +107,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            isUserComment = true;
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
@@ -177,7 +181,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        nowTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(ACTION_REFRESH_COMMENT);
@@ -198,14 +202,24 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     @Override
+    protected void onPause() {
+        nowTime = System.currentTimeMillis();
+        if (mDetailFgt != null) {
+            String percent = mDetailFgt.getPercent();
+            if (!TextUtil.isEmptyString(percent)) {
+                //上报日志
+                LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, percent, this.getString(R.string.version_name), isUserComment);
+            }
+        }
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
-        lastTime = System.currentTimeMillis();
         if (mRefreshReceiver != null) {
             unregisterReceiver(mRefreshReceiver);
             mRefreshReceiver = null;
         }
-        //上报日志
-        LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
 //        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
 //            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
 //            getWindow().clearFlags(WindowManager.LayoutParams.
@@ -241,21 +255,21 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
-                    NewsDetailFgt detailFgt = new NewsDetailFgt();
+                    mDetailFgt = new NewsDetailFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsDetailFgt.KEY_DETAIL_RESULT, result);
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mNid);
                     args.putString(NewsDetailFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
 //                    detailFgt.setShowCareforLayout(mShowCareforLayout);
-                    detailFgt.setArguments(args);
-                    return detailFgt;
+                    mDetailFgt.setArguments(args);
+                    return mDetailFgt;
                 } else {
-                    NewsCommentFgt commentFgt = new NewsCommentFgt();
+                    mCommentFgt = new NewsCommentFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
-                    commentFgt.setArguments(args);
-                    return commentFgt;
+                    mCommentFgt.setArguments(args);
+                    return mCommentFgt;
                 }
             }
 

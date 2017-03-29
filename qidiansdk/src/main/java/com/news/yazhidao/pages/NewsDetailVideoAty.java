@@ -108,6 +108,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private TextView mDetailRightMore;
     private UserCommentDialog mCommentDialog;
     private int mCommentNum;
+    private boolean isUserComment;
 
     public void setHandler(Handler handler) {
         mHandler = handler;
@@ -119,6 +120,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public class RefreshPageBroReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            isUserComment = true;
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
@@ -200,7 +202,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         mDurationStart = System.currentTimeMillis();
-        nowTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
             IntentFilter filter = new IntentFilter(ACTION_REFRESH_COMMENT);
@@ -211,8 +213,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onPause() {
+        nowTime = System.currentTimeMillis();
+        //上报日志
+        LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%", this.getString(R.string.version_name), isUserComment);
         super.onPause();
-        Logger.e("aaa", "===========================onPause====================");
     }
 
     @Override
@@ -228,16 +232,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
-
         vPlayPlayer.onDestory();
         vPlayPlayer = null;
-        lastTime = System.currentTimeMillis();
         if (mRefreshReceiver != null) {
             unregisterReceiver(mRefreshReceiver);
             mRefreshReceiver = null;
         }
         //上报日志
-        LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
 //        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
 //            /**梁帅：清除屏幕常亮的这个设置，从而允许屏幕熄灭*/
 //            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
