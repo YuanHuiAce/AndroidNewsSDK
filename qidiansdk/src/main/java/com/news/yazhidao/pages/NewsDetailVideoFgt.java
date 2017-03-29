@@ -337,10 +337,6 @@ public class NewsDetailVideoFgt extends Fragment {
         TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
 
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
-//        lv.addFooterView(footerView);
-
-        final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
-        lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
