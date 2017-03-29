@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //平台类型 - IOS:1, 安卓:2, 网页:3, 无法识别:4
         user.setPlatform(2);
         //第三方用户id
-        user.setSuid("87654321");
+        user.setSuid("4455667788");
         //第三方登录token
-        user.setStoken("123458899");
+        user.setStoken("2233445566");
         //过期时间
         user.setSexpires("2016-4-27 17:37:22");
         //用户名
-        user.setUname("liulei");
+        user.setUname("shaolong");
         //性别 0:男 1:女
         user.setGender(0);
         //头像地址
@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             if (mainView != null && mainView.closePopWindow()) {
                 return true;
             }
-
             if (PlayerManager.videoPlayView != null) {
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;

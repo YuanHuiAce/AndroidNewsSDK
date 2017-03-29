@@ -43,6 +43,8 @@ public class LogUtil {
         uploadLogDataEntity.setF(0);
         uploadLogDataEntity.setLt(newsFeed.getLogtype());
         uploadLogDataEntity.setLc(newsFeed.getLogchid());
+        uploadLogDataEntity.setPe(percent);
+        uploadLogDataEntity.setV(version);
         final String locationJsonString = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         final String LogData = SharedPreManager.mInstance(context).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);
         Gson gson = new Gson();
@@ -67,7 +69,7 @@ public class LogUtil {
             e.printStackTrace();
         }
         String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(gson.toJson(uploadLogDataEntity)) + "&pe=" + percent + "&v=" + version;
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(gson.toJson(uploadLogDataEntity));
         final UpLoadLogRequest<String> request = new UpLoadLogRequest<>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

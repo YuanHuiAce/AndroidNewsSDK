@@ -37,7 +37,6 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        long start = System.currentTimeMillis();
         if (mMultiItemTypeSupport == null)
             return super.getView(position, convertView, parent);
         int layoutId = mMultiItemTypeSupport.getLayoutId(position,

@@ -60,6 +60,7 @@ import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.net.volley.RelatePointRequestPost;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
@@ -70,6 +71,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -97,6 +99,8 @@ public class NewsDetailFgt extends Fragment {
     private String mDocid, mTitle, mNewID;
     private ArrayList<NewsDetailComment> mComments;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
+    public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_NEWS_IMAGE = "key_news_image";
     public static final String KEY_NEWS_ID = "key_news_id";
     public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
@@ -263,7 +267,7 @@ public class NewsDetailFgt extends Fragment {
                 return height - itemRecod.top;
             }
         });
-        mAdapter = new NewsDetailFgtAdapter(mContext);
+        mAdapter = new NewsDetailFgtAdapter(mContext, null);
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         new Handler().postDelayed(new Runnable() {
@@ -444,7 +448,7 @@ public class NewsDetailFgt extends Fragment {
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
-        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 36);
         adLayoutParams.width = imageWidth;
         adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         adImageView.setLayoutParams(adLayoutParams);
@@ -462,6 +466,7 @@ public class NewsDetailFgt extends Fragment {
         });
         TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
         TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
+
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
@@ -501,43 +506,56 @@ public class NewsDetailFgt extends Fragment {
     }
 
     private void loadRelatedData() {
-        isLoadDate = true;
-        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = new NewsDetailRequest<>(Request.Method.GET,
-                new TypeToken<ArrayList<RelatedItemEntity>>() {
-                }.getType(),
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID + "&p=" + viewpointPage + "&c=" + (6),
-                new Response.Listener<ArrayList<RelatedItemEntity>>() {
-                    @Override
-                    public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
-                        isLoadDate = false;
-                        viewpointPage++;
-                        //去掉跳转到h5
-                        Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
-                        while (iterator.hasNext()) {
-                            RelatedItemEntity relatedItemEntity = iterator.next();
-                            if (!relatedItemEntity.getUrl().contains("deeporiginalx.com")) {
-                                iterator.remove();
-                            }
-                        }
-                        mNewsDetailList.onRefreshComplete();
-                        if (!TextUtil.isListEmpty(relatedItemEntities)) {
-                            setBeanPageList(relatedItemEntities);
-                        } else {
-                            setNoRelatedDate();
+        if (!TextUtil.isEmptyString(mNewID)) {
+            isLoadDate = true;
+            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+            String requestUrl = HttpConstant.URL_NEWS_RELATED;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("nid", Integer.valueOf(mNewID));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
+                jsonObject.put("p", viewpointPage);
+                jsonObject.put("c", (6));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+            RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
+                @Override
+                public void onResponse(final ArrayList<RelatedItemEntity> relatedItemEntities) {
+                    isLoadDate = false;
+                    viewpointPage++;
+                    //去掉跳转到h5
+                    Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
+                    while (iterator.hasNext()) {
+                        RelatedItemEntity relatedItemEntity = iterator.next();
+                        String url = relatedItemEntity.getUrl();
+                        if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
+                            iterator.remove();
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        isLoadDate = false;
-                        mNewsDetailList.onRefreshComplete();
+                    mNewsDetailList.onRefreshComplete();
+                    if (!TextUtil.isListEmpty(relatedItemEntities)) {
+                        setBeanPageList(relatedItemEntities);
+                    } else {
                         setNoRelatedDate();
                     }
-                });
-        related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(related);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    isLoadDate = false;
+                    mNewsDetailList.onRefreshComplete();
+                    setNoRelatedDate();
+                }
+            });
+            relateRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(relateRequestPost);
+        }
     }
 
     public void setNoRelatedDate() {
@@ -783,7 +801,6 @@ public class NewsDetailFgt extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
@@ -791,6 +808,7 @@ public class NewsDetailFgt extends Fragment {
         mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
         mDetailWebView = null;
+        super.onDestroy();
     }
 
     public interface ShowCareforLayout {

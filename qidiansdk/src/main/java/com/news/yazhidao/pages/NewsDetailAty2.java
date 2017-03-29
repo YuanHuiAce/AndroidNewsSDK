@@ -192,7 +192,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     public void finish() {
-        if (mNewsFeed != null) {
+        if (mNewsFeed != null && isUserComment) {
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());

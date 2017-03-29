@@ -221,7 +221,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void finish() {
-        if (mNewsFeed != null) {
+        if (mNewsFeed != null && isUserComment) {
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
@@ -254,7 +254,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
      * @param result
      */
     private void displayDetailAndComment(final NewsDetail result) {
-        mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mNewsDetailViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 Message msg = mHandler.obtainMessage();
@@ -271,7 +271,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-                    mDetailRightMore.setVisibility(View.GONE);
+//                    mDetailRightMore.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
@@ -280,9 +280,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
                     mDetailLeftBack.setCompoundDrawables(drawable1, null, null, null);
-                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
-                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
-                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
+//                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
+//                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
+//                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
+//                    mDetailRightMore.setVisibility(View.VISIBLE);
                 }
             }
         });
