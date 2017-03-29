@@ -239,7 +239,7 @@ public class NewsDetailVideoFgt extends Fragment {
                     // 当不滚动时
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                        if (view.getLastVisiblePosition() == (view.getCount()-1)) {
                             isBottom = true;
                         } else {
                             isBottom = false;
@@ -252,6 +252,7 @@ public class NewsDetailVideoFgt extends Fragment {
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
             }
         });
+
         mAdapter = new NewsDetailVideoFgtAdapter(getActivity());
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
@@ -292,6 +293,7 @@ public class NewsDetailVideoFgt extends Fragment {
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
         mDetailVideoTitle.setText(mResult.getTitle());
+
         //第2部分的viewPointContent
         final View mViewPointLayout = inflater.inflate(R.layout.vdetail_relate_layout, container, false);
         mViewPointLayout.setLayoutParams(layoutParams);
@@ -301,7 +303,6 @@ public class NewsDetailVideoFgt extends Fragment {
             public void run() {
                 mVideoDetailFootView.addView(footerView);
                 mVideoDetailFootView.addView(mViewPointLayout);
-
             }
         }, 500);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
@@ -321,6 +322,7 @@ public class NewsDetailVideoFgt extends Fragment {
         adLayoutParams.width = imageWidth;
         adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         adImageView.setLayoutParams(adLayoutParams);
+
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -405,6 +407,7 @@ public class NewsDetailVideoFgt extends Fragment {
                         }
                     }
                 },
+
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -659,8 +662,8 @@ public class NewsDetailVideoFgt extends Fragment {
             vplayer.onDestory();
         }
         vplayer = null;
-    }
 
+    }
     public interface ShowCareforLayout {
         void show();
     }

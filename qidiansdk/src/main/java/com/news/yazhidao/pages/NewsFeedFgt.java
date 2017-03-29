@@ -8,12 +8,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,8 +112,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isBottom;
     private RefreshReceiver mRefreshReceiver;
     private LinearLayout footerView;
-    private ViewGroup vPlayerContainer;
+    private FrameLayout vPlayerContainer;
     private RelativeLayout mHomeRelative;
+    private ViewGroup mAndroidContent;
 
 
     @Override
@@ -253,7 +254,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        vPlayerContainer = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
+        if (mstrChannelId.equals("44")) {
+            mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
+            FrameLayout.LayoutParams lpParent = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            vPlayerContainer = new FrameLayout(mContext);
+            vPlayerContainer.setBackgroundColor(Color.BLACK);
+            vPlayerContainer.setVisibility(View.GONE);
+            mAndroidContent.addView(vPlayerContainer,lpParent);
+        }
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
@@ -320,13 +328,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             delay = 500;
         }
         mHandler.postDelayed(mThread, delay);
-        rootView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                return vPlayer.onKeyDown(keyCode, event);
-            }
-        });
+//        rootView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                return vPlayer.onKeyDown(keyCode, event);
+//            }
+//        });
         return rootView;
     }
 
@@ -1121,7 +1129,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                    @Override
 //                    public void run() {
 //                        vPlayer.onChanged(newConfig);
+
                 vPlayerContainer.removeView(vPlayer);
+                vPlayerContainer.setVisibility(View.GONE);
                 Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
                 int position = getPlayItemPosition();
                 if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
@@ -1156,6 +1166,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         }
                     }
                 }
+
+                vPlayerContainer.setVisibility(View.VISIBLE);
                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 vPlayerContainer.addView(vPlayer, lp);
