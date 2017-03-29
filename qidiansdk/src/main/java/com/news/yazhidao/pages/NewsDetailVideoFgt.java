@@ -303,7 +303,7 @@ public class NewsDetailVideoFgt extends Fragment {
                 mVideoDetailFootView.addView(mViewPointLayout);
 
             }
-        }, 1000);
+        }, 500);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
 //        detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -339,6 +339,8 @@ public class NewsDetailVideoFgt extends Fragment {
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
 //        lv.addFooterView(footerView);
 
+        final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
+        lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
@@ -354,6 +356,8 @@ public class NewsDetailVideoFgt extends Fragment {
 
             @Override
             public void onResponse(ArrayList<NewsDetailComment> result) {
+                isWebSuccess = true;
+                isBgLayoutSuccess();
                 if (!TextUtil.isListEmpty(result)) {
                     //同步服务器上的评论数据到本地数据库
                     //  addCommentInfoToSql(mComments);
@@ -366,6 +370,8 @@ public class NewsDetailVideoFgt extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                isWebSuccess = true;
+                isBgLayoutSuccess();
                 detail_shared_MoreComment.setVisibility(View.GONE);
                 detail_hot_layout.setVisibility(View.GONE);
             }
