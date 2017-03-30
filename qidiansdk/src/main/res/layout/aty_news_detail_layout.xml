@@ -141,6 +141,7 @@
                 android:layout_gravity="top|right"
                 android:layout_marginTop="2dp"
                 android:gravity="center"
+                android:background="@color/bg_detail"
                 android:textColor="@color/new_color2"
                 android:textSize="10sp"
                 android:visibility="gone" />

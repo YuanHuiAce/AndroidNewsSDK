@@ -46,12 +46,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         super(context, datas, new MultiItemTypeSupport<RelatedItemEntity>() {
             @Override
             public int getLayoutId(int position, RelatedItemEntity RelatedItemEntity) {
-                switch (RelatedItemEntity.getRtype()) {
+                switch (RelatedItemEntity.getStyle()) {
                     case 0:
+                        return R.layout.qd_ll_news_item_no_pic;
+                    case 1:
                         return R.layout.qd_ll_news_item_one_pic;
-                    case 3:
-                        return R.layout.qd_ll_news_item_one_pic;
-                    case 6:
+                    case 8:
                         return R.layout.ll_video_item_small;
                     default:
                         return R.layout.ll_news_item_empty;
@@ -65,13 +65,13 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 
             @Override
             public int getItemViewType(int position, RelatedItemEntity RelatedItemEntity) {
-                switch (RelatedItemEntity.getRtype()) {
+                switch (RelatedItemEntity.getStyle()) {
                     case 0:
+                        return RelatedItemEntity.NO_PIC;
+                    case 1:
                         return RelatedItemEntity.ONE_AND_TWO_PIC;
-                    case 3:
+                    case 8:
                         return RelatedItemEntity.VIDEO_SMALL;
-                    case 6:
-                        return RelatedItemEntity.AD;
                     default:
                         return RelatedItemEntity.EMPTY;
                 }
@@ -90,6 +90,16 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
+        } else if (layoutId == R.layout.qd_ll_news_item_no_pic) {
+            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
+            if (relatedItemEntity.getPtime() != null)
+                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity);
+            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+            holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
             final String strTitle = relatedItemEntity.getTitle();
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
@@ -98,13 +108,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpCard.width = mCardWidth;
             lpCard.height = mCardHeight;
             ivCard.setLayoutParams(lpCard);
-            String url = relatedItemEntity.getImgUrl();
-            if (TextUtil.isEmptyString(url)) {
-                holder.getView(R.id.title_img_View).setVisibility(View.GONE);
-            } else {
-                holder.getView(R.id.title_img_View).setVisibility(View.VISIBLE);
-                holder.setGlideDraweeViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
-            }
+            holder.setGlideDraweeViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             if (relatedItemEntity.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
@@ -221,6 +225,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             tvTitle.setMaxLines(2);
+            strTitle = strTitle.replace("<font color='#0091fa' >", "").replace("</font>", "");
             tvTitle.setText(strTitle);
             if (isRead) {
                 TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
@@ -286,6 +291,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     return;
                 }
                 firstClick = System.currentTimeMillis();
+                relatedItemEntity.setRead(true);
+                notifyDataSetChanged();
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);

@@ -328,13 +328,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             delay = 500;
         }
         mHandler.postDelayed(mThread, delay);
-//        rootView.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//
-//                return vPlayer.onKeyDown(keyCode, event);
-//            }
-//        });
         return rootView;
     }
 

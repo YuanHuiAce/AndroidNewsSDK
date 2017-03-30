@@ -11,10 +11,10 @@ import java.util.Date;
  */
 public class RelatedItemEntity implements Serializable, Comparable {
 
+    public static final int NO_PIC = 0;
     public static final int ONE_AND_TWO_PIC = 1;
     public static final int VIDEO_SMALL = 2;
-    public static final int AD = 3;
-    public static final int EMPTY = 4;
+    public static final int EMPTY = 3;
     /**
      * "url": "http://news.163.com/16/0520/08/BNGEG7ID00014Q4P.html",
      * "title": "但愿雷洋事件不是一个小插曲",
@@ -36,6 +36,7 @@ public class RelatedItemEntity implements Serializable, Comparable {
     private int nid;
     private int duration;
     private String purl;
+    private int style;
     /**
      * 莫一年的第一天
      */
@@ -219,6 +220,14 @@ public class RelatedItemEntity implements Serializable, Comparable {
 
     public void setUpload(boolean upload) {
         isUpload = upload;
+    }
+
+    public int getStyle() {
+        return style;
+    }
+
+    public void setStyle(int style) {
+        this.style = style;
     }
 
     public ArrayList<String> getAdimpression() {

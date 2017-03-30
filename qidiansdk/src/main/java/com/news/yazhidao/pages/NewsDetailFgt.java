@@ -239,7 +239,7 @@ public class NewsDetailFgt extends Fragment {
             public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
                 mCurrentfirstVisibleItem = firstVisibleItem;
                 View firstView = absListView.getChildAt(0);
-                if (null != firstView) {
+                if (null != firstView && null != recordSp) {
                     ItemRecod itemRecord = (ItemRecod) recordSp.get(firstVisibleItem);
                     if (null == itemRecord) {
                         itemRecord = new ItemRecod();
@@ -258,7 +258,9 @@ public class NewsDetailFgt extends Fragment {
                 int height = 0;
                 for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
                     ItemRecod itemRecod = (ItemRecod) recordSp.get(i);
-                    height += itemRecod.height;
+                    if (null != itemRecod) {
+                        height += itemRecod.height;
+                    }
                 }
                 ItemRecod itemRecod = (ItemRecod) recordSp.get(mCurrentfirstVisibleItem);
                 if (null == itemRecod) {
@@ -536,6 +538,18 @@ public class NewsDetailFgt extends Fragment {
                         String url = relatedItemEntity.getUrl();
                         if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
                             iterator.remove();
+                        }
+                    }
+                    for (RelatedItemEntity relatedItemEntity : relatedItemEntities) {
+                        if (TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
+                            relatedItemEntity.setStyle(0);
+                        } else {
+                            int rtype = relatedItemEntity.getRtype();
+                            if (rtype == 6) {
+                                relatedItemEntity.setStyle(8);
+                            } else {
+                                relatedItemEntity.setStyle(1);
+                            }
                         }
                     }
                     mNewsDetailList.onRefreshComplete();
