@@ -27,6 +27,8 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,14 +206,23 @@ public class AdUtil {
                                 if (!TextUtil.isEmptyString(lat)) {
                                     url = url + "&lat=" + lat + "&lon=" + lon;
                                 }
-                                url = url.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
-                                AdIntent.putExtra("key_url", url);
-                                Log.i("tag", "event===1" + url);
+                                String first = url.split("s=")[0];
+                                String end = url.split("&s=")[1];
+                                end = URLDecoder.decode(end);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = URLEncoder.encode(end);
+                                AdIntent.putExtra("key_url", first + end);
+                                Log.i("tag", "event===1" + first + end);
                                 context.startActivity(AdIntent);
                             } else {
                                 String url = event.getEventValue();
-                                url = url.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
                                 url = url.replace("acttype=&", "acttype=1&");
+                                String first = url.split("s=")[0];
+                                String end = url.split("&s=")[1];
+                                end = URLDecoder.decode(end);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = URLEncoder.encode(end);
+                                url = first + end;
                                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
                                     @Override
@@ -292,14 +303,23 @@ public class AdUtil {
                                 if (!TextUtil.isEmptyString(lat)) {
                                     url = url + "&lat=" + lat + "&lon=" + lon;
                                 }
-                                url = url.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                String first = url.split("s=")[0];
+                                String end = url.split("&s=")[1];
+                                end = URLDecoder.decode(end);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = URLEncoder.encode(end);
                                 AdIntent.putExtra("key_url", url);
-                                Log.i("tag", "event===1" + url);
+                                Log.i("tag", "event===1" + first + end);
                                 context.startActivity(AdIntent);
                             } else {
                                 String url = event.getEventValue();
-                                url = url.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
                                 url = url.replace("acttype=&", "acttype=1&");
+                                String first = url.split("s=")[0];
+                                String end = url.split("&s=")[1];
+                                end = URLDecoder.decode(end);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = URLEncoder.encode(end);
+                                url = first + end;
                                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
                                     @Override
