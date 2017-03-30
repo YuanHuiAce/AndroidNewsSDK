@@ -114,7 +114,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private LinearLayout footerView;
     private ViewGroup vPlayerContainer;
     private RelativeLayout mHomeRelative;
-
+    private boolean isLoad = false;
 
     @Override
     public void onThemeChanged() {
@@ -164,6 +164,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
+        if (getUserVisibleHint() && !isLoad) {
+            isLoad = true;
+            if (!TextUtil.isEmptyString(mstrChannelId)) {
+                mHandler.postDelayed(mThread, 500);
+            }
+        }
         if (vPlayer != null && !isVisibleToUser) {
             VideoVisibleControl();
         }
@@ -319,7 +325,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mstrChannelId != null && mstrChannelId.equals("1")) {
             delay = 500;
         }
-        mHandler.postDelayed(mThread, delay);
+        if (isLoad) {
+            mHandler.postDelayed(mThread, delay);
+        }
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -723,6 +731,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         long time = (System.currentTimeMillis() - homeTime) / 1000;
         Logger.e("aaa", "time====" + time);
+
         if (isNewVisity && isClickHome && time >= 60) {
 //            mlvNewsFeed.setRefreshing();
 //            isListRefresh = true;
