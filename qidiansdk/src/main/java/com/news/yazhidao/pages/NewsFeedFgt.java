@@ -323,7 +323,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-
                 return vPlayer.onKeyDown(keyCode, event);
             }
         });

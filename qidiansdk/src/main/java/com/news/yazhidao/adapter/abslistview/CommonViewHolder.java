@@ -160,8 +160,7 @@ public class CommonViewHolder {
                 } else {
                     imageView.setAlpha(1.0f);
                 }
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
             }
         }
     }

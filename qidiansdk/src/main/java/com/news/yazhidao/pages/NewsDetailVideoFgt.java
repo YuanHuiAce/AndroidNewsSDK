@@ -412,6 +412,18 @@ public class NewsDetailVideoFgt extends Fragment {
                             iterator.remove();
                         }
                     }
+                    for (RelatedItemEntity relatedItemEntity : relatedItemEntities) {
+                        if (TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
+                            relatedItemEntity.setStyle(0);
+                        } else {
+                            int rtype = relatedItemEntity.getRtype();
+                            if (rtype == 6) {
+                                relatedItemEntity.setStyle(8);
+                            } else {
+                                relatedItemEntity.setStyle(1);
+                            }
+                        }
+                    }
                     mNewsDetailList.onRefreshComplete();
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
