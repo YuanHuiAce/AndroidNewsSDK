@@ -44,7 +44,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
-import com.news.yazhidao.adapter.NewsDetailVideoFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
@@ -192,69 +191,69 @@ public class NewsDetailVideoFgt extends Fragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                if (!isLoadDate) {
-                    loadRelatedData();
-                }
+//                if (!isLoadDate) {
+//                    loadRelatedData();
+//                }
             }
         });
-        mNewsDetailList.setOnStateListener(new PullToRefreshBase.onStateListener() {
-            @Override
-            public void getState(PullToRefreshBase.State mState) {
-                if (!isBottom) {
-                    return;
-                }
-                boolean isVisisyProgressBar = false;
-                switch (mState) {
-                    case RESET://初始
-                        isVisisyProgressBar = false;
-                        footView_tv.setText("上拉获取更多文章");
-                        break;
-                    case PULL_TO_REFRESH://更多推荐
-                        isVisisyProgressBar = false;
-                        footView_tv.setText("上拉获取更多文章");
-                        break;
-                    case RELEASE_TO_REFRESH://松开推荐
-                        isVisisyProgressBar = false;
-                        footView_tv.setText("松手获取更多文章");
-                        break;
-                    case REFRESHING:
-                    case MANUAL_REFRESHING://推荐中
-                        isVisisyProgressBar = true;
-                        footView_tv.setText("正在获取更多文章...");
-                        break;
-                    case OVERSCROLLING:
-                        // NO-OP
-                        break;
-                }
-                if (isVisisyProgressBar) {
-                    footView_progressbar.setVisibility(View.VISIBLE);
-                } else {
-                    footView_progressbar.setVisibility(View.GONE);
-                }
-                mNewsDetailList.setFooterViewInvisible();
-            }
-        });
-
-        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    // 当不滚动时
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        // 判断滚动到底部
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            isBottom = true;
-                        } else {
-                            isBottom = false;
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
-            }
-        });
+//        mNewsDetailList.setOnStateListener(new PullToRefreshBase.onStateListener() {
+//            @Override
+//            public void getState(PullToRefreshBase.State mState) {
+//                if (!isBottom) {
+//                    return;
+//                }
+//                boolean isVisisyProgressBar = false;
+//                switch (mState) {
+//                    case RESET://初始
+//                        isVisisyProgressBar = false;
+//                        footView_tv.setText("上拉获取更多文章");
+//                        break;
+//                    case PULL_TO_REFRESH://更多推荐
+//                        isVisisyProgressBar = false;
+//                        footView_tv.setText("上拉获取更多文章");
+//                        break;
+//                    case RELEASE_TO_REFRESH://松开推荐
+//                        isVisisyProgressBar = false;
+//                        footView_tv.setText("松手获取更多文章");
+//                        break;
+//                    case REFRESHING:
+//                    case MANUAL_REFRESHING://推荐中
+//                        isVisisyProgressBar = true;
+//                        footView_tv.setText("正在获取更多文章...");
+//                        break;
+//                    case OVERSCROLLING:
+//                        // NO-OP
+//                        break;
+//                }
+//                if (isVisisyProgressBar) {
+//                    footView_progressbar.setVisibility(View.VISIBLE);
+//                } else {
+//                    footView_progressbar.setVisibility(View.GONE);
+//                }
+//                mNewsDetailList.setFooterViewInvisible();
+//            }
+//        });
+//
+//        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                switch (scrollState) {
+//                    // 当不滚动时
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+//                        // 判断滚动到底部
+//                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+//                            isBottom = true;
+//                        } else {
+//                            isBottom = false;
+//                        }
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+//            }
+//        });
 
         mAdapter = new NewsDetailFgtAdapter(getActivity(), null);
         mNewsDetailList.setAdapter(mAdapter);
@@ -340,11 +339,18 @@ public class NewsDetailVideoFgt extends Fragment {
         });
         TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
         TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
+
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
-        footerView_layout.setVisibility(View.GONE);
+        footerView_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadRelatedData();
+            }
+        });
+//        footerView_layout.setVisibility(View.GONE);
     }
 
     private void loadData() {

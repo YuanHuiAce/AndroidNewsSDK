@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/footerView_layout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="30dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -25,8 +25,9 @@
             android:id="@+id/footerView_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上拉获取更多文章"
+            android:text="查看更多"
             android:textColor="@color/color9"
+            android:visibility="gone"
             />
     </LinearLayout>
 
