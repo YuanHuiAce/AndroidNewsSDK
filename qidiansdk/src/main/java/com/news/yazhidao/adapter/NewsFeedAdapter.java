@@ -289,7 +289,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(),feed.getClicktimesStr());
             setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
         } else if (layoutId == R.layout.ll_video_item_small) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -301,7 +301,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(),feed.getClicktimesStr());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -354,12 +354,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
     }
 
-    public void setVideoDuration(TextView durationView, int duration) {
+    public void setVideoDuration(TextView durationView, int duration,String clickNums) {
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
-            durationView.setText(time);
+            durationView.setText(time+clickNums);
         } else {
-            durationView.setText("");
+            durationView.setText(""+clickNums);
         }
     }
 

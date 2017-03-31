@@ -119,6 +119,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (oldVersion<=41)
             {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN icon TEXT;");
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN clicktimes INTEGER;");
             }
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);

@@ -115,6 +115,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private FrameLayout vPlayerContainer;
     private RelativeLayout mHomeRelative;
     private ViewGroup mAndroidContent;
+    private int position;
 
 
     @Override
@@ -260,7 +261,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayerContainer = new FrameLayout(mContext);
             vPlayerContainer.setBackgroundColor(Color.BLACK);
             vPlayerContainer.setVisibility(View.GONE);
-            mAndroidContent.addView(vPlayerContainer,lpParent);
+            mAndroidContent.addView(vPlayerContainer, lpParent);
         }
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
@@ -1222,19 +1223,81 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         });
 
+        if (mstrChannelId.equals("44")) {
+            vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
+                @Override
+                public void completion(IMediaPlayer mp) {
+                    position = getNextPosition();
+                    if (position != -1) {
+                        if (vPlayer != null) {
+                            vPlayer.stop();
+                            vPlayer.release();
+                        }
+                        removeViews();
+                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 1, 0);
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
+                                vPlayer.play(mArrNewsFeed.get(position).getVideourl());
+                                FrameLayout videoContainer= getPlayItemView(getPlayItemPosition());
+                                if (videoContainer!=null)
+                                     videoContainer.addView(vPlayer);
+                                RelativeLayout showBg=getItemView(getPlayItemPosition());
+                                if (showBg!=null)
+                                    showBg.setVisibility(View.GONE);
+                                lastPostion = cPostion;
+                            }
+                        },100);
 
-        vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
-            @Override
-            public void completion(IMediaPlayer mp) {
-                if (vPlayer != null) {
-                    vPlayer.stop();
-                    vPlayer.release();
+                    } else {
+                        if (vPlayer != null) {
+                            vPlayer.stop();
+                            vPlayer.release();
+                        }
+                        removeViews();
+                        lastPostion = -1;
+                    }
                 }
-                removeViews();
-                lastPostion = -1;
-            }
-        });
+            });
+        }
     }
+
+    /**
+     * 获取播放视频填充布局
+     *
+     * @param cPosition
+     * @return
+     */
+    public RelativeLayout getItemView(int cPosition) {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        if (cPosition != -1) {
+            View item = lv.getChildAt(cPosition);
+            return (RelativeLayout) item.findViewById(R.id.rl_video_show);
+        }
+
+        return null;
+    }
+    /**
+     * 获取下一个item位置
+     *
+     * @return
+     */
+    public int getNextPosition() {
+        int position = -1;
+        for (int i = 0; i < mArrNewsFeed.size(); i++) {
+            if (mArrNewsFeed.get(i).getNid() == cPostion) {
+                for (position = i + 1; position < mArrNewsFeed.size(); position++) {
+                    if (mArrNewsFeed.get(position).getVideourl() != null) {
+                        cPostion = mArrNewsFeed.get(position).getNid();
+                        return position;
+                    }
+                }
+            }
+        }
+        return position;
+    }
+
 
     /**
      * 判断当前播放item是否可见，-1 不可见
