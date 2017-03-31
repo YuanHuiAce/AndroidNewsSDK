@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,8 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
     public static final String TAG = "NewsFeedFgt";
@@ -114,9 +117,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private LinearLayout footerView;
     private FrameLayout vPlayerContainer;
     private RelativeLayout mHomeRelative;
+    private boolean isLoad = false;
     private ViewGroup mAndroidContent;
     private int position;
-
 
     @Override
     public void onThemeChanged() {
@@ -166,6 +169,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
+        if (getUserVisibleHint() && !isLoad) {
+            isLoad = true;
+            if (!TextUtil.isEmptyString(mstrChannelId)) {
+                mHandler.postDelayed(mThread, 500);
+            }
+        }
         if (vPlayer != null && !isVisibleToUser) {
             VideoVisibleControl();
         }
@@ -328,7 +337,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mstrChannelId != null && mstrChannelId.equals("1")) {
             delay = 500;
         }
-        mHandler.postDelayed(mThread, delay);
+        if (isLoad) {
+            mHandler.postDelayed(mThread, delay);
+        }
         return rootView;
     }
 
@@ -726,6 +737,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         long time = (System.currentTimeMillis() - homeTime) / 1000;
         Logger.e("aaa", "time====" + time);
+
         if (isNewVisity && isClickHome && time >= 60) {
 //            mlvNewsFeed.setRefreshing();
 //            isListRefresh = true;
