@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +62,7 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.transitionseverywhere.TransitionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,8 +74,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
-
-import static com.android.volley.Request.Method.HEAD;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
 
@@ -899,7 +897,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
                 Log.v(TAG, "onScroll");
-                if ("44".equals(mstrChannelId))
+                if ("44".equals(mstrChannelId) && portrait)
                     VideoVisibleControl();
             }
         });
@@ -1124,36 +1122,50 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (!"44".equals(mstrChannelId))
             return;
         super.onConfigurationChanged(newConfig);
-
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
                 portrait = true;
-//                mHandler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        vPlayer.onChanged(newConfig);
-
                 vPlayerContainer.removeView(vPlayer);
                 vPlayerContainer.setVisibility(View.GONE);
-                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
-                int position = getPlayItemPosition();
-                if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
+                mHandler.postDelayed(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             TransitionManager.beginDelayedTransition(vPlayer);
+                                             Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+                                             int position = getPlayItemPosition();
+                                             if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
+                                                 if (position != -1) {
+                                                     FrameLayout playItemView = getPlayItemView(position);
+                                                     View itemView = (View) playItemView.getParent();
+                                                     if (itemView != null) {
+                                                         itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+                                                     }
+                                                     playItemView.removeAllViews();
+                                                     playItemView.addView(vPlayer);
 
-                    FrameLayout playItemView = getPlayItemView(position);
-                    View itemView = (View) playItemView.getParent();
-                    if (itemView != null) {
-                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-                    }
-                    playItemView.removeAllViews();
-                    playItemView.addView(vPlayer);
+                                                     if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                                                         vPlayer.showBottomControl(false);
+                                                 } else {
+                                                     FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
+                                                     if (videoContainer != null)
+                                                         videoContainer.addView(vPlayer);
+                                                     RelativeLayout showBg = getItemView(getPlayItemPosition());
+                                                     if (showBg != null)
+                                                         showBg.setVisibility(View.GONE);
 
-                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                        vPlayer.showBottomControl(false);
-                }
-//                    }
-//                }, 300);
+                                                 }
+                                             } else {
+                                                 if (vPlayer != null) {
+                                                     vPlayer.stop();
+                                                     vPlayer.release();
+                                                 }
+
+                                             }
+                                         }
+                                     }
+
+                        , 300);
 
 
             } else {
@@ -1186,11 +1198,108 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
+//    /**
+//     * 横竖屏切换
+//     *
+//     * @param newConfig
+//     */
+//    @Override
+//    public void onConfigurationChanged(final Configuration newConfig) {
+//        if (!"44".equals(mstrChannelId))
+//            return;
+//        super.onConfigurationChanged(newConfig);
+//
+//        if (vPlayer != null) {
+//            vPlayer.onChanged(newConfig);
+//            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//
+////                mHandler.postDelayed(new Runnable() {
+////                                         @Override
+////                                         public void run() {
+////                                             TransitionManager.beginDelayedTransition(vPlayer);
+//                vPlayerContainer.removeView(vPlayer);
+//                vPlayerContainer.setVisibility(View.GONE);
+//                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+//                int position = getPlayItemPosition();
+//                if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
+//                    if (position != -1) {
+//                        FrameLayout playItemView = getPlayItemView(position);
+//                        View itemView = (View) playItemView.getParent();
+//                        if (itemView != null) {
+//                            itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+//                        }
+//                        playItemView.removeAllViews();
+//                        playItemView.addView(vPlayer);
+//
+//                        if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+//                            vPlayer.showBottomControl(false);
+//                    }else
+//                    {
+//                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextPosition() , 0);
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
+//                                if (videoContainer != null)
+//                                    videoContainer.addView(vPlayer);
+//                                RelativeLayout showBg = getItemView(getPlayItemPosition());
+//                                if (showBg != null)
+//                                    showBg.setVisibility(View.GONE);
+//                                portrait = true;
+//                            }
+//                        },300);
+//
+//                    }
+//                } else {
+//                    if (vPlayer!=null)
+//                    {
+//                        vPlayer.stop();
+//                        vPlayer.release();
+//                    }
+//
+//                }
+////                                         }
+////                                     }
+////
+////                        , 300);
+//
+//
+//            } else {
+//                portrait = false;
+//                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+////                vPlayer.onChanged(newConfig);
+//                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                if (frameLayout != null) {
+//                    frameLayout.removeView(vPlayer);
+//                    View itemView = (View) frameLayout.getParent();
+//                    if (itemView != null) {
+//                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
+//                        if (videoSHow != null) {
+//                            videoSHow.setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                }
+//
+//                vPlayerContainer.setVisibility(View.VISIBLE);
+//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+//                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                vPlayerContainer.addView(vPlayer, lp);
+//                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+//                    vPlayer.showBottomControl(false);
+//
+//            }
+//
+//        } else {
+//            mAdapter.notifyDataSetChanged();
+//            mHomeRelative.setVisibility(View.VISIBLE);
+//        }
+//    }
 
 
     /**
      * 视频播放控制
      */
+
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
@@ -1241,26 +1350,47 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
                     if (position != -1) {
-                        if (vPlayer != null) {
-                            vPlayer.stop();
-                            vPlayer.release();
-                        }
-                        removeViews();
-                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 1, 0);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
-                                vPlayer.play(mArrNewsFeed.get(position).getVideourl());
-                                FrameLayout videoContainer= getPlayItemView(getPlayItemPosition());
-                                if (videoContainer!=null)
-                                     videoContainer.addView(vPlayer);
-                                RelativeLayout showBg=getItemView(getPlayItemPosition());
-                                if (showBg!=null)
-                                    showBg.setVisibility(View.GONE);
-                                lastPostion = cPostion;
+                        if (vPlayerContainer.getVisibility() == View.VISIBLE) {
+                            if (vPlayer != null) {
+                                vPlayer.stop();
+                                vPlayer.release();
                             }
-                        },100);
+                            vPlayerContainer.removeView(vPlayer);
+                            vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
+                            vPlayer.play(mArrNewsFeed.get(position).getVideourl());
+                            vPlayerContainer.addView(vPlayer);
+                            lastPostion = cPostion;
+
+                        } else {
+                            if (vPlayer != null) {
+                                vPlayer.stop();
+                                vPlayer.release();
+                            }
+                            removeViews();
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    TransitionManager.beginDelayedTransition(mlvNewsFeed);
+                                    mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 1, 0);
+                                }
+                            }, 100);
+
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
+                                    vPlayer.play(mArrNewsFeed.get(position).getVideourl());
+                                    FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
+                                    if (videoContainer != null)
+                                        videoContainer.addView(vPlayer);
+                                    RelativeLayout showBg = getItemView(getPlayItemPosition());
+                                    if (showBg != null)
+                                        showBg.setVisibility(View.GONE);
+                                    lastPostion = cPostion;
+                                    TransitionManager.endTransitions(mlvNewsFeed);
+                                }
+                            }, 200);
+                        }
 
                     } else {
                         if (vPlayer != null) {
@@ -1290,6 +1420,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
         return null;
     }
+
     /**
      * 获取下一个item位置
      *
@@ -1307,7 +1438,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }
         }
-        return position;
+        return -1;
     }
 
 

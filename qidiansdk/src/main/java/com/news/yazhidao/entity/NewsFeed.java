@@ -215,7 +215,7 @@ public class NewsFeed implements Serializable {
         } else if (clicktimes % 10000 == 0) {
             return "/"+clicktimes + "次播放";
         } else {
-            return "/"+clicktimes / 10000 + "次播放";
+            return "/"+clicktimes / 10000 + "万次播放";
         }
     }
 

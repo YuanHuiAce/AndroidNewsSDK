@@ -453,15 +453,15 @@ public class VPlayPlayer extends FrameLayout {
             @Override
             public void onCompletion(IMediaPlayer mp) {
                 statusChange(PlayStateParams.STATE_PLAYBACK_COMPLETED);
-                if (getScreenOrientation((Activity) mContext)
-                        == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                    //横屏播放完毕，重置
-                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    ViewGroup.LayoutParams layoutParams = mVideoView.getLayoutParams();
-                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    mVideoView.setLayoutParams(layoutParams);
-                }
+//                if (getScreenOrientation((Activity) mContext)
+//                        == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
+//                    //横屏播放完毕，重置
+//                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                    ViewGroup.LayoutParams layoutParams = mVideoView.getLayoutParams();
+//                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                    mVideoView.setLayoutParams(layoutParams);
+//                }
                 if (completionListener != null)
                     completionListener.completion(mp);
             }
@@ -1348,13 +1348,12 @@ public class VPlayPlayer extends FrameLayout {
     }
 
     public boolean onBackPressed() {
-        if (getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-
+        if (getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
+            Log.v(TAG, "onBackPressed" + mClick + "" + mIsLand + "" + mClickLand);
             if (!isLock) {
-                mIsLand = false; // 是否是横屏
-                mClick = false; // 是否点击
-//                mClickLand = true; // 点击进入横屏
-                mClickPort = false; // 点击进入竖屏
+                mClick = true; // 是否点击
+                mIsLand = false;
+                mClickPort = false;
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 return true;
             }
@@ -1363,6 +1362,7 @@ public class VPlayPlayer extends FrameLayout {
         }
         return false;
     }
+
 
 
     public boolean isShowing() {

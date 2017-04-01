@@ -32,5 +32,6 @@
         android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
         android:layout_marginTop="11dp"
-        android:background="@drawable/list_divider" />
+        android:background="@drawable/list_divider"
+        />
 </RelativeLayout>

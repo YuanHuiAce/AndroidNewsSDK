@@ -258,8 +258,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                holder.getView(R.id.top_image).setVisibility(View.GONE);
 //            }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
-            TextUtil.setLayoutBgResource(mContext, (LinearLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
-            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+//            TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
+//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
