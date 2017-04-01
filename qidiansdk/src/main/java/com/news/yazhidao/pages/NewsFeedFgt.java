@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -1393,12 +1394,24 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         }
 
                     } else {
-                        if (vPlayer != null) {
-                            vPlayer.stop();
-                            vPlayer.release();
+
+                        if (vPlayerContainer.getVisibility()==View.VISIBLE)
+                        {
+                            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            if (vPlayer != null) {
+                                vPlayer.stop();
+                                vPlayer.release();
+                            }
+                            vPlayerContainer.removeView(vPlayer);
                         }
-                        removeViews();
-                        lastPostion = -1;
+                        else {
+                            if (vPlayer != null) {
+                                vPlayer.stop();
+                                vPlayer.release();
+                            }
+                            removeViews();
+                            lastPostion = -1;
+                        }
                     }
                 }
             });
