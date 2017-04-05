@@ -119,13 +119,26 @@ public class CommonViewHolder {
         return mLayoutId;
     }
 
+//    public void setGlideDraweeViewURI(int draweeView, String strImg) {
+//        ImageView imageView = getView(draweeView);
+//        if (!TextUtil.isEmptyString(strImg)) {
+////            imageView.setImageURI(Uri.parse(strImg));
+//            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(imageView);
+////            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+//        }
+//    }
+
+
     public void setGlideDraweeViewURI(int draweeView, String strImg) {
         ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            imageView.setImageURI(Uri.parse(strImg));
-//            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-        }
+            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+        }else
+            Glide.with(mContext).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+
     }
+
 
     public void setGlideDraweeViewURI(int draweeView, String strImg, int width, int height, int rType) {
         ImageView imageView = getView(draweeView);
@@ -147,8 +160,7 @@ public class CommonViewHolder {
                 } else {
                     imageView.setAlpha(1.0f);
                 }
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
             }
         }
     }

@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 41;
+    private static int DATABASE_VERSION = 42;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -116,6 +116,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
             }
 
+            if (oldVersion<=41)
+            {
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN icon TEXT;");
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN clicktimes INTEGER;");
+            }
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/new_color9"
+    android:background="@color/bg_detail"
     android:orientation="vertical">
 
     <TextView
@@ -18,150 +18,191 @@
         android:ellipsize="end"
         android:textColor="#333333"
         android:textSize="15sp" />
-
-    <RelativeLayout
-        android:id="@+id/detail_shared_ShareImageLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="10dp"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/detail_shared_PraiseLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:background="@drawable/detail_shared_framebg"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            >
-
-            <ImageView
-                android:id="@+id/detail_shared_AttentionImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_detail_like_normal"/>
-            <TextView
-                android:id="@+id/detail_shared_PraiseText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:textColor="@color/color3"
-                android:textSize="@dimen/font5"
-                android:visibility="gone"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/detail_shared_FriendCircleLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/detail_shared_framebg"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="9dp"
-            android:paddingRight="9dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/friendcircle"/>
-
-            <TextView
-                android:id="@+id/detail_shared_FriendCircleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:text="朋友圈"
-                android:textColor="@color/color3"
-                android:textSize="@dimen/font5"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/detail_shared_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="19dp"
-        android:text="关心本文，会推荐更多类似的内容"
-        android:textColor="@color/color3"
-        android:textSize="@dimen/font5"
-        android:visibility="visible"/>
-
-    <RelativeLayout
-        android:id="@+id/detail_shared_MoreComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="19dp"
-        android:background="@drawable/bg_select_comment_more"
-        android:visibility="gone"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerInParent="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="查看全部评论"
-                android:textColor="@color/new_color2"
-                android:textSize="@dimen/font4"
-                />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_detail_view_all_comment"
-                android:layout_marginLeft="4dp"
-                android:paddingTop="1dp"/>
-        </LinearLayout>
-    </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="30dp"
-        >
+        android:visibility="gone">
+
+        <!--<ImageView-->
+        <!--android:id="@+id/detail_point"-->
+        <!--android:layout_width="20dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_marginTop="14dp"-->
+        <!--android:background="@drawable/ic_detail_point" />-->
 
         <TextView
-            android:id="@+id/detail_shared_hotComment"
+            android:id="@+id/detail_ViewPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="热门评论"
+            android:text="相关视频"
             android:textColor="@color/detail_share_TopTitleColor"
-            android:textSize="@dimen/new_font4"/>
+            android:textSize="@dimen/new_font4" />
 
         <View
-            android:id="@+id/detail_shared_hotComment_Line1"
+            android:id="@+id/detail_ViewPoint_Line1"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_alignRight="@id/detail_shared_hotComment"
-            android:layout_below="@id/detail_shared_hotComment"
+            android:layout_alignRight="@id/detail_ViewPoint"
+            android:layout_below="@id/detail_ViewPoint"
             android:layout_marginTop="6dp"
-            android:background="@color/new_color2"/>
+            android:background="@color/new_color2" />
 
         <View
-            android:id="@+id/detail_shared_hotComment_Line2"
+            android:id="@+id/detail_ViewPoint_Line2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/detail_shared_hotComment"
+            android:layout_below="@id/detail_ViewPoint"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/detail_shared_hotComment_Line1"
-            android:background="@color/new_color4"/>
+            android:layout_toRightOf="@id/detail_ViewPoint_Line1"
+            android:background="@color/new_color4" />
     </RelativeLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/detail_shared_ShareImageLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="17dp"-->
+        <!--android:layout_marginRight="17dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:visibility="gone">-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/detail_shared_PraiseLayout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:background="@drawable/detail_shared_framebg"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="14dp"-->
+            <!--android:paddingRight="14dp"-->
+            <!--&gt;-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/detail_shared_AttentionImage"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/btn_detail_like_normal"/>-->
+            <!--<TextView-->
+                <!--android:id="@+id/detail_shared_PraiseText"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="6dp"-->
+                <!--android:textColor="@color/color3"-->
+                <!--android:textSize="@dimen/font5"-->
+                <!--android:visibility="gone"/>-->
+        <!--</LinearLayout>-->
+
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/detail_shared_FriendCircleLayout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="28dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:background="@drawable/detail_shared_framebg"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="9dp"-->
+            <!--android:paddingRight="9dp"-->
+            <!--&gt;-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/friendcircle"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/detail_shared_FriendCircleText"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="7dp"-->
+                <!--android:text="朋友圈"-->
+                <!--android:textColor="@color/color3"-->
+                <!--android:textSize="@dimen/font5"/>-->
+        <!--</LinearLayout>-->
+    <!--</RelativeLayout>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/detail_shared_Text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginTop="19dp"-->
+        <!--android:text="关心本文，会推荐更多类似的内容"-->
+        <!--android:textColor="@color/color3"-->
+        <!--android:textSize="@dimen/font5"-->
+        <!--android:visibility="gone"/>-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/detail_shared_MoreComment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="17dp"-->
+        <!--android:layout_marginRight="17dp"-->
+        <!--android:layout_marginTop="19dp"-->
+        <!--android:background="@drawable/bg_select_comment_more"-->
+        <!--android:visibility="gone"-->
+        <!--&gt;-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_centerInParent="true">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="34dp"-->
+                <!--android:drawablePadding="4dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="查看全部评论"-->
+                <!--android:textColor="@color/new_color2"-->
+                <!--android:textSize="@dimen/font4"-->
+                <!--/>-->
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ic_detail_view_all_comment"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:paddingTop="1dp"/>-->
+        <!--</LinearLayout>-->
+    <!--</RelativeLayout>-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/detail_shared_TitleLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:visibility="gone"-->
+        <!--&gt;-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/detail_shared_hotComment"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="热门评论"-->
+            <!--android:textColor="@color/detail_share_TopTitleColor"-->
+            <!--android:textSize="@dimen/new_font4"/>-->
+
+        <!--<View-->
+            <!--android:id="@+id/detail_shared_hotComment_Line1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_alignRight="@id/detail_shared_hotComment"-->
+            <!--android:layout_below="@id/detail_shared_hotComment"-->
+            <!--android:layout_marginTop="6dp"-->
+            <!--android:background="@color/new_color2"/>-->
+
+        <!--<View-->
+            <!--android:id="@+id/detail_shared_hotComment_Line2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_below="@id/detail_shared_hotComment"-->
+            <!--android:layout_marginTop="6dp"-->
+            <!--android:layout_toRightOf="@id/detail_shared_hotComment_Line1"-->
+            <!--android:background="@color/new_color4"/>-->
+    <!--</RelativeLayout>-->
 
 </LinearLayout>

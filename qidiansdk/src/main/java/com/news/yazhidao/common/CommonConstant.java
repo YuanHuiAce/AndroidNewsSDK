@@ -55,6 +55,10 @@ public final class CommonConstant {
     public static final String KEY_LOCATION_PROVINCE = "key_location_province";
     public static final String KEY_LOCATION_CITY = "key_location_city";
     public static final String KEY_LOCATION_ADDR = "key_location_addr";
+    public static final String NEWS_COMMENT_NUM = "news_comment_num";
+    public static final String NEWS_ID = "news_id";
+    public static final int INTENT_REQUEST_COMMENT = 10001;
+    public static final int INTENT_RESULT_COMMENT = 10002;
 
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;
@@ -70,6 +74,8 @@ public final class CommonConstant {
     public static final String GridAppWallPosID = "grid_app_wall_pos_id";
     public static final String NativePosID = "native_pos_id";
     public static final String NativeVideoPosID = "native_video_pos_id";
+    //通知登录action
+    public static final String USER_LOGIN_ACTION="sdk_user_login_action";
     //feed流广告位id
     public static final String NEWS_FEED_AD_ID = "";
     //详情页广告位id

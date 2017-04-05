@@ -219,12 +219,6 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        nowTime = System.currentTimeMillis();
-    }
-
     private void setRefreshComplete() {
 //        mHandler.postDelayed(new Runnable() {
 //            @Override
@@ -261,16 +255,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onResume() {
+        super.onResume();
+        lastTime = System.currentTimeMillis();
     }
 
     @Override
-    protected void onDestroy() {
-        lastTime = System.currentTimeMillis();
+    protected void onPause() {
+        nowTime = System.currentTimeMillis();
         //上报日志
-        LogUtil.upLoadLog(mUsedNewsFeed, this, lastTime - nowTime);
-        super.onDestroy();
+        LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%", this.getString(R.string.version_name), false);
+        super.onPause();
     }
 
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {

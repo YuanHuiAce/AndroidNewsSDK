@@ -585,6 +585,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     /**
      * 传入地理坐标
+     *
      * @param location，省，市，县
      */
     public void setLocation(Location location, String province, String city, String address) {

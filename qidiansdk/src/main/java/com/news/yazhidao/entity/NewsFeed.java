@@ -135,9 +135,12 @@ public class NewsFeed implements Serializable {
     /**
      * 来源图片
      */
+    @DatabaseField
     private String icon;
 
     private NativeADDataRef dataRef;
+
+    private AdDetailEntity adresponse;
 
     public NativeADDataRef getDataRef() {
         return dataRef;
@@ -146,6 +149,7 @@ public class NewsFeed implements Serializable {
     public void setDataRef(NativeADDataRef dataRef) {
         this.dataRef = dataRef;
     }
+
     /**
      * 视频播放地址
      */
@@ -159,6 +163,12 @@ public class NewsFeed implements Serializable {
 
     @DatabaseField
     private int duration;
+
+    /**
+     * 播放数
+     */
+    @DatabaseField
+    private int clicktimes;
 
     private int logtype;
 
@@ -192,6 +202,24 @@ public class NewsFeed implements Serializable {
                 ", conflag=" + conflag +
                 ", conpubflag=" + conpubflag +
                 '}';
+    }
+
+    public int getClicktimes() {
+        return clicktimes;
+    }
+
+    public void setClicktimes(int clicktimes) {
+        this.clicktimes = clicktimes;
+    }
+
+    public String getClicktimesStr() {
+        if (clicktimes == 0) {
+            return "";
+        } else if (clicktimes % 10000 == 0) {
+            return "/"+clicktimes + "次播放";
+        } else {
+            return "/"+clicktimes / 10000 + "万次播放";
+        }
     }
 
     public int getRtype() {

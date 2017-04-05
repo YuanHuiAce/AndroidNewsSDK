@@ -152,7 +152,7 @@ public class HttpConstant {
     /**
      * 新闻客户端-新闻相关属性集
      */
-    public static final String URL_NEWS_RELATED = URL_SERVER_HOST + "/ns/asc?";
+    public static final String URL_NEWS_RELATED = URL_SERVER_HOST + "/ns/ascad";
     /**
      * 添加新闻收藏
      * 取消新闻收藏
@@ -202,4 +202,9 @@ public class HttpConstant {
      * 滑动接口
      */
     public static final String URL_SCROLL_AD = URL_SERVER_HOST + "/sl/ins";
+
+    /**
+     * 用户映射接口
+     */
+    public static final String URL_AUTHORIZED_USER = URL_SERVER_HOST + "/au/sin/s";
 }

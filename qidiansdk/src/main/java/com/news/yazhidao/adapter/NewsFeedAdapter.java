@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -264,8 +265,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                holder.getView(R.id.top_image).setVisibility(View.GONE);
 //            }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
-            TextUtil.setLayoutBgResource(mContext, (LinearLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
-            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+//            TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
+//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -330,11 +331,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setCommentClick(feed);
                 }
             });
+            setSourceViewText((TextViewExtend) holder.getView(R.id.tve_video_source_username), feed.getPname());
+            holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd, feed.getIcon());
             //视频播放
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
         } else if (layoutId == R.layout.ll_video_item_small) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -346,7 +349,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+            setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -358,7 +361,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
@@ -400,12 +402,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
     }
 
-    public void setVideoDuration(TextView durationView, int duration) {
+    public void setVideoDuration(TextView durationView, int duration, String clickNums) {
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
-            durationView.setText(time);
+            durationView.setText(time + clickNums);
         } else {
-            durationView.setText("");
+            durationView.setText("" + clickNums);
         }
     }
 
@@ -617,43 +619,29 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 4) {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-                    }
+                    setNewsFeedRead(feed);
                     Intent intent = new Intent(mContext, NewsTopicAty.class);
                     intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-                    }
+                    setNewsFeedRead(feed);
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
                     }
                 } else {
-                    if (!feed.isRead()) {
-                        feed.setRead(true);
-                        if (mNewsFeedDao == null) {
-                            mNewsFeedDao = new NewsFeedDao(mContext);
-                        }
-                        mNewsFeedDao.update(feed);
-                    }
+                    setNewsFeedRead(feed);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     ArrayList<String> imageList = feed.getImgs();
                     if (imageList != null && imageList.size() != 0) {
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
                     }
-                    mContext.startActivity(intent);
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
+                    }
                 }
             }
         });
@@ -682,6 +670,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         feed);
             }
         });
+    }
+
+    private void setNewsFeedRead(NewsFeed feed) {
+        if (!feed.isRead()) {
+            feed.setRead(true);
+            if (mNewsFeedDao == null) {
+                mNewsFeedDao = new NewsFeedDao(mContext);
+            }
+            mNewsFeedDao.update(feed);
+        }
     }
 
     /**

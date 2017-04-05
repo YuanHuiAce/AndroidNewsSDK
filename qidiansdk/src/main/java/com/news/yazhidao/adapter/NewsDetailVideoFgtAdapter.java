@@ -97,6 +97,4 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             }
         });
     }
-
-
 }

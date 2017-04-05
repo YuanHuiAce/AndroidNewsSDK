@@ -51,6 +51,7 @@
     <color name="transparent">#00000000</color>
     <color name="gray_black">#8f000000</color>
     <color name="white_light">#bbffffff</color>
+    <color name="bg_detail">#f6f6f6</color>
 
     <color name="transparency">#00ffffff</color>
     <!-- 透明颜色 -->
@@ -278,7 +279,7 @@
     <color name="channeltabstrip_bg">#f8f8f8</color>
     <color name="channeltabstrip_bg_night">#202124</color>
     <color name="channeltabstrip_divider">#f0f0f0</color>
-
+    <color name="news_source_bg" >#f8f8f8</color>
     <color name="newsfeed_red" >#fff83b3b</color>
     <color name="news_type_color1" >#ff7d68</color>
     <color name="news_type_color2" >#b3e0ff</color>

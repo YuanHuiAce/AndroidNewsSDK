@@ -13,6 +13,8 @@ public class UploadLogDataEntity implements Serializable{
     private int f;
     private int lt;
     private int lc;
+    private String pe;
+    private String v;
 
     public Long getN() {
         return n;
@@ -68,5 +70,21 @@ public class UploadLogDataEntity implements Serializable{
 
     public void setLc(int lc) {
         this.lc = lc;
+    }
+
+    public String getPe() {
+        return pe;
+    }
+
+    public void setPe(String pe) {
+        this.pe = pe;
+    }
+
+    public String getV() {
+        return v;
+    }
+
+    public void setV(String v) {
+        this.v = v;
     }
 }
