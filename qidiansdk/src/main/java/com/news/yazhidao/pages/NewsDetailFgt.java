@@ -83,6 +83,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.news.yazhidao.R.id.footerView_tv;
+
 
 /**
  * 新闻详情页
@@ -471,10 +473,11 @@ public class NewsDetailFgt extends Fragment {
 
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
-        footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
+        footView_tv = (TextView) footerView.findViewById(footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
         footerView_layout.setVisibility(View.GONE);
+        footView_tv.setVisibility(View.VISIBLE);
     }
 
     private void loadData() {
