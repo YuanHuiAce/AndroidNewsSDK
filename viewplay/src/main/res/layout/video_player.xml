@@ -33,14 +33,15 @@
     </LinearLayout>
 
     <!--网络提示-->
+    <include layout="@layout/player_network"/>
     <LinearLayout
-        android:id="@+id/app_video_netTie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#33000000"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+      >
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,6 +64,8 @@
             android:text="@string/tips_not_wifi_confirm"
             android:textColor="@android:color/white" />
     </LinearLayout>
+
+
     <RelativeLayout
         android:id="@+id/app_video_replay"
         android:gravity="center"
