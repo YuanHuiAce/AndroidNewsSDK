@@ -63,6 +63,8 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 import com.transitionseverywhere.TransitionManager;
 
 import org.json.JSONArray;
@@ -76,7 +78,7 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener {
+public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     public static final String TAG = "NewsFeedFgt";
     public static final String KEY_NEWS_FEED = "key_news_feed";
@@ -119,6 +121,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isLoad = false;
     private ViewGroup mAndroidContent;
     private int position;
+    //广点通
+    private NativeAD mNativeAD;
+    private boolean isPullDown;
+    private boolean isADRefresh;
+    private List<NativeADDataRef> mADs;
+    public static final int AD_COUNT = 0;
 
     @Override
     public void onThemeChanged() {
@@ -132,7 +140,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
         mAdapter.notifyDataSetChanged();
     }
-
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -227,23 +234,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mHandler.postDelayed(mThread, 1000);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CommonConstant.INTENT_REQUEST_COMMENT && data != null) {
-            int newsId = data.getIntExtra(CommonConstant.NEWS_ID, 0);
-            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-                for (NewsFeed newsFeed : mArrNewsFeed) {
-                    if (newsFeed.getNid() == newsId) {
-                        int num = data.getIntExtra(CommonConstant.NEWS_COMMENT_NUM, 0);
-                        newsFeed.setComment(num);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mContext = getActivity();
@@ -252,9 +242,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mFlag = mSharedPreferences.getBoolean("isshow", false);
         /** 梁帅：注册修改字体大小的广播*/
         mRefreshReceiver = new RefreshReceiver();
-        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+        intentFilter.addAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
         mContext.registerReceiver(mRefreshReceiver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NativePosID, this);
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -262,6 +255,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (arguments != null) {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
+        }
+        if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("1")) {
+            uploadInformation();
+            uploadChannelInformation();
         }
         if (mstrChannelId.equals("44")) {
             mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
@@ -291,7 +288,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                Logger.e("aaa", "刷新");
+                isPullDown = true;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
             }
@@ -299,7 +296,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                Logger.e("aaa", "加载");
+                isPullDown = false;
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
             }
@@ -323,6 +320,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                  *  如果有数据，拿数据的一条的是时间是下拉刷新
                  *  如果没有数据，直接加载
                  */
+                //广点通sdk请求广告
+                loadAD();
                 ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (!TextUtil.isListEmpty(arrNewsFeed)) {
                     loadData(PULL_DOWN_REFRESH);
@@ -367,7 +366,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         if (rootView != null) {
             unbindDrawables(rootView);
         }
@@ -395,6 +393,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * @return
      */
     public void stopRefresh() {
+    }
+
+    private void loadAD() {
+        if (mNativeAD != null && !isADRefresh && !TextUtil.isEmptyString(CommonConstant.APPID)) {
+            mNativeAD.loadAD(AD_COUNT);
+            isADRefresh = true;
+        }
     }
 
     private void loadNewsFeedData(String url, final int flag) {
@@ -506,7 +511,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 return;
             }
             mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
-            mRefreshTitleBarAnimtation();
+            mRefreshTitleBarAnimation();
         }
         //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
         if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
@@ -580,6 +585,42 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mAdapter.notifyDataSetChanged();
             if (bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
+            }
+            if (mADs != null && mAdapter != null && mADs.size() > 0) {
+                for (int i = 0; i < mADs.size(); i++) {
+                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
+                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
+//                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
+                    NativeADDataRef data = mADs.get(i);
+                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
+                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+                        NewsFeed newsFeed = new NewsFeed();
+                        newsFeed.setTitle(data.getDesc());
+                        newsFeed.setRtype(3);
+                        ArrayList<String> imgs = new ArrayList<>();
+                        imgs.add(data.getImgUrl());
+                        newsFeed.setImgs(imgs);
+                        newsFeed.setPname(data.getTitle());
+                        int style = newsFeedFirst.getStyle();
+                        if (style == 11 || style == 12 || style == 13 || style == 5) {
+                            newsFeed.setStyle(50);
+                        } else {
+                            newsFeed.setStyle(51);
+                        }
+                        newsFeed.setDataRef(data);
+                        if (isPullDown) {
+                            mArrNewsFeed.add(2, newsFeed);
+                        } else {
+                            if (mArrNewsFeed.size() >= 14) {
+                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                            } else {
+                                mArrNewsFeed.add(2, newsFeed);
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
             }
         } else {
             //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
@@ -770,10 +811,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
             mAdapter.notifyDataSetChanged();
         }
-        if (mstrChannelId.equals("1")) {
-            uploadInformation();
-            uploadChannelInformation();
-        }
     }
 
     long homeTime;
@@ -807,12 +844,23 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
                 Logger.e("aaa", "文字的改变！！！");
                 mAdapter.notifyDataSetChanged();
+            } else if (CommonConstant.CHANGE_COMMENT_NUM_ACTION.equals(intent.getAction()) && intent != null) {
+                int newsId = intent.getIntExtra(CommonConstant.NEWS_ID, 0);
+                if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                    for (NewsFeed newsFeed : mArrNewsFeed) {
+                        if (newsFeed.getNid() == newsId) {
+                            int num = intent.getIntExtra(CommonConstant.NEWS_COMMENT_NUM, 0);
+                            newsFeed.setComment(num);
+                            mAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
 
     public void addHFView(LayoutInflater LayoutInflater) {
-
 //        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
 //        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
 //        mSearchHeaderView.setLayoutParams(layoutParams);
@@ -906,7 +954,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     }
 
-    public void mRefreshTitleBarAnimtation() {
+    public void mRefreshTitleBarAnimation() {
         //初始化
         Animation mStartAlphaAnimation = new AlphaAnimation(0f, 1.0f);
         //设置动画时间
@@ -971,6 +1019,95 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setTextSize() {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        if (list.size() > 0) {
+            mADs = list;
+            if (mADs != null && mAdapter != null && mADs.size() > 0) {
+                for (int i = 0; i < mADs.size(); i++) {
+                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
+                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
+//                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
+                    NativeADDataRef data = mADs.get(i);
+                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
+                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+                        NewsFeed newsFeed = new NewsFeed();
+                        newsFeed.setTitle(data.getDesc());
+                        newsFeed.setRtype(3);
+                        ArrayList<String> imgs = new ArrayList<>();
+                        imgs.add(data.getImgUrl());
+                        newsFeed.setImgs(imgs);
+                        newsFeed.setPname(data.getTitle());
+                        int style = newsFeedFirst.getStyle();
+                        if (style == 11 || style == 12 || style == 13 || style == 5) {
+                            newsFeed.setStyle(50);
+                        } else {
+                            newsFeed.setStyle(51);
+                        }
+                        newsFeed.setDataRef(data);
+                        if (isPullDown) {
+                            mArrNewsFeed.add(2, newsFeed);
+                        } else {
+                            if (mArrNewsFeed.size() >= 14) {
+                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                            } else {
+                                mArrNewsFeed.add(2, newsFeed);
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+        getADButtonText(nativeADDataRef);
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        isADRefresh = false;
+    }
+
+    /**
+     * App类广告安装、下载状态的更新（普链广告没有此状态，其值为-1） 返回的AppStatus含义如下： 0：未下载 1：已安装 2：已安装旧版本 4：下载中（可获取下载进度“0-100”）
+     * 8：下载完成 16：下载失败
+     */
+    private String getADButtonText(NativeADDataRef adItem) {
+        if (adItem == null) {
+            return "……";
+        }
+        if (!adItem.isAPP()) {
+            return "查看详情";
+        }
+        switch (adItem.getAPPStatus()) {
+            case 0:
+                return "点击下载";
+            case 1:
+                return "点击启动";
+            case 2:
+                return "点击更新";
+            case 4:
+                return adItem.getProgress() > 0 ? "下载中" + adItem.getProgress() + "%" : "下载中"; // 特别注意：当进度小于0时，不要使用进度来渲染界面
+            case 8:
+                return "下载完成";
+            case 16:
+                return "下载失败,点击重试";
+            default:
+                return "查看详情";
         }
     }
 
@@ -1340,7 +1477,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                NewsFeedFgt.this.startActivityForResult(intent, CommonConstant.INTENT_REQUEST_COMMENT);
+                NewsFeedFgt.this.startActivity(intent);
                 lastPostion = cPostion;
             }
         });
@@ -1395,16 +1532,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                     } else {
 
-                        if (vPlayerContainer.getVisibility()==View.VISIBLE)
-                        {
+                        if (vPlayerContainer.getVisibility() == View.VISIBLE) {
                             ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                             if (vPlayer != null) {
                                 vPlayer.stop();
                                 vPlayer.release();
                             }
                             vPlayerContainer.removeView(vPlayer);
-                        }
-                        else {
+                        } else {
                             if (vPlayer != null) {
                                 vPlayer.stop();
                                 vPlayer.release();

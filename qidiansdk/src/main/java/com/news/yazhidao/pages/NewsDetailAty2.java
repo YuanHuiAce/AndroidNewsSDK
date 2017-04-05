@@ -196,7 +196,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
-            setResult(CommonConstant.INTENT_RESULT_COMMENT, intent);
+            intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
+            sendBroadcast(intent);
         }
         super.finish();
     }

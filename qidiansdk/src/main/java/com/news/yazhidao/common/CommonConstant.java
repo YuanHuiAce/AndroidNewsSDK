@@ -64,14 +64,17 @@ public final class CommonConstant {
     public static final int TEXT_SIZE_SMALL = 16;
     public static final int TEXT_SIZE_BIG = 20;
     public static final String CHANGE_TEXT_ACTION = "change_text";
+    public static final String CHANGE_COMMENT_NUM_ACTION = "change_comment_num";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
-
+    //广点通SDK id 广告位id
+    public static final String APPID = "1105847205";
+    public static final String NativePosID = "2000611873536900";
     //通知登录action
     public static final String USER_LOGIN_ACTION="sdk_user_login_action";
-    //feed流广告位id
-    public static final String NEWS_FEED_AD_ID = "238";
-    //详情页广告位id
-    public static final String NEWS_DETAIL_AD_ID = "237";
+    //feed流广告位id 238
+    public static final String NEWS_FEED_AD_ID = "";
+    //详情页广告位id 237
+    public static final String NEWS_DETAIL_AD_ID = "";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
     public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
