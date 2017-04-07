@@ -1266,7 +1266,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                                              if (showBg != null)
                                                                  showBg.setVisibility(View.GONE);
                                                          }
-                                                     },300);
+                                                     },100);
 
                                                  }
                                              } else {
@@ -1280,7 +1280,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                          }
                                      }
 
-                        , 300);
+                        , 100);
 
 
             } else {
