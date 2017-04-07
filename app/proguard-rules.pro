@@ -208,6 +208,13 @@ java.lang.Object readResolve();
   **[] $VALUES;
   public *;
 }
+##广点通
+-keep class com.qq.e.** {
+    public protected *;
+}
+-keep class android.support.v4.app.NotificationCompat**{
+    public *;
+}
 ##视频
 -keep class tv.danmaku.ijk.media.** { *; }
 -dontwarn tv.danmaku.ijk.**

@@ -95,7 +95,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             if (relatedItemEntity.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity,(EllipsizeEndTextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
@@ -113,7 +113,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             if (relatedItemEntity.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             }
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
@@ -151,7 +151,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             ivVideoSmall.setLayoutParams(lpVideoSmall);
             holder.setGlideDraweeViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), relatedItemEntity.getDuration());
@@ -258,7 +258,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
      * @param rlNewsContent
      * @param relatedItemEntity
      */
-    private void setNewsContentClick(final RelativeLayout rlNewsContent, final RelatedItemEntity relatedItemEntity) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final RelatedItemEntity relatedItemEntity, final EllipsizeEndTextView tvTitle) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
         final float[] down_x = new float[1];
         final float[] down_y = new float[1];
@@ -291,8 +291,6 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                relatedItemEntity.setRead(true);
-                notifyDataSetChanged();
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
@@ -307,6 +305,11 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
                     mContext.startActivity(intent);
+                }
+                if (relatedItemEntity.isRead()) {
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
+                } else {
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
                 }
             }
         });

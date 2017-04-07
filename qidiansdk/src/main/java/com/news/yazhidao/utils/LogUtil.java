@@ -32,7 +32,7 @@ public class LogUtil {
         }
         Logger.e("aaa", "开始上传日志！");
         if (newsFeed == null || TextUtil.isEmptyString(mUserId)) {
-            Log.i("tag","percent kong");
+            Logger.e("tag","percent kong");
             return;
         }
         final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();

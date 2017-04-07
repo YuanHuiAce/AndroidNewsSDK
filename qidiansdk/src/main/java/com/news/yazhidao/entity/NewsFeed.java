@@ -3,6 +3,7 @@ package com.news.yazhidao.entity;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class NewsFeed implements Serializable {
     public static final int TOPIC = 4;
     public static final int BIG_PIC = 5;
     public static final int EMPTY = 6;
+    public static final int AD_ONE_PIC = 7;
+    public static final int AD_BIG_PIC = 8;
     public static final int VIDEO_PLAYER = 9;
     public static final int VIDEO_SMALL = 10;
 
@@ -136,6 +139,15 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String icon;
 
+    private NativeADDataRef dataRef;
+
+    public NativeADDataRef getDataRef() {
+        return dataRef;
+    }
+
+    public void setDataRef(NativeADDataRef dataRef) {
+        this.dataRef = dataRef;
+    }
 
     private AdDetailEntity adresponse;
 
@@ -213,9 +225,9 @@ public class NewsFeed implements Serializable {
         if (clicktimes == 0) {
             return "";
         } else if (clicktimes % 10000 == 0) {
-            return "/"+clicktimes + "次播放";
+            return "/" + clicktimes + "次播放";
         } else {
-            return "/"+clicktimes / 10000 + "万次播放";
+            return "/" + clicktimes / 10000 + "万次播放";
         }
     }
 

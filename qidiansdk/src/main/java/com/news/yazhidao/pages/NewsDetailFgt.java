@@ -70,6 +70,8 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +89,7 @@ import java.util.List;
 /**
  * 新闻详情页
  */
-public class NewsDetailFgt extends Fragment {
+public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private LoadWebView mDetailWebView;
     private NewsDetail mResult;
@@ -132,6 +134,8 @@ public class NewsDetailFgt extends Fragment {
     private ImageView adImageView;
     private int viewpointPage = 1;
     private int mIntScorllY;
+    //广告
+    private NativeAD mNativeAD;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,6 +156,7 @@ public class NewsDetailFgt extends Fragment {
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             mContext.registerReceiver(mRefreshReceiver, filter);
         }
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NativePosID, this);
     }
 
     @Override
@@ -452,7 +457,11 @@ public class NewsDetailFgt extends Fragment {
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 36);
         adLayoutParams.width = imageWidth;
-        adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+        if (TextUtil.isEmptyString(CommonConstant.APPID)) {
+            adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+        } else {
+            adLayoutParams.height = (int) (imageWidth * 9 / 16.0f);
+        }
         adImageView.setLayoutParams(adLayoutParams);
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -475,6 +484,7 @@ public class NewsDetailFgt extends Fragment {
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
         footerView_layout.setVisibility(View.GONE);
+        footView_tv.setVisibility(View.VISIBLE);
     }
 
     private void loadData() {
@@ -886,49 +896,93 @@ public class NewsDetailFgt extends Fragment {
     }
 
     private void loadADData() {
-        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
-            String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
-            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
-            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
-            Gson gson = new Gson();
-            //加入详情页广告位id
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
-            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-            NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
-                @Override
-                public void onResponse(final ArrayList<NewsFeed> result) {
-                    final NewsFeed newsFeed = result.get(0);
-                    if (newsFeed != null) {
-                        adtvTitle.setText(newsFeed.getTitle());
-                        final ArrayList<String> imgs = newsFeed.getImgs();
-                        if (!TextUtil.isListEmpty(imgs)) {
-                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
-                            adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        if (mNativeAD != null && !TextUtil.isEmptyString(CommonConstant.APPID)) {
+            mNativeAD.loadAD(1);
+        } else {
+            if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
+                String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+                ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+                adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+                Gson gson = new Gson();
+                //加入详情页广告位id
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+                    @Override
+                    public void onResponse(final ArrayList<NewsFeed> result) {
+                        final NewsFeed newsFeed = result.get(0);
+                        if (newsFeed != null) {
+                            adtvTitle.setText(newsFeed.getTitle());
+                            final ArrayList<String> imgs = newsFeed.getImgs();
+                            if (!TextUtil.isListEmpty(imgs)) {
+                                mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                    @Override
+                                    public void onGlobalLayout() {
+                                        mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                    }
+                                });
+                            }
+                            adLayout.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onGlobalLayout() {
-                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                public void onClick(View view) {
+                                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                    AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                    mContext.startActivity(AdIntent);
                                 }
                             });
+                            AdUtil.upLoadAd(newsFeed, mContext);
                         }
-                        adLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                AdIntent.putExtra("key_url", newsFeed.getPurl());
-                                mContext.startActivity(AdIntent);
-                            }
-                        });
-                        AdUtil.upLoadAd(newsFeed, mContext);
                     }
-                }
-            }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        adLayout.setVisibility(View.GONE);
+                    }
+                });
+                newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+                requestQueue.add(newsFeedRequestPost);
+            }
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        adLayout.setVisibility(View.VISIBLE);
+        final NativeADDataRef dataRef = list.get(0);
+        if (dataRef != null) {
+            adtvTitle.setText(dataRef.getDesc());
+            final String url = dataRef.getImgUrl();
+            if (!TextUtil.isEmptyString(url)) {
+                mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                    }
+                });
+            }
+            dataRef.onExposured(adLayout);
+            adLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    adLayout.setVisibility(View.GONE);
+                public void onClick(View view) {
+                    dataRef.onClicked(adLayout);
                 }
             });
-            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(newsFeedRequestPost);
         }
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        adLayout.setVisibility(View.GONE);
     }
 }
