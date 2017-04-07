@@ -159,7 +159,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -179,7 +179,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             if (feed.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -224,7 +224,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
                 setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
@@ -242,7 +242,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -256,7 +256,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -290,7 +290,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             if (feed.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -310,7 +310,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
                 setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
@@ -337,7 +337,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             //视频播放
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
         } else if (layoutId == R.layout.ll_video_item_small) {
@@ -349,7 +349,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             ivVideoSmall.setLayoutParams(lpVideoSmall);
             holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
@@ -557,7 +557,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      * @param rlNewsContent
      * @param feed
      */
-    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed, final TextView tvTitle) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
         final float[] down_x = new float[1];
         final float[] down_y = new float[1];
@@ -623,6 +623,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     } else {
                         mContext.startActivity(intent);
                     }
+                }
+                if (feed.isRead()) {
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
+                } else {
+                    TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
                 }
             }
         });

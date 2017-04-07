@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,6 +18,7 @@ import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
-    private UserLoginReceiver mReceiver;
+    private UserReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +102,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
         //注册登录监听广播
-        mReceiver = new UserLoginReceiver();
+        mReceiver = new UserReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(CommonConstant.USER_LOGIN_ACTION);
+        filter.addAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
+        filter.addAction(CommonConstant.SHARE_WECHAT_ACTION);
+        filter.addAction(CommonConstant.SHARE_SINA_WEIBO_ACTION);
+        filter.addAction(CommonConstant.SHARE_QQ_ACTION);
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
@@ -150,17 +156,39 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         AuthorizedUserUtil.authorizedUser(user, this);
     }
 
-    private class UserLoginReceiver extends BroadcastReceiver {
+    private class UserReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (CommonConstant.USER_LOGIN_ACTION.equals(action)) {
                 //调用登录界面 授权成功后
+                ToastUtil.toastLong("请先登录");
                 setAuthorizedUserInformation();
+            } else if (CommonConstant.SHARE_WECHAT_MOMENTS_ACTION.equals(action)) {
+                //调用微信朋友圈分享
+                String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
+                String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
+                Log.i("tag", shareTitle + "<====>" + shareUrl);
+            } else if (CommonConstant.SHARE_WECHAT_ACTION.equals(action)) {
+                //调用微信分享
+                String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
+                String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
+                Log.i("tag", shareTitle + "<====>" + shareUrl);
+            } else if (CommonConstant.SHARE_SINA_WEIBO_ACTION.equals(action)) {
+                //调用新浪微博分享
+                String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
+                String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
+                Log.i("tag", shareTitle + "<====>" + shareUrl);
+            } else if (CommonConstant.SHARE_QQ_ACTION.equals(action)) {
+                //调用QQ分享
+                String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
+                String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
+                Log.i("tag", shareTitle + "<====>" + shareUrl);
             }
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

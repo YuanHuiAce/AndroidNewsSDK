@@ -98,6 +98,11 @@ public class HttpConstant {
     public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/pbs/cocs/r?";
 
     /**
+     * 转发记录
+     */
+    public static final String URL_REPLAY = URL_SERVER_HOST + "/ns/replay";
+
+    /**
      *  频道刷新加上广告
      */
     public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?";

@@ -66,11 +66,18 @@ public final class CommonConstant {
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String CHANGE_COMMENT_NUM_ACTION = "change_comment_num";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
+    //分享action
+    public static final String SHARE_TITLE = "share_title";
+    public static final String SHARE_URL = "share_url";
+    public static final String SHARE_WECHAT_MOMENTS_ACTION = "share_wechat_moments_action";
+    public static final String SHARE_WECHAT_ACTION = "share_wechat_action";
+    public static final String SHARE_SINA_WEIBO_ACTION = "share_sina_weibo_action";
+    public static final String SHARE_QQ_ACTION = "share_qq_action";
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NativePosID = "2000611873536900";
     //通知登录action
-    public static final String USER_LOGIN_ACTION="sdk_user_login_action";
+    public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
     //feed流广告位id 238
     public static final String NEWS_FEED_AD_ID = "";
     //详情页广告位id 237

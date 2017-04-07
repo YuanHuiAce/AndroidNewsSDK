@@ -65,7 +65,6 @@ public class AuthorizedUserUtil {
     }
 
     public static void sendUserLoginBroadcast(Context context){
-        ToastUtil.toastLong("请先登录");
         Intent intent = new Intent();
         intent.setAction(CommonConstant.USER_LOGIN_ACTION);
         context.sendBroadcast(intent);

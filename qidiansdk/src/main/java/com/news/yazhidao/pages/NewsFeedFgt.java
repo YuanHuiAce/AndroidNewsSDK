@@ -123,10 +123,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private int position;
     //广点通
     private NativeAD mNativeAD;
-    private boolean isPullDown;
     private boolean isADRefresh;
     private List<NativeADDataRef> mADs;
-    public static final int AD_COUNT = 0;
+    public static final int AD_COUNT = 5;
 
     @Override
     public void onThemeChanged() {
@@ -288,7 +287,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                isPullDown = true;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
             }
@@ -296,7 +294,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                isPullDown = false;
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
             }
@@ -320,8 +317,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                  *  如果有数据，拿数据的一条的是时间是下拉刷新
                  *  如果没有数据，直接加载
                  */
-                //广点通sdk请求广告
-                loadAD();
                 ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (!TextUtil.isListEmpty(arrNewsFeed)) {
                     loadData(PULL_DOWN_REFRESH);
@@ -586,41 +581,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
             }
-            if (mADs != null && mAdapter != null && mADs.size() > 0) {
-                for (int i = 0; i < mADs.size(); i++) {
-                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
-                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
-//                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
-                    NativeADDataRef data = mADs.get(i);
-                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
-                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
-                        NewsFeed newsFeed = new NewsFeed();
-                        newsFeed.setTitle(data.getDesc());
-                        newsFeed.setRtype(3);
-                        ArrayList<String> imgs = new ArrayList<>();
-                        imgs.add(data.getImgUrl());
-                        newsFeed.setImgs(imgs);
-                        newsFeed.setPname(data.getTitle());
-                        int style = newsFeedFirst.getStyle();
-                        if (style == 11 || style == 12 || style == 13 || style == 5) {
-                            newsFeed.setStyle(50);
-                        } else {
-                            newsFeed.setStyle(51);
-                        }
-                        newsFeed.setDataRef(data);
-                        if (isPullDown) {
-                            mArrNewsFeed.add(2, newsFeed);
-                        } else {
-                            if (mArrNewsFeed.size() >= 14) {
-                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
-                            } else {
-                                mArrNewsFeed.add(2, newsFeed);
-                            }
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-                mAdapter.notifyDataSetChanged();
+            //广点通sdk请求广告
+            if (TextUtil.isListEmpty(mADs)) {
+                loadAD();
+            } else {
+                addADToList(flag);
             }
         } else {
             //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
@@ -660,6 +625,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
             }, 1000);
+            if (bgLayout.getVisibility() == View.VISIBLE) {
+                bgLayout.setVisibility(View.GONE);
+            }
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
             User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
             user.setUtype("2");
@@ -858,6 +826,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }
         }
+
     }
 
     public void addHFView(LayoutInflater LayoutInflater) {
@@ -1022,46 +991,48 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
-    @Override
-    public void onADLoaded(List<NativeADDataRef> list) {
-        if (list.size() > 0) {
-            mADs = list;
-            if (mADs != null && mAdapter != null && mADs.size() > 0) {
-                for (int i = 0; i < mADs.size(); i++) {
-                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
-                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
+    private void addADToList(int flag) {
+        if (!TextUtil.isListEmpty(mADs) && mAdapter != null) {
+            // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
+            // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
 //                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
-                    NativeADDataRef data = mADs.get(i);
-                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
-                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
-                        NewsFeed newsFeed = new NewsFeed();
-                        newsFeed.setTitle(data.getDesc());
-                        newsFeed.setRtype(3);
-                        ArrayList<String> imgs = new ArrayList<>();
-                        imgs.add(data.getImgUrl());
-                        newsFeed.setImgs(imgs);
-                        newsFeed.setPname(data.getTitle());
-                        int style = newsFeedFirst.getStyle();
-                        if (style == 11 || style == 12 || style == 13 || style == 5) {
-                            newsFeed.setStyle(50);
-                        } else {
-                            newsFeed.setStyle(51);
-                        }
-                        newsFeed.setDataRef(data);
-                        if (isPullDown) {
-                            mArrNewsFeed.add(2, newsFeed);
-                        } else {
-                            if (mArrNewsFeed.size() >= 14) {
-                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
-                            } else {
-                                mArrNewsFeed.add(2, newsFeed);
-                            }
-                        }
-                        mAdapter.notifyDataSetChanged();
+            NativeADDataRef data = mADs.get(0);
+            if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
+                NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+                NewsFeed newsFeed = new NewsFeed();
+                newsFeed.setTitle(data.getDesc());
+                newsFeed.setRtype(3);
+                ArrayList<String> imgs = new ArrayList<>();
+                imgs.add(data.getImgUrl());
+                newsFeed.setImgs(imgs);
+                newsFeed.setPname(data.getTitle());
+                int style = newsFeedFirst.getStyle();
+                if (style == 11 || style == 12 || style == 13 || style == 5) {
+                    newsFeed.setStyle(50);
+                } else {
+                    newsFeed.setStyle(51);
+                }
+                newsFeed.setDataRef(data);
+                if (PULL_DOWN_REFRESH == flag) {
+                    mArrNewsFeed.add(2, newsFeed);
+                } else {
+                    if (mArrNewsFeed.size() >= 14) {
+                        mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                    } else {
+                        mArrNewsFeed.add(2, newsFeed);
                     }
                 }
-                mAdapter.notifyDataSetChanged();
+                mADs.remove(0);
             }
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        if (!TextUtil.isListEmpty(list)) {
+            mADs = list;
+            addADToList(PULL_DOWN_REFRESH);
         }
         isADRefresh = false;
     }
@@ -1086,6 +1057,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * App类广告安装、下载状态的更新（普链广告没有此状态，其值为-1） 返回的AppStatus含义如下： 0：未下载 1：已安装 2：已安装旧版本 4：下载中（可获取下载进度“0-100”）
      * 8：下载完成 16：下载失败
      */
+
     private String getADButtonText(NativeADDataRef adItem) {
         if (adItem == null) {
             return "……";
