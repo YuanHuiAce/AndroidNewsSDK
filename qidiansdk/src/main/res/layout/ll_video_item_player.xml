@@ -34,12 +34,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_video_title">
-
         <com.news.yazhidao.widget.VideoItemContainer
             android:id="@+id/layout_item_video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"/>
+            />
+
 
         <RelativeLayout
             android:id="@+id/rl_video_show"
@@ -74,6 +74,7 @@
                 android:textColor="@color/white"
                 android:textSize="11sp" />
         </RelativeLayout>
+
     </RelativeLayout>
 
     <include
