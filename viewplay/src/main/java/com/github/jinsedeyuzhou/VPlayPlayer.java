@@ -36,7 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.jinsedeyuzhou.media.IjkVideoView;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
@@ -139,6 +138,8 @@ public class VPlayPlayer extends FrameLayout {
     private OnClickOrientationListener onClickOrientationListener;
     private NetChangeReceiver changeReceiver;
 
+    private boolean firstPlay;
+
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -173,7 +174,7 @@ public class VPlayPlayer extends FrameLayout {
                     }
                     break;
                 case PlayStateParams.MESSAGE_SHOW_DIALOG:
-                    mVideoDuration.setText(mVideoView.getDuration() + "");
+                    mVideoDuration.setText(generateTimeSeconds(duration));
                     mVideoNetTie.setVisibility(View.VISIBLE);
                     break;
             }
@@ -187,9 +188,9 @@ public class VPlayPlayer extends FrameLayout {
             if (id == R.id.player_btn) {
                 if (isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6 || MediaNetUtils.getNetworkType(mContext) == 3) {
                     doPauseResume();
-                } else if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
+                } else if (mVideoView.isPlaying() && !isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
 //                    showWifiDialog();
-                    mVideoDuration.setText(mVideoView.getDuration() + "");
+                    mVideoDuration.setText(generateTimeSeconds(duration));
                     mVideoNetTie.setVisibility(View.VISIBLE);
                 }
 
@@ -656,10 +657,20 @@ public class VPlayPlayer extends FrameLayout {
             Log.d(TAG, "STATE_PLAYING");
             progressBar.setVisibility(View.GONE);
             mVideoStaus.setVisibility(View.GONE);
+            mVideoNetTie.setVisibility(View.GONE);
             isShowContoller = true;
             play.setVisibility(View.VISIBLE);
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
             handler.sendEmptyMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
+            if (firstPlay && !isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
+////            showWifiDialog();
+//////            Toast.makeText(mContext.getApplicationContext(),MediaNetUtils.getNetworkType(mContext)+"",Toast.LENGTH_LONG).show();
+                mVideoDuration.setText(generateTimeSeconds(duration));
+                mVideoNetTie.setVisibility(View.VISIBLE);
+                firstPlay = false;
+                onPause();
+
+            }
 
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
@@ -697,6 +708,7 @@ public class VPlayPlayer extends FrameLayout {
         progressBar.setVisibility(View.GONE);
         appVideoPlay.setVisibility(View.GONE);
         mVideoStaus.setVisibility(View.GONE);
+        mVideoNetTie.setVisibility(View.GONE);
     }
 
     public void showBottomControl(boolean show) {
@@ -936,6 +948,15 @@ public class VPlayPlayer extends FrameLayout {
 
     private String generateTime(long time) {
         int totalSeconds = (int) (time / 1000);
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+        return hours > 0 ? String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds) : String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
+
+    private String generateTimeSeconds(long time) {
+        int totalSeconds = (int) (time);
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
         int hours = totalSeconds / 3600;
@@ -1246,6 +1267,7 @@ public class VPlayPlayer extends FrameLayout {
             orientationEventListener.enable();
         bottomProgress.setProgress(0);
         mVideoStaus.setVisibility(View.GONE);
+        mVideoNetTie.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         if (PlayerApplication.getInstance().isSound)
             sound.setImageResource(R.mipmap.sound_mult_icon);
@@ -1465,6 +1487,7 @@ public class VPlayPlayer extends FrameLayout {
 
     public void play(String url) {
         this.url = url;
+        firstPlay = true;
         play(url, 0);
     }
 
@@ -1481,21 +1504,22 @@ public class VPlayPlayer extends FrameLayout {
             // 注册网路变化的监听
             registerNetReceiver();
         }
-        if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
-//            showWifiDialog();
-
-            mVideoNetTie.setVisibility(View.VISIBLE);
-        } else {
-            if (playerSupport) {
-                start();
-                progressBar.setVisibility(View.VISIBLE);
-                releaseBitmap();
-                mVideoView.setVideoPath(url);
-                mVideoView.seekTo(position);
-                mVideoView.start();
-                play.setSelected(true);
-            }
+//        if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
+////            showWifiDialog();
+//////            Toast.makeText(mContext.getApplicationContext(),MediaNetUtils.getNetworkType(mContext)+"",Toast.LENGTH_LONG).show();
+////            mVideoDuration.setText(generateTimeSeconds(duration));
+////            mVideoNetTie.setVisibility(View.VISIBLE);
+//        } else {
+        if (playerSupport) {
+            start();
+            progressBar.setVisibility(View.VISIBLE);
+            releaseBitmap();
+            mVideoView.setVideoPath(url);
+            mVideoView.seekTo(position);
+            mVideoView.start();
+            play.setSelected(true);
         }
+//        }
 
     }
 
@@ -1529,9 +1553,8 @@ public class VPlayPlayer extends FrameLayout {
 
     }
 
-    public void setDuration(String duration)
-    {
-        mVideoDuration.setText(duration);
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     /**
@@ -1597,7 +1620,7 @@ public class VPlayPlayer extends FrameLayout {
             Log.e(TAG, "网络状态改变");
             if (MediaNetUtils.getNetworkType(activity) == 3) {// 网络是WIFI
 //                onNetChangeListener.onWifi();
-            } else if (!isAllowModible && MediaNetUtils.getNetworkType(activity) == 6
+            } else if (mVideoView.isPlaying() && !isAllowModible && MediaNetUtils.getNetworkType(activity) == 6
                     ) {// 网络不是手机网络或者是以太网
                 // TODO 更新状态是暂停状态
 
@@ -1607,16 +1630,16 @@ public class VPlayPlayer extends FrameLayout {
                 show(0);
 //                onNetChangeListener.onMobile();
 //                showWifiDialog();
-                mVideoDuration.setText(mVideoView.getDuration()+"");
+                mVideoDuration.setText(generateTimeSeconds(duration));
                 mVideoNetTie.setVisibility(View.VISIBLE);
 
             } else if (MediaNetUtils.getNetworkType(activity) == 1) {// 网络链接断开
-                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
                 onPause();
 //                onNetChangeListener.onDisConnect();
             } else {
                 onPause();
-                Toast.makeText(mContext, "未知网络", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "未知网络", Toast.LENGTH_SHORT).show();
 //                onNetChangeListener.onNoAvailable();
             }
 
@@ -1630,6 +1653,7 @@ public class VPlayPlayer extends FrameLayout {
 
     public interface OnShareListener {
         void onShare();
+
         void onPlayCancel();
     }
 

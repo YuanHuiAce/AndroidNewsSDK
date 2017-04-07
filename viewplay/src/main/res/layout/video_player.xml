@@ -33,7 +33,11 @@
     </LinearLayout>
 
     <!--网络提示-->
-    <include layout="@layout/player_network"/>
+    <include layout="@layout/player_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

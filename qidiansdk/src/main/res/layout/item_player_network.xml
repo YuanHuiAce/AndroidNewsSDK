@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/app_video_netTie"
+    android:id="@+id/video_netTie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -31,7 +31,7 @@
             android:textColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/app_video_network_duration"
+            android:id="@+id/video_network_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
@@ -45,7 +45,7 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/app_video_netTie_confirm"
+            android:id="@+id/video_netTie_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -60,7 +60,7 @@
 
 
         <TextView
-            android:id="@+id/app_video_netTie_cancel"
+            android:id="@+id/video_netTie_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

@@ -271,7 +271,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-//                    mDetailRightMore.setVisibility(View.GONE);
+                    mDetailRightMore.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
@@ -283,7 +283,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-//                    mDetailRightMore.setVisibility(View.VISIBLE);
+                    mDetailRightMore.setVisibility(View.VISIBLE);
                 }
             }
         });

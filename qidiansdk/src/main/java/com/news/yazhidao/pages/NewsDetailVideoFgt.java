@@ -683,6 +683,16 @@ public class NewsDetailVideoFgt extends Fragment {
         if (vplayer != null) {
             vplayer.onPause();
         }
+
+        if (mSmallLayout.getVisibility()==View.VISIBLE)
+        {
+            vplayer.stop();
+            vplayer.release();
+            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+            if (frameLayout != null) {
+                frameLayout.removeAllViews();
+            }
+        }
     }
 
     @Override
@@ -922,21 +932,29 @@ public class NewsDetailVideoFgt extends Fragment {
                     frameLayout.removeAllViews();
                 }
                 mFullScreen.setVisibility(View.GONE);
-                mDetailContainer.setVisibility(View.VISIBLE);
-                mDetailVideo.addView(vplayer);
-                if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                    vplayer.showBottomControl(false);
-                mDetailVideo.setVisibility(View.VISIBLE);
+                if (mSmallLayout.getVisibility()!=View.VISIBLE) {
+                    mDetailContainer.setVisibility(View.VISIBLE);
+                    mDetailVideo.addView(vplayer);
+                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vplayer.showBottomControl(false);
+                    mDetailVideo.setVisibility(View.VISIBLE);
+                }else
+                {
+                    mSmallScreen.addView(vplayer);
+                    vplayer.setShowContoller(false);
+                    mSmallLayout.setVisibility(View.VISIBLE);
+                }
 
             } else {
-                mDetailContainer.setVisibility(View.GONE);
+                if (mSmallLayout.getVisibility()!=View.VISIBLE) {
+                    mDetailContainer.setVisibility(View.GONE);
+                    mDetailVideo.setVisibility(View.GONE);
+                }
                 FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeAllViews();
                 }
-                mDetailVideo.setVisibility(View.GONE);
                 mFullScreen.addView(vplayer);
-
                 if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
                     vplayer.showBottomControl(false);
                 mFullScreen.setVisibility(View.VISIBLE);

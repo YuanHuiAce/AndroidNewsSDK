@@ -1314,6 +1314,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
+
                 relativeLayout.setVisibility(View.GONE);
                 isAd = false;
                 cPostion = feed.getNid();
@@ -1328,7 +1329,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
                 mItemVideo.removeAllViews();
                 vPlayer.setTitle(feed.getTitle());
-                vPlayer.setDuration(feed.getDuration()+"");
+                vPlayer.setDuration(feed.getDuration());
                 vPlayer.play(feed.getVideourl());
                 mItemVideo.addView(vPlayer);
                 lastPostion = cPostion;
@@ -1382,7 +1383,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                             vPlayerContainer.removeView(vPlayer);
                             vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
-                            vPlayer.setDuration(mArrNewsFeed.get(position).getDuration()+"");
+                            vPlayer.setDuration(mArrNewsFeed.get(position).getDuration());
                             vPlayer.play(mArrNewsFeed.get(position).getVideourl());
                             vPlayerContainer.addView(vPlayer);
                             lastPostion = cPostion;
@@ -1456,7 +1457,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (videoContainer != null)
                     videoContainer.addView(vPlayer);
                 vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
-                vPlayer.setDuration(mArrNewsFeed.get(position).getDuration()+"");
+                vPlayer.setDuration(mArrNewsFeed.get(position).getDuration());
 
                 vPlayer.play(mArrNewsFeed.get(position).getVideourl());
 
