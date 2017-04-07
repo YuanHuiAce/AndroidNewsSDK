@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <LinearLayout
         android:id="@+id/mChannelLayout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="41dp"
         android:orientation="horizontal">
 
@@ -42,11 +42,18 @@
             android:src="@drawable/channel_more_selector" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/mDividingLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/mChannelLayout"
+        android:background="@color/search_lineBlack" />
+
     <TextView
         android:id="@+id/mNetWorkBar"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_below="@id/mChannelLayout"
+        android:layout_below="@id/mDividingLine"
         android:background="@color/white80"
         android:gravity="center"
         android:text="无法连接到网络,请检查网络设置>"
@@ -64,7 +71,7 @@
         android:id="@+id/feedDislike_popupWindow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"></com.news.yazhidao.widget.FeedDislikePopupWindow>
+        android:visibility="gone" />
 
 
     <com.news.yazhidao.widget.VideoContainer

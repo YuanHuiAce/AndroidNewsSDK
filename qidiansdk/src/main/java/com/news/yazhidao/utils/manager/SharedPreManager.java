@@ -6,10 +6,12 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -436,8 +438,16 @@ public final class SharedPreManager {
         return historyEntities;
     }
 
-    public void Historyremove() {
+    public void HistoryRemove() {
         remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
+    }
+
+    public void saveSubscribeList(ArrayList<AttentionListEntity> list){
+        save(CommonConstant.FILE_DATA,CommonConstant.KEY_SUBSCRIBE_LIST, GsonUtil.serialized(list));
+    }
+
+    public void deleteSubscribeList(){
+        remove(CommonConstant.FILE_DATA, CommonConstant.KEY_SUBSCRIBE_LIST);
     }
 
 }

@@ -1,11 +1,11 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,7 +22,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -32,13 +31,12 @@ import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onFocusItemClick;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.application.QiDianApplication;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.net.volley.GsonRequest;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.FetchElementaryRequestPost;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
@@ -46,18 +44,21 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.HotLabelsLayout;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 
 /**
  * Created by fengjigang on 15/10/29.
  */
-public class TopicSearchAty extends BaseActivity implements View.OnClickListener {
+public class TopicSearchAty extends SwipeBackActivity implements View.OnClickListener {
 
     public final static String KEY_NOT_NEED_OPEN_HOME_ATY = "KEY_NOT_NEED_OPEN_HOME_ATY";
     /**
@@ -77,7 +78,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private View mSearchLoaddingWrapper;
     private ImageView mSearchTipImg;
     private TextView mSearchTip;
-    //    private ProgressBar mSearchProgress;
     private ArrayList<Element> mHotLabels;
     private ArrayList<NewsFeed> mNewsFeedLists = new ArrayList<>();
     private int mTotalPage;
@@ -86,8 +86,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private int mPageIndex = 1;//搜索index
     private SearchListViewOpenAdapter mSearchListViewOpenAdapter;
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
-    private RelativeLayout HistoryLayout, HotSearchlayout;
-    private View mBgLayout;
+    private RelativeLayout HistoryLayout, HotSearchLayout, bgLayout;
     private boolean misPullUpToRefresh = false;
 
     @Override
@@ -106,15 +105,23 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mSearchLeftBack.setOnClickListener(this);
         mSearchContent = (EditText) findViewById(R.id.mSearchContent);
         mSearchContent.addTextChangedListener(new TopicTextWatcher());
+        mSearchContent.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    doSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
         mSearchClear = findViewById(R.id.mSearchClear);
         mSearchClear.setOnClickListener(this);
         mDoSearch = (TextView) findViewById(R.id.mDoSearch);
-
-        mBgLayout = findViewById(R.id.bgLayout);
         mSearchLoaddingWrapper = findViewById(R.id.mSearchLoaddingWrapper);
         mSearchTipImg = (ImageView) findViewById(R.id.mSearchTipImg);
         mSearchTip = (TextView) findViewById(R.id.mSearchTip);
-//        mSearchProgress = (ProgressBar) findViewById(R.id.mSearchProgress);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mNewsFeedAdapter = new NewsFeedAdapter(this, null, null);
         mNewsFeedAdapter.isFavoriteList();
         mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
@@ -140,129 +147,105 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.mSearchLeftBack) {
-            finish();
-
-        } else if (v.getId() == R.id.mSearchClear) {
-            mSearchContent.setText("");
-            isVisity(false);
-        } else if (v.getId() == R.id.mDoSearch) {
-            if (mKeyWord != null && !mKeyWord.equals("")) {
-                hideKeyboard(v);
-                mSearchTip.setText("暂无搜索结果");
-                SharedPreManager.mInstance(this).HistorySave(mKeyWord);
-                try {
-                    historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        int i = v.getId();
+        if (i == R.id.mSearchLeftBack) {
+            hideKeyboard();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
                 }
-                isVisity(true);
-                mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
-                mSearchListViewOpenAdapter.notifyDataSetChanged();
-                mPageIndex = 1;
-                loadNewsData(mKeyWord, mPageIndex + "");
-            } else {
-                ToastUtil.toastShort("请您输入搜索关键词");
-            }
-        } else if (v.getId() == R.id.mDoSearchChangeBatch) {
+            }, 200);
+        } else if (i == R.id.mSearchClear) {
+            mSearchContent.setText("");
+            isVisibility(false);
+        } else if (i == R.id.mDoSearch) {
+            doSearch();
+        } else if (i == R.id.mDoSearchChangeBatch) {
             setHotLabelLayoutData(mCurrPageIndex++);
         }
-//        switch (v.getId()) {
-//            case R.id.mSearchLeftBack:
-//                finish();
-//                break;
-//            case R.id.mSearchClear:
-//                mSearchContent.setText("");
-//                isVisity(false);
-//                break;
-//            case R.id.mDoSearch:
-//                if(mKeyWord!=null&&!mKeyWord.equals("")) {
-//                    hideKeyboard(v);
-//                    mSearchTip.setText("暂无搜索结果");
-//                    SharedPreManager.mInstance(this).HistorySave(mKeyWord);
-//                    try {
-//                        historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    isVisity(true);
-//                    mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
-//                    mSearchListViewOpenAdapter.notifyDataSetChanged();
-//                    mPageIndex = 1;
-//                    loadNewsData(mKeyWord, mPageIndex + "");
-//                }else {
-//                    ToastUtil.toastShort("请您输入搜索关键词");
-//                }
-//                break;
-//            case R.id.mDoSearchChangeBatch:
-//                setHotLabelLayoutData(mCurrPageIndex++);
-//                break;
-//        }
+    }
+
+
+    private void doSearch() {
+        hideKeyboard();
+        if (!TextUtil.isEmptyString(mKeyWord)) {
+            mSearchTip.setText("暂无搜索结果");
+            SharedPreManager.mInstance(TopicSearchAty.this).HistorySave(mKeyWord);
+            SharedPreManager.mInstance(TopicSearchAty.this).deleteSubscribeList();
+            try {
+                historyEntities = SharedPreManager.mInstance(this).HistoryGetList();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            isVisibility(true);
+            mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
+            mSearchListViewOpenAdapter.notifyDataSetChanged();
+            mPageIndex = 1;
+            loadNewsData(mKeyWord, mPageIndex + "");
+        } else {
+            ToastUtil.toastShort("请您输入搜索关键词");
+        }
     }
 
     /**
      * 获取新闻数据
      */
     private void loadNewsData(String pKeyWord, final String pPageIndex) {
-        System.out.println("search=====:keyword:" + pKeyWord + "pageIndex:" + pPageIndex + "Url:" + HttpConstant.URL_SEARCH + "?keywords=" + pKeyWord + "&p=" + pPageIndex);
         if (!misPullUpToRefresh)
-            mBgLayout.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.VISIBLE);
         String keyWord = "";
         try {
             keyWord = URLEncoder.encode(pKeyWord, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
+        User user = SharedPreManager.mInstance(this).getUser(this);
+        int uid = 0;
+        if (user != null) {
+            uid = user.getMuid();
+        }
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), HttpConstant.URL_SEARCH + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
+        }.getType(), HttpConstant.URL_SEARCH_WITH_SUBSCRIBE + "?keywords=" + keyWord + "&p=" + pPageIndex + "&uid=" + uid, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
-//                System.out.println("search=========sucessful:"+response.toString());
                 mSearchListView.onRefreshComplete();
-                mBgLayout.setVisibility(View.GONE);
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if (pPageIndex.equals("1")) {
                         mNewsFeedLists.removeAll(mNewsFeedLists);
-
                     }
                     mNewsFeedLists.addAll(response);
-                    if (pPageIndex.equals("1")) {
-                        setAttentionDate();
-                    }
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
-
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
                     mNewsFeedAdapter.notifyDataSetChanged();
-
                 } else {
-                    Logger.e("jigang", "response is null");
-                    misPullUpToRefresh = false;
                     if (mPageIndex > 1) {
                         ToastUtil.toastShort("没有更多数据");
                     } else {
                         ToastUtil.toastShort("没有搜索到与\"" + mKeyWord + "\"相关的数据");
                         mSearchTipImg.setVisibility(View.VISIBLE);
                         mSearchTip.setVisibility(View.VISIBLE);
-//                        mSearchProgress.setVisibility(View.GONE);
-
                     }
+                }
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("search=========:" + error.toString());
                 misPullUpToRefresh = false;
                 mSearchListView.onRefreshComplete();
-                Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
                 mSearchTip.setVisibility(View.VISIBLE);
-                mBgLayout.setVisibility(View.GONE);
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
             }
         });
 //        searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
@@ -270,64 +253,49 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         requestQueue.add(searchRequest);
     }
 
-    public void setAttentionDate() {
-        NewsFeed newsFeed = new NewsFeed();
-        ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
-        for (int i = 0; i < 4; i++) {
-            AttentionListEntity attentionListEntity = new AttentionListEntity();
-            attentionListEntity.setIcon("http://www.ld12.com/upimg358/20160201/yd33s1bvzmm1543.jpg");
-            attentionListEntity.setDescr("音乐风云");
-            attentionListEntities.add(attentionListEntity);
-        }
-        newsFeed.setAttentionListEntities(attentionListEntities);
-        newsFeed.setStyle(4);
-        if (!TextUtil.isListEmpty(mNewsFeedLists)) {//判断不为空
-            if (mNewsFeedLists.size() <= 2) {//判断搜索列表的数量小于等于2
-                mNewsFeedLists.add(newsFeed);
-            } else {
-                mNewsFeedLists.add(2, newsFeed);
-            }
-        }
-
-    }
-
     @Override
     protected void loadData() {
         mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
         mSearchTip.setText("暂无热门搜索热词");
-        GsonRequest<ArrayList<Element>> hotWordRequest = new GsonRequest<ArrayList<Element>>(Request.Method.POST, new TypeToken<ArrayList<Element>>() {
-        }.getType(), "http://121.40.34.56/news/baijia/fetchElementary", new Response.Listener<ArrayList<Element>>() {
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        FetchElementaryRequestPost<ArrayList<Element>> fetchElementaryRequestPost = new FetchElementaryRequestPost("http://121.40.34.56/news/baijia/fetchElementary", "", new Response.Listener<ArrayList<Element>>() {
             @Override
-            public void onResponse(ArrayList<Element> result) {
+            public void onResponse(final ArrayList<Element> result) {
                 mHotLabels = result;
-                mBgLayout.setVisibility(View.GONE);
                 if (!TextUtil.isListEmpty(mHotLabels)) {
                     int temp = mHotLabels.size() % PAGE_CAPACITY;
                     mTotalPage = (temp == 0) ? mHotLabels.size() / PAGE_CAPACITY : mHotLabels.size() / PAGE_CAPACITY + 1;
                     setHotLabelLayoutData(mCurrPageIndex++);
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                 } else {
-                    Logger.e("jigang", "-----No Date ~");
                     mSearchTipImg.setVisibility(View.VISIBLE);
                     mSearchTip.setVisibility(View.VISIBLE);
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
-                    HotSearchlayout.setVisibility(View.GONE);
-//                    mSearchProgress.setVisibility(View.GONE);
+                    HotSearchLayout.setVisibility(View.GONE);
+                }
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mBgLayout.setVisibility(View.GONE);
-                HotSearchlayout.setVisibility(View.GONE);
+                HotSearchLayout.setVisibility(View.GONE);
                 mSearchLoaddingWrapper.setVisibility(View.GONE);
                 mSearchTipImg.setVisibility(View.VISIBLE);
                 mSearchTip.setVisibility(View.VISIBLE);
                 HistoryLayout.setVisibility(View.GONE);
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
             }
         });
-        QiDianApplication.getInstance().getRequestQueue().add(hotWordRequest);
-
+        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        fetchElementaryRequestPost.setRequestHeaders(header);
+        fetchElementaryRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(fetchElementaryRequestPost);
     }
 
     LinearLayout mFootView;
@@ -341,19 +309,14 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mSearchHotLabelLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                View view = getWindow().peekDecorView();
-                if (view != null) {
-                    mSearchContent.clearFocus();
-                    InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                hideKeyboard();
                 return false;
             }
         });
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
         mHotLabelsLayout = (HotLabelsLayout) headView.findViewById(R.id.mHotLabelsLayout);
         HistoryLayout = (RelativeLayout) headView.findViewById(R.id.HistoryLayout);
-        HotSearchlayout = (RelativeLayout) headView.findViewById(R.id.HotSearchlayout);
+        HotSearchLayout = (RelativeLayout) headView.findViewById(R.id.HotSearchlayout);
         mDoSearchChangeBatch.setOnClickListener(this);
         lv.addHeaderView(headView);
         try {
@@ -361,7 +324,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Logger.e("aaa", "historyEntities============" + historyEntities.toString());
         if (historyEntities.size() == 0) {
             HistoryEntity bean = new HistoryEntity(-1);
             historyEntities.add(bean);
@@ -369,8 +331,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         } else {
             addListViewFootView();
         }
-
-        mSearchListViewOpenAdapter = new SearchListViewOpenAdapter(TopicSearchAty.this);
+        mSearchListViewOpenAdapter = new SearchListViewOpenAdapter(this);
         mSearchListViewOpenAdapter.setOnSearchListViewOpenItemClick(mOnSearchListViewOpenItemClick);
         mSearchListViewOpenAdapter.setOnFocusItemClick(mOnFocusItemClick);
         mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
@@ -380,10 +341,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     onSearchListViewOpenItemClick mOnSearchListViewOpenItemClick = new onSearchListViewOpenItemClick() {
         @Override
         public void listener(String content) {
+            hideKeyboard();
             mSearchContent.setText(content);
-
-
-//            hideKeyboard(view);
             mSearchTip.setText("暂无搜索结果");
             SharedPreManager.mInstance(TopicSearchAty.this).HistorySave(mKeyWord);
             try {
@@ -391,7 +350,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            isVisity(true);
+            isVisibility(true);
             mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
             mSearchListViewOpenAdapter.notifyDataSetChanged();
             mPageIndex = 1;
@@ -433,7 +392,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        hideKeyboard(v);
+                        hideKeyboard();
                         mSearchContent.setText(element.getTitle());
                         mSearchTip.setText("暂无搜索结果");
                         SharedPreManager.mInstance(TopicSearchAty.this).HistorySave(element.getTitle());
@@ -442,7 +401,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        isVisity(true);
+                        isVisibility(true);
                         mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
                         mSearchListViewOpenAdapter.notifyDataSetChanged();
                         mPageIndex = 1;
@@ -460,39 +419,15 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-
-
-            if (requestCode == NewsFeedAdapter.REQUEST_CODE) {
-                int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
-                Logger.e("jigang", "news nid = " + newsId);
-                if (!TextUtil.isListEmpty(mNewsFeedLists)) {
-                    for (NewsFeed item : mNewsFeedLists) {
-                        if (item != null && newsId == item.getNid()) {
-                            item.setRead(true);
-                        }
-                    }
-                    mNewsFeedAdapter.notifyDataSetChanged();
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("TopActivity:" + e.toString());
-        }
-    }
-
     /**
      * 获取InputMethodManager，隐藏软键盘
-     *
-     * @param view
      */
-    private void hideKeyboard(View view) {
-        IBinder token = view.getWindowToken();
-        if (token != null) {
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+    private void hideKeyboard() {
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            mSearchContent.clearFocus();
+            InputMethodManager inputManger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManger.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -519,7 +454,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 mDoSearch.setOnClickListener(TopicSearchAty.this);
             } else {
                 mKeyWord = "";
-//                isVisity(false);//没有文字隐藏查找的listview等等
+//                isVisibility(false);//没有文字隐藏查找的listview等等
                 mSearchClear.setVisibility(View.GONE);
 //                mDoSearch.setTextColor(TopicSearchAty.this.getResources().getColor(R.color.do_search_not_do));//搜索文字变色
                 mDoSearch.setOnClickListener(null);
@@ -530,7 +465,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     /**
      * @param isType true显示搜索结果 false显示搜索界面
      */
-    public void isVisity(boolean isType) {
+    public void isVisibility(boolean isType) {
         if (isType) {
             mSearchListViewOpen.setVisibility(View.GONE);
             mSearchListView.setVisibility(View.VISIBLE);
@@ -542,9 +477,10 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             }
             if (mSearchTip.getVisibility() == View.VISIBLE) {
                 mSearchTip.setVisibility(View.GONE);
-                ;
             }
-//            if (mSearchProgress.getVisibility() == View.GONE) {mSearchProgress.setVisibility(View.VISIBLE);}
+            if (bgLayout.getVisibility() == View.GONE) {
+                bgLayout.setVisibility(View.VISIBLE);
+            }
         } else {
             mSearchListViewOpen.setVisibility(View.VISIBLE);
             mSearchListView.setVisibility(View.GONE);
@@ -556,9 +492,10 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             }
             if (mSearchTip.getVisibility() == View.GONE) {
                 mSearchTip.setVisibility(View.VISIBLE);
-                ;
             }
-//            if (mSearchProgress.getVisibility() == View.VISIBLE) {mSearchProgress.setVisibility(View.GONE);}
+            if (bgLayout.getVisibility() == View.VISIBLE) {
+                bgLayout.setVisibility(View.GONE);
+            }
         }
         if (historyEntities.size() != 0) {
             if (mFootView == null) {
@@ -567,9 +504,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             if (HistoryLayout.getVisibility() == View.GONE) {
                 HistoryLayout.setVisibility(View.VISIBLE);
             }
-
         }
-
     }
 
     public void addListViewFootView() {
@@ -583,9 +518,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         footView_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreManager.mInstance(TopicSearchAty.this).Historyremove();
+                SharedPreManager.mInstance(TopicSearchAty.this).HistoryRemove();
                 HistoryLayout.setVisibility(View.GONE);
-                historyEntities = new ArrayList<HistoryEntity>();
+                historyEntities = new ArrayList<>();
                 HistoryEntity bean = new HistoryEntity(-1);
                 historyEntities.add(bean);
                 mSearchListViewOpenAdapter.setNewsFeed(historyEntities);

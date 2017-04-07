@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/bg_share" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/new_color5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/new_color9"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="16dp"
+            android:text="新闻号"
+            android:textColor="@color/bg_share_text"
+            android:textSize="@dimen/font3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="17dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="50dp" />
+
+
+            <LinearLayout
+                android:id="@+id/linear_ll_news_search_item_layoutOne"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_ll_news_search_item_iconOne"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="top|center" />
+
+                <TextView
+                    android:id="@+id/tv_ll_news_search_item_descrOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="历史"
+                    android:textColor="@color/bg_share_text"
+                    android:textSize="@dimen/font5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_ll_news_search_item_layoutTwo"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_ll_news_search_item_iconTwo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="top|center"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/tv_ll_news_search_item_descrTwo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="历史"
+                    android:textColor="@color/bg_share_text"
+                    android:textSize="@dimen/font5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_ll_news_search_item_layoutThree"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_ll_news_search_item_iconThree"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="top|center"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/tv_ll_news_search_item_descrThree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="历史"
+                    android:textColor="@color/bg_share_text"
+                    android:textSize="@dimen/font5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_ll_news_search_item_layoutFour"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_ll_news_search_item_iconFour"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="top|center"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/tv_ll_news_search_item_descrFour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="历史"
+                    android:textColor="@color/bg_share_text"
+                    android:textSize="@dimen/font5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/new_color5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/bg_share" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/new_color5" />
+</LinearLayout>
