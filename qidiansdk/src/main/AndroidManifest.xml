@@ -47,6 +47,11 @@
             android:name=".pages.NewsDetailVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.TopicSearchAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <!--广点通-->
         <!-- 声明SDK所需要的组件 -->
         <service

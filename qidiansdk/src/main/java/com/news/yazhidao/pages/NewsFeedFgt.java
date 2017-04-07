@@ -105,7 +105,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean mIsFirst = true;
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRetry;
-    private RelativeLayout bgLayout;
+    private RelativeLayout bgLayout, mrlSearch;
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
     private Handler mHandler;
@@ -825,30 +825,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }
         }
-
     }
 
     public void addHFView(LayoutInflater LayoutInflater) {
-//        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
-//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//        mSearchHeaderView.setLayoutParams(layoutParams);
+        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-//        lv.addHeaderView(mSearchHeaderView);
-//        lv.setHeaderDividersEnabled(false);
-//        mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
-//        mSearch_layout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent in = new Intent(getActivity(), TopicSearchAty.class);
-//                getActivity().startActivity(in);
-//            }
-//        });
+        lv.addHeaderView(mSearchHeaderView);
+        lv.setHeaderDividersEnabled(false);
+        mrlSearch = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
+        mrlSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, TopicSearchAty.class);
+                mContext.startActivity(intent);
+            }
+        });
         footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
-
 //        lv.setFooterDividersEnabled(false);
         mlvNewsFeed.setOnStateListener(new PullToRefreshBase.onStateListener() {
             @Override
@@ -1288,28 +1286,32 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
             } else {
-
-                portrait = false;
-                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        portrait = false;
+                        Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
 //                vPlayer.onChanged(newConfig);
-                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                if (frameLayout != null) {
-                    frameLayout.removeView(vPlayer);
-                    View itemView = (View) frameLayout.getParent();
-                    if (itemView != null) {
-                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
-                        if (videoSHow != null) {
-                            videoSHow.setVisibility(View.VISIBLE);
+                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                        if (frameLayout != null) {
+                            frameLayout.removeView(vPlayer);
+                            View itemView = (View) frameLayout.getParent();
+                            if (itemView != null) {
+                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+                                if (videoSHow != null) {
+                                    videoSHow.setVisibility(View.VISIBLE);
+                                }
+                            }
                         }
-                    }
-                }
 
-                vPlayerContainer.setVisibility(View.VISIBLE);
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                vPlayerContainer.addView(vPlayer, lp);
-                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                    vPlayer.showBottomControl(false);
+                        vPlayerContainer.setVisibility(View.VISIBLE);
+                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        vPlayerContainer.addView(vPlayer, lp);
+                        if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                            vPlayer.showBottomControl(false);
+                    }
+                },300);
 
             }
 

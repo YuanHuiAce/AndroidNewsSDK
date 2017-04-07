@@ -30,8 +30,8 @@ public class SearchListViewOpenAdapter extends CommonAdapter<HistoryEntity> {
                 holder.getView(R.id.search_listviewopen_itemLayout).setVisibility(View.VISIBLE);
             }
         }
-        holder.setTextViewExtendText(R.id.search_listviewopen_item_content, historyEntity.getCotent());
-        setItemClick((RelativeLayout) holder.getView(R.id.search_listviewopen_itemLayout), historyEntity.getCotent());
+        holder.setTextViewExtendText(R.id.search_listviewopen_item_content, historyEntity.getContent());
+        setItemClick((RelativeLayout) holder.getView(R.id.search_listviewopen_itemLayout), historyEntity.getContent());
         setFocusClick((TextViewExtend) holder.getView(R.id.focus_item_content), historyEntity);
     }
 

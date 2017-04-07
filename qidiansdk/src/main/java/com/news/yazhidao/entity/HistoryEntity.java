@@ -6,23 +6,23 @@ import java.io.Serializable;
  * Created by Administrator on 2016/5/11.
  */
 public class HistoryEntity implements Serializable {
-    private String cotent;
+    private String content;
     private int position = 0;
     private boolean isFocus = false;
 
-    public HistoryEntity(String cotent ) {
-        this.cotent = cotent;
+    public HistoryEntity(String content ) {
+        this.content = content;
     }
     public HistoryEntity(int position) {
         this.position = position;
     }
 
-    public String getCotent() {
-        return cotent;
+    public String getContent() {
+        return content;
     }
 
-    public void setCotent(String cotent) {
-        this.cotent = cotent;
+    public void setContent(String cotent) {
+        this.content = cotent;
     }
 
     public int getPosition() {

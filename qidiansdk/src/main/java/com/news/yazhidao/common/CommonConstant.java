@@ -32,6 +32,7 @@ public final class CommonConstant {
 
     public static final String FILE_USER = "user";
     public static final String FILE_JPUSH = "jpush";
+    public static final String FILE_DATA = "data";
     public static final String FILE_UMENG = "umeng";
     public static final String KEY_USER_INFO = "user_info";
     public static final String KEY_VISITOR_INFO = "key_visitor_info";//游客信息
@@ -52,6 +53,8 @@ public final class CommonConstant {
     public static final String UPLOAD_LOG_DETAIL = "uploadlog_detali";//用户上传日志
     public static final String MY_FAVORITE = "my_favorite";//我的收藏
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
+    public static final String KEY_SUBSCRIBE_LIST = "key_subscribe_list";//订阅信息
+    public static final String KEY_ATTENTION_ID = "key_attention_id";//是否是以一次点击关注源
     public static final String KEY_LOCATION_PROVINCE = "key_location_province";
     public static final String KEY_LOCATION_CITY = "key_location_city";
     public static final String KEY_LOCATION_ADDR = "key_location_addr";
