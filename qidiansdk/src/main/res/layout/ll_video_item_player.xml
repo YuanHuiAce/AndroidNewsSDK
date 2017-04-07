@@ -84,7 +84,15 @@
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/item_bottom_video"
+        android:layout_marginTop="2dp"
+        android:background="#e0e0e0" />
+    <ImageView
+        android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_below="@+id/item_bottom_video"
-        android:background="#f8f8f8" />
+        android:background="#f8f8f8"
+        android:visibility="gone"
+        />
 </RelativeLayout>

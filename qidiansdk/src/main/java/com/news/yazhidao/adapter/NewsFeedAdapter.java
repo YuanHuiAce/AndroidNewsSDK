@@ -314,7 +314,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.ll_video_item_player) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
             ImageView ivVideo = holder.getView(R.id.image_bg);
