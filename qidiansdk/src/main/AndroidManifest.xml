@@ -52,6 +52,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateVisible" />
+        <activity
+            android:name=".pages.AttentionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
+        <activity
+            android:name=".pages.SubscribeListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
         <!--广点通-->
         <!-- 声明SDK所需要的组件 -->
         <service

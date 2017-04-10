@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mAttentionRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/new_color9">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/mAttentionList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animationCache="false"
+        android:background="@color/white"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/listview_scrollbar"
+        android:scrollbars="vertical" />
+
+    <RelativeLayout
+        android:id="@+id/mAttentionTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparency">
+
+        <TextView
+            android:id="@+id/mAttentionLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp" />
+
+        <TextView
+            android:id="@+id/mAttentionRightMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableRight="@drawable/btn_detail_right_more"
+            android:paddingRight="15dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/mAttentionCenterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="top|center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/new_font10"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/mAttention_btn"
+            android:layout_width="56dp"
+            android:layout_height="23dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/mAttentionRightMore"
+            android:background="@drawable/unattention_tv_shape"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="关注"
+            android:textColor="#ffe71f19" />
+
+        <include layout="@layout/qd_loading_view_anim" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="invisible" />
+
+</RelativeLayout>

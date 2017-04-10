@@ -24,8 +24,6 @@ import com.news.yazhidao.utils.manager.UserManager;
 
 import java.util.ArrayList;
 
-import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
-
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     private static final String TAG = "MainActivity";
     RelativeLayout newsLayout;
@@ -37,13 +35,14 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        SharedPreManager.mInstance(this).save("flag","text1","测试！");
+        //显示个人中心
+        SharedPreManager.mInstance(this).save("flag", "showUserCenter", true);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int size = mInstance(MainActivity.this).getInt("showflag", "textSize");
+                int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
@@ -88,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                     visitorUser.setUserIcon("");
                     visitorUser.setVisitor(true);
                     SharedPreManager.mInstance(MainActivity.this).saveUser(visitorUser);
+                    //更新user图标
+                    if (SharedPreManager.mInstance(MainActivity.this).getBoolean("flag", "showUserCenter")) {
+                        mainView.setUserCenterImg("");
+                    }
                 }
             }
         });
@@ -154,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         user.setDistrict("二七区");
         //授权用户映射
         AuthorizedUserUtil.authorizedUser(user, this);
+        //更新user图标
+        if (SharedPreManager.mInstance(this).getBoolean("flag", "showUserCenter")) {
+            mainView.setUserCenterImg(user.getAvatar());
+        }
     }
 
     private class UserReceiver extends BroadcastReceiver {

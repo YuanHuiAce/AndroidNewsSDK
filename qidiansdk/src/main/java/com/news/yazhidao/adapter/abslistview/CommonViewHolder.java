@@ -95,6 +95,11 @@ public class CommonViewHolder {
         text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
     }
 
+    public void setTextViewTextColor(int ViewID, int color) {
+        TextView text = getView(ViewID);
+        text.setTextColor(mContext.getResources().getColor(color));
+    }
+
     public void setTextViewExtendTextColor(int ViewID, int color) {
         TextViewExtend text = getView(ViewID);
         text.setTextColor(mContext.getResources().getColor(color));
@@ -119,29 +124,21 @@ public class CommonViewHolder {
         return mLayoutId;
     }
 
-//    public void setGlideDraweeViewURI(int draweeView, String strImg) {
-//        ImageView imageView = getView(draweeView);
-//        if (!TextUtil.isEmptyString(strImg)) {
-////            imageView.setImageURI(Uri.parse(strImg));
-//            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(imageView);
-////            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-//        }
-//    }
-
-
-    public void setGlideDraweeViewURI(int draweeView, String strImg) {
-        ImageView imageView = getView(draweeView);
-        if (!TextUtil.isEmptyString(strImg)) {
-            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
-        }else
-            Glide.with(mContext).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
-
+    public void setSimpleDrawViewResource(int drawView, int Resource) {
+        ImageView imageView = getView(drawView);
+        imageView.setImageResource(Resource);
     }
 
+    public void setGlideDrawViewURI(int drawView, String strImg) {
+        ImageView imageView = getView(drawView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+        } else
+            Glide.with(mContext).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+    }
 
-    public void setGlideDraweeViewURI(int draweeView, String strImg, int width, int height, int rType) {
-        ImageView imageView = getView(draweeView);
+    public void setGlideDrawViewURI(int drawView, String strImg, int width, int height, int rType) {
+        ImageView imageView = getView(drawView);
         if (!TextUtil.isEmptyString(strImg)) {
             if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
                 imageView.setImageResource(R.drawable.bg_load_default_small);
@@ -161,6 +158,26 @@ public class CommonViewHolder {
                     imageView.setAlpha(1.0f);
                 }
                 Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+            }
+        }
+    }
+
+    public void setGlideDrawViewURI(int drawView, String strImg, int position) {
+        ImageView imageView = getView(drawView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.m_r_q1).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        } else {
+            int type = position % 5;
+            if (type == 0) {
+                imageView.setImageResource(R.drawable.m_r_q1);
+            } else if (type == 1) {
+                imageView.setImageResource(R.drawable.m_r_q2);
+            } else if (type == 2) {
+                imageView.setImageResource(R.drawable.m_r_q3);
+            } else if (type == 3) {
+                imageView.setImageResource(R.drawable.m_r_q4);
+            } else if (type == 4) {
+                imageView.setImageResource(R.drawable.m_r_q5);
             }
         }
     }

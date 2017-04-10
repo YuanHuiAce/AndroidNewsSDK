@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
@@ -289,6 +290,17 @@ public class TextUtil {
         contentBuilder.append("</div></body></html>");
         return contentBuilder.toString();
     }
+
+    public static ArrayList<AttentionListEntity> copyArrayList(ArrayList<AttentionListEntity> target) {
+        ArrayList<AttentionListEntity> newList = new ArrayList<>();
+        if (!TextUtil.isListEmpty(target)) {
+            for (AttentionListEntity entity : target) {
+                newList.add(new AttentionListEntity(entity.getConcern(), entity.getCtime(), entity.getDescr(), entity.getFlag(), entity.getIcon(), entity.getId(), entity.getName()));
+            }
+        }
+        return newList;
+    }
+
     public static String secToTime(int time) {
         String timeStr = null;
         int hour = 0;

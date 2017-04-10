@@ -157,7 +157,6 @@
                 android:layout_height="50dp" />
 
         </LinearLayout>
-
     </LinearLayout>
 
     <ImageView

@@ -193,7 +193,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        if (rootView != null && isVisibleToUser && isLoadedData) {
 //            isLoadedData = false;
 //            mHandler.postDelayed(mRunnable, 800);
-//            Logger.e("jigang", "refresh " + mstrChannelId);
 //            if (mArrNewsFeed == null || mIsFirst) {
 //                mArrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
 //                mAdapter.notifyDataSetChanged();
@@ -237,7 +236,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.onCreate(bundle);
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
-        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
         /** 梁帅：注册修改字体大小的广播*/
         mRefreshReceiver = new RefreshReceiver();
@@ -305,7 +304,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
         playVideoControl();
-//        String platform = AnalyticsConfig.getChannel(getActivity());
         //load news data
         mHandler = new Handler();
         mThread = new Runnable() {

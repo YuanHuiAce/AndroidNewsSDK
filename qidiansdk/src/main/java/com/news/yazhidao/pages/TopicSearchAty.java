@@ -39,7 +39,6 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FetchElementaryRequestPost;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -165,7 +164,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             setHotLabelLayoutData(mCurrPageIndex++);
         }
     }
-
 
     private void doSearch() {
         hideKeyboard();
@@ -436,17 +434,14 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            Logger.e("jigang", "s=" + s + ",start=" + start + ",count=" + count + ",after=" + after);
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Logger.e("jigang", "s=" + s + ",start=" + start + ",before=" + before + ",count=" + count);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
                 mKeyWord = mSearchContent.getText().toString();
                 mSearchClear.setVisibility(View.VISIBLE);

@@ -60,9 +60,8 @@ public final class CommonConstant {
     public static final String KEY_LOCATION_ADDR = "key_location_addr";
     public static final String NEWS_COMMENT_NUM = "news_comment_num";
     public static final String NEWS_ID = "news_id";
-    public static final int INTENT_REQUEST_COMMENT = 10001;
-    public static final int INTENT_RESULT_COMMENT = 10002;
-
+    public static final String FILE_DATA_ATTENTION = "file_data_attention";
+    public static final String KEY_ATTENTIN_LIST = "key_attentin_list";
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;
     public static final int TEXT_SIZE_BIG = 20;
