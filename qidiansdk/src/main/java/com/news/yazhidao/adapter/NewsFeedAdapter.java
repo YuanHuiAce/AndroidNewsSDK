@@ -451,6 +451,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
@@ -482,9 +483,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
-//            if (isAttention) {
-//                holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
-//            }
+            if (isAttention) {
+                holder.getView(R.id.source_content_linearLayout).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ll_video_item_small) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);

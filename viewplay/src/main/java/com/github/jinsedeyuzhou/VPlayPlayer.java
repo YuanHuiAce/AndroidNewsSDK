@@ -521,7 +521,8 @@ public class VPlayPlayer extends FrameLayout {
                                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                             mIsLand = true;
                             mClick = false;
-                        } else {
+                        }
+                        else{
                             if ((rotation >= 60 && rotation <= 120))
                                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
                             else if (((rotation >= 230) && (rotation <= 310)))
@@ -1365,13 +1366,13 @@ public class VPlayPlayer extends FrameLayout {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-
             if (!isLock) {
-                mIsLand = false; // 是否是横屏
-                mClick = false; // 是否点击
-//                mClickLand = true; // 点击进入横屏
-                mClickPort = false; // 点击进入竖屏
+                mClick = true; // 是否点击
+                mIsLand = false;
+                mClickPort = false;
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+
                 return true;
             }
             return true;

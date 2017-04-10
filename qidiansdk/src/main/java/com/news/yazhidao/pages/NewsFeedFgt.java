@@ -910,7 +910,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
                 Log.v(TAG, "onScroll  ");
-                if ("44".equals(mstrChannelId) && portrait&&!isAuto)
+                if ("44".equals(mstrChannelId) && portrait && !isAuto)
                     VideoVisibleControl();
             }
         });
@@ -1230,28 +1230,32 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                vPlayerContainer.removeView(vPlayer);
-                vPlayerContainer.setVisibility(View.GONE);
                 mHandler.postDelayed(new Runnable() {
                                          @Override
                                          public void run() {
+                                             portrait = true;
+                                             vPlayerContainer.removeView(vPlayer);
+                                             vPlayerContainer.setVisibility(View.GONE);
                                              TransitionManager.beginDelayedTransition(vPlayer);
                                              Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
                                              int position = getPlayItemPosition();
                                              if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
                                                  if (position != -1) {
                                                      FrameLayout playItemView = getPlayItemView(position);
-                                                     View itemView = (View) playItemView.getParent();
+                                                     ViewGroup itemView = (ViewGroup) playItemView.getParent();
                                                      if (itemView != null) {
                                                          itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
                                                      }
+//                                                     ViewGroup parent = (ViewGroup) vPlayer.getParent();
+//                                                     if (parent != null)
+//                                                         parent.removeAllViews();
                                                      playItemView.removeAllViews();
                                                      playItemView.addView(vPlayer);
 
                                                      if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                                                          vPlayer.showBottomControl(false);
                                                  } else {
-                                                     mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextPosition()+1 , 0);
+                                                     mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextPosition() + 1, 0);
                                                      mHandler.postDelayed(new Runnable() {
                                                          @Override
                                                          public void run() {
@@ -1262,7 +1266,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                                              if (showBg != null)
                                                                  showBg.setVisibility(View.GONE);
                                                          }
-                                                     },100);
+                                                     }, 300);
 
                                                  }
                                              } else {
@@ -1272,35 +1276,40 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                                  }
 
                                              }
-                                             portrait = true;
+
                                          }
                                      }
 
-                        , 100);
+                        , 300);
 
 
             } else {
-                portrait = false;
-                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        portrait = false;
+                        Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
 //                vPlayer.onChanged(newConfig);
-                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                if (frameLayout != null) {
-                    frameLayout.removeView(vPlayer);
-                    View itemView = (View) frameLayout.getParent();
-                    if (itemView != null) {
-                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
-                        if (videoSHow != null) {
-                            videoSHow.setVisibility(View.VISIBLE);
+                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                        if (frameLayout != null) {
+                            frameLayout.removeView(vPlayer);
+                            View itemView = (View) frameLayout.getParent();
+                            if (itemView != null) {
+                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+                                if (videoSHow != null) {
+                                    videoSHow.setVisibility(View.VISIBLE);
+                                }
+                            }
                         }
-                    }
-                }
 
-                vPlayerContainer.setVisibility(View.VISIBLE);
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                vPlayerContainer.addView(vPlayer, lp);
-                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                    vPlayer.showBottomControl(false);
+                        vPlayerContainer.setVisibility(View.VISIBLE);
+                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        vPlayerContainer.addView(vPlayer, lp);
+                        if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                            vPlayer.showBottomControl(false);
+                    }
+                },300);
 
             }
 
@@ -1479,7 +1488,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
                     if (position != -1) {
-                        isAuto=true;
+                        isAuto = true;
                         if (vPlayerContainer.getVisibility() == View.VISIBLE) {
                             if (vPlayer != null) {
                                 vPlayer.stop();
@@ -1567,7 +1576,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 vPlayer.play(mArrNewsFeed.get(position).getVideourl());
 
                 lastPostion = cPostion;
-                isAuto=false;
+                isAuto = false;
                 position = 0;
             }
         }, 1000);
@@ -1671,7 +1680,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * 滑动控制视频是否播放
      */
     private void VideoVisibleControl() {
-        Log.v(TAG,"VideoVisibleControl");
+        Log.v(TAG, "VideoVisibleControl");
         try {
             if (vPlayer == null)
                 return;

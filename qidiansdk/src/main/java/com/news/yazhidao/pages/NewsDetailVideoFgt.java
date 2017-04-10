@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -896,6 +897,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mSmallScreen.removeAllViews();
                     mSmallLayout.setVisibility(View.GONE);
                 } else if (mFullScreen.getVisibility() == View.VISIBLE) {
+                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     mFullScreen.removeAllViews();
                     mFullScreen.setVisibility(View.GONE);
                 } else if (mDetailVideo.getVisibility() == View.VISIBLE) {

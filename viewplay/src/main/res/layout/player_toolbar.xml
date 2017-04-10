@@ -19,9 +19,10 @@
         android:layout_width="wrap_content"
         android:layout_toRightOf="@+id/iv_video_finish"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
+        android:singleLine="true"
         android:layout_centerVertical="true"
-        android:maxLength="20"
+        android:maxEms="20"
+        android:ellipsize="end"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         />
