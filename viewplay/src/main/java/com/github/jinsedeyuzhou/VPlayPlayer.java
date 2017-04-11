@@ -521,8 +521,7 @@ public class VPlayPlayer extends FrameLayout {
                                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                             mIsLand = true;
                             mClick = false;
-                        }
-                        else{
+                        } else {
                             if ((rotation >= 60 && rotation <= 120))
                                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
                             else if (((rotation >= 230) && (rotation <= 310)))
@@ -1051,6 +1050,7 @@ public class VPlayPlayer extends FrameLayout {
                 firstTouch = false;
             }
             contollerbar.setVisibility(View.GONE);
+//            if (!portrait)
             if (seek) {
                 onProgressSlide(-deltaX / mVideoView.getWidth());
             } else {
@@ -1085,7 +1085,7 @@ public class VPlayPlayer extends FrameLayout {
             handler.sendEmptyMessage(PlayStateParams.MESSAGE_SEEK_NEW_POSITION);
         }
         handler.removeMessages(PlayStateParams.MESSAGE_HIDE_CONTOLL);
-        handler.sendEmptyMessageDelayed(PlayStateParams.MESSAGE_HIDE_CONTOLL, 500);
+        handler.sendEmptyMessageDelayed(PlayStateParams.MESSAGE_HIDE_CONTOLL, 200);
 
     }
 

@@ -835,6 +835,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              if (!MediaNetUtils.isConnectionAvailable(mContext))
+                  return ;
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
@@ -988,8 +990,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (mSmallLayout.getVisibility()!=View.VISIBLE) {
                     mDetailContainer.setVisibility(View.VISIBLE);
                     mDetailVideo.addView(vplayer);
-                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                        vplayer.showBottomControl(false);
+//                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vplayer.showBottomControl(true);
                     mDetailVideo.setVisibility(View.VISIBLE);
                 }else
                 {

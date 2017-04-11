@@ -218,3 +218,7 @@ java.lang.Object readResolve();
 ##视频
 -keep class tv.danmaku.ijk.media.** { *; }
 -dontwarn tv.danmaku.ijk.**
+
+###bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
