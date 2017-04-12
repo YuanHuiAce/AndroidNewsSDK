@@ -35,6 +35,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -51,13 +52,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class AttentionActivity extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
-    public static final String KEY_ATTENTION_TITLE = "key_attention_title";
-    public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
-    public static final String KEY_ATTENTION_CONPUBFLAG = "key_detail_conpubflag";
-    public static final String KEY_ATTENTION_INDEX = "key_attention_index";
-    public static final int REQUEST_CODE = 1040;
+
     private PullToRefreshListView mAttentionList;
     private RequestManager mRequestManager;
     private TextView mAttentionLeftBack,
@@ -97,9 +95,9 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 
     @Override
     protected void initializeViews() {
-        mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
-        conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
-        mIndex = getIntent().getIntExtra(KEY_ATTENTION_INDEX, 0);
+        mPName = getIntent().getStringExtra(CommonConstant.KEY_ATTENTION_TITLE);
+        conpubflag = getIntent().getIntExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, 0);
+        mIndex = getIntent().getIntExtra(CommonConstant.KEY_ATTENTION_INDEX, 0);
         ismAttention = (conpubflag > 0);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mAttentionLeftBack = (TextView) findViewById(R.id.mAttentionLeftBack);
@@ -199,6 +197,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                         break;
                 }
             }
+
             /**
              * 正在滚动
              * firstVisibleItem第一个Item的位置
@@ -221,7 +220,6 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                     mAttention_btn.setVisibility(View.GONE);
                 }
                 if (firstVisibleItem != 1) {
-
                     return;
                 }
                 final int[] location = new int[2];
@@ -296,62 +294,62 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
     }
 
     public void loadData() {
-            RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-            String pname = null;
-            String tstart = System.currentTimeMillis() + "";
-            if (!TextUtil.isListEmpty(mNewsFeeds)) {//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
-                int position = mNewsFeeds.size() - 1;
-                String Ptime = mNewsFeeds.get(position).getPtime();
-                if (!TextUtil.isEmptyString(Ptime)) {
-                    tstart = DateUtil.dateStr2Long(Ptime) + "";
-                }
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        String pname = null;
+        String tstart = System.currentTimeMillis() + "";
+        if (!TextUtil.isListEmpty(mNewsFeeds)) {//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
+            int position = mNewsFeeds.size() - 1;
+            String Ptime = mNewsFeeds.get(position).getPtime();
+            if (!TextUtil.isEmptyString(Ptime)) {
+                tstart = DateUtil.dateStr2Long(Ptime) + "";
             }
-            try {
-                pname = URLEncoder.encode(mPName, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            NewsDetailRequest<AttentionPbsEntity> attentionRequest = new NewsDetailRequest<>(Request.Method.GET,
-                    new TypeToken<AttentionPbsEntity>() {
-                    }.getType(),
-                    HttpConstant.URL_GETLIST_ATTENTION + "pname=" + pname + "&info=1" + "&tcr=" + tstart + "&p=" + (mPageIndex++),
-                    new Response.Listener<AttentionPbsEntity>() {
+        }
+        try {
+            pname = URLEncoder.encode(mPName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        NewsDetailRequest<AttentionPbsEntity> attentionRequest = new NewsDetailRequest<>(Request.Method.GET,
+                new TypeToken<AttentionPbsEntity>() {
+                }.getType(),
+                HttpConstant.URL_GETLIST_ATTENTION + "pname=" + pname + "&info=1" + "&tcr=" + tstart + "&p=" + (mPageIndex++),
+                new Response.Listener<AttentionPbsEntity>() {
 
-                        @Override
-                        public void onResponse(AttentionPbsEntity result) {
-                            if (bgLayout.getVisibility() == View.VISIBLE) {
-                                bgLayout.setVisibility(View.GONE);
+                    @Override
+                    public void onResponse(AttentionPbsEntity result) {
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
+                            bgLayout.setVisibility(View.GONE);
+                        }
+                        mAttentionList.onRefreshComplete();
+                        AttentionListEntity attentionListEntity = result.getInfo();
+                        String descr = attentionListEntity.getDescr();
+                        if (!TextUtil.isEmptyString(descr)) {
+                            linear_attention_descrLayout.setVisibility(View.VISIBLE);
+                            img_attention_line.setVisibility(View.VISIBLE);
+                            attention_headViewItem_Content.setText(descr);
+                        } else {
+                            linear_attention_descrLayout.setVisibility(View.GONE);
+                            img_attention_line.setVisibility(View.GONE);
+                        }
+                        String icon = attentionListEntity.getIcon();
+                        if (!TextUtil.isEmptyString(icon)) {
+                            mRequestManager.load(Uri.parse(icon)).transform(new CommonViewHolder.GlideCircleTransform(AttentionActivity.this, 0, AttentionActivity.this.getResources().getColor(R.color.white))).into(iv_attention_headImage);
+                        } else {
+                            mRequestManager.load("").placeholder(R.drawable.detail_attention_placeholder).into(iv_attention_headImage);
+                        }
+                        List<NewsFeed> newsFeeds = result.getNews();
+                        if (!TextUtil.isListEmpty(newsFeeds)) {
+                            mNewsFeeds.addAll(newsFeeds);
+                            mAdapter.setNewsFeed(mNewsFeeds);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            lv.removeFooterView(footerView);
+                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                            if (TextUtil.isListEmpty(mNewsFeeds)) {
+                                tv_attention_historyTitle.setVisibility(View.GONE);
+                                tv_attention_noData.setVisibility(View.VISIBLE);
                             }
-                            mAttentionList.onRefreshComplete();
-                            AttentionListEntity attentionListEntity = result.getInfo();
-                            String descr = attentionListEntity.getDescr();
-                            if (!TextUtil.isEmptyString(descr)) {
-                                linear_attention_descrLayout.setVisibility(View.VISIBLE);
-                                img_attention_line.setVisibility(View.VISIBLE);
-                                attention_headViewItem_Content.setText(descr);
-                            } else {
-                                linear_attention_descrLayout.setVisibility(View.GONE);
-                                img_attention_line.setVisibility(View.GONE);
-                            }
-                            String icon = attentionListEntity.getIcon();
-                            if (!TextUtil.isEmptyString(icon)) {
-                                mRequestManager.load(Uri.parse(icon)).transform(new CommonViewHolder.GlideCircleTransform(AttentionActivity.this, 0, AttentionActivity.this.getResources().getColor(R.color.white))).into(iv_attention_headImage);
-                            } else {
-                                mRequestManager.load("").placeholder(R.drawable.detail_attention_placeholder).into(iv_attention_headImage);
-                            }
-                            List<NewsFeed> newsFeeds = result.getNews();
-                            if (!TextUtil.isListEmpty(newsFeeds)) {
-                                mNewsFeeds.addAll(newsFeeds);
-                                mAdapter.setNewsFeed(mNewsFeeds);
-                                mAdapter.notifyDataSetChanged();
-                            } else {
-                                lv.removeFooterView(footerView);
-                                mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
-                                if (TextUtil.isListEmpty(mNewsFeeds)) {
-                                    tv_attention_historyTitle.setVisibility(View.GONE);
-                                    tv_attention_noData.setVisibility(View.VISIBLE);
-                                }
-                            }
+                        }
 //                        new Handler().postDelayed(new Runnable() {
 //                            @Override
 //                            public void run() {
@@ -363,24 +361,24 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 //                            }
 //                        }, 100);
 
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    mAttentionList.onRefreshComplete();
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
                     }
-                    lv.removeFooterView(footerView);
-                    mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
-                    if (TextUtil.isListEmpty(mNewsFeeds)) {
-                        tv_attention_historyTitle.setVisibility(View.GONE);
-                        tv_attention_noData.setVisibility(View.VISIBLE);
-                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mAttentionList.onRefreshComplete();
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
                 }
-            });
-            attentionRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(attentionRequest);
+                lv.removeFooterView(footerView);
+                mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                if (TextUtil.isListEmpty(mNewsFeeds)) {
+                    tv_attention_historyTitle.setVisibility(View.GONE);
+                    tv_attention_noData.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        attentionRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(attentionRequest);
     }
 
     boolean isNetWork;
@@ -497,8 +495,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 //                }
         } else if (id == R.id.mAttention_btn) {
             if (mUser != null && mUser.isVisitor()) {
-//                Intent loginAty = new Intent(this, LoginAty.class);
-//                startActivityForResult(loginAty, REQUEST_CODE);
+                AuthorizedUserUtil.sendUserLoginBroadcast(AttentionActivity.this);
             } else {
                 addOrDeleteAttention(ismAttention);
             }
@@ -507,17 +504,17 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 
     @Override
     public void finish() {
-        Intent in = new Intent();
-        in.putExtra(KEY_ATTENTION_CONPUBFLAG, ismAttention);
-        in.putExtra(KEY_ATTENTION_INDEX, mIndex);
-        setResult(1234, in);
+        Intent intent = new Intent();
+        intent.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, ismAttention);
+        intent.putExtra(CommonConstant.KEY_ATTENTION_INDEX, mIndex);
+        setResult(CommonConstant.RESULT_ATTENTION_CODE, intent);
         super.finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == 1006) {
+        if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == 1006) {
             mUser = SharedPreManager.mInstance(this).getUser(this);
             addOrDeleteAttention(false);
         }

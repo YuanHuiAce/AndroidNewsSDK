@@ -324,6 +324,7 @@ public class TextUtil {
         }
         return timeStr;
     }
+
     public static String unitFormat(int i) {
         String retStr = null;
         if (i >= 0 && i < 10)

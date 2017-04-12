@@ -208,6 +208,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (!TextUtil.isEmptyString(percent)) {
                 //上报日志
                 LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, percent, this.getString(R.string.version_name), isUserComment);
+                LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime, this.getString(R.string.version_name));
             }
         }
         super.onPause();

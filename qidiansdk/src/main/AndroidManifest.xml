@@ -59,6 +59,7 @@
         <activity
             android:name=".pages.SubscribeListActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/SwipeBackTheme" />
         <!--广点通-->
         <!-- 声明SDK所需要的组件 -->

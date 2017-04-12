@@ -22,6 +22,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -36,10 +37,6 @@ import java.util.HashMap;
 
 public class SubscribeListActivity extends SwipeBackActivity {
 
-    public static final String KEY_SUBSCRIBE_LIST = "key_subscribe_list";
-    private static final int REQUEST_LOGIN_CODE = 1035;
-    private static final int REQUEST_SUBSCRIBE_CODE = 1036;
-    public static final String KEY_ATTENTION_INDEX = "key_attention_index";
     private TextView mSubscribeListLeftBack;
     private PullToRefreshListView mAttentionListView;
     private SubscribeListAdapter mAdapter;
@@ -66,12 +63,12 @@ public class SubscribeListActivity extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
-        ArrayList<AttentionListEntity> subscribeList = SharedPreManager.mInstance(this).getSubscribeList();
-        if (!TextUtil.isListEmpty(subscribeList)) {
-            mAttentionListEntities = subscribeList;
-        } else {
-            mAttentionListEntities = (ArrayList<AttentionListEntity>) getIntent().getSerializableExtra(KEY_SUBSCRIBE_LIST);
-        }
+//        ArrayList<AttentionListEntity> subscribeList = SharedPreManager.mInstance(this).getSubscribeList();
+//        if (!TextUtil.isListEmpty(subscribeList)) {
+//            mAttentionListEntities = subscribeList;
+//        } else {
+        mAttentionListEntities = (ArrayList<AttentionListEntity>) getIntent().getSerializableExtra(CommonConstant.KEY_SUBSCRIBE_LIST);
+//        }
         mAttentionListTemp = TextUtil.copyArrayList(mAttentionListEntities);
         mAttentionListView.setMode(PullToRefreshBase.Mode.DISABLED);
         mAttentionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,15 +76,14 @@ public class SubscribeListActivity extends SwipeBackActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent attentionAty = new Intent(SubscribeListActivity.this, AttentionActivity.class);
                 AttentionListEntity attention = mAttentionListEntities.get(position - 1);
-                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
-                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, attention.getIcon());
-                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, attention.getName());
-                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_INDEX, position - 1 );
-                startActivityForResult(attentionAty, REQUEST_SUBSCRIBE_CODE);
+                attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
+                attentionAty.putExtra(CommonConstant.KEY_ATTENTION_HEADIMAGE, attention.getIcon());
+                attentionAty.putExtra(CommonConstant.KEY_ATTENTION_TITLE, attention.getName());
+                attentionAty.putExtra(CommonConstant.KEY_ATTENTION_INDEX, position - 1);
+                startActivityForResult(attentionAty, CommonConstant.REQUEST_ATTENTION_CODE);
             }
         });
         mAdapter = new SubscribeListAdapter(mContext);
-
         mAdapter.setNewsFeed(mAttentionListEntities);
         mAttentionListView.setAdapter(mAdapter);
         mSubscribeListLeftBack.setOnClickListener(new View.OnClickListener() {
@@ -100,23 +96,19 @@ public class SubscribeListActivity extends SwipeBackActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("aaa", "requestCode == " + requestCode + ",resultCode == " + resultCode);
-        if (resultCode == 1234) {
+        if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == CommonConstant.RESULT_ATTENTION_CODE) {
             if (data != null) {
-                boolean attention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, false);
-                int position = data.getIntExtra(AttentionActivity.KEY_ATTENTION_INDEX, 0);
+                boolean attention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
+                int position = data.getIntExtra(CommonConstant.KEY_ATTENTION_INDEX, 0);
                 AttentionListEntity entity = mAttentionListEntities.get(position);
-                if (attention != (entity.getFlag() > 0)) {
-                    if (attention) {
-                        entity.setFlag(1);
-                        entity.setConcern(entity.getConcern() + 1);
-                    } else {
-                        entity.setFlag(0);
-                        entity.setConcern(entity.getConcern() - 1);
-                    }
-                    mAdapter.notifyDataSetChanged();
+                if (attention) {
+                    entity.setFlag(1);
+                    entity.setConcern(entity.getConcern() + 1);
+                } else {
+                    entity.setFlag(0);
+                    entity.setConcern(entity.getConcern() - 1);
                 }
+                mAdapter.notifyDataSetChanged();
             }
         }
 //        else if (requestCode == REQUEST_LOGIN_CODE && resultCode == LoginAty.REQUEST_CODE) {
@@ -136,14 +128,12 @@ public class SubscribeListActivity extends SwipeBackActivity {
         public SubscribeListAdapter(Context mContext) {
             super(R.layout.subscribelist_item, mContext, null);
             this.mContext = mContext;
-
         }
 
         @Override
         public void convert(CommonViewHolder holder, final AttentionListEntity attentionListEntity, final int position) {
-            holder.setGlideDrawViewURI(R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon(),position);
+            holder.setGlideDrawViewURI(R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon(), position);
             holder.setTextViewText(R.id.tv_SubscribeListItem_name, attentionListEntity.getName());
-            Logger.e("aaa", "attentionListEntity.getConcern()==" + attentionListEntity.getConcern());
             int concern = attentionListEntity.getConcern();
             String personNum = "";
             if (concern > 10000) {
@@ -169,6 +159,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                 public void onClick(View v) {
                     User user = SharedPreManager.mInstance(SubscribeListActivity.this).getUser(mContext);
                     if (user != null && user.isVisitor()) {
+                        AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                     } else {
                         changeAttentionStatus(SubscribeListAdapter.this, attentionListEntity);
                     }
@@ -185,28 +176,27 @@ public class SubscribeListActivity extends SwipeBackActivity {
      */
     private void changeAttentionStatus(SubscribeListAdapter subscribeListAdapter, AttentionListEntity attentionListEntity) {
         if (attentionListEntity.getFlag() == 1) {
-            SharedPreManager.mInstance(this).deleteAttention(attentionListEntity.getName());
+//            SharedPreManager.mInstance(this).deleteAttention(attentionListEntity.getName());
             attentionListEntity.setFlag(0);
             attentionListEntity.setConcern(attentionListEntity.getConcern() - 1);
         } else {
-            SharedPreManager.mInstance(this).addAttention(attentionListEntity.getName());
-            if(SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
+//            SharedPreManager.mInstance(this).addAttention(attentionListEntity.getName());
+//            if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)) {
 //                ToastUtil.showAttentionSuccessToast(mContext);
-            }else{
-//                AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,attentionListEntity.getName());
+//            } else {
+//                Atte、ntionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,attentionListEntity.getName());
 //                attentionDetailDialog.show();
-                SharedPreManager.mInstance(this).save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
-            }
+//                SharedPreManager.mInstance(this).save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, true);
+//            }
             attentionListEntity.setFlag(1);
             attentionListEntity.setConcern(attentionListEntity.getConcern() + 1);
         }
         subscribeListAdapter.notifyDataSetChanged();
-
     }
 
     @Override
-    protected void onDestroy() {
-        SharedPreManager.mInstance(this).saveSubscribeList(mAttentionListEntities);
+    protected void onPause() {
+//        SharedPreManager.mInstance(this).saveSubscribeList(mAttentionListEntities);
         /**用户退出时发送关注和取消关注的状态*/
         User user = SharedPreManager.mInstance(this).getUser(this);
         for (int i = 0; i < mAttentionListTemp.size(); i++) {
@@ -216,9 +206,18 @@ public class SubscribeListActivity extends SwipeBackActivity {
                 attentionSubscribe(newEntity, user);
             }
         }
-        super.onDestroy();
+        super.onPause();
     }
 
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(CommonConstant.KEY_SUBSCRIBE_LIST, mAttentionListEntities);
+        setResult(CommonConstant.RESULT_SUBSCRIBE_LIST_CODE, intent);
+        super.finish();
+    }
+
+    //请求应该改成list也可以
     private void attentionSubscribe(final AttentionListEntity attentionListEntity, User user) {
         String pname = null;
         try {
@@ -252,7 +251,5 @@ public class SubscribeListActivity extends SwipeBackActivity {
         request.setRequestHeader(header);
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
-
     }
-
 }

@@ -128,13 +128,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //平台类型 - IOS:1, 安卓:2, 网页:3, 无法识别:4
         user.setPlatform(2);
         //第三方用户id
-        user.setSuid("4455667788");
+        user.setSuid("3344667788");
         //第三方登录token
         user.setStoken("2233445566");
         //过期时间
-        user.setSexpires("2016-4-27 17:37:22");
+        user.setSexpires("2016-5-27 17:37:22");
         //用户名
-        user.setUname("shaolong");
+        user.setUname("test");
         //性别 0:男 1:女
         user.setGender(0);
         //头像地址

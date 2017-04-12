@@ -176,7 +176,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         isNewVisity = isVisibleToUser;
         if (getUserVisibleHint() && !isLoad) {
             isLoad = true;
-            if (!TextUtil.isEmptyString(mstrChannelId)) {
+            if (!TextUtil.isEmptyString(mstrChannelId) && mHandler != null && mThread != null) {
                 mHandler.postDelayed(mThread, 500);
             }
         }
@@ -1309,7 +1309,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                             vPlayer.showBottomControl(false);
                     }
-                },300);
+                }, 300);
 
             }
 
