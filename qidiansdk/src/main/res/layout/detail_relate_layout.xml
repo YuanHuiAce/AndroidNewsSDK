@@ -10,10 +10,8 @@
         android:id="@+id/detail_shared_ShareImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="17dp"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp"
-        android:visibility="gone">
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp">
 
         <LinearLayout
             android:id="@+id/detail_shared_PraiseLayout"
@@ -79,6 +77,8 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
+    <include layout="@layout/detail_attention_item" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -139,10 +139,10 @@
         android:id="@+id/detail_shared_MoreComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
         android:layout_marginLeft="17dp"
         android:layout_marginRight="17dp"
         android:layout_marginTop="17dp"
-        android:layout_marginBottom="17dp"
         android:background="@drawable/bg_select_comment_more"
         android:visibility="gone">
 

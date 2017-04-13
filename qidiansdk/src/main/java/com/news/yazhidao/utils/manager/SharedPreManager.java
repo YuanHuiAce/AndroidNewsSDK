@@ -125,6 +125,10 @@ public final class SharedPreManager {
         return new ArrayList<>();
     }
 
+    public boolean getUserCenterIsShow() {
+        return getBoolean("flag", "showUserCenter");
+    }
+
 
     /**
      * 保存User json
@@ -475,18 +479,18 @@ public final class SharedPreManager {
         remove(CommonConstant.FILE_DATA, CommonConstant.KEY_SUBSCRIBE_LIST);
     }
 
-    public  void deleteAttention(String pName){
+    public void deleteAttention(String pName) {
         ArrayList<String> attentions = getAttentions();
-        if (!TextUtil.isListEmpty(attentions)){
+        if (!TextUtil.isListEmpty(attentions)) {
             attentions.remove(pName);
         }
-        save(CommonConstant.FILE_DATA_ATTENTION,CommonConstant.KEY_ATTENTIN_LIST,GsonUtil.serialized(attentions));
+        save(CommonConstant.FILE_DATA_ATTENTION, CommonConstant.KEY_ATTENTIN_LIST, GsonUtil.serialized(attentions));
     }
 
-    public  void addAttention(String pName){
+    public void addAttention(String pName) {
         ArrayList<String> attentions = getAttentions();
         attentions.add(pName);
-        save(CommonConstant.FILE_DATA_ATTENTION,CommonConstant.KEY_ATTENTIN_LIST,GsonUtil.serialized(attentions));
+        save(CommonConstant.FILE_DATA_ATTENTION, CommonConstant.KEY_ATTENTIN_LIST, GsonUtil.serialized(attentions));
     }
 
 }

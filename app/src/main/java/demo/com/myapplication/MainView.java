@@ -176,7 +176,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mChannelTabStrip.setViewPager(mViewPager);
         mivUserCenter = (ImageView) view.findViewById(R.id.mUserCenter);
         mivUserCenter.setOnClickListener(this);
-        if (!SharedPreManager.mInstance(activity).getBoolean("flag", "showUserCenter")) {
+        if (!SharedPreManager.mInstance(activity).getUserCenterIsShow()) {
             mivUserCenter.setVisibility(View.GONE);
         }
         dislikePopupWindow = (FeedDislikePopupWindow) view.findViewById(R.id.feedDislike_popupWindow);

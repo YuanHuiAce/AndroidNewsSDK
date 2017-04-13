@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                     visitorUser.setVisitor(true);
                     SharedPreManager.mInstance(MainActivity.this).saveUser(visitorUser);
                     //更新user图标
-                    if (SharedPreManager.mInstance(MainActivity.this).getBoolean("flag", "showUserCenter")) {
+                    if (SharedPreManager.mInstance(MainActivity.this).getUserCenterIsShow()) {
                         mainView.setUserCenterImg("");
                     }
                 }
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //授权用户映射
         AuthorizedUserUtil.authorizedUser(user, this);
         //更新user图标
-        if (SharedPreManager.mInstance(this).getBoolean("flag", "showUserCenter")) {
+        if (SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mainView.setUserCenterImg(user.getAvatar());
         }
     }
