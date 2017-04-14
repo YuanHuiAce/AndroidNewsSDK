@@ -237,6 +237,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             } else {
                 mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
             }
+        } else {
+            mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
         }
         /**注册用户登录广播*/
         mReceiver = new InterNetReceiver();
@@ -384,7 +386,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             activity.startActivityForResult(channelOperate, REQUEST_CODE);
         } else if (id == R.id.mUserCenter) {
             User user = SharedPreManager.mInstance(activity).getUser(activity);
-            if (user.isVisitor()) {
+            if (user != null && user.isVisitor()) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(activity);
             } else {
 //                Intent userCenterAty = new Intent(this, UserCenterAty.class);

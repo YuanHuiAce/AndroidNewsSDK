@@ -5,6 +5,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -126,6 +128,8 @@ public class NewsFeed implements Serializable {
      * 是(1)否(0)已关心该新闻对应的发布源
      */
     private int conpubflag;
+
+    private JSONObject extend;
 
     /**
      * 搜索频道中的订阅源
@@ -509,5 +513,13 @@ public class NewsFeed implements Serializable {
 
     public void setAdresponse(AdDetailEntity adresponse) {
         this.adresponse = adresponse;
+    }
+
+    public JSONObject getExtend() {
+        return extend;
+    }
+
+    public void setExtend(JSONObject extend) {
+        this.extend = extend;
     }
 }

@@ -280,10 +280,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     @Override
     public void onDetach() {
-        super.onDetach();
         if (mRefreshReceiver != null) {
             getActivity().unregisterReceiver(mRefreshReceiver);
         }
+        super.onDetach();
     }
 
     @Override

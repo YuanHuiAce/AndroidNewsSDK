@@ -346,11 +346,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         ThemeManager.unregisterThemeChangeListener(this);
         if (mRefreshReceiver != null) {
             mContext.unregisterReceiver(mRefreshReceiver);
         }
+        super.onDestroy();
     }
 
     @Override
@@ -690,7 +690,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRetry.setVisibility(View.VISIBLE);
             setRefreshComplete();
             //请求token
-            UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+            UserManager.registerVisitor(mContext, new UserManager.RegisterVisitorListener() {
                 @Override
                 public void registerSuccess() {
                     loadData(flag);
@@ -894,13 +894,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
                             isListRefresh = true;
                             loadData(PULL_UP_REFRESH);
                         } else {
                             isBottom = false;
-                            Logger.e("aaa", "在33333isBottom ==" + isBottom);
                         }
                         break;
                 }
@@ -909,7 +907,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                Log.v(TAG, "onScroll  ");
                 if ("44".equals(mstrChannelId) && portrait && !isAuto)
                     VideoVisibleControl();
             }

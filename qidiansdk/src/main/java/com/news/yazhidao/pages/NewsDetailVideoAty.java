@@ -216,7 +216,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void onPause() {
         nowTime = System.currentTimeMillis();
         //上报日志
-        LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%", this.getString(R.string.version_name), isUserComment);
+        //上报日志
+        LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%");
+        LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime);
         super.onPause();
     }
 
