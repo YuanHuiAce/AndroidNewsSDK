@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * 新闻详情页
  */
 public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener {
+    private static final String TAG=NewsDetailVideoFgt.class.getSimpleName();
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
@@ -264,8 +266,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        });
 
         mAdapter = new NewsDetailFgtAdapter(mContext, null);
-        mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
+        mNewsDetailList.setAdapter(mAdapter);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -330,7 +333,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             @Override
             public void run() {
 //                mVideoDetailFootView.addView(footerView);
+//                mNewsDetailHeaderView.addView(mViewPointLayout);
                 mVideoDetailFootView.addView(mViewPointLayout);
+
             }
         }, 500);
         //关心
@@ -370,6 +375,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                 } else {
                     setCareForType();
+
                 }
             }
         });
@@ -591,9 +597,13 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     ToastUtil.toastLong("取消关心");
                 } else {
                     isLike = true;
+                    Log.v(TAG,"");
                     detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
                     ToastUtil.toastLong("将推荐更多此类文章");
                 }
+                mNewsDetailList.getRefreshableView().removeFooterView(mVideoDetailFootView);
+                mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
+
                 isNetWork = false;
             }
         }, new Response.ErrorListener() {
@@ -1038,6 +1048,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              if (!MediaNetUtils.isConnectionAvailable(mContext))
+                  return ;
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
@@ -1191,8 +1203,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (mSmallLayout.getVisibility() != View.VISIBLE) {
                     mDetailContainer.setVisibility(View.VISIBLE);
                     mDetailVideo.addView(vplayer);
-                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                        vplayer.showBottomControl(false);
+//                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vplayer.showBottomControl(true);
                     mDetailVideo.setVisibility(View.VISIBLE);
                 } else {
                     mSmallScreen.addView(vplayer);

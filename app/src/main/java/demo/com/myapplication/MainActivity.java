@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                CrashReport.testJavaCrash();
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 //调用登录界面 授权成功后
                 ToastUtil.toastLong("请先登录");
                 setAuthorizedUserInformation();
+
             } else if (CommonConstant.SHARE_WECHAT_MOMENTS_ACTION.equals(action)) {
                 //调用微信朋友圈分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);

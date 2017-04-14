@@ -85,7 +85,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_video_item_player;
                     //item视频布局不能在列表播放，可以在其他列表出现
                     case 8:
-                        return R.layout.ll_video_item_small;
+                        return R.layout.ll_video_item_big;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -491,13 +491,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
             }
-        } else if (layoutId == R.layout.ll_video_item_small) {
+        } else if (layoutId == R.layout.ll_video_item_big) {
+            int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
-            lpVideoSmall.width = mCardWidth;
-            lpVideoSmall.height = mCardHeight;
+            lpVideoSmall.width = widthv;
+            lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
+//            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f), feed.getRtype());
             holder.setGlideDrawViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
@@ -518,32 +520,33 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-            tvTitle.post(new Runnable() {
-                @Override
-                public void run() {
-                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
-                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
-                    int lineCount = tvTitle.getLineCount();
-                    if (lineCount >= 3) {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
-                    } else {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
-                    }
-                    llSourceOnePic.setLayoutParams(lpSourceContent);
-                    ivBottomLine.setLayoutParams(lpBottomLine);
-                }
-            });
+//            tvTitle.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
+//                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
+//                    int lineCount = tvTitle.getLineCount();
+//                    if (lineCount >= 3) {
+//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
+//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
+//                    } else {
+//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
+//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
+//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
+//                    }
+//                    llSourceOnePic.setLayoutParams(lpSourceContent);
+//                    ivBottomLine.setLayoutParams(lpBottomLine);
+//                }
+//            });
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+
         }
     }
 

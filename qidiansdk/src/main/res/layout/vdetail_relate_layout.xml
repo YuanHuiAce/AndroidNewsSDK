@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:background="@drawable/detail_shared_framebg"
+            android:layout_alignParentLeft="true"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
