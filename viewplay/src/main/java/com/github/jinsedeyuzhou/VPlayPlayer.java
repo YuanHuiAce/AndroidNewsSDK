@@ -2,11 +2,13 @@ package com.github.jinsedeyuzhou;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -99,6 +101,7 @@ public class VPlayPlayer extends FrameLayout {
 
     //    private boolean PlayerApplication.getInstance().isSound;
     private AudioManager audioManager;
+    private RotationObserver mRotationObserver;
     private int currentPosition;
     //默认超时时间
     private int defaultTimeout = 3000;
@@ -152,6 +155,8 @@ public class VPlayPlayer extends FrameLayout {
                     break;
                 case PlayStateParams.MESSAGE_SHOW_PROGRESS:
                     setProgress();
+                    if (gestureTouch.getVisibility()==View.VISIBLE)
+                        endGesture();
                     if (!isDragging) {
                         msg = obtainMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000);
@@ -243,6 +248,7 @@ public class VPlayPlayer extends FrameLayout {
             }
         }
     };
+
 
 
     public VPlayPlayer(Context context) {
@@ -423,6 +429,8 @@ public class VPlayPlayer extends FrameLayout {
         audioManager = (AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = ((AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE))
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        mRotationObserver = new RotationObserver(new Handler());
+        mRotationObserver.startObserver();
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
@@ -1276,6 +1284,13 @@ public class VPlayPlayer extends FrameLayout {
             sound.setImageResource(R.mipmap.sound_open_icon);
         hide(false);
 
+        if (!isNetListener) {// 如果设置不监听网络的变化，则取消监听网络变化的广播
+            unregisterNetReceiver();
+        } else {
+            // 注册网路变化的监听
+            registerNetReceiver();
+        }
+
 
     }
 
@@ -1446,6 +1461,7 @@ public class VPlayPlayer extends FrameLayout {
 
     public void onDestory() {
         unregisterNetReceiver();
+        mRotationObserver.stopObserver();
         handler.removeCallbacksAndMessages(null);
         mVideoView.stopPlayback();
     }
@@ -1499,12 +1515,7 @@ public class VPlayPlayer extends FrameLayout {
         else
             sound.setImageResource(R.mipmap.sound_open_icon);
         status = PlayStateParams.STATE_PREPARE;
-        if (!isNetListener) {// 如果设置不监听网络的变化，则取消监听网络变化的广播
-            unregisterNetReceiver();
-        } else {
-            // 注册网路变化的监听
-            registerNetReceiver();
-        }
+
 //        if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
 ////            showWifiDialog();
 //////            Toast.makeText(mContext.getApplicationContext(),MediaNetUtils.getNetworkType(mContext)+"",Toast.LENGTH_LONG).show();
@@ -1696,5 +1707,59 @@ public class VPlayPlayer extends FrameLayout {
         void completion(IMediaPlayer mp);
     }
 
+
+
+    //得到屏幕旋转的状态
+    private int getRotationStatus(Context context) {
+        int status = 0;
+        try {
+            status = android.provider.Settings.System.getInt(context.getContentResolver(),
+                    android.provider.Settings.System.ACCELEROMETER_ROTATION);
+        } catch (Settings.SettingNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+    class RotationObserver extends ContentObserver
+    {
+        ContentResolver mResolver;
+
+        public RotationObserver(Handler handler)
+        {
+            super(handler);
+            if (activity!=null)
+                mResolver = activity.getContentResolver();
+            // TODO Auto-generated constructor stub
+
+        }
+
+        //屏幕旋转设置改变时调用
+        @Override
+        public void onChange(boolean selfChange)
+        {
+            // TODO Auto-generated method stub
+            super.onChange(selfChange);
+            //更新按钮状态
+            if (getRotationStatus(mContext) == 1 && mVideoView.isPlaying()) {
+                orientationEventListener.enable();
+            } else {
+                orientationEventListener.disable();
+            }
+        }
+
+        public void startObserver()
+        {
+            mResolver.registerContentObserver(Settings.System
+                            .getUriFor(Settings.System.ACCELEROMETER_ROTATION), false,
+                    this);
+        }
+
+        public void stopObserver()
+        {
+            mResolver.unregisterContentObserver(this);
+        }
+    }
 
 }
