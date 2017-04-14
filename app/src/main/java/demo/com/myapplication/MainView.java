@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,11 +28,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -43,6 +47,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -75,9 +80,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
     private MyViewPagerAdapter mViewPagerAdapter;
-    private ImageView mChannelExpand;
+    private ImageView mChannelExpand, mivUserCenter;
     private ChannelItemDao mChannelItemDao;
-    private UserLoginReceiver mReceiver;
+    private InterNetReceiver mReceiver;
     private long mLastPressedBackKeyTime;
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
@@ -85,6 +90,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
     private VPlayPlayer vPlayPlayer;
+    private RequestManager mRequestManager;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -100,7 +106,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     FragmentActivity activity;
-//    private SimpleDraweeView mUserCenter;
 
     /**
      * 自定义的PopWindow
@@ -145,6 +150,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
+        mRequestManager = Glide.with(activity);
         vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
@@ -162,14 +168,17 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mChannelTabStrip = (ChannelTabStrip) view.findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) view.findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
-
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) view.findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
         mViewPagerAdapter = new MyViewPagerAdapter(mContext.getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
-//                mUserCenter.setImageURI(Uri.parse("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0"));
+        mivUserCenter = (ImageView) view.findViewById(R.id.mUserCenter);
+        mivUserCenter.setOnClickListener(this);
+        if (!SharedPreManager.mInstance(activity).getUserCenterIsShow()) {
+            mivUserCenter.setVisibility(View.GONE);
+        }
         dislikePopupWindow = (FeedDislikePopupWindow) view.findViewById(R.id.feedDislike_popupWindow);
 //        dislikePopupWindow.setVisibility(View.GONE);
 
@@ -221,18 +230,18 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         /**更新右下角用户登录图标*/
-//        User user = SharedPreManager.getUser(this);
-//        if (user != null) {
-//            if (!TextUtil.isEmptyString(user.getUserIcon())) {
-//                mUserCenter.setImageURI(Uri.parse(user.getUserIcon()));
-//            }
-//        }
+        User user = SharedPreManager.mInstance(activity).getUser(activity);
+        if (user != null) {
+            if (!TextUtil.isEmptyString(user.getUserIcon())) {
+                mRequestManager.load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
+            } else {
+                mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
+            }
+        }
         /**注册用户登录广播*/
-        mReceiver = new UserLoginReceiver();
+        mReceiver = new InterNetReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(ACTION_USER_LOGOUT);
-        filter.addAction(ACTION_USER_LOGIN);
         activity.registerReceiver(mReceiver, filter);
         UserManager.registerVisitor(mContext, null);
         setChannelList();
@@ -303,19 +312,19 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
 
+    public void setUserCenterImg(String url) {
+        if (!TextUtil.isEmptyString(url)) {
+            mRequestManager.load(Uri.parse(url)).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
+        } else {
+            mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
+        }
+    }
 
-    private class UserLoginReceiver extends BroadcastReceiver {
+
+    private class InterNetReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-//            if (ACTION_USER_LOGIN.equals(intent.getAction())) {
-//                String url = intent.getStringExtra(KEY_INTENT_USER_URL);
-//                if (!TextUtil.isEmptyString(url)) {
-//                    mUserCenter.setImageURI(Uri.parse(url));
-//                }
-//            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
-//                mUserCenter.setImageURI(null);
-//            }
             String action = intent.getAction();
             if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
                 mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -369,42 +378,19 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.mChannelExpand) {
-
-//        switch (v.getId()) {
-////            case R.id.mTopSearch:
-////                Intent topicSearch = new Intent(MainAty.this, TopicSearchAty.class);
-////                startActivity(topicSearch);
-////                break;
-//            case R.id.mChannelExpand:
+        int id = v.getId();
+        if (id == R.id.mChannelExpand) {
             Intent channelOperate = new Intent(activity, ChannelOperateAty.class);
-//                Mobclic/kAgent.onEvent(this, "user_open_channel_edit_page");
             activity.startActivityForResult(channelOperate, REQUEST_CODE);
+        } else if (id == R.id.mUserCenter) {
+            User user = SharedPreManager.mInstance(activity).getUser(activity);
+            if (user.isVisitor()) {
+                AuthorizedUserUtil.sendUserLoginBroadcast(activity);
+            } else {
+//                Intent userCenterAty = new Intent(this, UserCenterAty.class);
+//                startActivity(userCenterAty);
+            }
         }
-//                break;
-//            case R.id.mUserCenter:
-//                User user = SharedPreManager.getUser(this);
-////                //FIXME debug
-////                if (user == null){
-////                    user = new User();
-////                    user.setUserName("forward_one");
-////                    user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
-////                }
-//                if (user == null) {
-//                    Intent loginAty = new Intent(this, LoginAty.class);
-//                    startActivity(loginAty);
-//                } else {
-//                    Intent userCenterAty = new Intent(this, UserCenterAty.class);
-//                    startActivity(userCenterAty);
-//                }
-//                MobclickAgent.onEvent(this, "yazhidao_user_open_user_center");
-//                break;
-//        else if (v.getId() == R.id.mDetailLeftBack) {
-////            case R.id.mDetailLeftBack:
-//            MainAty.this.finish();
-////                break;
-//
-//        }
     }
 
     ChannelItem item1;
@@ -423,7 +409,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 }
             }
             if (index == -1) {
-                Logger.e("jigang", "index = " + index);
                 index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
             }
             mViewPager.setCurrentItem(index);

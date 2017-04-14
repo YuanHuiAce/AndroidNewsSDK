@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +25,13 @@ import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
+import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -39,6 +43,7 @@ import com.qq.e.ads.nativ.NativeADDataRef;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -50,7 +55,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private Context mContext;
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
-    public static int REQUEST_CODE = 10002;
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private int mCardWidth, mCardHeight;
@@ -176,6 +180,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
@@ -187,7 +192,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpCard.width = mCardWidth;
             lpCard.height = mCardHeight;
             ivCard.setLayoutParams(lpCard);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null) {
@@ -224,6 +229,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -235,7 +241,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
@@ -250,15 +256,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
             setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
-            holder.setGlideDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
-            holder.setGlideDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
-            holder.setGlideDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
@@ -271,107 +278,104 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_news_search_item) {
-//            final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
-//            int size = attentionListEntities.size();
-//            if (size == 1) {
-//                holder.setGlideDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0,0,);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-//                holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, "更多");
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.INVISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(0));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Intent in = new Intent(mContext, SubscribeListActivity.class);
-//                        in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
-//                        mContext.startActivity(in);
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
-//            } else if (size == 2) {
-//                holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-//                holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
-//                holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, "更多");
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(0));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(1));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Intent in = new Intent(mContext, SubscribeListActivity.class);
-//                        in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
-//                        mContext.startActivity(in);
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
-//            } else if (size >= 3) {
-//                holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-//                holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
-//                holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon(), 2);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getName());
-//                holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
-//                holder.setTextViewText(R.id.tv_ll_news_search_item_descrFour, "更多");
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.VISIBLE);
-//                holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(0));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(1));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        setOpenAttentionPage(attentionListEntities.get(2));
-//                    }
-//                });
-//                holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Intent in = new Intent(mContext, SubscribeListActivity.class);
-//                        in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
-//                        mContext.startActivity(in);
-//                    }
-//                });
-//            }
+            final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
+            if (!TextUtil.isListEmpty(attentionListEntities)) {
+                int size = attentionListEntities.size();
+                if (size == 1) {
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
+                    holder.setSimpleDrawViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, "更多");
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.INVISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(0), 0);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenSubscribeListPage(attentionListEntities);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
+                } else if (size == 2) {
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
+                    holder.setSimpleDrawViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, "更多");
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(0), 0);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(1), 1);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenSubscribeListPage(attentionListEntities);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
+                } else if (size >= 3) {
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
+                    holder.setGlideDrawViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon(), 2);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getName());
+                    holder.setSimpleDrawViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrFour, "更多");
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(0), 0);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(1), 1);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenAttentionPage(attentionListEntities.get(2), 2);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setOpenSubscribeListPage(attentionListEntities);
+                        }
+                    });
+                }
+            }
         } else if (layoutId == R.layout.ll_news_item_topic) {
             ImageView ivTopic = holder.getView(R.id.title_img_View);
             int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -379,7 +383,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpTopic.width = ivWidth;
             lpTopic.height = (int) (ivWidth * 76 / 310.0f);
             ivTopic.setLayoutParams(lpTopic);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
@@ -394,10 +398,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
-//            TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
-//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
+            TextUtil.setLayoutBgResource(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -414,7 +419,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpCard.width = cardWidth;
             lpCard.height = cardHeight;
             ivCard.setLayoutParams(lpCard);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null) {
@@ -427,6 +432,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -437,7 +443,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(0), with, height, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, strArrBigImgUrl.get(0), with, height, feed.getRtype());
             setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
@@ -453,6 +459,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_player) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
@@ -462,7 +469,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpVideo.height = (int) (mScreenWidth * 203 / 360.0f);
             ivVideo.setLayoutParams(lpVideo);
             holder.getView(R.id.layout_item_video).setLayoutParams(lpVideo);
-            holder.setGlideDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
             setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
             //点击评论跳转
             holder.getView(R.id.tv_video_comments).setOnClickListener(new View.OnClickListener() {
@@ -472,7 +479,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             });
             setSourceViewText((TextViewExtend) holder.getView(R.id.tve_video_source_username), feed.getPname());
-            holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd, feed.getIcon());
+            holder.setGlideDrawViewURI(R.id.iv_video_source_avatarHd, feed.getIcon());
             //视频播放
             setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
@@ -481,7 +488,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
-                holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
+                holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
             int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -491,7 +499,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpVideoSmall.width = widthv;
             lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
-            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f), feed.getRtype());
+//            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f), feed.getRtype());
+            holder.setGlideDrawViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
@@ -535,9 +544,24 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
 
         }
+    }
+
+    private void setOpenAttentionPage(AttentionListEntity attention, int index) {
+        Intent attentionAty = new Intent(mContext, AttentionActivity.class);
+        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
+        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_TITLE, attention.getName());
+        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_INDEX, index);
+        ((Activity) mContext).startActivityForResult(attentionAty, CommonConstant.REQUEST_ATTENTION_CODE);
+    }
+
+    private void setOpenSubscribeListPage(ArrayList<AttentionListEntity> attentionListEntities) {
+        Intent intent = new Intent(mContext, SubscribeListActivity.class);
+        intent.putExtra(CommonConstant.KEY_SUBSCRIBE_LIST, attentionListEntities);
+        ((Activity) mContext).startActivityForResult(intent, CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE);
     }
 
 
@@ -601,13 +625,24 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = dateFormat.getCalendar();
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
             if (between >= (24 * 3600000)) {
-                tvComment.setText("");
+                if (isAttention) {
+                    tvComment.setText(month + "月" + day + "日");
+                } else {
+                    tvComment.setText("");
+                }
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvComment.setText("");
+                if (isAttention) {
+                    tvComment.setText(between / 3600000 + "小时前");
+                } else {
+                    tvComment.setText("");
+                }
             } else {
                 int time = (int) (between * 60 / 3600000);
                 if (time > 0) {
@@ -627,7 +662,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
-            tvTitle.setMaxLines(2);
+            tvTitle.setMaxLines(3);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");

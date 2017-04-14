@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,7 +32,9 @@ import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onFocusItemClick;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.application.QiDianApplication;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
@@ -39,7 +42,6 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FetchElementaryRequestPost;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -56,7 +58,7 @@ import java.util.List;
 
 
 /**
- * Created by fengjigang on 15/10/29.
+ * 搜索
  */
 public class TopicSearchAty extends SwipeBackActivity implements View.OnClickListener {
 
@@ -147,8 +149,8 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.mSearchLeftBack) {
+        int id = v.getId();
+        if (id == R.id.mSearchLeftBack) {
             hideKeyboard();
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -156,16 +158,55 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                     finish();
                 }
             }, 200);
-        } else if (i == R.id.mSearchClear) {
+        } else if (id == R.id.mSearchClear) {
             mSearchContent.setText("");
             isVisibility(false);
-        } else if (i == R.id.mDoSearch) {
+        } else if (id == R.id.mDoSearch) {
             doSearch();
-        } else if (i == R.id.mDoSearchChangeBatch) {
+        } else if (id == R.id.mDoSearchChangeBatch) {
             setHotLabelLayoutData(mCurrPageIndex++);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == CommonConstant.RESULT_ATTENTION_CODE) {
+            int index = data.getIntExtra(CommonConstant.KEY_ATTENTION_INDEX, 0);
+            boolean attention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
+            if (!TextUtil.isListEmpty(mNewsFeedLists)) {
+                for (NewsFeed item : mNewsFeedLists) {
+                    ArrayList<AttentionListEntity> attentionListEntities = item.getAttentionListEntities();
+                    if (!TextUtil.isListEmpty(attentionListEntities)) {
+                        for (int i = 0; i < attentionListEntities.size(); i++) {
+                            if (i == index) {
+                                if (!attention) {
+                                    attentionListEntities.get(i).setFlag(0);
+                                } else {
+                                    attentionListEntities.get(i).setFlag(1);
+                                }
+                                mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
+                                mNewsFeedAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE && resultCode == CommonConstant.RESULT_SUBSCRIBE_LIST_CODE) {
+            ArrayList<AttentionListEntity> entities = (ArrayList<AttentionListEntity>) data.getSerializableExtra(CommonConstant.KEY_SUBSCRIBE_LIST);
+            if (!TextUtil.isListEmpty(mNewsFeedLists)) {
+                for (NewsFeed item : mNewsFeedLists) {
+                    ArrayList<AttentionListEntity> attentionListEntities = item.getAttentionListEntities();
+                    if (!TextUtil.isListEmpty(attentionListEntities)) {
+                        item.setAttentionListEntities(entities);
+                        mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
+                        mNewsFeedAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     private void doSearch() {
         hideKeyboard();
@@ -365,7 +406,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         }
     };
 
-
     public void setHotLabelLayoutData(int mCurrPageIndex) {
         if (mTotalPage >= 1) {
             mHotLabelsLayout.removeAllViews();
@@ -384,9 +424,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 textView.setPadding(paddingLR, padding, paddingLR, padding);
                 textView.setTextColor(getResources().getColor(R.color.bg_share_text));
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-//                Drawable drawable = getResources().getDrawable(R.drawable.bg_search_hotlabel);
-//                drawable.setColorFilter(new
-//                        PorterDuffColorFilter(TextUtil.getRandomColor4Hotlabel(this), PorterDuff.Mode.SRC_IN));
                 textView.setBackgroundResource(R.drawable.bg_search_hotlabel);
                 textView.setText(element.getTitle());
                 textView.setOnClickListener(new View.OnClickListener() {
@@ -406,11 +443,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                         mSearchListViewOpenAdapter.notifyDataSetChanged();
                         mPageIndex = 1;
                         loadNewsData(element.getTitle(), mPageIndex + "");
-//                        Intent diggerIntent = new Intent(TopicSearchAty.this, DiggerAty.class);
-//                        diggerIntent.setType("text/plain");
-//                        diggerIntent.putExtra(Intent.EXTRA_TEXT, element.getTitle());
-//                        diggerIntent.putExtra(KEY_NOT_NEED_OPEN_HOME_ATY, true);
-//                        startActivity(diggerIntent);
                     }
                 });
                 mHotLabelsLayout.addView(textView);
@@ -436,17 +468,14 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            Logger.e("jigang", "s=" + s + ",start=" + start + ",count=" + count + ",after=" + after);
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Logger.e("jigang", "s=" + s + ",start=" + start + ",before=" + before + ",count=" + count);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
                 mKeyWord = mSearchContent.getText().toString();
                 mSearchClear.setVisibility(View.VISIBLE);

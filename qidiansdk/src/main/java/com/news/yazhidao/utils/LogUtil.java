@@ -1,12 +1,16 @@
 package com.news.yazhidao.utils;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
@@ -15,16 +19,22 @@ import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.entity.UserLogBasicInfoEntity;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LogUtil {
 
-    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent, String version ,boolean isUserComment) {
+    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent, String version, boolean isUserComment) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         String mUserId = "";
         if (user != null) {
@@ -32,7 +42,7 @@ public class LogUtil {
         }
         Logger.e("aaa", "开始上传日志！");
         if (newsFeed == null || TextUtil.isEmptyString(mUserId)) {
-            Logger.e("tag","percent kong");
+            Logger.e("tag", "percent kong");
             return;
         }
         final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
@@ -80,6 +90,63 @@ public class LogUtil {
             public void onErrorResponse(VolleyError error) {
             }
         });
+        requestQueue.add(request);
+    }
+
+    public static void userReadLog(NewsFeed newsFeed, Context context, Long begintime, Long endtime, String version) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (newsFeed == null || mUserId == null) {
+            Logger.e("tag", "percent kong");
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        ;
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        final UserLogBasicInfoEntity userLogBasicInfoEntity = new UserLogBasicInfoEntity();
+        userLogBasicInfoEntity.setUid(mUserId);
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        userLogBasicInfoEntity.setDeviceid(androidId);
+        userLogBasicInfoEntity.setPtype(CommonConstant.LOG_PTYPE);
+        userLogBasicInfoEntity.setCtype(CommonConstant.LOG_CTYPE);
+        userLogBasicInfoEntity.setVersion_text(version);
+        userLogBasicInfoEntity.setCtime(System.currentTimeMillis());
+        try {
+            JSONObject json = new JSONObject();
+            json.put("begintime", begintime);
+            json.put("endtime", endtime);
+            json.put("readtime", (int) ((endtime - begintime) / 1000));
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_READ, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "1111");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 

@@ -58,14 +58,20 @@ public final class CommonConstant {
     public static final String KEY_LOCATION_PROVINCE = "key_location_province";
     public static final String KEY_LOCATION_CITY = "key_location_city";
     public static final String KEY_LOCATION_ADDR = "key_location_addr";
+    public static final String KEY_ATTENTION_TITLE = "key_attention_title";
+    public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
+    public static final String KEY_ATTENTION_CONPUBFLAG = "key_detail_conpubflag";
+    public static final String KEY_ATTENTION_INDEX = "key_attention_index";
     public static final String NEWS_COMMENT_NUM = "news_comment_num";
     public static final String NEWS_ID = "news_id";
-    public static final int INTENT_REQUEST_COMMENT = 10001;
-    public static final int INTENT_RESULT_COMMENT = 10002;
-
+    public static final String FILE_DATA_ATTENTION = "file_data_attention";
+    public static final String KEY_ATTENTIN_LIST = "key_attentin_list";
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;
-    public static final int TEXT_SIZE_BIG = 20;
+    public static final int REQUEST_ATTENTION_CODE = 1040;
+    public static final int RESULT_ATTENTION_CODE = 2040;
+    public static final int REQUEST_SUBSCRIBE_LIST_CODE = 3040;
+    public static final int RESULT_SUBSCRIBE_LIST_CODE = 4040;
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String CHANGE_COMMENT_NUM_ACTION = "change_comment_num";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
@@ -90,5 +96,8 @@ public final class CommonConstant {
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
+    public static final String LOG_PTYPE = "安卓";
+    //奇点资讯，黄历天气，纹字锁屏，猎鹰浏览器，白牌
+    public static final String LOG_CTYPE = "纹字锁屏";
 
 }

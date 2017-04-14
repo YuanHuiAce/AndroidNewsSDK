@@ -11,15 +11,17 @@ public class AttentionListEntity implements Serializable{
     private String name;
     private String icon;
     private String descr;
-    private String concern;
+    private int concern;
+    private int flag;
 
-    public AttentionListEntity(String id, String ctime, String name, String icon, String descr, String concern) {
-        this.id = id;
-        this.ctime = ctime;
-        this.name = name;
-        this.icon = icon;
-        this.descr = descr;
+    public AttentionListEntity(int concern, String ctime, String descr, int flag, String icon, String id, String name) {
         this.concern = concern;
+        this.ctime = ctime;
+        this.descr = descr;
+        this.flag = flag;
+        this.icon = icon;
+        this.id = id;
+        this.name = name;
     }
 
     public AttentionListEntity() {
@@ -77,11 +79,19 @@ public class AttentionListEntity implements Serializable{
         this.descr = descr;
     }
 
-    public String getConcern() {
+    public int getConcern() {
         return concern;
     }
 
-    public void setConcern(String concern) {
+    public void setConcern(int concern) {
         this.concern = concern;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

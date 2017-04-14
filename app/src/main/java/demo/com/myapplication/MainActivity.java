@@ -24,8 +24,6 @@ import com.news.yazhidao.utils.manager.UserManager;
 
 import java.util.ArrayList;
 
-import static com.news.yazhidao.utils.manager.SharedPreManager.mInstance;
-
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     private static final String TAG = "MainActivity";
     RelativeLayout newsLayout;
@@ -37,14 +35,15 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        SharedPreManager.mInstance(this).save("flag","text1","测试！");
+        //显示个人中心
+        SharedPreManager.mInstance(this).save("flag", "showUserCenter", true);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                CrashReport.testJavaCrash();
-                int size = mInstance(MainActivity.this).getInt("showflag", "textSize");
+                int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
                 } else {
@@ -89,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                     visitorUser.setUserIcon("");
                     visitorUser.setVisitor(true);
                     SharedPreManager.mInstance(MainActivity.this).saveUser(visitorUser);
+                    //更新user图标
+                    if (SharedPreManager.mInstance(MainActivity.this).getUserCenterIsShow()) {
+                        mainView.setUserCenterImg("");
+                    }
                 }
             }
         });
@@ -126,13 +129,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //平台类型 - IOS:1, 安卓:2, 网页:3, 无法识别:4
         user.setPlatform(2);
         //第三方用户id
-        user.setSuid("4455667788");
+        user.setSuid("3344667788");
         //第三方登录token
         user.setStoken("2233445566");
         //过期时间
-        user.setSexpires("2016-4-27 17:37:22");
+        user.setSexpires("2016-5-27 17:37:22");
         //用户名
-        user.setUname("shaolong");
+        user.setUname("test");
         //性别 0:男 1:女
         user.setGender(0);
         //头像地址
@@ -155,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         user.setDistrict("二七区");
         //授权用户映射
         AuthorizedUserUtil.authorizedUser(user, this);
+        //更新user图标
+        if (SharedPreManager.mInstance(this).getUserCenterIsShow()) {
+            mainView.setUserCenterImg(user.getAvatar());
+        }
     }
 
     private class UserReceiver extends BroadcastReceiver {

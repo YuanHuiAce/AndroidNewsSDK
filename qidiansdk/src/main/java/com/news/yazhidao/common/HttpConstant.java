@@ -9,6 +9,8 @@ public class HttpConstant {
      */
     public static final String URL_SERVER_HOST = "http://bdp.deeporiginalx.com/v2";
 
+    public static final String URL_LOG_HOST = "http://log.deeporiginalx.com/rep/v2";
+
     public static final String URL_REGISTER_VISITOR = URL_SERVER_HOST + "/au/sin/g";//注册游客信息
 
     public static final String URL_VISITOR_LOGIN = URL_SERVER_HOST + "/au/lin/g";//游客登录
@@ -21,8 +23,11 @@ public class HttpConstant {
 
     public static final String URL_SEARCH = URL_SERVER_HOST + "/ns/es/s";//搜索
 
+    public static final String URL_LOG_POST_NEWS_READ = URL_LOG_HOST + "/news/read";
+    /**
+     * 新闻阅读时长日志
+     */
     public static final String URL_GET_NEWS_CONTENT = URL_SERVER_HOST + "/news/baijia/point";
-
     /**
      * 谷歌今日焦点
      */
@@ -38,8 +43,8 @@ public class HttpConstant {
 
     public static final String URL_GET_MESSAGE_LIST = URL_SERVER_HOST + "/news/baijia/fetchImList?";
     /**
-    * 获取频道列表接口
-    */
+     * 获取频道列表接口
+     */
     public static final String URL_FETCH_CHANNEL_LIST = URL_SERVER_HOST + "/ns/chs?";
     /**
      * 获取专辑列表接口
@@ -103,16 +108,16 @@ public class HttpConstant {
     public static final String URL_REPLAY = URL_SERVER_HOST + "/ns/replay";
 
     /**
-     *  频道刷新加上广告
+     * 频道刷新加上广告
      */
     public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?";
     /**
-     *  频道加载加上广告
+     * 频道加载加上广告
      */
     public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la?";
 
     /**
-     *  手机信息上传
+     * 手机信息上传
      */
     public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/v2/au/app";
     /**
@@ -152,7 +157,7 @@ public class HttpConstant {
     /**
      * 日志上传
      */
-    public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep/v2/c?";// URL_SERVER_HOST+"/c?"
+    public static final String URL_UPLOAD_LOG = "http://bdp.deeporiginalx.com/rep/v2/c?";// URL_SERVER_HOST+"/c?"
 
     /**
      * 新闻客户端-新闻相关属性集
@@ -189,7 +194,7 @@ public class HttpConstant {
      */
     public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
     /**
-     *  专题详情
+     * 专题详情
      */
     public static final String URL_NEWS_TOPIC = URL_SERVER_HOST + "/ns/tdq?";
 
