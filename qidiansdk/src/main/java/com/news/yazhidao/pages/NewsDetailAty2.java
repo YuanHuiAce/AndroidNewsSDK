@@ -92,13 +92,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private RefreshPageBroReceiver mRefreshReceiver;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
-    private String mSource, mImageUrl;
+    private String mImageUrl;
     private String mNid;
     private NewsDetailCommentDao newsDetailCommentDao;
     private boolean isRefresh = false;
     private LinearLayout careforLayout;
     private boolean isFavorite;
-    public static final int REQUEST_CODE = 1030;
     long lastTime, nowTime;
     private int mCommentNum;
     private NewsDetailFgt mDetailFgt;
@@ -144,7 +143,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
-        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);

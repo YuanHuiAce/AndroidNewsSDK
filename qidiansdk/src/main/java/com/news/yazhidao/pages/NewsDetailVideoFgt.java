@@ -49,6 +49,7 @@ import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
@@ -64,7 +65,10 @@ import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -102,32 +106,30 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
     private LinearLayout detail_shared_FriendCircleLayout,
-            detail_shared_CareForLayout,
+            detail_shared_CareForLayout, linearlayout_attention,
             mCommentLayout,
             mNewsDetailHeaderView;
-    private RelativeLayout detail_hot_layout;
-    private TextView detail_shared_PraiseText,
-            detail_shared_Text,
-            detail_shared_hotComment;
+    private TextView detail_shared_Text, detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
-            detail_Hot_Layout,
+            detail_Hot_Layout, relativeLayout_attention,
             detail_shared_ViewPointTitleLayout, adLayout;
-    private ImageView detail_shared_AttentionImage;
+    private ImageView detail_shared_AttentionImage, image_attention_line, image_attention_success, iv_attention_icon;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiver mRefreshReceiver;
     private boolean isWebSuccess;
+    private boolean isLike;
+    private boolean isAttention;
     private static final int VIDEO_SMALL = 2;
     private static final int VIDEO_FULLSCREEN = 3;
     private static final int VIDEO_NORMAL = 5;
-    private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
-
-    private TextView footView_tv;
+    private TextView detail_shared_PraiseText, tv_attention_title, footView_tv;
     private ProgressBar footView_progressbar;
     private LinearLayout footerView_layout;
     private boolean isBottom;
     private boolean isLoadDate;
+    private boolean isNetWork;
     View rootView;
     private Context mContext;
     private RequestManager mRequestManager;
@@ -261,7 +263,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //            }
 //        });
 
-        mAdapter = new NewsDetailFgtAdapter(getActivity(), null);
+        mAdapter = new NewsDetailFgtAdapter(mContext, null);
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         new Handler().postDelayed(new Runnable() {
@@ -281,6 +283,24 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         super.onDetach();
         if (mRefreshReceiver != null) {
             getActivity().unregisterReceiver(mRefreshReceiver);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == CommonConstant.RESULT_ATTENTION_CODE) {
+            isAttention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
+            if (isAttention) {
+                image_attention_success.setVisibility(View.VISIBLE);
+                image_attention_line.setVisibility(View.GONE);
+                linearlayout_attention.setVisibility(View.GONE);
+                mResult.setConpubflag(1);
+            } else {
+                image_attention_success.setVisibility(View.GONE);
+                image_attention_line.setVisibility(View.VISIBLE);
+                linearlayout_attention.setVisibility(View.VISIBLE);
+                mResult.setConpubflag(0);
+            }
         }
     }
 
@@ -309,18 +329,104 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mVideoDetailFootView.addView(footerView);
+//                mVideoDetailFootView.addView(footerView);
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
         }, 500);
+        //关心
+        detail_shared_FriendCircleLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_shared_FriendCircleLayout);
+        detail_shared_CareForLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_shared_PraiseLayout);
+        detail_shared_AttentionImage = (ImageView) mViewPointLayout.findViewById(R.id.detail_shared_AttentionImage);
+        if (mResult.getConflag() == 1) {
+            isLike = true;
+            detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+        } else {
+            isLike = false;
+            detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+        }
+        detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
+        detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                if (user != null) {
+                    if (user.isVisitor()) {
+                        AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
+                        intent.putExtra(CommonConstant.SHARE_TITLE, mTitle);
+                        intent.putExtra(CommonConstant.SHARE_URL, "http://deeporiginalx.com/videoShare/index.html?nid=" + mNewID);
+                        mContext.sendBroadcast(intent);
+                    }
+                }
+            }
+        });
+        detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                if (user != null && user.isVisitor()) {
+                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+                } else {
+                    setCareForType();
+                }
+            }
+        });
+        //关注
+        linearlayout_attention = (LinearLayout) mViewPointLayout.findViewById(R.id.linearlayout_attention);
+        image_attention_line = (ImageView) mViewPointLayout.findViewById(R.id.image_attention_line);
+        image_attention_success = (ImageView) mViewPointLayout.findViewById(R.id.image_attention_success);
+        relativeLayout_attention = (RelativeLayout) mViewPointLayout.findViewById(R.id.relativeLayout_attention);
+        iv_attention_icon = (ImageView) mViewPointLayout.findViewById(R.id.iv_attention_icon);
+        tv_attention_title = (TextView) mViewPointLayout.findViewById(R.id.tv_attention_title);
+        String icon = mResult.getIcon();
+        String name = mResult.getPname();
+        if (!TextUtil.isEmptyString(icon)) {
+            Glide.with(mContext).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
+        } else {
+            Glide.with(mContext).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
+        }
+        if (!TextUtil.isEmptyString(name)) {
+            tv_attention_title.setText(name);
+        }
+        isAttention = mResult.getConpubflag() == 1;
+        if (isAttention) {
+            image_attention_success.setVisibility(View.VISIBLE);
+            image_attention_line.setVisibility(View.GONE);
+            linearlayout_attention.setVisibility(View.GONE);
+        } else {
+            image_attention_success.setVisibility(View.GONE);
+            image_attention_line.setVisibility(View.VISIBLE);
+            linearlayout_attention.setVisibility(View.VISIBLE);
+        }
+        relativeLayout_attention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChannelItemDao channelItemDao = new ChannelItemDao(mContext);
+//                channelItemDao.setFocusOnline();
+                Intent intent = new Intent(mContext, AttentionActivity.class);
+                intent.putExtra(CommonConstant.KEY_ATTENTION_TITLE, mResult.getPname());
+                intent.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, mResult.getConpubflag());
+                startActivityForResult(intent, CommonConstant.REQUEST_ATTENTION_CODE);
+            }
+        });
+        linearlayout_attention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+                if (user != null && user.isVisitor()) {
+                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+                } else {
+                    addordeleteAttention(true);
+                }
+            }
+        });
+        //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
-//        detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
-//        detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
-        detail_shared_ViewPointTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
-        detail_hot_layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
+        detail_Hot_Layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
-
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
@@ -347,7 +453,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
         });
         TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
-        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
@@ -358,7 +463,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 loadRelatedData();
             }
         });
-//        footerView_layout.setVisibility(View.GONE);
     }
 
     private void loadData() {
@@ -378,7 +482,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     addCommentContent(result);
                 } else {
                     detail_shared_MoreComment.setVisibility(View.GONE);
-                    detail_hot_layout.setVisibility(View.GONE);
+                    detail_Hot_Layout.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
@@ -387,7 +491,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 isWebSuccess = true;
                 isBgLayoutSuccess();
                 detail_shared_MoreComment.setVisibility(View.GONE);
-                detail_hot_layout.setVisibility(View.GONE);
+                detail_Hot_Layout.setVisibility(View.GONE);
             }
         });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -460,6 +564,118 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         }
     }
 
+    public void setCareForType() {
+        if (!NetUtil.checkNetWork(mContext)) {
+            ToastUtil.toastShort("无法连接到网络，请稍后再试");
+            return;
+        }
+        if (isNetWork) {
+            return;
+        }
+        isNetWork = true;
+        JSONObject json = new JSONObject();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        int userID = 0;
+        if (user != null) {
+            userID = user.getMuid();
+        }
+        DetailOperateRequest detailOperateRequest = new DetailOperateRequest((isLike ? Request.Method.DELETE : Request.Method.POST),
+                HttpConstant.URL_ADDORDELETE_CAREFOR + "nid=" + mNewID + (userID != 0 ? "&uid=" + userID : ""),
+                json.toString(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (isLike) {
+                    isLike = false;
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+                    ToastUtil.toastLong("取消关心");
+                } else {
+                    isLike = true;
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                    ToastUtil.toastLong("将推荐更多此类文章");
+                }
+                isNetWork = false;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ToastUtil.toastLong("关心失败");
+                isNetWork = false;
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        detailOperateRequest.setRequestHeader(header);
+        detailOperateRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(detailOperateRequest);
+    }
+
+    public void addordeleteAttention(boolean isAttention) {
+        if (isNetWork) {
+            return;
+        }
+        String pname = null;
+        try {
+            pname = URLEncoder.encode(mResult.getPname(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        int uid = 0;
+        if (user != null) {
+            uid = user.getMuid();
+        }
+        isNetWork = true;
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        JSONObject json = new JSONObject();
+        DetailOperateRequest request = new DetailOperateRequest(isAttention ? Request.Method.POST : Request.Method.DELETE,
+                HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + uid + "&pname=" + pname
+                , json.toString(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String data = response.optString("data");
+                Logger.e("aaa", "json+++++++++++++++++++++++" + data);
+                //保存关注信息
+                SharedPreManager.mInstance(mContext).addAttention(mResult.getPname());
+                if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)) {
+//                    ToastUtil.showAttentionSuccessToast(mContext);
+                } else {
+//                    attentionDetailDialog = new AttentionDetailDialog(mContext, mResult.getPname());
+//                    attentionDetailDialog.show();
+                    SharedPreManager.mInstance(mContext).save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, true);
+                }
+                image_attention_success.setVisibility(View.VISIBLE);
+                image_attention_line.setVisibility(View.GONE);
+                linearlayout_attention.setVisibility(View.GONE);
+                mResult.setConpubflag(1);
+                isNetWork = false;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage().indexOf("2003") != -1) {
+                    ToastUtil.toastShort("用户已关注该信息！");
+                    image_attention_success.setVisibility(View.VISIBLE);
+                    image_attention_line.setVisibility(View.GONE);
+                    linearlayout_attention.setVisibility(View.GONE);
+                    mResult.setConpubflag(1);
+                    return;
+                }
+                ToastUtil.toastShort("关注失败！");
+                isNetWork = false;
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
+
     public void setNoRelatedDate() {
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         if (viewpointPage > 1) {
@@ -512,11 +728,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             footView_tv.setText("内容加载完毕");
             mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         }
-        detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
     }
 
     public void addCommentContent(final ArrayList<NewsDetailComment> result) {
-        detail_hot_layout.setVisibility(View.VISIBLE);
+        detail_Hot_Layout.setVisibility(View.VISIBLE);
         int num;
         int size = result.size();
         if (size > 3) {
@@ -691,9 +906,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (vplayer != null) {
             vplayer.onPause();
         }
-
-        if (mSmallLayout.getVisibility()==View.VISIBLE)
-        {
+        if (mSmallLayout.getVisibility() == View.VISIBLE) {
             vplayer.stop();
             vplayer.release();
             FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
@@ -713,16 +926,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         }
         vplayer = null;
 
-    }
-
-    public interface ShowCareforLayout {
-        void show();
-    }
-
-    ShowCareforLayout mShowCareforLayout;
-
-    public void setShowCareforLayout(ShowCareforLayout showCareforLayout) {
-        mShowCareforLayout = showCareforLayout;
     }
 
     private void loadADData() {
@@ -985,21 +1188,20 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     frameLayout.removeAllViews();
                 }
                 mFullScreen.setVisibility(View.GONE);
-                if (mSmallLayout.getVisibility()!=View.VISIBLE) {
+                if (mSmallLayout.getVisibility() != View.VISIBLE) {
                     mDetailContainer.setVisibility(View.VISIBLE);
                     mDetailVideo.addView(vplayer);
                     if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
                         vplayer.showBottomControl(false);
                     mDetailVideo.setVisibility(View.VISIBLE);
-                }else
-                {
+                } else {
                     mSmallScreen.addView(vplayer);
                     vplayer.setShowContoller(false);
                     mSmallLayout.setVisibility(View.VISIBLE);
                 }
 
             } else {
-                if (mSmallLayout.getVisibility()!=View.VISIBLE) {
+                if (mSmallLayout.getVisibility() != View.VISIBLE) {
                     mDetailContainer.setVisibility(View.GONE);
                     mDetailVideo.setVisibility(View.GONE);
                 }

@@ -3,6 +3,7 @@ package com.news.yazhidao.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -95,7 +96,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             if (relatedItemEntity.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity,(EllipsizeEndTextView) holder.getView(R.id.title_textView));
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
@@ -184,6 +185,13 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }
             });
+            Log.i("tag", "Count" + getCount());
+            int count = getCount();
+            if (count != 0 && position == count - 1) {
+                holder.getView(R.id.line_bottom_imageView).setVisibility(View.GONE);
+            } else {
+                holder.getView(R.id.line_bottom_imageView).setVisibility(View.VISIBLE);
+            }
         }
     }
 
