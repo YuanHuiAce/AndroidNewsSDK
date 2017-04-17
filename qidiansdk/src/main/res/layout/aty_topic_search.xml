@@ -51,6 +51,7 @@
                 android:background="@null"
                 android:hint="请输入关键字..."
                 android:paddingBottom="4dp"
+                android:singleLine="true"
                 android:paddingTop="4dp"
                 android:textColor="#aa000000"
                 android:textColorHint="#aaaaaa"

@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -91,6 +93,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private RelativeLayout mMainView;
     private VPlayPlayer vPlayPlayer;
     private RequestManager mRequestManager;
+    private long lastTime, nowTime;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -152,6 +155,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         activity = mContext;
         mRequestManager = Glide.with(activity);
         vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
+        lastTime = System.currentTimeMillis();
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
@@ -358,6 +362,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         if (mReceiver != null) {
             activity.unregisterReceiver(mReceiver);
         }
+        nowTime = System.currentTimeMillis();
+        Log.i("tag",(int) ((nowTime - lastTime) / 1000)+"======time");
+        LogUtil.appUseLog(activity, lastTime, nowTime);
     }
 
     public View getNewsView() {

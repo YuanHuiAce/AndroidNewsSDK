@@ -47,8 +47,8 @@ public class NewsCommentHeaderView extends LinearLayout {
     }
 
     private void updateView() {
-        TextUtil.setLayoutBgColor(mContext, mllContentLayout, R.color.white);
-        TextUtil.setLayoutBgColor(mContext, mllNewsCommentNoCommentsLayout, R.color.white);
+        TextUtil.setLayoutBgColor(mContext, mllContentLayout, R.color.news_feed_list);
+        TextUtil.setLayoutBgColor(mContext, mllNewsCommentNoCommentsLayout, R.color.news_feed_list);
         TextUtil.setTextColor(mContext, mtvNewsCommentTitle, R.color.newsFeed_titleColor);
         TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.new_color3);
         if (mNewsFeed != null) {

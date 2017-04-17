@@ -339,6 +339,10 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                         }
                         List<NewsFeed> newsFeeds = result.getNews();
                         if (!TextUtil.isListEmpty(newsFeeds)) {
+                            if (newsFeeds.size() < 20) {
+                                mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                                footView_tv.setVisibility(View.GONE);
+                            }
                             mNewsFeeds.addAll(newsFeeds);
                             mAdapter.setNewsFeed(mNewsFeeds);
                             mAdapter.notifyDataSetChanged();

@@ -245,11 +245,11 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
             mHeaderText.setText(mPullLabel);
         }
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
-            mLoadMoreLayout.setBackgroundResource(R.color.white);
-            mInnerLayout.setBackgroundResource(R.color.white);
+            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list);
+            mInnerLayout.setBackgroundResource(R.color.news_feed_list);
         } else {
-            mLoadMoreLayout.setBackgroundResource(R.color.white_night);
-            mInnerLayout.setBackgroundResource(R.color.white_night);
+            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list_night);
+            mInnerLayout.setBackgroundResource(R.color.news_feed_list_night);
         }
         // Now call the callback
         pullToRefreshImpl();
@@ -302,11 +302,11 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
             }
         }
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
-            mLoadMoreLayout.setBackgroundResource(R.color.white);
-            mInnerLayout.setBackgroundResource(R.color.white);
+            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list);
+            mInnerLayout.setBackgroundResource(R.color.news_feed_list);
         } else {
-            mLoadMoreLayout.setBackgroundResource(R.color.white_night);
-            mInnerLayout.setBackgroundResource(R.color.white_night);
+            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list_night);
+            mInnerLayout.setBackgroundResource(R.color.news_feed_list_night);
         }
     }
 

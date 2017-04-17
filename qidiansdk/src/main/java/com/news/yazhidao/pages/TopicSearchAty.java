@@ -255,6 +255,9 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 mSearchListView.onRefreshComplete();
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
+                    if(response.size()>30){
+                        response = (ArrayList<NewsFeed>) response.subList(0,29);
+                    }
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if (pPageIndex.equals("1")) {
                         mNewsFeedLists.removeAll(mNewsFeedLists);

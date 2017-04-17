@@ -341,7 +341,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             if (user != null) {
                 mUserId = user.getMuid() + "";
             }
-            Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mNid);
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
             }.getType(), HttpConstant.URL_VIDEO_CONTENT + "nid=" + mNid + "&uid=" + mUserId, new Response.Listener<NewsDetail>() {

@@ -136,8 +136,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void initTheme() {
         TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mlvNewsFeed.setHeaderLoadingView();
-        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.white);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
+        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.news_feed_list);
+        TextUtil.setLayoutBgResource(mContext, footerView, R.color.news_feed_list);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -742,8 +742,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mRefreshTitleBar.setVisibility(View.GONE);
         }
         long time = (System.currentTimeMillis() - homeTime) / 1000;
-        Logger.e("aaa", "time====" + time);
-
         if (isNewVisity && isClickHome && time >= 60) {
 //            mlvNewsFeed.setRefreshing();
 //            isListRefresh = true;
@@ -843,7 +841,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         });
         footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
+        TextUtil.setLayoutBgResource(mContext, footerView, R.color.news_feed_list);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
 //        lv.setFooterDividersEnabled(false);
