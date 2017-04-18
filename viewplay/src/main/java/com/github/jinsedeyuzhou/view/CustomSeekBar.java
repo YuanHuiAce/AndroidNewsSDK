@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.SeekBar;
 
 /**
@@ -29,13 +28,7 @@ public class CustomSeekBar extends SeekBar {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction()==MotionEvent.ACTION_DOWN)
-        {
-            return true;
-        }
 
-        return super.onTouchEvent(event);
-    }
+
+
 }

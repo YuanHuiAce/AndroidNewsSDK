@@ -34,7 +34,7 @@ public class CustomTouchLayout extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction()==MotionEvent.ACTION_DOWN)
         {
-            return true;
+            getParent().requestDisallowInterceptTouchEvent(true);
         }
         return super.onTouchEvent(event);
     }

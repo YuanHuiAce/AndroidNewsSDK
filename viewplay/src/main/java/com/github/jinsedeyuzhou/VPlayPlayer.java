@@ -485,7 +485,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
-        if (id == R.id.media_contoller) {
+        if (id == R.id.ll_container_tools) {
             Rect seekRect = new Rect();
             seekBar.getHitRect(seekRect);
             if ((event.getY() >= (seekRect.top - 50)) && (event.getY() <= (seekRect.bottom + 50))) {
@@ -499,7 +499,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 } else {
                     MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
                             event.getAction(), x, y, event.getMetaState());
-                    return  seekBar.onTouchEvent(me);
+                 return   seekBar.onTouchEvent(me);
+
+
                 }
             }
 
