@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +159,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private LinearLayout footerView;
     //广告sdk
     private NativeAD mNativeAD;
+    private RelativeLayout mDetailSharedTitleLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -285,10 +285,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     @Override
     public void onDetach() {
-        super.onDetach();
         if (mRefreshReceiver != null) {
             getActivity().unregisterReceiver(mRefreshReceiver);
         }
+        super.onDetach();
     }
 
     @Override
@@ -325,25 +325,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
+        mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
-
-        //第2部分的viewPointContent
-        final View mViewPointLayout = inflater.inflate(R.layout.vdetail_relate_layout, container, false);
-        mViewPointLayout.setLayoutParams(layoutParams);
-        //延时加载热点评论和相关观点
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                mVideoDetailFootView.addView(footerView);
-//                mNewsDetailHeaderView.addView(mViewPointLayout);
-                mVideoDetailFootView.addView(mViewPointLayout);
-
-            }
-        }, 500);
         //关心
-        detail_shared_FriendCircleLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_shared_FriendCircleLayout);
-        detail_shared_CareForLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_shared_PraiseLayout);
-        detail_shared_AttentionImage = (ImageView) mViewPointLayout.findViewById(R.id.detail_shared_AttentionImage);
+        detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
+        detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
+        detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         if (mResult.getConflag() == 1) {
             isLike = true;
             detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
@@ -382,12 +369,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
         });
         //关注
-        linearlayout_attention = (LinearLayout) mViewPointLayout.findViewById(R.id.linearlayout_attention);
-        image_attention_line = (ImageView) mViewPointLayout.findViewById(R.id.image_attention_line);
-        image_attention_success = (ImageView) mViewPointLayout.findViewById(R.id.image_attention_success);
-        relativeLayout_attention = (RelativeLayout) mViewPointLayout.findViewById(R.id.relativeLayout_attention);
-        iv_attention_icon = (ImageView) mViewPointLayout.findViewById(R.id.iv_attention_icon);
-        tv_attention_title = (TextView) mViewPointLayout.findViewById(R.id.tv_attention_title);
+        linearlayout_attention = (LinearLayout) mCommentTitleView.findViewById(R.id.linearlayout_attention);
+        image_attention_line = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_line);
+        image_attention_success = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_success);
+        relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
+        iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
+        tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         String icon = mResult.getIcon();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
@@ -430,6 +417,20 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
             }
         });
+
+        //第2部分的viewPointContent
+        final View mViewPointLayout = inflater.inflate(R.layout.vdetail_relate_layout, container, false);
+        mViewPointLayout.setLayoutParams(layoutParams);
+        //延时加载热点评论和相关观点
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                mVideoDetailFootView.addView(footerView);
+//                mNewsDetailHeaderView.addView(mViewPointLayout);
+                mVideoDetailFootView.addView(mViewPointLayout);
+
+            }
+        },0);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -556,6 +557,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
                     } else {
+                        mDetailSharedTitleLayout.setVisibility(View.GONE);
                         setNoRelatedDate();
                     }
                 }
@@ -599,13 +601,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     ToastUtil.toastLong("取消关心");
                 } else {
                     isLike = true;
-                    Log.v(TAG,"");
                     detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
                     ToastUtil.toastLong("将推荐更多此类文章");
                 }
-                mNewsDetailList.getRefreshableView().removeFooterView(mVideoDetailFootView);
-                mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
-
                 isNetWork = false;
             }
         }, new Response.ErrorListener() {
@@ -727,6 +725,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
+        mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
         beanList.addAll(relatedItemEntities);
         mAdapter.setNewsFeed(beanList);
         mAdapter.notifyDataSetChanged();

@@ -96,8 +96,67 @@ public final class CommonConstant {
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
-    public static final String LOG_PTYPE = "安卓";
-    //奇点资讯，黄历天气，纹字锁屏，猎鹰浏览器，白牌
-    public static final String LOG_CTYPE = "纹字锁屏";
+    public static final String LOG_PTYPE = "Android";
+    //qidian 奇点资讯
+    //huangli 黄历天气
+    //wenzi	纹字锁屏
+    //lybrowser	猎鹰浏览器
+    //baipai 白牌
+    public static final String LOG_CTYPE = "wenzi";
+    /**
+     * atype取值 对应动作	对应params
+     * login	登录
+     * refreshFeed	上拉刷新feed流	chid(频道id)
+     * loadFeed	下拉加载feed流	chid
+     * detailClick	点击详情页	nid(新闻id)，logchid（点击来源，首页或频道页或相关推荐列表）
+     * commentClick	点击获取评论	nid
+     * changeChannel	切换频道	fchid,tchid
+     * subChannel	订阅频道	chids(频道id列表，逗号分隔)
+     * subPublisher	订阅来源	publisher(来源名称)
+     * search	搜索	query
+     * relateClick	点击相关新闻	nid
+     * myComments	我的评论
+     * myCollections	我的收藏
+     * myMessages	我的消息
+     */
+    public static final String LOG_ATYPE_LOGIN = "login";
+    public static final String LOG_ATYPE_REFRESHFEED = "refreshFeed";
+    public static final String LOG_ATYPE_LOADFEED = "loadFeed";
+    public static final String LOG_ATYPE_DETAILCLICK = "detailClick";
+    public static final String LOG_ATYPE_COMMENTCLICK = "commentClick";
+    public static final String LOG_ATYPE_CHANGECHANNEL = "changeChannel";
+    public static final String LOG_ATYPE_SUBCHANNEL = "subChannel";
+    public static final String LOG_ATYPE_SUBPUBLISHER = "subPublisher";
+    public static final String LOG_ATYPE_SEARCH = "search";
+    public static final String LOG_ATYPE_RELATECLICK = "relateClick";
+    public static final String LOG_ATYPE_MYCOMMENTS = "myComments";
+    public static final String LOG_ATYPE_MYCOLLECTIONS = "myCollections";
+    public static final String LOG_ATYPE_MYMESSAGES = "myMessages";
+
+    /**
+     * page取值	对应页面
+     * feedPage	feed流页面
+     * detailPage	新闻详情页
+     * channelPage	设置页面
+     * topicPage	专题页面
+     * loginPage	登录页面
+     * searchPage	搜索页面
+     * pfeedPage	来源feed流页面
+     * myCommentPage	我的评论页面
+     * myCollectionPage	我的收藏页面
+     * myMessagePage	我的消息页面
+     * settingPage	设置页面
+     */
+    public static final String LOG_PAGE_FEEDPAGE = "feedPage";
+    public static final String LOG_PAGE_DETAILPAGE = "detailPage";
+    public static final String LOG_PAGE_CHANNELPAGE = "channelPage";
+    public static final String LOG_PAGE_TOPICPAGE = "topicPage";
+    public static final String LOG_PAGE_LOGINPAGE = "loginPage";
+    public static final String LOG_PAGE_SEARCHPAGE = "searchPage";
+    public static final String LOG_PAGE_PFEEDPAGE = "pfeedPage";
+    public static final String LOG_PAGE_MYCOMMENTPAGE = "myCommentPage";
+    public static final String LOG_PAGE_MYCOLLECTIONPAGE = "myCollectionPage";
+    public static final String LOG_PAGE_MYMESSAGEPAGE = "myMessagePage";
+    public static final String LOG_PAGE_SETTINGPAGE = "settingPage";
 
 }

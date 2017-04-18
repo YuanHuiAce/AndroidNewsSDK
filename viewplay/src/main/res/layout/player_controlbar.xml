@@ -39,7 +39,7 @@
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
-        <SeekBar
+        <com.github.jinsedeyuzhou.view.CustomSeekBar
             style="@style/SeekBarAppTheme"
             android:id="@+id/seekbar"
             android:layout_gravity="center_vertical"

@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.google.gson.Gson;
+import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -23,18 +24,32 @@ import com.news.yazhidao.entity.UserLogBasicInfoEntity;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class LogUtil {
 
-    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent, String version, boolean isUserComment) {
+    private static UserLogBasicInfoEntity getLogBasicInfo(Context context, Long userId) {
+        UserLogBasicInfoEntity userLogBasicInfoEntity = new UserLogBasicInfoEntity();
+        userLogBasicInfoEntity.setUid(userId);
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        userLogBasicInfoEntity.setDeviceid(androidId);
+        userLogBasicInfoEntity.setPtype(CommonConstant.LOG_PTYPE);
+        userLogBasicInfoEntity.setCtype(CommonConstant.LOG_CTYPE);
+        userLogBasicInfoEntity.setVersion_text(context.getString(R.string.version_name));
+        userLogBasicInfoEntity.setCtime(System.currentTimeMillis());
+        return userLogBasicInfoEntity;
+    }
+
+    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         String mUserId = "";
         if (user != null) {
@@ -54,7 +69,7 @@ public class LogUtil {
         uploadLogDataEntity.setLt(newsFeed.getLogtype());
         uploadLogDataEntity.setLc(newsFeed.getLogchid());
         uploadLogDataEntity.setPe(percent);
-        uploadLogDataEntity.setV(version);
+        uploadLogDataEntity.setV(context.getString(R.string.version_name));
         final String locationJsonString = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         final String LogData = SharedPreManager.mInstance(context).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);
         Gson gson = new Gson();
@@ -93,7 +108,7 @@ public class LogUtil {
         requestQueue.add(request);
     }
 
-    public static void userReadLog(NewsFeed newsFeed, Context context, Long begintime, Long endtime, String version) {
+    public static void userReadLog(NewsFeed newsFeed, Context context, Long begintime, Long endtime) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -105,17 +120,9 @@ public class LogUtil {
             return;
         }
         JSONObject jsonObject = new JSONObject();
-        ;
         Gson gson = new Gson();
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        final UserLogBasicInfoEntity userLogBasicInfoEntity = new UserLogBasicInfoEntity();
-        userLogBasicInfoEntity.setUid(mUserId);
-        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        userLogBasicInfoEntity.setDeviceid(androidId);
-        userLogBasicInfoEntity.setPtype(CommonConstant.LOG_PTYPE);
-        userLogBasicInfoEntity.setCtype(CommonConstant.LOG_CTYPE);
-        userLogBasicInfoEntity.setVersion_text(version);
-        userLogBasicInfoEntity.setCtime(System.currentTimeMillis());
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
         try {
             JSONObject json = new JSONObject();
             json.put("begintime", begintime);
@@ -130,12 +137,12 @@ public class LogUtil {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("tag", "1111");
+                        Log.i("tag", "URL_LOG_POST_NEWS_READ");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "222");
+                Log.i("tag", "URL_LOG_POST_NEWS_READ222");
             }
         }) {
             @Override
@@ -150,4 +157,261 @@ public class LogUtil {
         requestQueue.add(request);
     }
 
+    public static void userShowLog(ArrayList<NewsFeed> arrNewsFeed, Context context, String source) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (arrNewsFeed == null || mUserId == null) {
+            Logger.e("tag", "percent kong");
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            for (NewsFeed newsFeed : arrNewsFeed) {
+                JSONObject object = new JSONObject();
+                object.put("nid", Long.valueOf(newsFeed.getNid()));
+                object.put("source", source);
+                object.put("chid", newsFeed.getChannel());
+                object.put("logtype", newsFeed.getLogtype());
+                object.put("logchid", newsFeed.getLogchid());
+                object.put("extend", newsFeed.getExtend());
+                jsonArray.put(object);
+            }
+            json.put("news_list", jsonArray);
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_SHOW, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "URL_LOG_POST_NEWS_SHOW");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_NEWS_SHOW222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
+
+    public static void userClickLog(NewsFeed newsFeed, Context context, String source) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (newsFeed == null || mUserId == null) {
+            Logger.e("tag", "percent kong");
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            json.put("nid", Long.valueOf(newsFeed.getNid()));
+            json.put("source", source);
+            json.put("chid", newsFeed.getChannel());
+            json.put("logtype", newsFeed.getLogtype());
+            json.put("logchid", newsFeed.getLogchid());
+            jsonObject.put("extend", newsFeed.getExtend());
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_CLICK, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "URL_LOG_POST_NEWS_CLICK");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_NEWS_CLICK222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
+
+    public static void adClickLog(Long aid, Context context, String source) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (aid == null || mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            json.put("aid", aid);
+            json.put("source", source);
+            jsonObject.put("extend", null);
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_AD_CLICK, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "URL_LOG_POST_AD_CLICK");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_AD_CLICK222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
+
+    public static void appUseLog(Context context, Long begintime, Long endtime) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            json.put("begintime", begintime);
+            json.put("endtime", endtime);
+            json.put("utime", (int) ((endtime - begintime) / 1000));
+            jsonObject.put("extend", null);
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_USE, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "URL_LOG_POST_APP_USE");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_APP_USE  222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
+
+    public static void userActionLog(Context context, String atype, String from, String to, Object params, boolean effective) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            json.put("atype", atype);
+            json.put("from", from);
+            json.put("to", to);
+            json.put("params", params);
+            json.put("effective", effective);
+            jsonObject.put("extend", null);
+            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_ACTION, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("tag", "URL_LOG_POST_APP_ACTION");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_APP_ACTION  222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+    }
 }

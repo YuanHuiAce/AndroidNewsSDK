@@ -9,7 +9,7 @@ public class HttpConstant {
      */
     public static final String URL_SERVER_HOST = "http://bdp.deeporiginalx.com/v2";
 
-    public static final String URL_LOG_HOST = "http://log.deeporiginalx.com/rep/v2";
+    public static final String URL_LOG_HOST = "http://log.deeporiginalx.com/rep/v2/log";
 
     public static final String URL_REGISTER_VISITOR = URL_SERVER_HOST + "/au/sin/g";//注册游客信息
 
@@ -24,6 +24,16 @@ public class HttpConstant {
     public static final String URL_SEARCH = URL_SERVER_HOST + "/ns/es/s";//搜索
 
     public static final String URL_LOG_POST_NEWS_READ = URL_LOG_HOST + "/news/read";
+
+    public static final String URL_LOG_POST_NEWS_SHOW = URL_LOG_HOST + "/news/show";
+
+    public static final String URL_LOG_POST_NEWS_CLICK = URL_LOG_HOST + "/news/click";
+
+    public static final String URL_LOG_POST_AD_CLICK = URL_LOG_HOST + "/ad/click";
+
+    public static final String URL_LOG_POST_APP_USE = URL_LOG_HOST + "/app/use";
+
+    public static final String URL_LOG_POST_APP_ACTION = URL_LOG_HOST + "/app/action";
     /**
      * 新闻阅读时长日志
      */

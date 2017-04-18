@@ -16,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -121,7 +120,7 @@ public class NewsCommentFgt extends Fragment {
             layout.topMargin = DensityUtil.dip2px(mContext, 48);
             mNewsCommentList.setLayoutParams(layout);
         }
-        TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.white);
+        TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.news_feed_list);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
@@ -277,10 +276,10 @@ public class NewsCommentFgt extends Fragment {
                     if (user != null && user.isVisitor()) {
                         AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                     } else {
-                        if ((user.getMuid() + "").equals(comment.getUid())) {
-                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+//                        if ((user.getMuid() + "").equals(comment.getUid())) {
+//                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
                         if (comment.getUpflag() == 0) {
                             comment.setUpflag(1);
                             holder.ivPraise.setImageResource(R.drawable.bg_praised);

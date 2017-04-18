@@ -2,6 +2,7 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -74,6 +75,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
         mAttentionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("tag", "position" + position);
                 Intent attentionAty = new Intent(SubscribeListActivity.this, AttentionActivity.class);
                 AttentionListEntity attention = mAttentionListEntities.get(position - 1);
                 attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
@@ -98,17 +100,26 @@ public class SubscribeListActivity extends SwipeBackActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == CommonConstant.RESULT_ATTENTION_CODE) {
             if (data != null) {
-                boolean attention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
+                boolean currentAttention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
                 int position = data.getIntExtra(CommonConstant.KEY_ATTENTION_INDEX, 0);
                 AttentionListEntity entity = mAttentionListEntities.get(position);
-                if (attention) {
-                    entity.setFlag(1);
-                    entity.setConcern(entity.getConcern() + 1);
+                int flag = entity.getFlag();
+                boolean attention;
+                if (flag == 0) {
+                    attention = false;
                 } else {
-                    entity.setFlag(0);
-                    entity.setConcern(entity.getConcern() - 1);
+                    attention = true;
                 }
-                mAdapter.notifyDataSetChanged();
+                if (currentAttention != attention) {
+                    if (currentAttention) {
+                        entity.setFlag(1);
+                        entity.setConcern(entity.getConcern() + 1);
+                    } else {
+                        entity.setFlag(0);
+                        entity.setConcern(entity.getConcern() - 1);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         }
 //        else if (requestCode == REQUEST_LOGIN_CODE && resultCode == LoginAty.REQUEST_CODE) {
@@ -161,7 +172,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                     if (user != null && user.isVisitor()) {
                         AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
                     } else {
-                        changeAttentionStatus(SubscribeListAdapter.this, attentionListEntity);
+                        changeAttentionStatus(attentionListEntity);
                     }
                 }
             });
@@ -171,10 +182,9 @@ public class SubscribeListActivity extends SwipeBackActivity {
     /**
      * 更改关注的状态
      *
-     * @param subscribeListAdapter
      * @param attentionListEntity
      */
-    private void changeAttentionStatus(SubscribeListAdapter subscribeListAdapter, AttentionListEntity attentionListEntity) {
+    private void changeAttentionStatus(AttentionListEntity attentionListEntity) {
         if (attentionListEntity.getFlag() == 1) {
 //            SharedPreManager.mInstance(this).deleteAttention(attentionListEntity.getName());
             attentionListEntity.setFlag(0);
@@ -191,7 +201,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
             attentionListEntity.setFlag(1);
             attentionListEntity.setConcern(attentionListEntity.getConcern() + 1);
         }
-        subscribeListAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -245,7 +255,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.mInstance(this).getUser(mContext).getAuthorToken());
+//        header.put("Authorization", SharedPreManager.mInstance(this).getUser(mContext).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);

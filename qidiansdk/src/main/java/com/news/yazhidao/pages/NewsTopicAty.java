@@ -264,7 +264,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     protected void onPause() {
         nowTime = System.currentTimeMillis();
         //上报日志
-        LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%", this.getString(R.string.version_name), false);
+        LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%");
+        LogUtil.userReadLog(mUsedNewsFeed, this, lastTime, nowTime);
         super.onPause();
     }
 

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animationCache="false"
-        android:background="@color/white"
+        android:background="@color/news_feed_list"
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:clipToPadding="false"
         android:divider="@null"

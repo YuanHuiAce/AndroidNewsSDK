@@ -52,6 +52,8 @@
     <color name="gray_black">#8f000000</color>
     <color name="white_light">#bbffffff</color>
     <color name="bg_detail">#f6f6f6</color>
+    <color name="news_feed_list">#f6f6f6</color>
+    <color name="news_feed_list_night">#f6f6f6</color>
 
     <color name="transparency">#00ffffff</color>
     <!-- 透明颜色 -->
@@ -145,6 +147,7 @@
     <color name="new_create_wall_radius_gray">#d0d0d0</color>
     <color name="new_tip_bg">#ceefff</color>
     <color name="new_tip_text">#8b9093</color>
+
 
     <color name="radio_button_selected_color">#d6b400</color>
     <color name="radio_button_unselected_color">@android:color/transparent</color>

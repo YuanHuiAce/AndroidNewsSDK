@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -582,8 +583,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
             durationView.setText(time + clickNums);
-        } else {
+        } else if (!TextUtils.isEmpty(clickNums)&&!"".equals(clickNums)){
             durationView.setText("" + clickNums);
+        }else
+        {
+            durationView.setVisibility(View.GONE);
         }
     }
 

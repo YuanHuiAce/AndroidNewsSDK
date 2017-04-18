@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.github.jinsedeyuzhou.media.IjkVideoView;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.github.jinsedeyuzhou.utils.WindowUtils;
+import com.github.jinsedeyuzhou.view.CustomSeekBar;
 import com.github.jinsedeyuzhou.view.MarqueeTextView;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -55,7 +56,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private IjkVideoView mVideoView;
     //初始化view
     private ProgressBar progressBar;
-    private SeekBar seekBar;
+    private CustomSeekBar seekBar;
     private TextView allTime;
     private TextView time;
     private ImageView full;
@@ -217,7 +218,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         progressBar = (ProgressBar) findViewById(R.id.loading);
         bottomProgress = (ProgressBar) findViewById(R.id.bottom_progressbar);
         container_tools = (LinearLayout) findViewById(R.id.ll_container_tools);
-        seekBar = (SeekBar) findViewById(R.id.seekbar);
+        seekBar = (CustomSeekBar) findViewById(R.id.seekbar);
         allTime = (TextView) findViewById(R.id.all_time);
         time = (TextView) findViewById(R.id.time);
         full = (ImageView) findViewById(R.id.full);
@@ -498,10 +499,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 } else {
                     MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
                             event.getAction(), x, y, event.getMetaState());
-
-                    return seekBar.onTouchEvent(me);
+                    return  seekBar.onTouchEvent(me);
                 }
             }
+
         } else if (id == R.id.main_video) {
             if (detector.onTouchEvent(event))
                 return true;
