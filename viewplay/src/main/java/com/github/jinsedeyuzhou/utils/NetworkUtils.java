@@ -1,15 +1,12 @@
 package com.github.jinsedeyuzhou.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 
-public class MediaNetUtils {
-
+public class NetworkUtils {
+    private static final String TAG = NetworkUtils.class.getSimpleName();
 
     /**
      * 判断当前网络类型-1为未知网络0为没有网络连接1网络断开或关闭2为以太网3为WiFi4为2G5为3G6为4G
@@ -42,7 +39,6 @@ public class MediaNetUtils {
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                 case TelephonyManager.NETWORK_TYPE_IDEN:
                     /** 2G网络 */
-
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
                 case TelephonyManager.NETWORK_TYPE_EVDO_A:
@@ -60,6 +56,25 @@ public class MediaNetUtils {
         }
         /** 未知网络 */
         return -1;
+    }
+
+
+
+
+    /**
+     * 判断是否有网
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager con = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo workinfo = con.getActiveNetworkInfo();
+        if (workinfo == null || !workinfo.isAvailable()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -82,39 +97,5 @@ public class MediaNetUtils {
 
     }
 
-    /**
-     * 判断是否有网
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isConnectionAvailable(Context context) {
-        ConnectivityManager con = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo workinfo = con.getActiveNetworkInfo();
-        if (workinfo == null || !workinfo.isAvailable()) {
-            return false;
-        }
-        return true;
-    }
-
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-
-    public static float  pixel2dip(Context context, float n){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        float dp = n / (metrics.densityDpi / 160f);
-        return n / (metrics.densityDpi / 160f);
-
-    }
-
-    public int dip2pixel(Context context, float n){
-//        int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n, context.getResources().getDisplayMetrics());
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n, context.getResources().getDisplayMetrics());
-    }
 
 }

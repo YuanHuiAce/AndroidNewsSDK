@@ -29,6 +29,7 @@ import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.pages.SubscribeListActivity;
@@ -47,7 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
+public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
 
     private final NewsFeedFgt mNewsFeedFgt;
     private String mstrKeyWord;
@@ -55,6 +56,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private Context mContext;
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
+    public static int REQUEST_CODE = 10002;
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private int mCardWidth, mCardHeight;
@@ -586,26 +588,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setAction(MainView.ACTION_SHOW_SHARE);
-//                intent.putExtra("newsfeed", newsFeed);
-//                mContext.sendBroadcast(intent);
-            }
-        });
+                if (onPlayClickListener!=null)
+                {
+                    onPlayClickListener.onShareClick(imageView,newsFeed);
+                }
     }
 
     private void setCommentClick(NewsFeed newsFeed) {
-//        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-//        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
+        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
 //        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
-//        if (mNewsFeedFgt != null) {
-//            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-//        } else {
-//            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-//        }
+        if (mNewsFeedFgt != null) {
+            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+        }
     }
 
     private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
@@ -930,6 +927,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
     }
 
+
+
+
     class ViewWrapper {
         private View mTarget;
 
@@ -974,6 +974,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
 
         void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
+        void onShareClick(ImageView imageView,NewsFeed feed);
     }
 
 }

@@ -2,7 +2,6 @@ package com.news.yazhidao.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 /**
@@ -22,15 +21,15 @@ public class VideoItemContainer extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (ev.getAction())
-        {
-            case MotionEvent.ACTION_MOVE:
-                return true;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        switch (ev.getAction())
+//        {
+//            case MotionEvent.ACTION_MOVE:
+//                return true;
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
 //    @Override
 //    public boolean onInterceptTouchEvent(MotionEvent ev) {

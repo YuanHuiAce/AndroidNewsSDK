@@ -37,9 +37,10 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
-import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -169,6 +170,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        position = arguments.getInt("position", 0);
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
@@ -1048,8 +1050,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              if (!MediaNetUtils.isConnectionAvailable(mContext))
-                  return ;
+              if (!NetworkUtils.isConnectionAvailable(mContext)) {
+                  ToastUtil.toastShort("无网络，请稍后重试！");
+                  return;
+              }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
@@ -1097,7 +1101,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        vp.start(mResult.getVideourl());
 
 
-        if (MediaNetUtils.getNetworkType(mContext) == 3) {
+        if (NetworkUtils.getNetworkType(mContext) == 3) {
             mVideoShowBg.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl(), position);
@@ -1105,7 +1109,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
-        vplayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
+
+        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
                 if (mSmallLayout.getVisibility() == View.VISIBLE) {

@@ -113,6 +113,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private UserCommentDialog mCommentDialog;
     private int mCommentNum;
     private boolean isUserComment;
+    private boolean isShowComment;
+    public int cPosition;
 
     public void setHandler(Handler handler) {
         mHandler = handler;
@@ -153,11 +155,14 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
         vPlayPlayer = new VPlayPlayer(this);
+        vPlayPlayer.setAllowTouch(true);
     }
 
     @Override
     protected void initializeViews() {
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
+        isShowComment = getIntent().getBooleanExtra(NewsCommentFgt.KEY_SHOW_COMMENT, false);
+        cPosition = getIntent().getIntExtra("position",0);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -220,6 +225,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         super.onPause();
     }
 
+
     @Override
     public void finish() {
         if (mNewsFeed != null && isUserComment) {
@@ -228,6 +234,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
             intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
             sendBroadcast(intent);
+        }
+
+        if (vPlayPlayer!=null)
+        {
+            Intent intent=new Intent();
         }
         super.finish();
     }
@@ -274,7 +285,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-                    mDetailRightMore.setVisibility(View.GONE);
+//                    mDetailRightMore.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
@@ -286,7 +297,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-                    mDetailRightMore.setVisibility(View.VISIBLE);
+//                    mDetailRightMore.setVisibility(View.GONE);
                 }
             }
         });
@@ -300,6 +311,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mNid);
                     args.putString(NewsDetailFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
+                    args.putInt("position", cPosition);
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
@@ -318,6 +330,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             }
         };
         mNewsDetailViewPager.setAdapter(pagerAdapter);
+        if (isShowComment) {
+            mNewsDetailViewPager.setCurrentItem(1);
+        }
     }
 
     private boolean isRefresh = false;

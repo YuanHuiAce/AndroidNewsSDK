@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -36,10 +38,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
-import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -64,6 +67,7 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.news.yazhidao.widget.SharePopupWindow;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
 import com.transitionseverywhere.TransitionManager;
@@ -79,7 +83,7 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
+public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener{
 
     public static final String TAG = "NewsFeedFgt";
     public static final String KEY_NEWS_FEED = "key_news_feed";
@@ -92,8 +96,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public static String KEY_WORD = "key_word";
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String KEY_NEWS_ID = "key_news_id";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
+    public static final String CURRENT_POSITION = "position";
     public static final int PULL_DOWN_REFRESH = 1;
     public static final int PULL_UP_REFRESH = 2;
+    public static final int REQUEST_CODE = 1060;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private Context mContext;
@@ -127,6 +134,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isADRefresh;
     private List<NativeADDataRef> mADs;
     public static final int AD_COUNT = 5;
+    private ImageView mivShareBg;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
 
     @Override
     public void onThemeChanged() {
@@ -140,6 +149,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         TextUtil.setLayoutBgResource(mContext, footerView, R.color.white);
         mAdapter.notifyDataSetChanged();
     }
+
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -236,6 +246,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mContext = getActivity();
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
@@ -269,6 +283,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
+        mivShareBg = (ImageView)rootView.findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
@@ -1208,6 +1223,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE)
+        {
+            if (data!=null)
+            {
+                data.getIntExtra("position",0);
+            }
+        }
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mContext = activity;
@@ -1295,7 +1322,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         }
                                     }
                                 }
-
                                 vPlayerContainer.setVisibility(View.VISIBLE);
                                 FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -1312,6 +1338,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
+    private SharePopupWindow.ShareDismiss shareDismiss=new SharePopupWindow.ShareDismiss() {
+        @Override
+        public void shareDismiss() {
+            mivShareBg.startAnimation(mAlphaAnimationOut);
+            mivShareBg.setVisibility(View.INVISIBLE);
+        }
+    };
 
     /**
      * 视频播放控制
@@ -1326,7 +1359,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
                 isAuto = false;
-                if (!MediaNetUtils.isConnectionAvailable(mContext))
+                if (!NetworkUtils.isConnectionAvailable(mContext))
                     return;
                 relativeLayout.setVisibility(View.GONE);
                 isAd = false;
@@ -1351,7 +1384,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
                 isAuto = false;
-                if (feed == null && !MediaNetUtils.isConnectionAvailable(mContext))
+                if (feed == null && !NetworkUtils.isConnectionAvailable(mContext))
                     return;
                 cPostion = feed.getNid();
                 if (cPostion != lastPostion && lastPostion != -1) {
@@ -1361,13 +1394,30 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                NewsFeedFgt.this.startActivity(intent);
+                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
+                NewsFeedFgt.this.startActivityForResult(intent,NewsFeedFgt.REQUEST_CODE);
                 lastPostion = cPostion;
+            }
+
+            @Override
+            public void onShareClick(ImageView imgView,final NewsFeed feed) {
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mivShareBg.startAnimation(mAlphaAnimationIn);
+                        mivShareBg.setVisibility(View.VISIBLE);
+                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity)mContext,shareDismiss);
+                        mSharePopupWindow.setVideo(true);
+                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
+                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    }
+                });
+
             }
         });
 
         if (mstrChannelId.equals("44")) {
-            vPlayer.setOnShareListener(new VPlayPlayer.OnShareListener() {
+            vPlayer.setOnShareListener(new IPlayer.OnShareListener() {
                 @Override
                 public void onShare() {
 
@@ -1380,10 +1430,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         vPlayer.release();
                     }
                     removeViews();
-
                 }
             });
-            vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
+            vPlayer.setCompletionListener(new IPlayer.CompletionListener() {
                 @Override
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
