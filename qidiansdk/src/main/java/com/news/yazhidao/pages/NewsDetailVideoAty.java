@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
@@ -162,7 +163,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void initializeViews() {
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
         isShowComment = getIntent().getBooleanExtra(NewsCommentFgt.KEY_SHOW_COMMENT, false);
-        cPosition = getIntent().getIntExtra("position",0);
+        cPosition = getIntent().getIntExtra("position", 0);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -234,14 +235,19 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
+
             intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
             sendBroadcast(intent);
         }
 
-        if (vPlayPlayer!=null)
-        {
-            Intent intent=new Intent();
-        }
+
+        Intent intent = new Intent();
+        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+        if (vPlayPlayer != null && vPlayPlayer.isPlay())
+            intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayPlayer.getCurrentPosition());
+        setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+
+
         super.finish();
     }
 

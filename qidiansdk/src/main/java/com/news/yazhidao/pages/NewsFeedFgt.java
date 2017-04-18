@@ -753,6 +753,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
 //        mHomeWatcher.startWatch();
         super.onResume();
+        if (vPlayer!=null&&isAutoPlay)
+        {
+            isAutoPlay=false;
+
+        }
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
@@ -1215,16 +1220,34 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     //========================================视频部分======================================//
-
+        private boolean isAutoPlay;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE)
+
+        if (vPlayer!=null&&requestCode == REQUEST_CODE&&mstrChannelId.equals("44")&&data!=null)
         {
-            if (data!=null)
+            if (vPlayer.getStatus()==PlayStateParams.STATE_PAUSED)
             {
-                data.getIntExtra("position",0);
+                int position=data.getIntExtra(NewsFeedFgt.CURRENT_POSITION,0);
+                int newId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
+                if (position!=0&&cPostion==newId&&newId!=0)
+                {
+                    vPlayer.seekToNewPosition(position);
+                    isAutoPlay=true;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            vPlayer.onResume();
+                        }
+                    },500);
+                }else
+                {
+                    vPlayer.stop();
+                    vPlayer.release();
+                    removeViews();
+                }
             }
         }
     }

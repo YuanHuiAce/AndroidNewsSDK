@@ -1262,13 +1262,13 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     public void onResume() {
         if (status == PlayStateParams.STATE_PAUSED) {
-            if (isAutoPause) {
+//            if (isAutoPause) {
                 mVideoView.start();
                 play.setSelected(true);
-                isAutoPause = false;
+//                isAutoPause = false;
                 releaseBitmap();
                 statusChange(PlayStateParams.STATE_PLAYING);
-            }
+//            }
         }
     }
 
@@ -1277,8 +1277,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
             play.setSelected(false);
-            currentPosition = mVideoView.getCurrentPosition();
-            isAutoPause = true;
+//            currentPosition = mVideoView.getCurrentPosition();
+//            isAutoPause = true;
             snapshotsBitmap();
             statusChange(PlayStateParams.STATE_PAUSED);
         }
@@ -1345,6 +1345,17 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     }
 
+    public void seekToNewPosition(int newPosition)
+    {
+        this.newPosition=newPosition;
+        endGesture();
+//        doPauseResume();
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
     public void setDuration(long duration) {
         this.duration = duration;
     }

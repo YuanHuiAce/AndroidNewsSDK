@@ -49,6 +49,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
         <activity
+            android:theme="@style/ThemeAnimation"
             android:name=".pages.NewsDetailVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
