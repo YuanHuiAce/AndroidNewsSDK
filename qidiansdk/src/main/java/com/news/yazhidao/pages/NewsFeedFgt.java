@@ -756,7 +756,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (vPlayer!=null&&isAutoPlay)
         {
             isAutoPlay=false;
-
+            vPlayer.onResume();
         }
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
@@ -1212,6 +1212,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+
                 }
             }, null);
             requestQueue.add(request);
@@ -1239,9 +1240,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            vPlayer.onResume();
+//                            vPlayer.onResume();
                         }
-                    },500);
+                    },100);
                 }else
                 {
                     vPlayer.stop();
