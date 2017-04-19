@@ -778,6 +778,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        }
 
 
+        if (vPlayer!=null&&isAutoPlay)
+        {
+            isAutoPlay=false;
+            vPlayer.onResume();
+        }
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
@@ -1234,6 +1239,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+
                 }
             }, null);
             requestQueue.add(request);
@@ -1258,6 +1264,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     isAutoPlay = true;
                     vPlayer.onResume();
 
+                    if (vPlayer.isPlay())
+                        if (getPlayItemPosition() != -1) {
+                            getShowItemView(getPlayItemPosition()).setVisibility(View.GONE);
+                            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                            if (frameLayout != null) {
+                                frameLayout.removeView(vPlayer);
+                            }
+                            getPlayItemView(getPlayItemPosition()).addView(vPlayer);
+
+                        }
 //                    mHandler.postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -1276,6 +1292,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                        }
 //                    },2000);
 
+                    isAutoPlay=true;
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+//                            vPlayer.onResume();
+                        }
+                    },100);
+                }else
+                {
+                    vPlayer.stop();
+                    vPlayer.release();
+                    removeViews();
                 }
             } else {
                 vPlayer.stop();
