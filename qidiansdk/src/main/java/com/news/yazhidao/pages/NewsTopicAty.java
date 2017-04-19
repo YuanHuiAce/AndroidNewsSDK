@@ -597,6 +597,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     } else {
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                        intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
                         ArrayList<String> imageList = feed.getImgs();
                         if (imageList != null && imageList.size() != 0) {
                             intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));

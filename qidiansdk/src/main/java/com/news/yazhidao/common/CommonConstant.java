@@ -31,9 +31,12 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NOTIFICATION_OPENED = "notification_open";
 
     public static final String FILE_USER = "user";
+    public static final String FILE_AD = "ad";
     public static final String FILE_JPUSH = "jpush";
     public static final String FILE_DATA = "data";
     public static final String FILE_UMENG = "umeng";
+    public static final String FILE_USER_CENTER = "user_center";
+    public static final String USER_CENTER_SHOW = "user_center_show";
     public static final String KEY_USER_INFO = "user_info";
     public static final String KEY_VISITOR_INFO = "key_visitor_info";//游客信息
     public static final String KEY_JPUSH_ID = "jpush_id";
@@ -45,6 +48,7 @@ public final class CommonConstant {
     public static final String KEY_USER_LOCATION = "key_user_location";
     public static final String KEY_LOCATION_LATITUDE = "key_location_latitude";
     public static final String KEY_LOCATION_LONGITUDE = "key_location_longitude";
+    public static final String KEY_SOURCE = "key_source";
     public static final String KEY_USER_NEED_SHOW_GUIDE_PAGE = "key_user_need_show_guide_page";
     public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
     public static final String KEY_UUID = "key_uuid";//确保用户唯一的uuid
@@ -72,6 +76,9 @@ public final class CommonConstant {
     public static final int RESULT_ATTENTION_CODE = 2040;
     public static final int REQUEST_SUBSCRIBE_LIST_CODE = 3040;
     public static final int RESULT_SUBSCRIBE_LIST_CODE = 4040;
+    public static final int REQUEST_LOGIN_CODE = 5040;
+    public static final int RESULT_LOGIN_CODE = 6040;
+    public static final String LOGIN_AUTHORIZEDUSER_ACTION = "login_authorizeduser_action";
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String CHANGE_COMMENT_NUM_ACTION = "change_comment_num";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
@@ -85,12 +92,14 @@ public final class CommonConstant {
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NativePosID = "2000611873536900";
+    public static final String NEWS_FEED_GDT_SDK_NativePosID = "2000611873536900";
+    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "2000611873536900";
+    //广点通API id 广告位id
+    public static final String NEWS_FEED_GDT_API_NativePosID = "246";
+    public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";
+    public static final String NEWS_RELATE_GDT_API_NativePosID = "237";
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
-    //feed流广告位id 238
-    public static final String NEWS_FEED_AD_ID = "";
-    //详情页广告位id 237
-    public static final String NEWS_DETAIL_AD_ID = "";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
     public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
@@ -103,6 +112,13 @@ public final class CommonConstant {
     //lybrowser	猎鹰浏览器
     //baipai 白牌
     public static final String LOG_CTYPE = "wenzi";
+
+    public static final String LOG_SHOW_FEED_SOURCE = "feed";
+    public static final String LOG_CLICK_FEED_SOURCE = "feed";
+    public static final String LOG_CLICK_RELATE_SOURCE = "relate";
+    public static final String LOG_CLICK_TOPIC_SOURCE = "topic";
+    public static final String LOG_SHOW_FEED_AD_GDT_API_SOURCE = "gdtAPI";
+    public static final String LOG_SHOW_FEED_AD_GDT_SDK_SOURCE = "gdtSDK";
     /**
      * atype取值 对应动作	对应params
      * login	登录

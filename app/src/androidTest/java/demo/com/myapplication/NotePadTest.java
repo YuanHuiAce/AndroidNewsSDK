@@ -8,6 +8,8 @@ import android.widget.ListView;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.robotium.solo.Solo;
 
+import demo.com.myapplication.pages.MainActivity;
+
 /**
  * Created by fiocca on 16/9/26.
  */
