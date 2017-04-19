@@ -306,12 +306,9 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     setRead(relatedItemEntity);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    ((Activity)mContext).overridePendingTransition(0, 0);
-                    mContext.startActivity(intent);
-                    ((Activity)mContext).overridePendingTransition(0, 0);
-
-
+                    ((Activity) mContext).startActivityForResult(intent,1060);
                     ((Activity) mContext).finish();
+                    ((Activity)mContext).overridePendingTransition(0, 0);
                 } else {
                     setRead(relatedItemEntity);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);

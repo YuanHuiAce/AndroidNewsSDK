@@ -84,6 +84,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
+    public static int REQUEST_CODE = 10003;
 
     private boolean isDisplay = true;
     private int defaultH;//图片新闻文本描述的默认高度
@@ -116,6 +117,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private boolean isUserComment;
     private boolean isShowComment;
     public int cPosition;
+    @Override
+    protected boolean isNeedAnimation() {
+        return false;
+    }
 
     public void setHandler(Handler handler) {
         mHandler = handler;
@@ -239,15 +244,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
             sendBroadcast(intent);
         }
-
-
-        Intent intent = new Intent();
-        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-        if (vPlayPlayer != null && vPlayPlayer.isPlay())
-            intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayPlayer.getCurrentPosition());
-        setResult(NewsFeedAdapter.REQUEST_CODE, intent);
-
-
         super.finish();
     }
 
@@ -556,6 +552,18 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent();
+        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+        if (vPlayPlayer != null && vPlayPlayer.isPlay())
+            intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayPlayer.getCurrentPosition());
+        setResult(1006, intent);
+        super.onBackPressed();
+
     }
 
     /**

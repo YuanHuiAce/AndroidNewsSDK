@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_feed_list_select">
 
-    <com.news.yazhidao.widget.EllipsizeEndTextView
+    <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,7 +12,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
-        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="#333333"
         android:textSize="15sp" />
 

@@ -162,6 +162,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                     break;
                 case PlayStateParams.PAUSE_IMAGE_HIDE:
                     appVideoPlay.setVisibility(View.GONE);
+                    bitmap.recycle();
+                    bitmap = null;
                     break;
                 case PlayStateParams.MESSAGE_SEEK_NEW_POSITION:
                     if (newPosition >= 0) {
@@ -1131,15 +1133,15 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         play.setSelected(false);
         mVideoView.pause();
         statusChange(PlayStateParams.STATE_PAUSED);
-        bitmap = mVideoView.getBitmap();
         snapshotsBitmap();
     }
 
     private void reStart() {
+        releaseBitmap();
         play.setSelected(true);
         mVideoView.start();
         statusChange(PlayStateParams.STATE_PLAYING);
-        releaseBitmap();
+
     }
 
     public void snapshotsBitmap() {
@@ -1153,8 +1155,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     public void releaseBitmap() {
         if (bitmap != null) {
             handler.sendEmptyMessageDelayed(PlayStateParams.PAUSE_IMAGE_HIDE, 100);
-            bitmap.recycle();
-            bitmap = null;
         }
     }
 
@@ -1263,11 +1263,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     public void onResume() {
         if (status == PlayStateParams.STATE_PAUSED) {
 //            if (isAutoPause) {
+                releaseBitmap();
                 mVideoView.start();
                 play.setSelected(true);
 //                isAutoPause = false;
-                releaseBitmap();
                 statusChange(PlayStateParams.STATE_PLAYING);
+                hide();
 //            }
         }
     }
@@ -1349,7 +1350,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     {
         this.newPosition=newPosition;
         endGesture();
-//        doPauseResume();
     }
 
     public String getUrl()

@@ -83,7 +83,7 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener{
+public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     public static final String TAG = "NewsFeedFgt";
     public static final String KEY_NEWS_FEED = "key_news_feed";
@@ -283,7 +283,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        mivShareBg = (ImageView)rootView.findViewById(R.id.share_bg_imageView);
+        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
@@ -753,11 +753,31 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
 //        mHomeWatcher.startWatch();
         super.onResume();
-        if (vPlayer!=null&&isAutoPlay)
-        {
-            isAutoPlay=false;
+        if (mstrChannelId.equals("44"))
+            Log.v(TAG, "onResume");
+//        if (vPlayer != null && isAutoPlay) {
+//            isAutoPlay = false;
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (vPlayer.isPlay()) {
+//                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                        if (frameLayout != null) {
+//                            View itemView = (View) frameLayout.getParent();
+//                            if (itemView != null) {
+//                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+//                                if (videoSHow.getVisibility()==View.VISIBLE)
+//                                videoSHow.setVisibility(View.GONE);
+//
+//                            }
+//                        }
+//                    }
+//                }
+//            },1000);
+//
+//        }
 
-        }
+
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
@@ -926,9 +946,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if ("44".equals(mstrChannelId) && portrait && !isAuto)
-
+                if ("44".equals(mstrChannelId) && portrait && !isAuto) {
                     VideoVisibleControl();
+                }
+
+//
 
             }
         });
@@ -1220,35 +1242,51 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     //========================================视频部分======================================//
-        private boolean isAutoPlay;
+    private boolean isAutoPlay;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG, "onActivityResult");
 
-        if (vPlayer!=null&&requestCode == REQUEST_CODE&&mstrChannelId.equals("44")&&data!=null)
-        {
-            if (vPlayer.getStatus()==PlayStateParams.STATE_PAUSED)
-            {
-                int position=data.getIntExtra(NewsFeedFgt.CURRENT_POSITION,0);
-                int newId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
-                if (position!=0&&cPostion==newId&&newId!=0)
-                {
+        if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
+            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+                int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
+                int newId = data.getIntExtra(NewsFeedFgt.KEY_NEWS_ID, 0);
+                if (position != 0 && cPostion == newId && newId != 0) {
                     vPlayer.seekToNewPosition(position);
-                    isAutoPlay=true;
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            vPlayer.onResume();
-                        }
-                    },500);
-                }else
-                {
-                    vPlayer.stop();
-                    vPlayer.release();
-                    removeViews();
+                    isAutoPlay = true;
+                    vPlayer.onResume();
+
+//                    mHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (vPlayer.isPlay()) {
+//                                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                                if (frameLayout != null) {
+//                                    View itemView = (View) frameLayout.getParent();
+//                                    if (itemView != null) {
+//                                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
+//                                        if (videoSHow.getVisibility()==View.VISIBLE)
+//                                               videoSHow.setVisibility(View.GONE);
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    },2000);
+
                 }
+            } else {
+                vPlayer.stop();
+                vPlayer.release();
+                removeViews();
             }
+
+        } else {
+            vPlayer.stop();
+            vPlayer.release();
+            removeViews();
         }
     }
 
@@ -1272,6 +1310,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
+        Log.v(TAG, "onConfigurationChanged");
         if (!"44".equals(mstrChannelId))
             return;
         super.onConfigurationChanged(newConfig);
@@ -1335,8 +1374,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     View itemView = (View) frameLayout.getParent();
                                     if (itemView != null) {
                                         View videoSHow = itemView.findViewById(R.id.rl_video_show);
+
                                         if (videoSHow != null) {
                                             videoSHow.setVisibility(View.VISIBLE);
+                                            Log.v(TAG, "onConfigurationChanged");
                                         }
                                     }
                                 }
@@ -1356,7 +1397,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mHomeRelative.setVisibility(View.VISIBLE);
         }
     }
-    private SharePopupWindow.ShareDismiss shareDismiss=new SharePopupWindow.ShareDismiss() {
+
+    private SharePopupWindow.ShareDismiss shareDismiss = new SharePopupWindow.ShareDismiss() {
         @Override
         public void shareDismiss() {
             mivShareBg.startAnimation(mAlphaAnimationOut);
@@ -1409,25 +1451,25 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     vPlayer.stop();
                     vPlayer.release();
                     removeViews();
-                }else
-                {
+                } else {
                     vPlayer.onPause();
                 }
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
-                NewsFeedFgt.this.startActivityForResult(intent,NewsFeedFgt.REQUEST_CODE);
+                NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = cPostion;
             }
 
             @Override
-            public void onShareClick(ImageView imgView,final NewsFeed feed) {
+            public void onShareClick(ImageView imgView, final NewsFeed feed) {
                 imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mivShareBg.startAnimation(mAlphaAnimationIn);
                         mivShareBg.setVisibility(View.VISIBLE);
-                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity)mContext,shareDismiss);
+                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
                         mSharePopupWindow.setVideo(true);
                         mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
                         mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -1631,6 +1673,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     /**
+     * 根据位置获取当前可见item 对象
+     *
+     * @param cPosition
+     * @return
+     */
+    public RelativeLayout getShowItemView(int cPosition) {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        if (cPosition != -1) {
+            View item = lv.getChildAt(cPosition);
+            return (RelativeLayout) item.findViewById(R.id.rl_video_show);
+        }
+        return null;
+    }
+
+    /**
      * 移除播放器
      */
     public void removeViews() {
@@ -1640,8 +1697,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             View itemView = (View) frameLayout.getParent();
             if (itemView != null) {
                 View show = itemView.findViewById(R.id.rl_video_show);
-                if (show != null)
+                if (show != null) {
                     show.setVisibility(View.VISIBLE);
+                    Log.e(TAG, "removeViews");
+                }
             }
         }
     }
@@ -1665,11 +1724,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     if (itemView != null) {
                         View videoSHow = itemView.findViewById(R.id.rl_video_show);
                         if (videoSHow != null) {
+                            Log.e(TAG, "rl_video_show");
                             videoSHow.setVisibility(View.VISIBLE);
                         }
 
                     }
                 }
+            }else
+            {
+                if (vPlayer.isPlay())
+                    if (getPlayItemPosition() != -1) {
+                        getShowItemView(getPlayItemPosition()).setVisibility(View.GONE);
+//                        getShowItemView((getPlayItemPosition()).setVisibility(View.GONE);
+
+                    }
             }
         } catch (Exception e) {
             Log.v(TAG, e.toString());

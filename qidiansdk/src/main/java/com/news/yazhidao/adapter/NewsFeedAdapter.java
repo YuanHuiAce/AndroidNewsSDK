@@ -465,7 +465,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_player) {
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
             ImageView ivVideo = holder.getView(R.id.image_bg);
             RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
             lpVideo.width = mScreenWidth;
@@ -496,7 +496,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
             int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
             lpVideoSmall.width = widthv;
@@ -520,7 +520,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final TextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
 //            tvTitle.post(new Runnable() {
