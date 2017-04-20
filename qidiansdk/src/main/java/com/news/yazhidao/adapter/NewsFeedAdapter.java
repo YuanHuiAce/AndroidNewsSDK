@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.pages.SubscribeListActivity;
@@ -48,7 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
+public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
 
     private final NewsFeedFgt mNewsFeedFgt;
     private String mstrKeyWord;
@@ -56,6 +58,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private Context mContext;
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
+    public static int REQUEST_CODE = 10002;
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private int mCardWidth, mCardHeight;
@@ -468,7 +471,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_player) {
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
             ImageView ivVideo = holder.getView(R.id.image_bg);
             RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
             lpVideo.width = mScreenWidth;
@@ -499,7 +502,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
             int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
             lpVideoSmall.width = widthv;
@@ -523,7 +526,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final TextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
 //            tvTitle.post(new Runnable() {
@@ -586,32 +589,30 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
             durationView.setText(time + clickNums);
-        } else {
+        } else if (!TextUtils.isEmpty(clickNums)&&!"".equals(clickNums)){
             durationView.setText("" + clickNums);
+        }else
+        {
+            durationView.setVisibility(View.GONE);
         }
     }
 
     private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setAction(MainView.ACTION_SHOW_SHARE);
-//                intent.putExtra("newsfeed", newsFeed);
-//                mContext.sendBroadcast(intent);
-            }
-        });
+                if (onPlayClickListener!=null)
+                {
+                    onPlayClickListener.onShareClick(imageView,newsFeed);
+                }
     }
 
     private void setCommentClick(NewsFeed newsFeed) {
-//        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-//        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
+        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
 //        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
-//        if (mNewsFeedFgt != null) {
-//            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-//        } else {
-//            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-//        }
+        if (mNewsFeedFgt != null) {
+            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+        }
     }
 
     private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
@@ -939,6 +940,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
     }
 
+
+
+
     class ViewWrapper {
         private View mTarget;
 
@@ -983,6 +987,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
 
         void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
+        void onShareClick(ImageView imageView,NewsFeed feed);
     }
 
 }

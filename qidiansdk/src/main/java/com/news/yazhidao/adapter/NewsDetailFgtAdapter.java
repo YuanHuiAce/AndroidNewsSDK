@@ -162,7 +162,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
-            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
+//            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
@@ -310,8 +310,9 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    mContext.startActivity(intent);
+                    ((Activity) mContext).startActivityForResult(intent,1060);
                     ((Activity) mContext).finish();
+                    ((Activity)mContext).overridePendingTransition(0, 0);
                 } else {
                     setRead(relatedItemEntity);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);

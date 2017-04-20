@@ -61,6 +61,7 @@ public class NewsCommentFgt extends Fragment {
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_TOP_MARGIN = "key_top_margin";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
     private PullToRefreshListView mNewsCommentList;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;

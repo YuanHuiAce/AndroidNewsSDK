@@ -36,9 +36,10 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
-import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -159,6 +160,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private LinearLayout footerView;
     //广告sdk
     private NativeAD mNativeAD;
+    private RelativeLayout mDetailSharedTitleLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -169,6 +171,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        position = arguments.getInt("position", 0);
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mRequestManager = Glide.with(this);
@@ -310,19 +313,20 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        ListView lv = mNewsDetailList.getRefreshableView();
+      ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mVideoDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_video_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         mVideoDetailFootView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
-        lv.addFooterView(mVideoDetailFootView);
+
 
         //第1部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
+        mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
         //关心
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
@@ -426,8 +430,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
                 mVideoDetailFootView.addView(mViewPointLayout);
 
+
+
             }
-        }, 500);
+        }, 0);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -435,6 +441,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
+        adLayout.setVisibility(View.GONE);
+        detail_Hot_Layout.setVisibility(View.GONE);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
@@ -556,6 +564,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
                     } else {
+                        mDetailSharedTitleLayout.setVisibility(View.GONE);
+                        adLayout.setVisibility(View.VISIBLE);
+                        detail_Hot_Layout.setVisibility(View.VISIBLE);
+                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                         setNoRelatedDate();
                     }
                 }
@@ -723,6 +735,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
+        mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
         beanList.addAll(relatedItemEntities);
         mAdapter.setNewsFeed(beanList);
         mAdapter.notifyDataSetChanged();
@@ -1048,8 +1061,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!MediaNetUtils.isConnectionAvailable(mContext))
+                if (!NetworkUtils.isConnectionAvailable(mContext)) {
+                    ToastUtil.toastShort("无网络，请稍后重试！");
                     return;
+                }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
@@ -1097,7 +1112,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        vp.start(mResult.getVideourl());
 
 
-        if (MediaNetUtils.getNetworkType(mContext) == 3) {
+        if (NetworkUtils.getNetworkType(mContext) == 3) {
             mVideoShowBg.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl(), position);
@@ -1105,7 +1120,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
-        vplayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
+
+        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
                 if (mSmallLayout.getVisibility() == View.VISIBLE) {

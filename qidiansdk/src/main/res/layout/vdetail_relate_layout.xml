@@ -13,6 +13,7 @@
 
         <include
             android:id="@+id/adLayout"
+
             layout="@layout/ll_ad_item_big"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
