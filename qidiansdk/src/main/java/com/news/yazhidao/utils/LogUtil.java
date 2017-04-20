@@ -130,7 +130,7 @@ public class LogUtil {
             json.put("begintime", begintime);
             json.put("endtime", endtime);
             json.put("readtime", (int) ((endtime - begintime) / 1000));
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -218,7 +218,7 @@ public class LogUtil {
                 jsonArray.put(object);
             }
             json.put("news_list", jsonArray);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -291,7 +291,7 @@ public class LogUtil {
             json.put("logtype", newsFeed.getLogtype());
             json.put("logchid", newsFeed.getLogchid());
             jsonObject.put("extend", newsFeed.getExtend());
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -359,7 +359,7 @@ public class LogUtil {
             json.put("aid", aid);
             json.put("source", source);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -428,7 +428,7 @@ public class LogUtil {
             json.put("endtime", endtime);
             json.put("utime", (int) ((endtime - begintime) / 1000));
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -499,7 +499,7 @@ public class LogUtil {
             json.put("params", params);
             json.put("effective", effective);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -558,4 +558,5 @@ public class NewsFeed implements Serializable {
     public void setAid(long aid) {
         this.aid = aid;
     }
+
 }

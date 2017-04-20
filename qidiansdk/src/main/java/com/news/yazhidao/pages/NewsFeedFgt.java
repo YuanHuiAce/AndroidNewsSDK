@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -175,6 +176,24 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
     }
+
+    public Rect rect = new Rect();
+
+    public int getVisibilityPercents(View view) {
+        View tv = view;
+        tv.getLocalVisibleRect(rect);
+        int height = tv.getHeight();
+        int percents = 100;
+        if (rect.top == 0 && rect.bottom == height) {
+            percents = 100;
+        } else if (rect.top > 0) {
+            percents = (height - rect.top) * 100 / height;
+        } else if (rect.bottom > 0 && rect.bottom < height) {
+            percents = rect.bottom * 100 / height;
+        }
+        return percents;
+    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -777,9 +796,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        }
 
 
-        if (vPlayer!=null&&isAutoPlay)
-        {
-            isAutoPlay=false;
+        if (vPlayer != null && isAutoPlay) {
+            isAutoPlay = false;
             vPlayer.onResume();
         }
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
@@ -932,6 +950,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //正在滚动时回调，回调2-3次，手指没抛则回调2次。scrollState = 2的这次不回调
+                //回调顺序如下
+                //第1次：scrollState = SCROLL_STATE_TOUCH_SCROLL(1) 正在滚动
+                //第2次：scrollState = SCROLL_STATE_FLING(2) 手指做了抛的动作（手指离开屏幕前，用力滑了一下）                //第3次：scrollState = SCROLL_STATE_IDLE(0) 停止滚动                //当屏幕停止滚动时为0；当屏幕滚动且用户使用的触碰或手指还在屏幕上时为1；                //由于用户的操作，屏幕产生惯性滑动时为2
                 switch (scrollState) {
                     // 当不滚动时
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
@@ -948,6 +970,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
+                                    Log.i("tag",newsFeed.getTitle()+"===");
                                 }
                             }
                         }
@@ -962,6 +985,17 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+                if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > firstVisibleItem + visibleItemCount - 3) {
+                    NewsFeed feed = mArrNewsFeed.get(firstVisibleItem + visibleItemCount - 3);
+                    View v = view.getChildAt(visibleItemCount - 1);
+                    int percents = getVisibilityPercents(v);
+                    if (!feed.isUpload() && feed.isVisble() && percents < 50) {
+                        feed.setVisble(false);
+                    } else {
+                        feed.setVisble(true);
+                    }
+                    Log.i("tag",feed.getTitle()+"==="+percents);
+                }
                 if ("44".equals(mstrChannelId) && portrait && !isAuto) {
                     VideoVisibleControl();
                 }
@@ -1202,15 +1236,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                        }
 //                    },2000);
 
-                    isAutoPlay=true;
+                    isAutoPlay = true;
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
 //                            vPlayer.onResume();
                         }
-                    },100);
-                }else
-                {
+                    }, 100);
+                } else {
                     vPlayer.stop();
                     vPlayer.release();
                     removeViews();
@@ -1669,8 +1702,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                     }
                 }
-            }else
-            {
+            } else {
                 if (vPlayer.isPlay())
                     if (getPlayItemPosition() != -1) {
                         getShowItemView(getPlayItemPosition()).setVisibility(View.GONE);
