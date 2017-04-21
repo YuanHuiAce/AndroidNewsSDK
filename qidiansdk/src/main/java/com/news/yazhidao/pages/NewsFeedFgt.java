@@ -1219,6 +1219,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult");
 
+
         if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
@@ -1433,7 +1434,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
-                NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                if (isAdded())
+                   NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                else
+                    ((Activity)mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = cPostion;
             }

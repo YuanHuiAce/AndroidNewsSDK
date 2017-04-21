@@ -431,7 +431,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
-        }, 1000);
+        }, 1500);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -561,10 +561,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         setBeanPageList(relatedItemEntities);
                         adLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
+
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
                         setNoRelatedDate();
                     }
+
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override

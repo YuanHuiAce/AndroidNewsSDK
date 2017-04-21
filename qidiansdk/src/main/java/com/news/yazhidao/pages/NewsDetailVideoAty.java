@@ -448,13 +448,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if ((this.vPlayPlayer != null) && (this.vPlayPlayer.isPlay())) {
-            Intent localIntent = new Intent();
-            localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, this.mNewsFeed.getNid());
-            localIntent.putExtra("position", this.vPlayPlayer.getCurrentPosition());
-            setResult(1006, localIntent);
-        }
+        Intent localIntent = new Intent();
+        localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+        if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
+            localIntent.putExtra("position",vPlayPlayer.getCurrentPosition());
+        setResult(1006, localIntent);
         super.onBackPressed();
+
     }
 
     @Override
