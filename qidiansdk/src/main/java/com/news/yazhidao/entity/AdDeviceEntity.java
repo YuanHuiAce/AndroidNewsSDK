@@ -47,6 +47,12 @@ public class AdDeviceEntity implements Serializable {
     private String screen_orientation;
     /** 设备所在的 IP 地址 */
     private String ip;
+    /** 客户端浏览器 user-agent */
+    private String ua;
+    /** 屏幕密度 */
+    private String density;
+    /** 用户 SIM 卡的 imsi 号,如获取不到上传空字符串即可 */
+    private String imsi;
 
     public AdDeviceEntity() {
     }
@@ -272,5 +278,29 @@ public class AdDeviceEntity implements Serializable {
 
     public void setAnidori(String anidori) {
         this.anidori = anidori;
+    }
+
+    public String getUa() {
+        return ua;
+    }
+
+    public void setUa(String ua) {
+        this.ua = ua;
+    }
+
+    public String getDensity() {
+        return density;
+    }
+
+    public void setDensity(String density) {
+        this.density = density;
+    }
+
+    public String getImsi() {
+        return imsi;
+    }
+
+    public void setImsi(String imsi) {
+        this.imsi = imsi;
     }
 }

@@ -49,7 +49,6 @@ import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
@@ -514,8 +513,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         relativeLayout_attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChannelItemDao channelItemDao = new ChannelItemDao(mContext);
+//                ChannelItemDao channelItemDao = new ChannelItemDao(mContext);
 //                channelItemDao.setFocusOnline();
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SUBPUBLISHER, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_ATTENTIONPAGE, null, true);
                 Intent intent = new Intent(mContext, AttentionActivity.class);
                 intent.putExtra(CommonConstant.KEY_ATTENTION_TITLE, mResult.getPname());
                 intent.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, mResult.getConpubflag());
@@ -1106,29 +1106,32 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
                     public void onResponse(final ArrayList<NewsFeed> result) {
-                        final NewsFeed newsFeed = result.get(0);
-                        if (newsFeed != null) {
-                            adtvTitle.setText(newsFeed.getTitle());
-                            final ArrayList<String> imgs = newsFeed.getImgs();
-                            if (!TextUtil.isListEmpty(imgs)) {
-                                mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
-                                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        if (!TextUtil.isListEmpty(result)) {
+                            LogUtil.adGetLog(mContext, 1, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                            final NewsFeed newsFeed = result.get(0);
+                            if (newsFeed != null) {
+                                adtvTitle.setText(newsFeed.getTitle());
+                                final ArrayList<String> imgs = newsFeed.getImgs();
+                                if (!TextUtil.isListEmpty(imgs)) {
+                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                    adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                        @Override
+                                        public void onGlobalLayout() {
+                                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                        }
+                                    });
+                                }
+                                adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onGlobalLayout() {
-                                        mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                    public void onClick(View view) {
+                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                        Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                        AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                        mContext.startActivity(AdIntent);
                                     }
                                 });
+                                AdUtil.upLoadAd(newsFeed, mContext);
                             }
-                            adLayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-                                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                    AdIntent.putExtra("key_url", newsFeed.getPurl());
-                                    mContext.startActivity(AdIntent);
-                                }
-                            });
-                            AdUtil.upLoadAd(newsFeed, mContext);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -1146,27 +1149,30 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
         adLayout.setVisibility(View.VISIBLE);
-        final NativeADDataRef dataRef = list.get(0);
-        if (dataRef != null) {
-            adtvTitle.setText(dataRef.getDesc());
-            final String url = dataRef.getImgUrl();
-            if (!TextUtil.isEmptyString(url)) {
-                mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
-                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        if (!TextUtil.isListEmpty(list)) {
+            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            final NativeADDataRef dataRef = list.get(0);
+            if (dataRef != null) {
+                adtvTitle.setText(dataRef.getDesc());
+                final String url = dataRef.getImgUrl();
+                if (!TextUtil.isEmptyString(url)) {
+                    mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                    adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                        }
+                    });
+                }
+                dataRef.onExposured(adLayout);
+                adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onGlobalLayout() {
-                        mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                    public void onClick(View view) {
+                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                        dataRef.onClicked(adLayout);
                     }
                 });
             }
-            dataRef.onExposured(adLayout);
-            adLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
-                    dataRef.onClicked(adLayout);
-                }
-            });
         }
     }
 

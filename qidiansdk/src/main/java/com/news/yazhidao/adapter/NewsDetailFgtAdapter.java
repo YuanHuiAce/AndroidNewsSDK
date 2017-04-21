@@ -256,9 +256,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         TextUtil.setLayoutBgResource(mContext, imageView, R.drawable.list_divider);
     }
 
-    private void setRead(RelatedItemEntity relatedItemEntity) {
+    private void setNewsFeedReadAndUploadUserAction(RelatedItemEntity relatedItemEntity, String formPage, String toPage) {
         if (!relatedItemEntity.isRead()) {
             relatedItemEntity.setRead(true);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, null, true);
+        } else {
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, null, false);
         }
     }
 
@@ -306,15 +309,15 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
-                    setRead(relatedItemEntity);
+                    setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    ((Activity) mContext).startActivityForResult(intent,1060);
+                    ((Activity) mContext).startActivityForResult(intent, 1060);
                     ((Activity) mContext).finish();
-                    ((Activity)mContext).overridePendingTransition(0, 0);
+                    ((Activity) mContext).overridePendingTransition(0, 0);
                 } else {
-                    setRead(relatedItemEntity);
+                    setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");

@@ -162,6 +162,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         activity = mContext;
         uploadInformation();
         uploadChannelInformation();
+
         mRequestManager = Glide.with(activity);
         vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         lastTime = System.currentTimeMillis();
@@ -258,7 +259,12 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         IntentFilter filter = new IntentFilter();
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         activity.registerReceiver(mReceiver, filter);
-        UserManager.registerVisitor(mContext, null);
+        UserManager.registerVisitor(activity, new UserManager.RegisterVisitorListener() {
+            @Override
+            public void registerSuccess() {
+//                LogUtil.userActionLog(activity,CommonConstant);
+            }
+        });
         setChannelList();
     }
 
@@ -410,6 +416,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.mChannelExpand) {
+            LogUtil.userActionLog(activity, CommonConstant.LOG_ATYPE_CHANNELCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_CHANNELPAGE, null, false);
             Intent channelOperate = new Intent(activity, ChannelOperateAty.class);
             activity.startActivityForResult(channelOperate, REQUEST_CODE);
         } else if (id == R.id.mUserCenter) {

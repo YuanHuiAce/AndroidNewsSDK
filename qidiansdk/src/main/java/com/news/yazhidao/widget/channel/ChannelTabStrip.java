@@ -18,8 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 
 import static com.news.yazhidao.R.id.category_text;
@@ -291,6 +293,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
         right_edge.draw(canvas);
     }
 
+    private int startPosition, endPosition;
+
     private class PageListener implements OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -322,6 +326,12 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
                 TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
+                    if (startPosition != position) {
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_CHANGECHANNEL, pager.getAdapter().getPageTitle(startPosition).toString(), pager.getAdapter().getPageTitle(i).toString(), null, true);
+                        startPosition = position;
+                    } else {
+                        startPosition = position;
+                    }
                     TextUtil.setTextColor(mContext, child, R.color.new_color2);
                 } else {
                     TextUtil.setTextColor(mContext, child, R.color.new_color1);

@@ -16,8 +16,6 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.utils.AuthorizedUserUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
@@ -43,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //展示广点通sdk
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, true);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {

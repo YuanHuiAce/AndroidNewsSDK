@@ -34,6 +34,8 @@ public class HttpConstant {
     public static final String URL_LOG_POST_APP_USE = URL_LOG_HOST + "/app/use";
 
     public static final String URL_LOG_POST_APP_ACTION = URL_LOG_HOST + "/app/action";
+
+    public static final String URL_LOG_POST_AD_GET = URL_LOG_HOST + "/ad/get";
     /**
      * 新闻阅读时长日志
      */

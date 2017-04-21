@@ -4,13 +4,10 @@ import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.news.yazhidao.R;
@@ -32,8 +29,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class LogUtil {
@@ -130,7 +125,7 @@ public class LogUtil {
             json.put("begintime", begintime);
             json.put("endtime", endtime);
             json.put("readtime", (int) ((endtime - begintime) / 1000));
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -218,7 +213,7 @@ public class LogUtil {
                 jsonArray.put(object);
             }
             json.put("news_list", jsonArray);
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -291,7 +286,7 @@ public class LogUtil {
             json.put("logtype", newsFeed.getLogtype());
             json.put("logchid", newsFeed.getLogchid());
             jsonObject.put("extend", newsFeed.getExtend());
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -359,7 +354,7 @@ public class LogUtil {
             json.put("aid", aid);
             json.put("source", source);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -428,7 +423,7 @@ public class LogUtil {
             json.put("endtime", endtime);
             json.put("utime", (int) ((endtime - begintime) / 1000));
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -499,32 +494,102 @@ public class LogUtil {
             json.put("params", params);
             json.put("effective", effective);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", userLogBasicInfoEntity);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_ACTION, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_APP_ACTION + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_APP_ACTION");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_APP_ACTION  222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_ACTION, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_APP_ACTION");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_APP_ACTION  222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
+
+    public static void adGetLog(Context context, int rnum, int snum, long aid, String source) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            JSONObject json = new JSONObject();
+            json.put("rnum", rnum);
+            json.put("snum", snum);
+            json.put("aid", aid);
+            json.put("source", source);
+            jsonObject.put("extend", null);
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
+            jsonObject.put("data", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_AD_GET + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+
+            }
+        });
+        requestQueue.add(request);
+    }
+
 }
