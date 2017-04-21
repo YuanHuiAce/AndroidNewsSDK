@@ -990,7 +990,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                int num = firstVisibleItem + visibleItemCount - 3;
+                int num = 0;
+                if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
+                    num = firstVisibleItem + visibleItemCount - 2;
+                } else {
+                    num = firstVisibleItem + visibleItemCount - 3;
+                }
                 if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > num && num >= 0) {
                     NewsFeed feed = mArrNewsFeed.get(num);
                     View v = view.getChildAt(visibleItemCount - 1);

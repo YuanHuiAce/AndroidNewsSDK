@@ -592,7 +592,25 @@ public class DeviceInfoUtil {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
                     String deviceid = mTelephonyManager.getDeviceId();
-                    return TextUtils.isEmpty(deviceid)?SharedPreManager.get("flag", "imei"):deviceid;
+                    return TextUtils.isEmpty(deviceid)?SharedPreManager.mInstance(context).get("flag", "imei"):deviceid;
+                }
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
+    }
+
+    /**
+     * 保存设置IMSI
+     */
+    public static String getDeviceImsi(Context context) {
+        try {
+            if (context != null) {
+                TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                if (mTelephonyManager != null) {
+                    String subscriberId = mTelephonyManager.getSubscriberId();
+                    return TextUtils.isEmpty(subscriberId)?SharedPreManager.mInstance(context).get("flag", "imei"):subscriberId;
                 }
             }
         } catch (Exception e) {

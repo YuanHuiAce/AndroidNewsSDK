@@ -74,6 +74,12 @@ public class AdUtil {
             adDeviceEntity.setOs_version(version);
             /** 设置屏幕分辨率 */
             adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
+            /** 客户端浏览器*/
+            adDeviceEntity.setUa("");
+            /** 设置屏幕密度*/
+            adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().toString());
+            /** 设置用户 SIM 卡的 imsi 号*/
+            adDeviceEntity.setImsi(DeviceInfoUtil.getDeviceImsi(mContext));
             /** 设置IP */
             String ip = "";
             if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
