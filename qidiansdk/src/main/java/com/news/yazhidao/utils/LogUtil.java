@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
@@ -125,39 +126,60 @@ public class LogUtil {
         UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
         try {
             JSONObject json = new JSONObject();
+            json.put("nid", Long.valueOf(newsFeed.getNid()));
             json.put("begintime", begintime);
             json.put("endtime", endtime);
             json.put("readtime", (int) ((endtime - begintime) / 1000));
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_READ, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_NEWS_READ + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_NEWS_READ");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_NEWS_READ222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_READ, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_NEWS_READ");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_NEWS_READ222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 
-    public static void userShowLog(ArrayList<NewsFeed> arrNewsFeed, Context context, String source) {
+    public static void userShowLog(final ArrayList<NewsFeed> arrNewsFeed, Context context) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -176,42 +198,73 @@ public class LogUtil {
             JSONObject json = new JSONObject();
             JSONArray jsonArray = new JSONArray();
             for (NewsFeed newsFeed : arrNewsFeed) {
+                newsFeed.setUpload(true);
                 JSONObject object = new JSONObject();
-                object.put("nid", Long.valueOf(newsFeed.getNid()));
-                object.put("source", source);
-                object.put("chid", newsFeed.getChannel());
-                object.put("logtype", newsFeed.getLogtype());
-                object.put("logchid", newsFeed.getLogchid());
-                object.put("extend", newsFeed.getExtend());
+                if (0 != newsFeed.getNid()) {
+                    object.put("nid", Long.valueOf(newsFeed.getNid()));
+                    object.put("source", newsFeed.getSource());
+                    object.put("chid", newsFeed.getChannel());
+                    object.put("logtype", newsFeed.getLogtype());
+                    object.put("logchid", newsFeed.getLogchid());
+                    object.put("extend", newsFeed.getExtend());
+                    object.put("ctime", newsFeed.getCtime());
+                } else {
+                    object.put("aid", Long.valueOf(newsFeed.getAid()));
+                    object.put("source", newsFeed.getSource());
+                    object.put("title", newsFeed.getTitle());
+                    object.put("extend", newsFeed.getExtend());
+                    object.put("ctime", newsFeed.getCtime());
+                }
                 jsonArray.put(object);
             }
             json.put("news_list", jsonArray);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_SHOW, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_NEWS_SHOW + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_NEWS_SHOW");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_NEWS_SHOW222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+        // 设置标签
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.GET, URL_LOG_POST_NEWS_SHOW, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_NEWS_SHOW");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_NEWS_SHOW222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 
@@ -238,32 +291,52 @@ public class LogUtil {
             json.put("logtype", newsFeed.getLogtype());
             json.put("logchid", newsFeed.getLogchid());
             jsonObject.put("extend", newsFeed.getExtend());
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_CLICK, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_NEWS_CLICK + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_NEWS_CLICK");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_NEWS_CLICK222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_CLICK, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_NEWS_CLICK");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_NEWS_CLICK222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 
@@ -286,32 +359,52 @@ public class LogUtil {
             json.put("aid", aid);
             json.put("source", source);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_AD_CLICK, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_AD_CLICK + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_AD_CLICK");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_AD_CLICK222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_AD_CLICK, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_AD_CLICK");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_AD_CLICK222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 
@@ -335,32 +428,52 @@ public class LogUtil {
             json.put("endtime", endtime);
             json.put("utime", (int) ((endtime - begintime) / 1000));
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_USE, jsonObject,
-                new Response.Listener<JSONObject>() {
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_APP_USE + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("tag", "URL_LOG_POST_APP_USE");
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
                     }
                 }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("tag", "URL_LOG_POST_APP_USE  222");
+            public void onErrorResponse(VolleyError arg0) {
+
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                header.put("X-Requested-With", "*");
-                return header;
-            }
-        };
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        });
+//        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_APP_USE, jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("tag", "URL_LOG_POST_APP_USE");
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("tag", "URL_LOG_POST_APP_USE  222");
+//            }
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/json");
+//                header.put("X-Requested-With", "*");
+//                return header;
+//            }
+//        };
+//        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
 
@@ -386,7 +499,7 @@ public class LogUtil {
             json.put("params", params);
             json.put("effective", effective);
             jsonObject.put("extend", null);
-            jsonObject.put("basicinfo", gson.toJson(userLogBasicInfoEntity));
+            jsonObject.put("basicinfo", userLogBasicInfoEntity);
             jsonObject.put("data", json);
         } catch (JSONException e) {
             e.printStackTrace();

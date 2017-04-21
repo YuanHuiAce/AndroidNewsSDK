@@ -73,6 +73,11 @@ public class DateUtil {
         return strtodate;
     }
 
+    public static String longToDAte(long time){
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date(time));
+    }
+
 
     public static Calendar strToCalendarLong(String strDate) {
         Calendar c = Calendar.getInstance();

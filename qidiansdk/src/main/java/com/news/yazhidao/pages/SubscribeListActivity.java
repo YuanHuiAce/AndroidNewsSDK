@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -75,7 +74,6 @@ public class SubscribeListActivity extends SwipeBackActivity {
         mAttentionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("tag", "position" + position);
                 Intent attentionAty = new Intent(SubscribeListActivity.this, AttentionActivity.class);
                 AttentionListEntity attention = mAttentionListEntities.get(position - 1);
                 attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());

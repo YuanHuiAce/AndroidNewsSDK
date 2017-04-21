@@ -16,6 +16,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailFgt;
@@ -23,6 +24,7 @@ import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -301,20 +303,20 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                 firstClick = System.currentTimeMillis();
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
                     setRead(relatedItemEntity);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    ((Activity)mContext).overridePendingTransition(0, 0);
-                    mContext.startActivity(intent);
-                    ((Activity)mContext).overridePendingTransition(0, 0);
-
-
+                    ((Activity) mContext).startActivityForResult(intent,1060);
                     ((Activity) mContext).finish();
+                    ((Activity)mContext).overridePendingTransition(0, 0);
                 } else {
                     setRead(relatedItemEntity);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                     intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
                     mContext.startActivity(intent);
                 }

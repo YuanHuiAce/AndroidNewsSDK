@@ -66,6 +66,7 @@ import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -94,7 +95,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * 新闻详情页
  */
 public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener {
-    private static final String TAG=NewsDetailVideoFgt.class.getSimpleName();
+    private static final String TAG = NewsDetailVideoFgt.class.getSimpleName();
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
@@ -312,13 +313,13 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        ListView lv = mNewsDetailList.getRefreshableView();
+      ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mVideoDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_video_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         mVideoDetailFootView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
-        lv.addFooterView(mVideoDetailFootView);
+
 
         //第1部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
@@ -429,8 +430,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
                 mVideoDetailFootView.addView(mViewPointLayout);
 
+
+
             }
-        },0);
+        }, 0);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -438,6 +441,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
+        adLayout.setVisibility(View.GONE);
+        detail_Hot_Layout.setVisibility(View.GONE);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
@@ -518,7 +523,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
 
@@ -526,7 +531,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 e.printStackTrace();
             }
             //加入详情页广告位id
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
+            }
             RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
                 @Override
                 public void onResponse(final ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -558,6 +565,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         setBeanPageList(relatedItemEntities);
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
+                        adLayout.setVisibility(View.VISIBLE);
+                        detail_Hot_Layout.setVisibility(View.VISIBLE);
+                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                         setNoRelatedDate();
                     }
                 }
@@ -940,7 +950,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     }
 
     private void loadADData() {
-        if (mNativeAD != null && !TextUtil.isEmptyString(CommonConstant.APPID)) {
+        if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(1);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -949,7 +959,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
@@ -970,6 +980,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                             adLayout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                     AdIntent.putExtra("key_url", newsFeed.getPurl());
                                     mContext.startActivity(AdIntent);
@@ -1010,6 +1021,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             adLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                     dataRef.onClicked(adLayout);
                 }
             });
@@ -1049,10 +1061,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              if (!NetworkUtils.isConnectionAvailable(mContext)) {
-                  ToastUtil.toastShort("无网络，请稍后重试！");
-                  return;
-              }
+                if (!NetworkUtils.isConnectionAvailable(mContext)) {
+                    ToastUtil.toastShort("无网络，请稍后重试！");
+                    return;
+                }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
@@ -1208,7 +1220,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mDetailContainer.setVisibility(View.VISIBLE);
                     mDetailVideo.addView(vplayer);
 //                    if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                        vplayer.showBottomControl(true);
+                    vplayer.showBottomControl(true);
                     mDetailVideo.setVisibility(View.VISIBLE);
                 } else {
                     mSmallScreen.addView(vplayer);

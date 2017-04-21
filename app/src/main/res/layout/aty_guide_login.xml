@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f6f6f6"
+    >
+
+    <LinearLayout
+        android:id="@+id/mGuideWords"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="145dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aty_guide_login_txt1"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/aty_guide_login_txt2"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3"
+            />
+
+        <TextView
+            android:id="@+id/mGuideSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:drawableRight="@mipmap/ic_login_arrow_skip"
+            android:text="@string/aty_guide_login_txt3"
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/font4"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_below="@id/mGuideWords"
+        android:layout_marginTop="110dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            >
+            <ImageView
+                android:id="@+id/mGuideWinxinLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/btn_weixin_login"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mGuideWinxinLogin"
+                android:layout_marginTop="16dp"
+                android:text="微信登录"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font3"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            >
+            <ImageView
+                android:id="@+id/mGuideWeiboLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/btn_weibo_login"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="微博登录"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font3"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

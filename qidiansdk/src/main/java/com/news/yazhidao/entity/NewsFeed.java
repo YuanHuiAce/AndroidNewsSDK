@@ -43,6 +43,7 @@ public class NewsFeed implements Serializable {
      */
     @DatabaseField(id = true)
     private int nid;
+    private long aid;
 
     @DatabaseField
     private String url;
@@ -115,6 +116,9 @@ public class NewsFeed implements Serializable {
     private ArrayList<String> adimpression;
 
     private boolean isUpload;
+    private boolean isVisble;
+    private long ctime;
+    private String source;
 
     /**
      * 是(1)否(0)已收藏
@@ -522,4 +526,37 @@ public class NewsFeed implements Serializable {
     public void setExtend(JSONObject extend) {
         this.extend = extend;
     }
+
+    public boolean isVisble() {
+        return isVisble;
+    }
+
+    public void setVisble(boolean visble) {
+        isVisble = visble;
+    }
+
+    public long getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(long ctime) {
+        this.ctime = ctime;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public long getAid() {
+        return aid;
+    }
+
+    public void setAid(long aid) {
+        this.aid = aid;
+    }
+
 }

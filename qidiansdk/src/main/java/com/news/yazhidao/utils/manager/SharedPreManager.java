@@ -126,7 +126,7 @@ public final class SharedPreManager {
     }
 
     public boolean getUserCenterIsShow() {
-        return getBoolean("flag", "showUserCenter");
+        return getBoolean(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW);
     }
 
 

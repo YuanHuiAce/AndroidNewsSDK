@@ -103,6 +103,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsDetailFgt mDetailFgt;
     private NewsCommentFgt mCommentFgt;
     private boolean isUserComment;
+    private String mSource;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -144,6 +145,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void initializeViews() {
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
+        mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
@@ -347,6 +349,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
                             mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                         }
+                        LogUtil.userClickLog(mNewsFeed, NewsDetailAty2.this, mSource);
                     } else {
                         ToastUtil.toastShort("此新闻暂时无法查看!");
                         NewsDetailAty2.this.finish();
@@ -461,7 +464,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (user == null) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(this);
             } else {
-                Logger.e("bbb", "收藏触发的点击事件！！！！！");
                 loadOperate();
             }
         }
@@ -531,8 +533,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         JSONObject json = new JSONObject();
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        Logger.e("aaa", "type====" + (isFavorite ? Request.Method.DELETE : Request.Method.POST));
-        Logger.e("aaa", "url===" + HttpConstant.URL_ADDORDELETE_FAVORITE + "nid=" + mNid + "&uid=" + mUserId);
         DetailOperateRequest detailOperateRequest = new DetailOperateRequest((isFavorite ? Request.Method.DELETE : Request.Method.POST),
                 HttpConstant.URL_ADDORDELETE_FAVORITE + "nid=" + mNid + "&uid=" + mUserId,
                 json.toString(), new Response.Listener<JSONObject>() {
