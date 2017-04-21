@@ -449,6 +449,9 @@ public final class SharedPreManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        if (TextUtil.isListEmpty(historyEntities)) {
+            return;
+        }
         Gson gson = new Gson();
         historyEntities.add(historyEntity);
         save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
@@ -458,11 +461,13 @@ public final class SharedPreManager {
         ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
         String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
         Gson gson = new Gson();
-        JSONArray array = new JSONArray(str);
-        for (int i = 0; i < array.length(); i++) {
-            String str1 = array.getString(i);
-            HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
-            historyEntities.add(bean);
+        if (!TextUtil.isEmptyString(str)) {
+            JSONArray array = new JSONArray(str);
+            for (int i = 0; i < array.length(); i++) {
+                String str1 = array.getString(i);
+                HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
+                historyEntities.add(bean);
+            }
         }
         return historyEntities;
     }

@@ -19,6 +19,7 @@
         android:textColor="#333333"
         android:textSize="15sp" />
 
+
     <RelativeLayout
         android:id="@+id/detail_shared_ShareImageLayout"
         android:layout_width="match_parent"
@@ -36,7 +37,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp">
+            android:paddingRight="14dp"
+            >
 
             <ImageView
                 android:id="@+id/detail_shared_AttentionImage"
@@ -62,7 +64,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp">
+            android:paddingRight="9dp"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"

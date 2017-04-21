@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -43,14 +43,16 @@
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+
     <application
         android:name=".DemoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true">
+        <!--SplashAty-->
         <activity
-            android:name=".pages.SplashAty"
+            android:name=".pages.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|layoutDirection"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -63,9 +65,9 @@
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".pages.MainActivity"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+        <!--android:name=".pages.MainActivity"-->
+        <!--android:screenOrientation="portrait" />-->
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
             android:name="com.mob.tools.MobUIShell"

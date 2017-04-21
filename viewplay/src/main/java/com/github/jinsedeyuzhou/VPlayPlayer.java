@@ -1161,10 +1161,14 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     //==========================对外提供方法==============================
 
     public void isOpenOrientation(boolean isOpen) {
-        if (isOpen)
+        if (isOpen&&!isLock) {
             orientationEventListener.enable();
-        else
+            mVideoLock.setImageResource(R.mipmap.video_unlock);
+        }
+        else {
             orientationEventListener.disable();
+            mVideoLock.setImageResource(R.mipmap.video_lock);
+        }
     }
 
     public int getCurrentPosition() {
@@ -1267,8 +1271,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 mVideoView.start();
                 play.setSelected(true);
 //                isAutoPause = false;
+
                 statusChange(PlayStateParams.STATE_PLAYING);
-                hide();
 //            }
         }
     }

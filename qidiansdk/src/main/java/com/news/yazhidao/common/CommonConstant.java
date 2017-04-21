@@ -92,8 +92,8 @@ public final class CommonConstant {
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NativePosID = "2000611873536900";
-    public static final String NEWS_FEED_GDT_SDK_NativePosID = "2000611873536900";
-    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "2000611873536900";
+    public static final String NEWS_FEED_GDT_SDK_NativePosID = "5090120177109704";
+    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "1070526117209763";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_NativePosID = "246";
     public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";
@@ -139,6 +139,8 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_REFRESHFEED = "refreshFeed";
     public static final String LOG_ATYPE_LOADFEED = "loadFeed";
     public static final String LOG_ATYPE_DETAILCLICK = "detailClick";
+    public static final String LOG_ATYPE_VIDEO_DETAILCLICK = "videoDetailClick";
+    public static final String LOG_ATYPE_CHANNELCLICK = "channelClick";
     public static final String LOG_ATYPE_COMMENTCLICK = "commentClick";
     public static final String LOG_ATYPE_CHANGECHANNEL = "changeChannel";
     public static final String LOG_ATYPE_SUBCHANNEL = "subChannel";
@@ -158,6 +160,7 @@ public final class CommonConstant {
      * loginPage	登录页面
      * searchPage	搜索页面
      * pfeedPage	来源feed流页面
+     * attentionPage	关注页面
      * myCommentPage	我的评论页面
      * myCollectionPage	我的收藏页面
      * myMessagePage	我的消息页面
@@ -165,10 +168,12 @@ public final class CommonConstant {
      */
     public static final String LOG_PAGE_FEEDPAGE = "feedPage";
     public static final String LOG_PAGE_DETAILPAGE = "detailPage";
+    public static final String LOG_PAGE_VIDEODETAILPAGE = "videoDetailPage";
     public static final String LOG_PAGE_CHANNELPAGE = "channelPage";
     public static final String LOG_PAGE_TOPICPAGE = "topicPage";
     public static final String LOG_PAGE_LOGINPAGE = "loginPage";
     public static final String LOG_PAGE_SEARCHPAGE = "searchPage";
+    public static final String LOG_PAGE_ATTENTIONPAGE = "attentionPage";
     public static final String LOG_PAGE_PFEEDPAGE = "pfeedPage";
     public static final String LOG_PAGE_MYCOMMENTPAGE = "myCommentPage";
     public static final String LOG_PAGE_MYCOLLECTIONPAGE = "myCollectionPage";

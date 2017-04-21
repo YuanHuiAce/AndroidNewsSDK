@@ -313,16 +313,16 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-      ListView lv = mNewsDetailList.getRefreshableView();
+        ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mVideoDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_video_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         mVideoDetailFootView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
-
+//        lv.addFooterView(mVideoDetailFootView);
 
         //第1部分的CommentTitle
-        final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
+        final View mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
@@ -428,12 +428,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void run() {
 //                mVideoDetailFootView.addView(footerView);
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
+
                 mVideoDetailFootView.addView(mViewPointLayout);
-
-
-
             }
-        }, 0);
+        }, 1000);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -441,8 +439,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
-        adLayout.setVisibility(View.GONE);
-        detail_Hot_Layout.setVisibility(View.GONE);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
@@ -544,7 +540,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     while (iterator.hasNext()) {
                         RelatedItemEntity relatedItemEntity = iterator.next();
                         String url = relatedItemEntity.getUrl();
-                        if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
+                        //relatedItemEntity.getRtype() != 3&&
+                        if (!url.contains("deeporiginalx.com")) {
                             iterator.remove();
                         }
                     }
@@ -563,11 +560,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mNewsDetailList.onRefreshComplete();
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
+                        adLayout.setVisibility(View.VISIBLE);
+                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
-                        adLayout.setVisibility(View.VISIBLE);
-                        detail_Hot_Layout.setVisibility(View.VISIBLE);
-                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                         setNoRelatedDate();
                     }
                 }
@@ -964,29 +960,32 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
                     public void onResponse(final ArrayList<NewsFeed> result) {
-                        final NewsFeed newsFeed = result.get(0);
-                        if (newsFeed != null) {
-                            adtvTitle.setText(newsFeed.getTitle());
-                            final ArrayList<String> imgs = newsFeed.getImgs();
-                            if (!TextUtil.isListEmpty(imgs)) {
-                                mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
-                                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        if (!TextUtil.isListEmpty(result)) {
+                            LogUtil.adGetLog(mContext, 1, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                            final NewsFeed newsFeed = result.get(0);
+                            if (newsFeed != null) {
+                                adtvTitle.setText(newsFeed.getTitle());
+                                final ArrayList<String> imgs = newsFeed.getImgs();
+                                if (!TextUtil.isListEmpty(imgs)) {
+                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                    adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                        @Override
+                                        public void onGlobalLayout() {
+                                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                        }
+                                    });
+                                }
+                                adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onGlobalLayout() {
-                                        mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                                    public void onClick(View view) {
+                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                        Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                        AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                        mContext.startActivity(AdIntent);
                                     }
                                 });
+                                AdUtil.upLoadAd(newsFeed, mContext);
                             }
-                            adLayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-                                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                    AdIntent.putExtra("key_url", newsFeed.getPurl());
-                                    mContext.startActivity(AdIntent);
-                                }
-                            });
-                            AdUtil.upLoadAd(newsFeed, mContext);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -1004,27 +1003,30 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
         adLayout.setVisibility(View.VISIBLE);
-        final NativeADDataRef dataRef = list.get(0);
-        if (dataRef != null) {
-            adtvTitle.setText(dataRef.getDesc());
-            final String url = dataRef.getImgUrl();
-            if (!TextUtil.isEmptyString(url)) {
-                mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
-                adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        if (!TextUtil.isListEmpty(list)) {
+            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            final NativeADDataRef dataRef = list.get(0);
+            if (dataRef != null) {
+                adtvTitle.setText(dataRef.getDesc());
+                final String url = dataRef.getImgUrl();
+                if (!TextUtil.isEmptyString(url)) {
+                    mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                    adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                        }
+                    });
+                }
+                dataRef.onExposured(adLayout);
+                adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onGlobalLayout() {
-                        mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                    public void onClick(View view) {
+                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                        dataRef.onClicked(adLayout);
                     }
                 });
             }
-            dataRef.onExposured(adLayout);
-            adLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
-                    dataRef.onClicked(adLayout);
-                }
-            });
         }
     }
 
@@ -1163,6 +1165,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                 ((ViewGroup) vplayer.getParent()).removeAllViews();
                             mDetailVideo.addView(vplayer);
                             vplayer.setShowContoller(true);
+                            vplayer.isOpenOrientation(true);
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
@@ -1188,6 +1191,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                             ((ViewGroup) vplayer.getParent()).removeAllViews();
                         mSmallScreen.addView(vplayer);
                         vplayer.setShowContoller(false);
+                        vplayer.isOpenOrientation(false);
                         mSmallLayout.setVisibility(View.VISIBLE);
                         mDetailVideo.removeAllViews();
                     }

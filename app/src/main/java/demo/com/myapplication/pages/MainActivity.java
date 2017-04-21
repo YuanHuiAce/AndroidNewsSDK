@@ -12,11 +12,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.jinsedeyuzhou.PlayerManager;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //显示个人中心
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, true);
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, false);
         //展示广点通sdk
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API

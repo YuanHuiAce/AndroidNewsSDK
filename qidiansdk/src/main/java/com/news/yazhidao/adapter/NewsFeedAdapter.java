@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
+public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private final NewsFeedFgt mNewsFeedFgt;
     private String mstrKeyWord;
@@ -251,7 +251,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
             holder.setGlideDrawViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
-            setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+            setTitleTextByADBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
@@ -586,22 +586,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
     }
 
     public void setVideoDuration(TextView durationView, int duration, String clickNums) {
+        durationView.setVisibility(View.VISIBLE);
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
             durationView.setText(time + clickNums);
-        } else if (!TextUtils.isEmpty(clickNums)&&!"".equals(clickNums)){
+        } else if (!TextUtils.isEmpty(clickNums) && !"".equals(clickNums)) {
             durationView.setText("" + clickNums);
-        }else
-        {
+        } else {
             durationView.setVisibility(View.GONE);
         }
     }
 
     private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
-                if (onPlayClickListener!=null)
-                {
-                    onPlayClickListener.onShareClick(imageView,newsFeed);
-                }
+        if (onPlayClickListener != null) {
+            onPlayClickListener.onShareClick(imageView, newsFeed);
+        }
     }
 
     private void setCommentClick(NewsFeed newsFeed) {
@@ -793,18 +792,18 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
-                    setNewsFeedRead(feed);
+                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
                     Intent intent = new Intent(mContext, NewsTopicAty.class);
                     intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
-                    setNewsFeedRead(feed);
+                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     if (onPlayClickListener != null) {
                         onPlayClickListener.onItemClick(rlNewsContent, feed);
                     }
                 } else {
-                    setNewsFeedRead(feed);
+                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
@@ -852,13 +851,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
         });
     }
 
-    private void setNewsFeedRead(NewsFeed feed) {
+    private void setNewsFeedReadAndUploadUserAction(NewsFeed feed, String toPage) {
         if (!feed.isRead()) {
             feed.setRead(true);
             if (mNewsFeedDao == null) {
                 mNewsFeedDao = new NewsFeedDao(mContext);
             }
             mNewsFeedDao.update(feed);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, null, true);
+        } else {
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, null, false);
         }
     }
 
@@ -941,8 +943,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
     }
 
 
-
-
     class ViewWrapper {
         private View mTarget;
 
@@ -987,7 +987,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
 
         void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
-        void onShareClick(ImageView imageView,NewsFeed feed);
+
+        void onShareClick(ImageView imageView, NewsFeed feed);
     }
 
 }

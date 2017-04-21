@@ -6,23 +6,71 @@
     android:background="@color/bg_detail"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/detail_video_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="#333333"
+        android:textSize="15sp" />
+    <RelativeLayout
+        android:id="@+id/detail_container_onlines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_detail_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:lines="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/tag_video_shape"
+            android:textColor="#837c78"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:id="@+id/tv_detail_onlines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_tag"
+            android:textColor="#9a9a9a"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="30dp"
+            android:textSize="11sp"
+            />
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/detail_shared_ShareImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp"
-        android:visibility="gone">
+        android:paddingRight="18dp">
 
         <LinearLayout
             android:id="@+id/detail_shared_PraiseLayout"
             android:layout_width="wrap_content"
             android:layout_height="28dp"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/detail_shared_framebg"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp">
+            android:paddingRight="14dp"
+            android:visibility="gone"
+            >
 
             <ImageView
                 android:id="@+id/detail_shared_AttentionImage"
@@ -39,7 +87,6 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/detail_shared_FriendCircleLayout"
             android:layout_width="wrap_content"
@@ -49,7 +96,9 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp">
+            android:paddingRight="9dp"
+            android:visibility="gone"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -77,101 +126,7 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/detail_attention_item"
-        android:visibility="gone" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_detail">
-
-        <include
-            android:id="@+id/adLayout"
-            layout="@layout/ll_ad_item_big"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="22dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/detail_Hot_Layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
-
-        <TextView
-            android:id="@+id/detail_hotComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="热门评论"
-            android:textColor="@color/detail_share_TopTitleColor"
-            android:textSize="@dimen/new_font4" />
-
-        <View
-            android:id="@+id/detail_shared_hotComment_Line1"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_alignRight="@id/detail_hotComment"
-            android:layout_below="@id/detail_hotComment"
-            android:layout_marginTop="6dp"
-            android:background="@color/new_color2" />
-
-        <View
-            android:id="@+id/detail_shared_hotComment_Line2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/detail_hotComment"
-            android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/detail_shared_hotComment_Line1"
-            android:background="@color/new_color4" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/detail_CommentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical" />
-
-    <RelativeLayout
-        android:id="@+id/detail_shared_MoreComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="17dp"
-        android:background="@drawable/bg_select_comment_more"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:text="查看全部评论"
-                android:textColor="@color/new_color2"
-                android:textSize="@dimen/font4" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:paddingTop="1dp"
-                android:src="@drawable/ic_detail_view_all_comment" />
-        </LinearLayout>
-    </RelativeLayout>
+    <include layout="@layout/detail_attention_item" />
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
@@ -192,7 +147,7 @@
             android:id="@+id/detail_ViewPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="相关推荐"
+            android:text="相关视频"
             android:textColor="@color/detail_share_TopTitleColor"
             android:textSize="@dimen/new_font4" />
 
@@ -214,5 +169,4 @@
             android:layout_toRightOf="@id/detail_ViewPoint_Line1"
             android:background="@color/new_color4" />
     </RelativeLayout>
-
 </LinearLayout>
