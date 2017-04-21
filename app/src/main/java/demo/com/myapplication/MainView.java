@@ -33,7 +33,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
@@ -56,7 +55,6 @@ import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
@@ -98,7 +96,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
-    private VPlayPlayer vPlayPlayer;
+//    private VPlayPlayer vPlayPlayer;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
 
@@ -164,7 +162,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         uploadChannelInformation();
 
         mRequestManager = Glide.with(activity);
-        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
+//        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         lastTime = System.currentTimeMillis();
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
