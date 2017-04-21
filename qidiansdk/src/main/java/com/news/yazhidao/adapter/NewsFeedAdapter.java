@@ -586,6 +586,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     public void setVideoDuration(TextView durationView, int duration, String clickNums) {
+        durationView.setVisibility(View.VISIBLE);
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
             durationView.setText(time + clickNums);
