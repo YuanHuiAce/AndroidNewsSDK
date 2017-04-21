@@ -3,15 +3,28 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion '25.0.2'
-
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
     defaultConfig {
-        applicationId "demo.com.myapplication"
+        applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
+        //多个dex支持
+        multiDexEnabled true
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
     }
-
+    sourceSets {
+        main {
+            jniLibs.srcDir('libs/jniLibs')
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -26,4 +39,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.4.0'
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile project(':sharesdk_mainlib')
 }

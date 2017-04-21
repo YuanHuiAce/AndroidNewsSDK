@@ -1,4 +1,4 @@
-package demo.com.myapplication;
+package demo.com.myapplication.pages;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,7 +22,8 @@ import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 
-import java.util.ArrayList;
+import demo.com.myapplication.MainView;
+import demo.com.myapplication.R;
 
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     private static final String TAG = "MainActivity";
@@ -30,13 +31,19 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     MainView mainView;
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
+    private AuthorizedUser authorizedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //显示个人中心
-        SharedPreManager.mInstance(this).save("flag", "showUserCenter", true);
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, true);
+        //展示广点通sdk
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        //展示广点通API
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
@@ -65,12 +72,12 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             public void onClick(View view) {
                 User visitorUser = SharedPreManager.mInstance(MainActivity.this).getUser(MainActivity.this);
                 if (null != visitorUser) {
-                    setAuthorizedUserInformation();
+                    userLogin();
                 } else {
                     UserManager.registerVisitor(MainActivity.this, new UserManager.RegisterVisitorListener() {
                         @Override
                         public void registerSuccess() {
-                            setAuthorizedUserInformation();
+                            userLogin();
                         }
                     });
                 }
@@ -95,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 }
             }
         });
-
         //添加View
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new MainView(this); //传入的activity是FragmentActivity
@@ -105,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
+        authorizedUser = (AuthorizedUser) getIntent().getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);
+        if (authorizedUser != null) {
+            mainView.setAuthorizedUserInformation(authorizedUser);
+        }
         //注册登录监听广播
         mReceiver = new UserReceiver();
         IntentFilter filter = new IntentFilter();
@@ -118,50 +128,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         ThemeManager.registerThemeChangeListener(this);
     }
 
-    public void setAuthorizedUserInformation() {
-        AuthorizedUser user = new AuthorizedUser();
-        //游客合并三方时提供该字段
-        user.setMuid(SharedPreManager.mInstance(MainActivity.this).getUser(MainActivity.this).getMuid());
-        //三方之间进行合并时提供该字段
-        user.setMsuid("");
-        //用户类型 - 本地注册用户:1, 游客用户:2 ,微博三方用户:3 ,微信三方用户:4, 黄历天气:12, 纹字锁频:13, 猎鹰浏览器:14, 白牌:15
-        user.setUtype(3);
-        //平台类型 - IOS:1, 安卓:2, 网页:3, 无法识别:4
-        user.setPlatform(2);
-        //第三方用户id
-        user.setSuid("3344667788");
-        //第三方登录token
-        user.setStoken("2233445566");
-        //过期时间
-        user.setSexpires("2016-5-27 17:37:22");
-        //用户名
-        user.setUname("test");
-        //性别 0:男 1:女
-        user.setGender(0);
-        //头像地址
-        user.setAvatar("http://tva4.sinaimg.cn/crop.106.0.819.819.1024/d869d439jw8etv9fxkb1uj20rt0mrwh7.jpg");
-        //用户屏蔽字段列表  没有可以不填
-        ArrayList<String> averse = new ArrayList<>();
-        averse.add("政治");
-        averse.add("战争");
-        averse.add("腐败");
-        user.setAverse(averse);
-        //用户偏好字段列表 没有可以不填
-        ArrayList<String> prefer = new ArrayList<>();
-        prefer.add("体育");
-        prefer.add("音乐");
-        prefer.add("杂志");
-        user.setAverse(prefer);
-        //用户地理位置信息 没有可以不填
-        user.setProvince("河南省");
-        user.setCity("郑州市");
-        user.setDistrict("二七区");
-        //授权用户映射
-        AuthorizedUserUtil.authorizedUser(user, this);
-        //更新user图标
-        if (SharedPreManager.mInstance(this).getUserCenterIsShow()) {
-            mainView.setUserCenterImg(user.getAvatar());
-        }
+    private void userLogin() {
+        //调用自己的登录授权界面
+        Intent intent = new Intent(MainActivity.this, GuideLoginAty.class);
+        startActivityForResult(intent, CommonConstant.REQUEST_LOGIN_CODE);
     }
 
     private class UserReceiver extends BroadcastReceiver {
@@ -170,10 +140,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (CommonConstant.USER_LOGIN_ACTION.equals(action)) {
-                //调用登录界面 授权成功后
-                ToastUtil.toastLong("请先登录");
-                setAuthorizedUserInformation();
-
+                userLogin();
             } else if (CommonConstant.SHARE_WECHAT_MOMENTS_ACTION.equals(action)) {
                 //调用微信朋友圈分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
@@ -201,9 +168,12 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         //设置频道的回调
         mainView.onActivityResult(requestCode, resultCode, data);
+        if (CommonConstant.REQUEST_LOGIN_CODE == requestCode && CommonConstant.RESULT_LOGIN_CODE == resultCode) {
+            AuthorizedUser user = (AuthorizedUser) data.getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);
+            mainView.setAuthorizedUserInformation(user);
+        }
     }
 
     //梁帅: 点击返回如果不喜欢窗口是显示的，隐藏它；

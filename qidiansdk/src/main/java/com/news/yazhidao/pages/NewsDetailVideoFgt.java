@@ -66,6 +66,7 @@ import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -518,7 +519,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
 
@@ -526,7 +527,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 e.printStackTrace();
             }
             //加入详情页广告位id
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
+            }
             RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
                 @Override
                 public void onResponse(final ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -942,7 +945,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     }
 
     private void loadADData() {
-        if (mNativeAD != null && !TextUtil.isEmptyString(CommonConstant.APPID)) {
+        if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(1);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -951,7 +954,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_AD_ID)));
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
@@ -972,6 +975,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                             adLayout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                     AdIntent.putExtra("key_url", newsFeed.getPurl());
                                     mContext.startActivity(AdIntent);
@@ -1012,6 +1016,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             adLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                     dataRef.onClicked(adLayout);
                 }
             });

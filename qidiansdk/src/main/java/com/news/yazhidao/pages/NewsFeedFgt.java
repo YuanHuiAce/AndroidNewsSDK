@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -36,7 +35,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
@@ -61,6 +59,7 @@ import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -72,10 +71,6 @@ import com.news.yazhidao.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
 import com.transitionseverywhere.TransitionManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,6 +99,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public static final int REQUEST_CODE = 1060;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
+    private ArrayList<NewsFeed> mUploadArrNewsFeed = new ArrayList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
@@ -184,6 +180,24 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
     }
+
+    public Rect rect = new Rect();
+
+    public int getVisibilityPercents(View view) {
+        View tv = view;
+        tv.getLocalVisibleRect(rect);
+        int height = tv.getHeight();
+        int percents = 100;
+        if (rect.top == 0 && rect.bottom == height) {
+            percents = 100;
+        } else if (rect.top > 0) {
+            percents = (height - rect.top) * 100 / height;
+        } else if (rect.bottom > 0 && rect.bottom < height) {
+            percents = rect.bottom * 100 / height;
+        }
+        return percents;
+    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -272,10 +286,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (arguments != null) {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
-        }
-        if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("1")) {
-            uploadInformation();
-            uploadChannelInformation();
         }
         if (mstrChannelId.equals("44")) {
             mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
@@ -437,7 +447,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
         //加入feed流广告位id
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
+        if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
+        } else {
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "")));
+        }
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (int i = 0; i < mArrNewsFeed.size(); i++) {
@@ -550,6 +564,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 } else {
                     newsFeed.setChannel_id(newsFeed.getChannel());
                 }
+                if (newsFeed.getRtype() == 3) {
+                    newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID));
+                } else {
+                    newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_SOURCE);
+                }
             }
         }
 //        for (Iterator it = result.iterator(); it.hasNext();) {
@@ -609,10 +629,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 bgLayout.setVisibility(View.GONE);
             }
             //广点通sdk请求广告
-            if (TextUtil.isListEmpty(mADs)) {
-                loadAD();
-            } else {
-                addADToList(flag);
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
+                if (TextUtil.isListEmpty(mADs)) {
+                    loadAD();
+                } else {
+                    addADToList(flag);
+                }
             }
         } else {
             //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
@@ -629,7 +651,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             } else {
                 mAdapter.setNewsFeed(mArrNewsFeed);
                 mAdapter.notifyDataSetChanged();
-
             }
             if (bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
@@ -755,9 +776,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.onPause();
         if (vPlayer != null)
             vPlayer.onPause();
-//        if () {
-//            VideoVisibleControl();
-//        }
+
+
     }
 
     @Override
@@ -769,8 +789,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mstrChannelId.equals("44"))
             Log.v(TAG, "onResume");
 //
-        if (vPlayer != null ) {
+        if (vPlayer != null) {
+
         }
+//        }
+
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
@@ -921,6 +944,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //正在滚动时回调，回调2-3次，手指没抛则回调2次。scrollState = 2的这次不回调
+                //回调顺序如下
+                //第1次：scrollState = SCROLL_STATE_TOUCH_SCROLL(1) 正在滚动
+                //第2次：scrollState = SCROLL_STATE_FLING(2) 手指做了抛的动作（手指离开屏幕前，用力滑了一下）                //第3次：scrollState = SCROLL_STATE_IDLE(0) 停止滚动                //当屏幕停止滚动时为0；当屏幕滚动且用户使用的触碰或手指还在屏幕上时为1；                //由于用户的操作，屏幕产生惯性滑动时为2
                 switch (scrollState) {
                     // 当不滚动时
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
@@ -932,6 +959,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         } else {
                             isBottom = false;
                         }
+                        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                            for (NewsFeed newsFeed : mArrNewsFeed) {
+                                if (!newsFeed.isUpload() && newsFeed.isVisble()) {
+                                    newsFeed.setUpload(true);
+                                    mUploadArrNewsFeed.add(newsFeed);
+                                    Log.i("tag", newsFeed.getTitle() + "===");
+                                }
+                            }
+                        }
+                        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() >= 4) {
+                            LogUtil.userShowLog(mUploadArrNewsFeed, mContext);
+                            mUploadArrNewsFeed.removeAll(mUploadArrNewsFeed);
+                        }
                         break;
                 }
             }
@@ -939,17 +979,23 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+                if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > firstVisibleItem + visibleItemCount - 3) {
+                    NewsFeed feed = feed = mArrNewsFeed.get(firstVisibleItem + visibleItemCount - 3);;
+                    View v = view.getChildAt(visibleItemCount - 1);
+                    int percents = getVisibilityPercents(v);
+                    if (!feed.isUpload() && feed.isVisble() && percents < 50) {
+                        feed.setVisble(false);
+                    } else {
+                        feed.setVisble(true);
+                    }
+                    Log.i("tag", feed.getTitle() + "===" + percents);
+                }
                 if ("44".equals(mstrChannelId) && portrait && !isAuto) {
 //                    VideoVisibleControl();
                     VideoShowControl();
                 }
-
-//
-
             }
         });
-
-
     }
 
     public void mRefreshTitleBarAnimation() {
@@ -1041,14 +1087,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 } else {
                     newsFeed.setStyle(51);
                 }
+                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID));
+                newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
                 if (PULL_DOWN_REFRESH == flag) {
-                    mArrNewsFeed.add(2, newsFeed);
+                    mArrNewsFeed.add(1, newsFeed);
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
                         mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
                     } else {
-                        mArrNewsFeed.add(2, newsFeed);
+                        mArrNewsFeed.add(1, newsFeed);
                     }
                 }
                 mADs.remove(0);
@@ -1112,104 +1160,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
-    //上传地理位置等信息
-    private void uploadInformation() {
-        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
-            try {
-                List<PackageInfo> packages = mContext.getPackageManager().getInstalledPackages(0);
-                final JSONArray array = new JSONArray();
-                for (int i = 0; i < packages.size(); i++) {
-                    PackageInfo packageInfo = packages.get(i);
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("app_id", packageInfo.packageName);
-                    jsonObject.put("active", 1);
-                    jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(mContext.getPackageManager()).toString());
-                    array.put(jsonObject);
-                }
-                /** 设置品牌 */
-                final String brand = Build.BRAND;
-                /** 设置设备型号 */
-                final String platform = Build.MODEL;
-                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
-                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-                Long uid = null;
-                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-                if (user != null) {
-                    uid = Long.valueOf(user.getMuid());
-                }
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("uid", uid);
-                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
-                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
-                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
-                jsonObject.put("brand", brand);
-                jsonObject.put("model", platform);
-                jsonObject.put("apps", array);
-                JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.POST, requestUrl,
-                        jsonObject, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject jsonObj) {
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-                requestQueue.add(request);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void uploadChannelInformation() {
-        if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
-            try {
-                final String requestUrl = HttpConstant.URL_UPLOAD_CHANNEL_INFORMATION;
-                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-                Long uid = null;
-                if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
-                    uid = Long.valueOf(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
-                }
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("uid", uid);
-                jsonObject.put("appversion", mContext.getString(R.string.version_name));
-                //加入广告位id
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_AD_ID)));
-                jsonObject.put("province", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
-                jsonObject.put("city", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
-                jsonObject.put("area", SharedPreManager.mInstance(mContext).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
-                /**
-                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
-                 */
-                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
-                /**
-                 * 1.ios 2.android 3.网页 4.无法识别
-                 */
-                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
-                JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.POST, requestUrl,
-                        jsonObject, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject jsonObj) {
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-                requestQueue.add(request);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * 广告滑动接口
      */
@@ -1267,12 +1217,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                         }
                     //延时进入onResume
-                   mHandler.postDelayed(new Runnable() {
-                       @Override
-                       public void run() {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                       }
-                   },100);
+                        }
+                    }, 100);
                 } else {
                     vPlayer.stop();
                     vPlayer.release();
@@ -1459,6 +1409,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     vPlayer.onPause();
                 }
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
@@ -1516,7 +1467,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         vPlayer.stop();
                         vPlayer.release();
                     }
-                    PlayerManager.newsFeed=null;
+                    PlayerManager.newsFeed = null;
                 }
 
 
@@ -1831,7 +1782,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
                 mFeedSmallScreen.removeAllViews();
-                vPlayer.setShowContoller(true);
+                vPlayer.setShowContoller(false);
                 vPlayer.isOpenOrientation(true);
                 frameLayout.removeAllViews();
                 frameLayout.addView(vPlayer);

@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -41,12 +43,14 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.ChannelItemDao;
+import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.ChannelListRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
@@ -59,10 +63,13 @@ import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -153,6 +160,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
+        uploadInformation();
+        uploadChannelInformation();
         mRequestManager = Glide.with(activity);
         vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         lastTime = System.currentTimeMillis();
@@ -318,6 +327,18 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
 
+
+    public void setAuthorizedUserInformation(AuthorizedUser user) {
+        if (user != null) {
+            //授权用户映射
+            AuthorizedUserUtil.authorizedUser(user, activity);
+            //更新user图标
+            if (SharedPreManager.mInstance(activity).getUserCenterIsShow()) {
+                setUserCenterImg(user.getAvatar());
+            }
+        }
+    }
+
     public void setUserCenterImg(String url) {
         if (!TextUtil.isEmptyString(url)) {
             mRequestManager.load(Uri.parse(url)).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
@@ -363,7 +384,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             activity.unregisterReceiver(mReceiver);
         }
         nowTime = System.currentTimeMillis();
-        Log.i("tag",(int) ((nowTime - lastTime) / 1000)+"======time");
+        Log.i("tag", (int) ((nowTime - lastTime) / 1000) + "======time");
         LogUtil.appUseLog(activity, lastTime, nowTime);
     }
 
@@ -588,6 +609,104 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, province);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, city);
         SharedPreManager.mInstance(activity).save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, address);
+    }
+
+    //上传地理位置等信息
+    private void uploadInformation() {
+        if (SharedPreManager.mInstance(activity).getUser(activity) != null) {
+            try {
+                List<PackageInfo> packages = activity.getPackageManager().getInstalledPackages(0);
+                final JSONArray array = new JSONArray();
+                for (int i = 0; i < packages.size(); i++) {
+                    PackageInfo packageInfo = packages.get(i);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("app_id", packageInfo.packageName);
+                    jsonObject.put("active", 1);
+                    jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(activity.getPackageManager()).toString());
+                    array.put(jsonObject);
+                }
+                /** 设置品牌 */
+                final String brand = Build.BRAND;
+                /** 设置设备型号 */
+                final String platform = Build.MODEL;
+                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                User user = SharedPreManager.mInstance(activity).getUser(activity);
+                if (user != null) {
+                    uid = Long.valueOf(user.getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("province", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("brand", brand);
+                jsonObject.put("model", platform);
+                jsonObject.put("apps", array);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+                requestQueue.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadChannelInformation() {
+        if (SharedPreManager.mInstance(activity).getUser(activity) != null) {
+            try {
+                final String requestUrl = HttpConstant.URL_UPLOAD_CHANNEL_INFORMATION;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                if (SharedPreManager.mInstance(activity).getUser(activity) != null) {
+                    uid = Long.valueOf(SharedPreManager.mInstance(activity).getUser(activity).getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("appversion", activity.getString(R.string.version_name));
+                //加入广告位id
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(activity, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
+                jsonObject.put("province", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                /**
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
+                 */
+                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
+                /**
+                 * 1.ios 2.android 3.网页 4.无法识别
+                 */
+                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+                requestQueue.add(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

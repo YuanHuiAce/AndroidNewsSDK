@@ -37,6 +37,7 @@ import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -169,6 +170,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
     public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
         //广告
         AdUtil.upLoadAd(feed, mContext);
+        boolean isVisble = feed.isVisble();
+        if (!isVisble) {
+            feed.setVisble(true);
+            feed.setCtime(System.currentTimeMillis());
+        }
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
@@ -776,6 +782,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
                     return;
                 }
                 if (feed.getDataRef() != null) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                     NativeADDataRef dataRef = feed.getDataRef();
                     dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
@@ -784,6 +791,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 3) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedRead(feed);
@@ -800,6 +808,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed>  {
                     setNewsFeedRead(feed);
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                     ArrayList<String> imageList = feed.getImgs();
                     if (imageList != null && imageList.size() != 0) {
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));

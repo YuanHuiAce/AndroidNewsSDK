@@ -115,6 +115,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private UserCommentDialog mCommentDialog;
     private int mCommentNum;
     private boolean isUserComment;
+    private String mSource;
     private boolean isShowComment;
     public int cPosition;
 
@@ -168,6 +169,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void initializeViews() {
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
+        mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
         isShowComment = getIntent().getBooleanExtra(NewsCommentFgt.KEY_SHOW_COMMENT, false);
         cPosition = getIntent().getIntExtra("position", 0);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
@@ -227,7 +229,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onPause() {
         nowTime = System.currentTimeMillis();
-        //上报日志
         //上报日志
         LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%");
         LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime);
@@ -379,6 +380,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
                             mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                         }
+                        LogUtil.userClickLog(mNewsFeed, NewsDetailVideoAty.this, mSource);
                     } else {
                         ToastUtil.toastShort("此新闻暂时无法查看!");
                         NewsDetailVideoAty.this.finish();

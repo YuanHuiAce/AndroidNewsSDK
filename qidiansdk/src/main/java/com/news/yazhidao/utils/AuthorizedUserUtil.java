@@ -2,6 +2,7 @@ package com.news.yazhidao.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,6 +29,7 @@ public class AuthorizedUserUtil {
 
     public static void authorizedUser(AuthorizedUser authorizedUser, final Context context) {
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        Log.i("tag",new Gson().toJson(authorizedUser).toString());
         JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_AUTHORIZED_USER, new Gson().toJson(authorizedUser),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -51,6 +53,7 @@ public class AuthorizedUserUtil {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("tag",error.toString());
             }
         }) {
             @Override
