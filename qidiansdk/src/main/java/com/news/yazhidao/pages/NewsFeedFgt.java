@@ -450,8 +450,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }
             tstart = getFirstItemTime(mArrNewsFeed);
-            /** 梁帅：判断是否是奇点频道 */
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
+            //下拉刷新打点
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, null, true);
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -466,6 +467,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 tstart = getFirstItemTime(null);
             }
             requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
+            //上拉刷新打点
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, null, true);
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
@@ -554,6 +557,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (newsFeed.getRtype() == 3) {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID));
+                    LogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                 } else {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_SOURCE);
                 }
@@ -897,6 +901,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mrlSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
                 Intent intent = new Intent(mContext, TopicSearchAty.class);
                 mContext.startActivity(intent);
             }
@@ -970,7 +975,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
-                                    Log.i("tag",newsFeed.getTitle()+"===");
+                                    Log.i("tag", newsFeed.getTitle() + "===");
                                 }
                             }
                         }
@@ -985,8 +990,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > firstVisibleItem + visibleItemCount - 3) {
-                    NewsFeed feed = mArrNewsFeed.get(firstVisibleItem + visibleItemCount - 3);
+                int num = firstVisibleItem + visibleItemCount - 3;
+                if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > num && num >= 0) {
+                    NewsFeed feed = mArrNewsFeed.get(num);
                     View v = view.getChildAt(visibleItemCount - 1);
                     int percents = getVisibilityPercents(v);
                     if (!feed.isUpload() && feed.isVisble() && percents < 50) {
@@ -994,7 +1000,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     } else {
                         feed.setVisble(true);
                     }
-                    Log.i("tag",feed.getTitle()+"==="+percents);
+                    Log.i("tag", feed.getTitle() + "===" + percents);
                 }
                 if ("44".equals(mstrChannelId) && portrait && !isAuto) {
                     VideoVisibleControl();
@@ -1113,6 +1119,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
         if (!TextUtil.isListEmpty(list)) {
+            LogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             mADs = list;
             addADToList(PULL_DOWN_REFRESH);
         }

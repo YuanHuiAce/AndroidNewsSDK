@@ -42,6 +42,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FetchElementaryRequestPost;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -224,6 +225,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             mSearchListViewOpenAdapter.notifyDataSetChanged();
             mPageIndex = 1;
             loadNewsData(mKeyWord, mPageIndex + "");
+            LogUtil.userActionLog(this, CommonConstant.LOG_ATYPE_SEARCH, CommonConstant.LOG_PAGE_SEARCHPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
         } else {
             ToastUtil.toastShort("请您输入搜索关键词");
         }
@@ -255,8 +257,8 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 mSearchListView.onRefreshComplete();
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
-                    if(response.size()>30){
-                        response = (ArrayList<NewsFeed>) response.subList(0,29);
+                    if (response.size() > 30) {
+                        response = (ArrayList<NewsFeed>) response.subList(0, 29);
                     }
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if (pPageIndex.equals("1")) {
