@@ -1,6 +1,9 @@
-package com.github.jinsedeyuzhou;
+package com.news.yazhidao.utils.manager;
 
 import android.content.Context;
+
+import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.news.yazhidao.entity.NewsFeed;
 
 /**
  * Created by Berkeley on 12/19/16.
@@ -10,6 +13,7 @@ public class PlayerManager {
 
     public static PlayerManager videoPlayViewManage;
     public static VPlayPlayer videoPlayView;
+    public static NewsFeed newsFeed;
 
 
     private PlayerManager() {

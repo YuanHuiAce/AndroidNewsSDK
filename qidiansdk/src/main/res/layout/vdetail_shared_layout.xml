@@ -18,7 +18,38 @@
         android:maxLines="3"
         android:textColor="#333333"
         android:textSize="15sp" />
+    <RelativeLayout
+        android:id="@+id/detail_container_onlines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_detail_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:lines="1"
+            android:gravity="center_vertical"
+            android:background="@drawable/tag_video_shape"
+            android:textColor="#837c78"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:id="@+id/tv_detail_onlines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_tag"
+            android:textColor="#9a9a9a"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="30dp"
+            android:textSize="11sp"
+            />
 
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/detail_shared_ShareImageLayout"
@@ -38,6 +69,7 @@
             android:orientation="horizontal"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
+            android:visibility="gone"
             >
 
             <ImageView
@@ -65,6 +97,7 @@
             android:orientation="horizontal"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
+            android:visibility="gone"
             >
 
             <ImageView

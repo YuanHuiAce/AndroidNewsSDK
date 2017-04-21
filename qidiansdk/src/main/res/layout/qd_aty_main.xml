@@ -73,7 +73,31 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!--全屏和小屏视频-->
+    <RelativeLayout
+        android:id="@+id/feed_small_layout"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone">
 
+        <com.news.yazhidao.widget.SmallVideoContainer
+            android:id="@+id/feed_small_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false" />
+
+        <ImageView
+            android:id="@+id/feed_video_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/video_close" />
+
+    </RelativeLayout>
     <com.news.yazhidao.widget.VideoContainer
         android:id="@+id/feed_full_screen"
         android:layout_width="match_parent"

@@ -312,16 +312,16 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-      ListView lv = mNewsDetailList.getRefreshableView();
+        ListView lv = mNewsDetailList.getRefreshableView();
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mVideoDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_video_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         mVideoDetailFootView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
-
+//        lv.addFooterView(mVideoDetailFootView);
 
         //第1部分的CommentTitle
-        final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
+        final View mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
@@ -427,12 +427,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void run() {
 //                mVideoDetailFootView.addView(footerView);
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
+
                 mVideoDetailFootView.addView(mViewPointLayout);
-
-
-
             }
-        }, 0);
+        }, 1000);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -440,8 +438,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
-        adLayout.setVisibility(View.GONE);
-        detail_Hot_Layout.setVisibility(View.GONE);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
@@ -560,11 +556,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mNewsDetailList.onRefreshComplete();
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
+                        adLayout.setVisibility(View.VISIBLE);
+                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
-                        adLayout.setVisibility(View.VISIBLE);
-                        detail_Hot_Layout.setVisibility(View.VISIBLE);
-                        mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
                         setNoRelatedDate();
                     }
                 }
@@ -1158,6 +1153,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                 ((ViewGroup) vplayer.getParent()).removeAllViews();
                             mDetailVideo.addView(vplayer);
                             vplayer.setShowContoller(true);
+                            vplayer.isOpenOrientation(true);
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
@@ -1183,6 +1179,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                             ((ViewGroup) vplayer.getParent()).removeAllViews();
                         mSmallScreen.addView(vplayer);
                         vplayer.setShowContoller(false);
+                        vplayer.isOpenOrientation(false);
                         mSmallLayout.setVisibility(View.VISIBLE);
                         mDetailVideo.removeAllViews();
                     }

@@ -117,6 +117,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private boolean isUserComment;
     private boolean isShowComment;
     public int cPosition;
+
     @Override
     protected boolean isNeedAnimation() {
         return false;
@@ -444,6 +445,17 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     @Override
+    public void onBackPressed() {
+        if ((this.vPlayPlayer != null) && (this.vPlayPlayer.isPlay())) {
+            Intent localIntent = new Intent();
+            localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, this.mNewsFeed.getNid());
+            localIntent.putExtra("position", this.vPlayPlayer.getCurrentPosition());
+            setResult(1006, localIntent);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
         int getId = v.getId();
         if (getId == R.id.mDetailLeftBack) {
@@ -554,17 +566,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         });
     }
 
-    @Override
-    public void onBackPressed() {
-
-        Intent intent = new Intent();
-        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-        if (vPlayPlayer != null && vPlayPlayer.isPlay())
-            intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayPlayer.getCurrentPosition());
-        setResult(1006, intent);
-        super.onBackPressed();
-
-    }
 
     /**
      * 梁帅：收藏上传接口(关心放到NewsDetailFgt)
