@@ -22,7 +22,6 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/title_img_View"
-        android:ellipsize="end"
         android:textColor="@color/newsFeed_titleColor"
         android:textSize="@dimen/new_font1" />
 

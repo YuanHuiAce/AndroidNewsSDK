@@ -975,7 +975,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
-                                    Log.i("tag", newsFeed.getTitle() + "===");
                                 }
                             }
                         }
@@ -1005,7 +1004,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     } else {
                         feed.setVisble(true);
                     }
-                    Log.i("tag", feed.getTitle() + "===" + percents);
                 }
                 if ("44".equals(mstrChannelId) && portrait && !isAuto) {
                     VideoVisibleControl();
@@ -1097,8 +1095,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 imgs.add(data.getImgUrl());
                 newsFeed.setImgs(imgs);
                 newsFeed.setPname(data.getTitle());
-                int style = newsFeedFirst.getStyle();
-                if (style == 11 || style == 12 || style == 13 || style == 5) {
+//                int style = newsFeedFirst.getStyle();
+//                if (style == 11 || style == 12 || style == 13 || style == 5) {
+//                    newsFeed.setStyle(50);
+//                } else {
+//                    newsFeed.setStyle(51);
+//                }
+                int i = Math.random()>0.5?1:0;
+                if (i == 0) {
                     newsFeed.setStyle(50);
                 } else {
                     newsFeed.setStyle(51);
@@ -1106,13 +1110,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
+                int position = 5;
+                if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
+                    position = 3;
+                }
                 if (PULL_DOWN_REFRESH == flag) {
-                    mArrNewsFeed.add(1, newsFeed);
+                    if (mArrNewsFeed.size() > position) {
+                        mArrNewsFeed.add(position, newsFeed);
+                    }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
-                        mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                        mArrNewsFeed.add(mArrNewsFeed.size() - 2, newsFeed);
                     } else {
-                        mArrNewsFeed.add(1, newsFeed);
+                        if (mArrNewsFeed.size() > position) {
+                            mArrNewsFeed.add(position, newsFeed);
+                        }
                     }
                 }
                 mADs.remove(0);

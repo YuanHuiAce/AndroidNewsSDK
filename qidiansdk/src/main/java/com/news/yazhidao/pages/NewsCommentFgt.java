@@ -162,6 +162,7 @@ public class NewsCommentFgt extends Fragment {
                         mCommentsAdapter.setData(mComments);
                         mNewsCommentHeaderView.setNoCommentsLayoutGone();
                     } else {
+                        mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
                         if (!TextUtil.isListEmpty(mComments)) {
                             mNewsCommentHeaderView.setNoCommentsLayoutGone();
                         } else {

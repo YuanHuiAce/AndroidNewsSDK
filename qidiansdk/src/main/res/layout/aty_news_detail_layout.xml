@@ -103,7 +103,8 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/mDetailShare"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_favorite_normal" />
+            android:src="@drawable/btn_detail_favorite_normal"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/mDetailShare"
