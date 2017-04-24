@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
+        //启动服务
+//        Intent service = new Intent(this,UpdateService.class);
+//        startService(service);
     }
 
     private void userLogin() {
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //设置频道的回调
+        super.onActivityResult(requestCode, resultCode, data);
         mainView.onActivityResult(requestCode, resultCode, data);
         if (CommonConstant.REQUEST_LOGIN_CODE == requestCode && CommonConstant.RESULT_LOGIN_CODE == resultCode) {
             AuthorizedUser user = (AuthorizedUser) data.getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);

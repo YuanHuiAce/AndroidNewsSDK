@@ -181,7 +181,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             mContext.registerReceiver(mRefreshReceiver, filter);
         }
-        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NativePosID, this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID, this);
     }
 
 
@@ -374,6 +374,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         image_attention_line = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_line);
         image_attention_success = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_success);
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
+        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         String icon = mResult.getIcon();
@@ -431,7 +432,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
-        }, 1000);
+        }, 1500);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -444,10 +445,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
         adLayoutParams.width = imageWidth;
-        if (TextUtil.isEmptyString(CommonConstant.APPID)) {
+        if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID)) {
             adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         } else {
-            adLayoutParams.height = (int) (imageWidth * 9 / 16.0f);
+            adLayoutParams.height = (int) (imageWidth * 10 / 19.0f);
         }
         adImageView.setLayoutParams(adLayoutParams);
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
@@ -562,10 +563,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         setBeanPageList(relatedItemEntities);
                         adLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
+
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
                         setNoRelatedDate();
                     }
+
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -978,7 +983,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
                                         mContext.startActivity(AdIntent);
@@ -1004,7 +1009,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public void onADLoaded(List<NativeADDataRef> list) {
         adLayout.setVisibility(View.VISIBLE);
         if (!TextUtil.isListEmpty(list)) {
-            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
                 adtvTitle.setText(dataRef.getDesc());
@@ -1022,7 +1027,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }
                 });

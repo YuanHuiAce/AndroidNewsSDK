@@ -335,7 +335,7 @@ public class LogUtil {
         requestQueue.add(request);
     }
 
-    public static void adClickLog(Long aid, Context context, String source) {
+    public static void adClickLog(Long aid, Context context, String source, String title) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -353,6 +353,7 @@ public class LogUtil {
             JSONObject json = new JSONObject();
             json.put("aid", aid);
             json.put("source", source);
+            json.put("title", title);
             jsonObject.put("extend", null);
             jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);

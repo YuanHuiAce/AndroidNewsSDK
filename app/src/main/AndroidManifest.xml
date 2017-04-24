@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
@@ -52,7 +52,7 @@
         android:supportsRtl="true">
         <!--SplashAty-->
         <activity
-            android:name=".pages.MainActivity"
+            android:name=".pages.SplashAty"
             android:configChanges="orientation|screenSize|keyboardHidden|layoutDirection"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -62,12 +62,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true" />
+
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
-        <!--<activity-->
-        <!--android:name=".pages.MainActivity"-->
-        <!--android:screenOrientation="portrait" />-->
+        <activity
+            android:launchMode="singleTop"
+            android:name=".pages.MainActivity"
+            android:screenOrientation="portrait" />
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
             android:name="com.mob.tools.MobUIShell"

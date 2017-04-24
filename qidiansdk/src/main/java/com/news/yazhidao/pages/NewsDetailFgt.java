@@ -161,7 +161,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             mContext.registerReceiver(mRefreshReceiver, filter);
         }
-        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NativePosID, this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID, this);
     }
 
     @Override
@@ -515,7 +515,15 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             public void onClick(View view) {
 //                ChannelItemDao channelItemDao = new ChannelItemDao(mContext);
 //                channelItemDao.setFocusOnline();
-                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SUBPUBLISHER, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_ATTENTIONPAGE, null, true);
+                if (!TextUtil.isEmptyString(mNewID)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNewID));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SUBPUBLISHER, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_ATTENTIONPAGE, jsonObject, true);
+                }
                 Intent intent = new Intent(mContext, AttentionActivity.class);
                 intent.putExtra(CommonConstant.KEY_ATTENTION_TITLE, mResult.getPname());
                 intent.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, mResult.getConpubflag());
@@ -546,10 +554,10 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 36);
         adLayoutParams.width = imageWidth;
-        if (TextUtil.isEmptyString(CommonConstant.APPID)) {
+        if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID)) {
             adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         } else {
-            adLayoutParams.height = (int) (imageWidth * 9 / 16.0f);
+            adLayoutParams.height = (int) (imageWidth * 10 / 19.0f);
         }
         adImageView.setLayoutParams(adLayoutParams);
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
@@ -561,6 +569,15 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                    if (!TextUtil.isEmptyString(mNewID)) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("nid", Long.valueOf(mNewID));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                    }
                 }
             }
         });
@@ -1125,7 +1142,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
                                         mContext.startActivity(AdIntent);
@@ -1151,7 +1168,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     public void onADLoaded(List<NativeADDataRef> list) {
         adLayout.setVisibility(View.VISIBLE);
         if (!TextUtil.isListEmpty(list)) {
-            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
                 adtvTitle.setText(dataRef.getDesc());
@@ -1169,7 +1186,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }
                 });

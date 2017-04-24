@@ -186,6 +186,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mViewPagerAdapter = new MyViewPagerAdapter(mContext.getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
+        mChannelTabStrip.setChannelItems(mSelChannelItems);
         mivUserCenter = (ImageView) view.findViewById(R.id.mUserCenter);
         mivUserCenter.setOnClickListener(this);
         if (!SharedPreManager.mInstance(activity).getUserCenterIsShow()) {
@@ -453,6 +454,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
             mViewPagerAdapter.setmChannelItems(channelItems);
             mViewPagerAdapter.notifyDataSetChanged();
+            mChannelTabStrip.setChannelItems(channelItems);
             mChannelTabStrip.setViewPager(mViewPager);
         }
     }
