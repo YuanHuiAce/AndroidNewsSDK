@@ -209,9 +209,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 mHandler.postDelayed(mThread, 500);
             }
         }
-        if (vPlayer != null && !isVisibleToUser&&vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED) {
-            VideoVisibleControl();
+        if (vPlayer != null && !isVisibleToUser) {
+
+            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                vPlayer.stop();
+                vPlayer.release();
+                mFeedSmallLayout.setVisibility(View.GONE);
+                mFeedSmallScreen.removeAllViews();
+            }  else {
+                vPlayer.onPause();
+            }
         }
+
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
         }
