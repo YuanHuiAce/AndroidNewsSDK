@@ -122,6 +122,7 @@
 
     <include layout="@layout/player_toolbar"
         />
+    <include layout="@layout/player_media_quality"/>
 
     <ProgressBar
         android:id="@+id/bottom_progressbar"

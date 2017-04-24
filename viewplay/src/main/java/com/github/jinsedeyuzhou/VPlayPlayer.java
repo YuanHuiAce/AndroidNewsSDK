@@ -29,6 +29,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -85,6 +86,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private TextView mVideoNetTieConfirm;
     private TextView mVideoNetTieCancel;
     private TextView mVideoDuration;
+    private TextView mMediaList;
+    private ListView mListView;
+
 
     //是否展示
     private boolean isShow;
@@ -186,6 +190,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     };
 
 
+
     public VPlayPlayer(Context context) {
         super(context);
         init(context);
@@ -212,7 +217,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     }
 
     private void initView() {
-        View.inflate(mContext, R.layout.video_player, this);
+        View.inflate(mContext, R.layout.player_video, this);
         contollerbar = findViewById(R.id.media_contoller);
         mVideoView = (IjkVideoView) findViewById(R.id.main_video);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
@@ -256,6 +261,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         mVideoTitle = (MarqueeTextView) findViewById(R.id.tv_video_title);
         mVideoLock = (ImageView) findViewById(R.id.app_video_lock);
         mVideoShare = (ImageView) findViewById(R.id.app_video_share);
+        mMediaList = (TextView) findViewById(R.id.tv_media_list);
+        mListView = (ListView) findViewById(R.id.lv_media_quality);
+
         initHeight = layout.getLayoutParams().height;
         screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
 
@@ -289,6 +297,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 //      pauseImage.setOnClickListener(onClickListener);
         mVideoNetTieConfirm.setOnClickListener(this);
         mVideoNetTieCancel.setOnClickListener(this);
+        mMediaList.setOnClickListener(this);
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
         detector = new GestureDetector(mContext, new PlayGestureListener());
@@ -481,6 +490,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mVideoNetTie.setVisibility(View.GONE);
             if (onShareListener != null)
                 onShareListener.onPlayCancel();
+        }else if (id==R.id.tv_media_list)
+        {
+
         }
     }
 
@@ -517,6 +529,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                     break;
             }
 
+        }else  if (id==R.id.fl_media_quality)
+        {
+            
         }
         return super.onTouchEvent(event);
     }
