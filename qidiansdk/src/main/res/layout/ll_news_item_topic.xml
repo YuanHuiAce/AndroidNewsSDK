@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_feed_list_select">
 
-    <com.news.yazhidao.widget.EllipsizeEndTextView
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,8 +13,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
-        android:ellipsize="end"
         android:textColor="#333333"
+        android:maxLines="2"
         android:textSize="15sp" />
 
     <ImageView

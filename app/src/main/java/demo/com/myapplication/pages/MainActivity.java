@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
+        //启动服务
+//        Intent service = new Intent(this,UpdateService.class);
+//        startService(service);
     }
 
     private void userLogin() {

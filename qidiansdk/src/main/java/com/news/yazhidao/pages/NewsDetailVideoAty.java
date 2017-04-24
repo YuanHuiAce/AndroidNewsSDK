@@ -51,6 +51,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -484,11 +485,29 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mNewsDetailViewPager.setCurrentItem(1);
                 mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                 mDetailCommentNum.setVisibility(View.GONE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailVideoAty.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
+                }
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
                 mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailVideoAty.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_COMMENTPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, jsonObject, false);
+                }
             }
         } else if (getId == R.id.mDetailShare) {
             if (mNewsFeed != null) {

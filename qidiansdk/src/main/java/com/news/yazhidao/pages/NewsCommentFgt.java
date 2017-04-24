@@ -179,6 +179,7 @@ public class NewsCommentFgt extends Fragment {
                     }
                     if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
                         mNewsCommentHeaderView.setNoCommentsLayoutVisible();
+                        mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
                     }
                 }
             });
