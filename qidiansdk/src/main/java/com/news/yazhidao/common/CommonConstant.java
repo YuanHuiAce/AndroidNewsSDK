@@ -92,8 +92,8 @@ public final class CommonConstant {
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NativePosID = "2000611873536900";
-    public static final String NEWS_FEED_GDT_SDK_NativePosID = "2000611873536900";
-    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "2000611873536900";
+    public static final String NEWS_FEED_GDT_SDK_NativePosID = "5090120177109704";
+    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "1070526117209763";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_NativePosID = "246";
     public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";

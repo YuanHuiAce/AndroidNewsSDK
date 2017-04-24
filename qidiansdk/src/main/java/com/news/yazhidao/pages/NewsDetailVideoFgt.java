@@ -541,7 +541,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     while (iterator.hasNext()) {
                         RelatedItemEntity relatedItemEntity = iterator.next();
                         String url = relatedItemEntity.getUrl();
-                        if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
+                        //relatedItemEntity.getRtype() != 3&&
+                        if (!url.contains("deeporiginalx.com")) {
                             iterator.remove();
                         }
                     }

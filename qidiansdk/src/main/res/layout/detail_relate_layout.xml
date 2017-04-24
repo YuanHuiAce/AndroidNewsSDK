@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp">
+        android:paddingRight="18dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/detail_shared_PraiseLayout"
@@ -76,7 +77,9 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
-    <include layout="@layout/detail_attention_item" />
+    <include
+        layout="@layout/detail_attention_item"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"

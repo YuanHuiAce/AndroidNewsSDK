@@ -55,6 +55,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -257,8 +258,14 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 mSearchListView.onRefreshComplete();
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
-                    if (response.size() > 30) {
-                        response = (ArrayList<NewsFeed>) response.subList(0, 29);
+                    //去掉新闻号
+                    Iterator<NewsFeed> iterator = response.iterator();
+                    while (iterator.hasNext()) {
+                        NewsFeed newsFeed = iterator.next();
+                        int nid = newsFeed.getNid();
+                        if (nid == 0) {
+                            iterator.remove();
+                        }
                     }
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if (pPageIndex.equals("1")) {
