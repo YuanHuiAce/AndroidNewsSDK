@@ -20,9 +20,15 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
+import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import static com.news.yazhidao.R.id.category_text;
 
@@ -60,6 +66,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
     private Drawable left_edge;
     private Drawable right_edge;
     private FrameLayout bgFrameLayout;
+    private ArrayList<ChannelItem> channelItems;
 
     public ChannelTabStrip(Context context) {
         this(context, null);
@@ -327,7 +334,16 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
                     if (startPosition != position) {
-                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_CHANGECHANNEL, pager.getAdapter().getPageTitle(startPosition).toString(), pager.getAdapter().getPageTitle(i).toString(), null, true);
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            if (!TextUtil.isListEmpty(channelItems) && channelItems.get(startPosition) != null && channelItems.get(i) != null) {
+                                jsonObject.put("fchid", Integer.valueOf(channelItems.get(startPosition).getId()));
+                                jsonObject.put("tchid", Integer.valueOf(channelItems.get(i).getId()));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_CHANGECHANNEL, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
                         startPosition = position;
                     } else {
                         startPosition = position;
@@ -338,5 +354,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 }
             }
         }
+    }
+
+    public void setChannelItems(ArrayList<ChannelItem> channelItems) {
+        this.channelItems = channelItems;
     }
 }

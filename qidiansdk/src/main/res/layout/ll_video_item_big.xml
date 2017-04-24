@@ -5,7 +5,7 @@
     android:background="@drawable/bg_feed_list_select">
 
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

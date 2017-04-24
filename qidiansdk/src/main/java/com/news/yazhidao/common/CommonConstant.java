@@ -91,9 +91,10 @@ public final class CommonConstant {
     public static final String SHARE_QQ_ACTION = "share_qq_action";
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
-    public static final String NativePosID = "2000611873536900";
-    public static final String NEWS_FEED_GDT_SDK_NativePosID = "5090120177109704";
-    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "1070526117209763";
+    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
+    public static final String NEWS_FEED_GDT_SDK_FEED_BIGPOSID = "1040627242105512";
+    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "1090626242209528";
+    public static final String NEWS_RELATE_GDT_SDK_SMALLID = "7050727232406589";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_NativePosID = "246";
     public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";
@@ -101,7 +102,7 @@ public final class CommonConstant {
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
-    public static final int NEWS_CTYPE = 3;
+    public static final int NEWS_CTYPE = 5;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
@@ -111,7 +112,7 @@ public final class CommonConstant {
     //wenzi	纹字锁屏
     //lybrowser	猎鹰浏览器
     //baipai 白牌
-    public static final String LOG_CTYPE = "wenzi";
+    public static final String LOG_CTYPE = "baipai";
 
     public static final String LOG_SHOW_FEED_SOURCE = "feed";
     public static final String LOG_CLICK_FEED_SOURCE = "feed";
@@ -168,6 +169,7 @@ public final class CommonConstant {
      */
     public static final String LOG_PAGE_FEEDPAGE = "feedPage";
     public static final String LOG_PAGE_DETAILPAGE = "detailPage";
+    public static final String LOG_PAGE_COMMENTPAGE = "commentPage";
     public static final String LOG_PAGE_VIDEODETAILPAGE = "videoDetailPage";
     public static final String LOG_PAGE_CHANNELPAGE = "channelPage";
     public static final String LOG_PAGE_TOPICPAGE = "topicPage";

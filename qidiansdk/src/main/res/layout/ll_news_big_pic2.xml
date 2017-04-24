@@ -5,14 +5,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_feed_list_select">
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="12dp"
-        android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
         android:textSize="@dimen/font3" />

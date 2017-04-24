@@ -39,9 +39,11 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -177,7 +179,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
@@ -195,7 +197,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
             final String strTitle = feed.getTitle();
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = mCardWidth;
@@ -211,7 +213,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
-            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final TextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
             tvTitle.post(new Runnable() {
@@ -275,7 +277,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDrawViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
             holder.setGlideDrawViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
             holder.setGlideDrawViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             if (feed.getPtime() != null)
@@ -393,7 +395,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpTopic.height = (int) (ivWidth * 76 / 310.0f);
             ivTopic.setLayoutParams(lpTopic);
             holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
@@ -419,10 +421,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             });
         } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
-            int cardWidth = (int) (mCardWidth * 145 / 110.0f);
-            int cardHeight = (int) (cardWidth * 9 / 16.0f);
+            int cardWidth = mCardWidth;
+            int cardHeight = (int) (mCardWidth * 9 / 16.0f);
             final String strTitle = feed.getTitle();
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = cardWidth;
@@ -446,7 +448,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-            int height = (int) (with * 9 / 16.0f);
+            int height = (int) (with * 10 / 19.0f);
             ImageView ivBigPic = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();
             lpBigPic.width = with;
@@ -666,9 +668,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     }
 
-    private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
-            tvTitle.setMaxLines(3);
+//            tvTitle.setMaxLines(3);
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
@@ -780,7 +782,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 if (feed.getDataRef() != null) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_FEED_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
                     NativeADDataRef dataRef = feed.getDataRef();
                     dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
@@ -789,7 +791,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 3) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
@@ -852,15 +854,26 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setNewsFeedReadAndUploadUserAction(NewsFeed feed, String toPage) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            int nid = feed.getNid();
+            int logchid = feed.getLogchid();
+            if (nid != 0) {
+                jsonObject.put("nid", Long.valueOf(nid));
+                jsonObject.put("logchid", logchid);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if (!feed.isRead()) {
             feed.setRead(true);
             if (mNewsFeedDao == null) {
                 mNewsFeedDao = new NewsFeedDao(mContext);
             }
             mNewsFeedDao.update(feed);
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, null, true);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, jsonObject, true);
         } else {
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, null, false);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DETAILCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, toPage, jsonObject, false);
         }
     }
 
