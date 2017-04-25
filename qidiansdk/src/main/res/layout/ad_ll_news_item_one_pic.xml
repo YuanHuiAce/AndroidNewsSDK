@@ -103,7 +103,7 @@
         <!--</LinearLayout>-->
         <include
             android:id="@+id/source_content_linearLayout"
-            layout="@layout/ll_news_item_source"
+            layout="@layout/ad_ll_news_item_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/image_list_LinearLayout"

@@ -92,13 +92,15 @@ public final class CommonConstant {
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
-    public static final String NEWS_FEED_GDT_SDK_FEED_BIGPOSID = "1040627242105512";
+    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "1040627242105512";
     public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "1090626242209528";
     public static final String NEWS_RELATE_GDT_SDK_SMALLID = "7050727232406589";
     //广点通API id 广告位id
-    public static final String NEWS_FEED_GDT_API_NativePosID = "246";
-    public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";
-    public static final String NEWS_RELATE_GDT_API_NativePosID = "237";
+    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
+    public static final String NEWS_FEED_GDT_API_BIGPOSID = "718";
+    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "717";
+    public static final String NEWS_RELATE_GDT_API_SMALLID = "716";
+
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
@@ -127,6 +129,7 @@ public final class CommonConstant {
      * loadFeed	下拉加载feed流	chid
      * detailClick	点击详情页	nid(新闻id)，logchid（点击来源，首页或频道页或相关推荐列表）
      * commentClick	点击获取评论	nid
+     * searchClick	点击获取搜索页
      * changeChannel	切换频道	fchid,tchid
      * subChannel	订阅频道	chids(频道id列表，逗号分隔)
      * subPublisher	订阅来源	publisher(来源名称)
@@ -139,6 +142,8 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_LOGIN = "login";
     public static final String LOG_ATYPE_REFRESHFEED = "refreshFeed";
     public static final String LOG_ATYPE_LOADFEED = "loadFeed";
+    public static final String LOG_ATYPE_LOADAD = "loadAd";
+    public static final String LOG_ATYPE_SEARCHCLICK = "searchClick";
     public static final String LOG_ATYPE_DETAILCLICK = "detailClick";
     public static final String LOG_ATYPE_VIDEO_DETAILCLICK = "videoDetailClick";
     public static final String LOG_ATYPE_CHANNELCLICK = "channelClick";

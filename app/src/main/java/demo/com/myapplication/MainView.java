@@ -60,6 +60,7 @@ import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,7 +97,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
-//    private VPlayPlayer vPlayPlayer;
+    //    private VPlayPlayer vPlayPlayer;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
 
@@ -262,6 +263,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             @Override
             public void registerSuccess() {
 //                LogUtil.userActionLog(activity,CommonConstant);
+                MobclickAgent.onProfileSignIn(SharedPreManager.mInstance(activity).getUser(activity).getUserId());
             }
         });
         setChannelList();
@@ -684,7 +686,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 jsonObject.put("uid", uid);
                 jsonObject.put("appversion", activity.getString(R.string.version_name));
                 //加入广告位id
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(activity, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(activity, CommonConstant.NEWS_FEED_GDT_API_BIGPOSID)));
                 jsonObject.put("province", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.mInstance(activity).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));

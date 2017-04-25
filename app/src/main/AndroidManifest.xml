@@ -62,10 +62,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".service.UpdateService"
-            android:enabled="true" />
-
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
@@ -107,6 +103,14 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+        <!--umeng-->
+        <!-- Caution! Do not change this app key. It is only for demo usage. -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="58f9d3c904e205169000013b"></meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Umeng"></meta-data>
 
     </application>
     //需要权限

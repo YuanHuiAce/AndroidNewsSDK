@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:text="设置字体大小" />
+        android:text="设置字体大小"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvLogin"
@@ -20,7 +21,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/tv"
-        android:text="登录映射" />
+        android:text="登录映射"
+        android:visibility="gone" />
 
 
     <TextView
@@ -29,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="8dp"
-        android:text="切换到奇点频道" />
+        android:text="切换到奇点频道"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvLogout"
@@ -38,7 +41,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/mFirstAndTop"
-        android:text="用户退出" />
+        android:text="用户退出"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/newsLayout"
@@ -46,12 +50,14 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tv"
         android:background="@color/black" />
+
     <ImageView
         android:id="@+id/share_bg_imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
         android:visibility="invisible" />
+
     <com.news.yazhidao.widget.VideoContainer
         android:id="@+id/feed_full_screen"
         android:layout_width="match_parent"

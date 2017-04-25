@@ -50,6 +50,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,6 +218,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("videoDetail");
         mDurationStart = System.currentTimeMillis();
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
@@ -229,6 +231,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onPause() {
+        MobclickAgent.onPageEnd("videoDetail");
         nowTime = System.currentTimeMillis();
         //上报日志
         LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%");
