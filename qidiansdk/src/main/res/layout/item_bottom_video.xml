@@ -19,8 +19,9 @@
         android:id="@+id/tv_video_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/iv_video_share"
+        android:layout_marginRight="15dp"
         android:textColor="#bebebe"
         android:textSize="12sp" />
 

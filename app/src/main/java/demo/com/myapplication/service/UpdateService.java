@@ -145,7 +145,15 @@ public class UpdateService extends Service {
                     Uri uriForDownloadedFile = manager.getUriForDownloadedFile(downId);
 
                     Logger.d(TAG, "uri=" + uriForDownloadedFile);
-
+                    File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME);
+                    if (file.exists()&&file.isDirectory())
+                    {
+                        File[] files = file.listFiles();
+                        for(File f:files)
+                        {
+                           Logger.v(TAG,f.getName().toString());
+                        }
+                    }
                     installApkNew(uriForDownloadedFile);
                 }
                 //停止服务并关闭广播
@@ -156,9 +164,8 @@ public class UpdateService extends Service {
 
         //安装apk
         protected void installApkNew(Uri uri) {
-
             Logger.v(TAG, "installApkNew:" + uri.toString());
-            Logger.v(TAG, "installApkNew:" + downId);
+            Logger.v(TAG, "installApkNew:" + uri.getEncodedPath());
             Intent intent = new Intent();
             //执行动作
             intent.setAction(Intent.ACTION_VIEW);
@@ -169,6 +176,8 @@ public class UpdateService extends Service {
             //不加下面这句话是可以的，查考的里面说如果不加上这句的话在apk安装完成之后点击单开会崩溃
 //            android.os.Process.killProcess(android.os.Process.myPid());
             startActivity(intent);
+
+
         }
     }
 }
