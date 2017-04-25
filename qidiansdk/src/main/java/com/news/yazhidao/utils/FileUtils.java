@@ -11,6 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -233,6 +236,36 @@ public class FileUtils {
     }
 
     /**
+     * 获取文件的MD5
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static String getMd5ByFile(File file) throws FileNotFoundException {
+        String value = null;
+        FileInputStream in = new FileInputStream(file);
+        try {
+            MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(byteBuffer);
+            BigInteger bi = new BigInteger(1, md5.digest());
+            value = bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return value;
+    }
+
+
+    /**
      * 获取字符串的md5值
      * @param key
      * @return
@@ -431,4 +464,15 @@ public class FileUtils {
         fos.close();
     }
 
+    public static void clear(File file) {
+        if (file.exists()) { //指定文件是否存在
+            if (file.isDirectory()) { //该路径名表示的文件是否是一个目录（文件夹）
+                File[] files = file.listFiles(); //列出当前文件夹下的所有文件
+                for (File f : files) {
+                   f.delete();
+                    //Log.d("fileName", f.getName()); //打印文件名
+                }
+            }
+        }
+    }
 }
