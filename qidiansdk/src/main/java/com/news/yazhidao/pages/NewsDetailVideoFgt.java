@@ -374,6 +374,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         image_attention_line = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_line);
         image_attention_success = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_success);
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
+        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         String icon = mResult.getIcon();
@@ -431,7 +432,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
-        }, 1000);
+        }, 1500);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -562,10 +563,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         setBeanPageList(relatedItemEntities);
                         adLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
+
                     } else {
                         mDetailSharedTitleLayout.setVisibility(View.GONE);
                         setNoRelatedDate();
                     }
+
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
