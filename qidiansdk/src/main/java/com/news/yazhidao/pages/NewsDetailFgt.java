@@ -141,6 +141,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private int mIntScorllY;
     //广告
     private NativeAD mNativeAD;
+    private int adPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -630,6 +631,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             String requestUrl = HttpConstant.URL_NEWS_RELATED;
             ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
             adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
@@ -664,6 +666,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                             relatedItemEntity.setStyle(0);
                         } else {
                             int rtype = relatedItemEntity.getRtype();
+                            if (rtype == 3) {
+                                relatedItemEntity.setStyle(2);
+                            }
                             if (rtype == 6) {
                                 relatedItemEntity.setStyle(8);
                             } else {
@@ -1111,7 +1116,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
-            mNativeAD.loadAD(1);
+            mNativeAD.loadAD(2);
+            adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
                 String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
@@ -1192,6 +1198,19 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         dataRef.onClicked(adLayout);
                     }
                 });
+            }
+            final NativeADDataRef dataRelate = list.get(1);
+            if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
+                RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                relatedItemEntity.setRtype(3);
+                relatedItemEntity.setStyle(1);
+                relatedItemEntity.setTitle(dataRef.getDesc());
+                relatedItemEntity.setPname(dataRef.getTitle());
+                relatedItemEntity.setImgUrl(dataRef.getImgUrl());
+                relatedItemEntity.setDataRef(dataRelate);
+                beanList.add(adPosition, relatedItemEntity);
+                mAdapter.setNewsFeed(beanList);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

@@ -20,6 +20,7 @@ import com.bumptech.glide.RequestManager;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
@@ -196,6 +197,11 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     protected void setContentView() {
         mHandler = new Handler();
         ShareSDK.initSDK(this);
+        AdUtil.setAdChannel(this);
+        //展示广点通sdk
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        //展示广点通API
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();

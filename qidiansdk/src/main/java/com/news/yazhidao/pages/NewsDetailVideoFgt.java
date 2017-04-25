@@ -161,6 +161,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     //广告sdk
     private NativeAD mNativeAD;
     private RelativeLayout mDetailSharedTitleLayout;
+    private int adPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -517,6 +518,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             String requestUrl = HttpConstant.URL_NEWS_RELATED;
             ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
             adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+            adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
@@ -952,7 +954,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
-            mNativeAD.loadAD(1);
+            mNativeAD.loadAD(2);
+            adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_VIDEO_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
                 String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
@@ -1033,6 +1036,19 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         dataRef.onClicked(adLayout);
                     }
                 });
+                final NativeADDataRef dataRelate = list.get(1);
+                if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
+                    RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                    relatedItemEntity.setRtype(3);
+                    relatedItemEntity.setStyle(1);
+                    relatedItemEntity.setTitle(dataRef.getDesc());
+                    relatedItemEntity.setPname(dataRef.getTitle());
+                    relatedItemEntity.setImgUrl(dataRef.getImgUrl());
+                    relatedItemEntity.setDataRef(dataRelate);
+                    beanList.add(adPosition, relatedItemEntity);
+                    mAdapter.setNewsFeed(beanList);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

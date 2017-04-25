@@ -1,5 +1,7 @@
 package com.news.yazhidao.entity;
 
+import com.qq.e.ads.nativ.NativeADDataRef;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +67,16 @@ public class RelatedItemEntity implements Serializable, Comparable {
     }
 
     public RelatedItemEntity() {
+    }
+
+    private NativeADDataRef dataRef;
+
+    public NativeADDataRef getDataRef() {
+        return dataRef;
+    }
+
+    public void setDataRef(NativeADDataRef dataRef) {
+        this.dataRef = dataRef;
     }
 
     @Override

@@ -89,6 +89,12 @@ public final class CommonConstant {
     public static final String SHARE_WECHAT_ACTION = "share_wechat_action";
     public static final String SHARE_SINA_WEIBO_ACTION = "share_sina_weibo_action";
     public static final String SHARE_QQ_ACTION = "share_qq_action";
+
+    public static final String AD_CHANNEL = "ad_channel";
+    public static final String AD_FEED_POS = "ad_feed_pos";
+    public static final String AD_FEED_VIDEO_POS = "ad_feed_video_pos";
+    public static final String AD_RELATED_POS = "ad_related_pos";
+    public static final String AD_RELATED_VIDEO_POS = "ad_related_video_pos";
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
     public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";

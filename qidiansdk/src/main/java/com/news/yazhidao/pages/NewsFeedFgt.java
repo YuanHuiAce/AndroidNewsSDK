@@ -140,6 +140,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
     private ImageView mFeedClose;
+    private int adPosition;
 
     @Override
     public void onThemeChanged() {
@@ -220,7 +221,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 vPlayer.release();
                 mFeedSmallLayout.setVisibility(View.GONE);
                 mFeedSmallScreen.removeAllViews();
-            }  else {
+            } else {
                 vPlayer.onPause();
             }
         }
@@ -300,13 +301,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        if (mstrChannelId.equals("44")) {
+        if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
             mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
             FrameLayout.LayoutParams lpParent = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vPlayerContainer = new FrameLayout(mContext);
             vPlayerContainer.setBackgroundColor(Color.BLACK);
             vPlayerContainer.setVisibility(View.GONE);
             mAndroidContent.addView(vPlayerContainer, lpParent);
+            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
+        } else {
+            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS);
         }
         //==============================视频==========================
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
@@ -455,6 +459,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
+        adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
         Gson gson = new Gson();
         //加入feed流广告位id
         if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
@@ -1137,20 +1142,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
-                int position = 5;
-                if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
-                    position = 3;
-                }
                 if (PULL_DOWN_REFRESH == flag) {
-                    if (mArrNewsFeed.size() > position) {
-                        mArrNewsFeed.add(position, newsFeed);
+                    if (mArrNewsFeed.size() > adPosition) {
+                        mArrNewsFeed.add(adPosition, newsFeed);
                     }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
                         mArrNewsFeed.add(mArrNewsFeed.size() - 2, newsFeed);
                     } else {
-                        if (mArrNewsFeed.size() > position) {
-                            mArrNewsFeed.add(position, newsFeed);
+                        if (mArrNewsFeed.size() > adPosition) {
+                            mArrNewsFeed.add(adPosition, newsFeed);
                         }
                     }
                 }
@@ -1470,9 +1471,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
-                   NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                    NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
                 else
-                    ((Activity)mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                    ((Activity) mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
 
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = cPostion;
