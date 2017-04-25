@@ -629,22 +629,15 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             isLoadDate = true;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             String requestUrl = HttpConstant.URL_NEWS_RELATED;
-            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
-            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
-            adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
                 jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_SMALLID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
-
+                jsonObject.put("ads",SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            //加入详情页广告位id
-            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_SMALLID)));
             }
             RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
                 @Override
