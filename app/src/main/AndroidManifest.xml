@@ -62,16 +62,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".service.UpdateService"
-            android:enabled="true" />
-
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
         <activity
-            android:launchMode="singleTop"
             android:name=".pages.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
@@ -103,17 +100,25 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="v2VQnOFTF0e3NunDcgoNhGRE" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
         <service
             android:name=".service.UpdateService"
-            android:enabled="true"
-            >
-        </service>
+            android:enabled="true"></service>
+        <!--umeng-->
+        <!-- Caution! Do not change this app key. It is only for demo usage. -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="58f9d3c904e205169000013b"></meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Umeng"></meta-data>
 
     </application>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />

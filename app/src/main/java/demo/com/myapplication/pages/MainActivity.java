@@ -19,6 +19,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.umeng.analytics.MobclickAgent;
 
 import demo.com.myapplication.MainView;
 import demo.com.myapplication.R;
@@ -36,12 +37,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //umeng统计
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, false);
-        //展示广点通sdk
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
-        //展示广点通API
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //启动服务
 //        Intent service = new Intent(this,UpdateService.class);
 //        startService(service);
+
     }
 
     private void userLogin() {
@@ -166,6 +166,17 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -433,6 +433,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+            holder.setGlideDrawViewURI(R.id.ad_image_icon, feed.getIcon());
             if (feed.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
             }
@@ -459,6 +460,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+            holder.setGlideDrawViewURI(R.id.ad_image_icon, feed.getIcon());
             if (feed.getPtime() != null)
                 setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
@@ -496,7 +498,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
-            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
+//            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
@@ -573,6 +575,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         Intent intent = new Intent(mContext, SubscribeListActivity.class);
         intent.putExtra(CommonConstant.KEY_SUBSCRIBE_LIST, attentionListEntities);
         ((Activity) mContext).startActivityForResult(intent, CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE);
+    }
+
+    private void setAdImageIcon(ImageView imageIcon, String iconUrl) {
+        if (TextUtil.isEmptyString(iconUrl)) {
+
+        }
     }
 
 
@@ -782,7 +790,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 if (feed.getDataRef() != null) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_FEED_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
+//                    MobclickAgent.onEvent(mContext, "clickAd");
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
                     NativeADDataRef dataRef = feed.getDataRef();
                     dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
@@ -791,7 +800,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 3) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
+//                    MobclickAgent.onEvent(mContext, "clickAd");
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);

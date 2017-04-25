@@ -88,7 +88,8 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bg_home_login_header">
+        android:background="@color/bg_home_login_header"
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"

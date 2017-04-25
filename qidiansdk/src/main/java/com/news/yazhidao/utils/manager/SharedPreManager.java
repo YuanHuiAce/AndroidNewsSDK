@@ -231,6 +231,18 @@ public final class SharedPreManager {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 0);
     }
 
+    public int getAdChannelInt(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 1);
+    }
+
+    public int getAdFeedPosition(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 5);
+    }
+
+    public int getAdDetailPosition(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 3);
+    }
+
     public boolean getBoolean(String spName, String key) {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getBoolean(key, false);
     }
@@ -449,25 +461,27 @@ public final class SharedPreManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (TextUtil.isListEmpty(historyEntities)) {
-            return;
+        for (int i = 0; i < historyEntities.size(); i++) {
+            if (content.equals(historyEntities.get(i).getContent())) {
+                historyEntities.remove(i);
+            }
         }
         Gson gson = new Gson();
-        historyEntities.add(historyEntity);
+        historyEntities.add(0, historyEntity);
         save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
     }
 
     public ArrayList<HistoryEntity> HistoryGetList() throws JSONException {
-        ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
+        ArrayList<HistoryEntity> historyEntities = new ArrayList<>();
         String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
         Gson gson = new Gson();
-        if (!TextUtil.isEmptyString(str)) {
-            JSONArray array = new JSONArray(str);
-            for (int i = 0; i < array.length(); i++) {
-                String str1 = array.getString(i);
-                HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
-                historyEntities.add(bean);
-            }
+//        if (!TextUtil.isEmptyString(str)) {
+        JSONArray array = new JSONArray(str);
+        for (int i = 0; i < array.length(); i++) {
+            String str1 = array.getString(i);
+            HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
+            historyEntities.add(bean);
+//            }
         }
         return historyEntities;
     }

@@ -6,21 +6,26 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.news.yazhidao.R;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AdDetailEntity;
 import com.news.yazhidao.entity.AdDeviceEntity;
 import com.news.yazhidao.entity.AdEntity;
 import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
@@ -30,7 +35,9 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class AdUtil {
@@ -119,6 +126,73 @@ public class AdUtil {
         } else {
             return "";
         }
+    }
+
+    public static void setAdChannel(final Context context) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("uid", mUserId);
+            jsonObject.put("did", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+            jsonObject.put("ctype", Integer.valueOf(CommonConstant.NEWS_CTYPE));
+            jsonObject.put("ptype", Integer.valueOf(CommonConstant.NEWS_PTYPE));
+            jsonObject.put("aversion", context.getString(R.string.version_name));
+            jsonObject.put("ctime", System.currentTimeMillis());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_POST_AD_SOURCE, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        JSONObject json = response;
+                        try {
+                            int adChannel = (int) json.get("data");
+                            if (adChannel == 1) {
+                                //展示广点通sdk
+                                SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false);
+                                //展示广点通API
+                                SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, true);
+                            } else if (adChannel == 2) {
+                                //展示广点通sdk
+                                SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+                                //展示广点通API
+                                SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+                            }
+                            SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL, adChannel);
+                            SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS, (int) json.get("feedAdPos"));
+                            SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS, (int) json.get("feedVideoAdPos"));
+                            SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS, (int) json.get("relatedAdPos"));
+                            SharedPreManager.mInstance(context).save(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_VIDEO_POS, (int) json.get("relatedVideoAdPos"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag", "URL_LOG_POST_APP_ACTION  222");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                return header;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
     }
 
     public static void upLoadAd(NewsFeed feed, Context context) {

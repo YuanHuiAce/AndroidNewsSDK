@@ -27,6 +27,8 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.qq.e.ads.nativ.NativeADDataRef;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -314,9 +316,18 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     return;
                 }
                 firstClick = System.currentTimeMillis();
+                if (relatedItemEntity.getDataRef() != null) {
+                    MobclickAgent.onEvent(mContext, "clickAd");
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, relatedItemEntity.getPname());
+                    NativeADDataRef dataRef = relatedItemEntity.getDataRef();
+                    dataRef.onExposured(rlNewsContent);
+                    dataRef.onClicked(rlNewsContent);
+                    return;
+                }
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
+                    MobclickAgent.onEvent(mContext, "clickAd");
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);

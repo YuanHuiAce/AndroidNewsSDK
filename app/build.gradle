@@ -8,7 +8,7 @@ android {
         abortOnError false
     }
     defaultConfig {
-        applicationId "com.news.yazhidao"
+        applicationId "com.falconnect.information"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1

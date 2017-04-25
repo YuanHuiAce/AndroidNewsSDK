@@ -45,6 +45,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -189,6 +190,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("detail");
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
@@ -196,6 +198,21 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             registerReceiver(mRefreshReceiver, filter);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPageEnd("detail");
+        nowTime = System.currentTimeMillis();
+        if (mDetailFgt != null) {
+            String percent = mDetailFgt.getPercent();
+            if (!TextUtil.isEmptyString(percent)) {
+                //上报日志
+                LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, percent);
+                LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime);
+            }
+        }
+        super.onPause();
     }
 
     @Override
@@ -208,20 +225,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             sendBroadcast(intent);
         }
         super.finish();
-    }
-
-    @Override
-    protected void onPause() {
-        nowTime = System.currentTimeMillis();
-        if (mDetailFgt != null) {
-            String percent = mDetailFgt.getPercent();
-            if (!TextUtil.isEmptyString(percent)) {
-                //上报日志
-                LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, percent);
-                LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime);
-            }
-        }
-        super.onPause();
     }
 
     @Override

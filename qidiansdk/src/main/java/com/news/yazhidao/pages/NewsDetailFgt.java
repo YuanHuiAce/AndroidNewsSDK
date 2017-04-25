@@ -30,7 +30,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -75,6 +74,7 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,6 +141,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private int mIntScorllY;
     //广告
     private NativeAD mNativeAD;
+    private int adPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -628,21 +629,15 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             isLoadDate = true;
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             String requestUrl = HttpConstant.URL_NEWS_RELATED;
-            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
-            adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNewID));
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_SMALLID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
-
+                jsonObject.put("ads",SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            //加入详情页广告位id
-            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
             }
             RelatePointRequestPost<ArrayList<RelatedItemEntity>> relateRequestPost = new RelatePointRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<ArrayList<RelatedItemEntity>>() {
                 @Override
@@ -655,7 +650,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         RelatedItemEntity relatedItemEntity = iterator.next();
                         String url = relatedItemEntity.getUrl();
                         //relatedItemEntity.getRtype() != 3&&
-                        if (!url.contains("deeporiginalx.com")) {
+                        if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
                             iterator.remove();
                         }
                     }
@@ -664,6 +659,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                             relatedItemEntity.setStyle(0);
                         } else {
                             int rtype = relatedItemEntity.getRtype();
+                            if (rtype == 3) {
+                                relatedItemEntity.setStyle(2);
+                            }
                             if (rtype == 6) {
                                 relatedItemEntity.setStyle(8);
                             } else {
@@ -948,42 +946,42 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         holder.ivPraise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-                if (user != null && user.isVisitor()) {
-                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
-                } else {
-                    if ((user.getMuid() + "").equals(comment.getUid())) {
-                        Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (comment.getUpflag() == 0) {
-                        comment.setUpflag(1);
-                        holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                        int num = 0;
-                        if (comment.getCommend() == 0) {
-                            num = 1;
-                        } else {
-                            num = comment.getCommend() + 1;
-                        }
-                        holder.tvPraiseCount.setVisibility(View.VISIBLE);
-                        comment.setCommend(num);
-                        holder.tvPraiseCount.setText(num + "");
-                        addNewsLove(user, comment, true);
-                    } else {
-                        comment.setUpflag(0);
-                        holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-                        int num = 0;
-                        if (comment.getCommend() != 0) {
-                            num = comment.getCommend() - 1;
-                        }
-                        if (num == 0) {
-                            holder.tvPraiseCount.setVisibility(View.INVISIBLE);
-                        }
-                        comment.setCommend(num);
-                        holder.tvPraiseCount.setText(num + "");
-                        addNewsLove(user, comment, false);
-                    }
-                }
+//                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+//                if (user != null && user.isVisitor()) {
+//                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+//                } else {
+//                    if ((user.getMuid() + "").equals(comment.getUid())) {
+//                        Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    if (comment.getUpflag() == 0) {
+//                        comment.setUpflag(1);
+//                        holder.ivPraise.setImageResource(R.drawable.bg_praised);
+//                        int num = 0;
+//                        if (comment.getCommend() == 0) {
+//                            num = 1;
+//                        } else {
+//                            num = comment.getCommend() + 1;
+//                        }
+//                        holder.tvPraiseCount.setVisibility(View.VISIBLE);
+//                        comment.setCommend(num);
+//                        holder.tvPraiseCount.setText(num + "");
+//                        addNewsLove(user, comment, true);
+//                    } else {
+//                        comment.setUpflag(0);
+//                        holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+//                        int num = 0;
+//                        if (comment.getCommend() != 0) {
+//                            num = comment.getCommend() - 1;
+//                        }
+//                        if (num == 0) {
+//                            holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+//                        }
+//                        comment.setCommend(num);
+//                        holder.tvPraiseCount.setText(num + "");
+//                        addNewsLove(user, comment, false);
+//                    }
+//                }
             }
         });
     }
@@ -1111,7 +1109,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
-            mNativeAD.loadAD(1);
+            mNativeAD.loadAD(2);
+            adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
                 String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
@@ -1119,13 +1118,13 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NativePosID)));
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
                     public void onResponse(final ArrayList<NewsFeed> result) {
                         if (!TextUtil.isListEmpty(result)) {
-                            LogUtil.adGetLog(mContext, 1, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                            LogUtil.adGetLog(mContext, 1, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                             final NewsFeed newsFeed = result.get(0);
                             if (newsFeed != null) {
                                 adtvTitle.setText(newsFeed.getTitle());
@@ -1142,7 +1141,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
+                                        MobclickAgent.onEvent(mContext, "clickAd");
+                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
                                         mContext.startActivity(AdIntent);
@@ -1186,10 +1186,24 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MobclickAgent.onEvent(mContext, "clickAd");
                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }
                 });
+            }
+            final NativeADDataRef dataRelate = list.get(1);
+            if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
+                RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                relatedItemEntity.setRtype(3);
+                relatedItemEntity.setStyle(1);
+                relatedItemEntity.setTitle(dataRef.getDesc());
+                relatedItemEntity.setPname(dataRef.getTitle());
+                relatedItemEntity.setImgUrl(dataRef.getImgUrl());
+                relatedItemEntity.setDataRef(dataRelate);
+                beanList.add(adPosition, relatedItemEntity);
+                mAdapter.setNewsFeed(beanList);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

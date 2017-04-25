@@ -20,6 +20,7 @@ import com.bumptech.glide.RequestManager;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
@@ -28,6 +29,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -40,6 +42,8 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     private ImageView mSplashMask;
     private TextView mSplashVersion;
     private int mScreenWidth;
+    private Handler mHandler;
+    private Runnable mRunnable;
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
@@ -191,7 +195,13 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void setContentView() {
+        mHandler = new Handler();
         ShareSDK.initSDK(this);
+        AdUtil.setAdChannel(this);
+        //展示广点通sdk
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        //展示广点通API
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
@@ -199,6 +209,20 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         mRequestManager = Glide.with(this);
         mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
         mNativeAD.loadAD(1);
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+//                boolean showGuidePage = SharedPreManager.mInstance(SplashAty.this).getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
+//                if (!showGuidePage) {
+//                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
+//                    startActivity(intent);
+//                } else {
+                Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
+                startActivity(mainAty);
+//                }
+                SplashAty.this.finish();
+            }
+        };
     }
 
 
@@ -257,22 +281,26 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void loadData() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                boolean showGuidePage = SharedPreManager.mInstance(SplashAty.this).getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
-//                if (!showGuidePage) {
-//                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
-//                    startActivity(intent);
-//                } else {
-                    Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
-                    startActivity(mainAty);
-//                }
-                SplashAty.this.finish();
-            }
-        }, 8000);
+        mHandler.postDelayed(mRunnable, 5000);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("SplashScreen");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageStart("SplashScreen");
+    }
+
+    @Override
+    public void finish() {
+        mHandler.removeCallbacks(mRunnable);
+        super.finish();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
