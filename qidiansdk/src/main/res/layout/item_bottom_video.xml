@@ -12,6 +12,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:visibility="gone"
         android:src="@drawable/video_share_black" />
 
     <com.news.yazhidao.widget.TextViewExtend

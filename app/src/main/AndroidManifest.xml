@@ -66,8 +66,9 @@
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
         <activity
-            android:launchMode="singleTop"
             android:name=".pages.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
@@ -99,10 +100,14 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="v2VQnOFTF0e3NunDcgoNhGRE" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"></service>
         <!--umeng-->
         <!-- Caution! Do not change this app key. It is only for demo usage. -->
         <meta-data
@@ -113,6 +118,10 @@
             android:value="Umeng"></meta-data>
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     //需要权限
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />

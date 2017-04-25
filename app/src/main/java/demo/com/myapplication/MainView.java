@@ -1,7 +1,9 @@
 package demo.com.myapplication;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -10,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -46,17 +49,21 @@ import com.news.yazhidao.entity.AuthorizedUser;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.entity.Version;
 import com.news.yazhidao.net.volley.ChannelListRequest;
+import com.news.yazhidao.net.volley.VersionRequest;
 import com.news.yazhidao.pages.ChannelOperateAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.AuthorizedUserUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.news.yazhidao.widget.CustomDialog;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
@@ -71,13 +78,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import demo.com.myapplication.service.UpdateService;
+
 
 /**
  * Created by fengjigang on 15/10/28.
  * 主界面view
  */
 public class MainView extends View implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
-
+    private static final String TAG = MainView.class.getSimpleName();
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
@@ -100,6 +109,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     //    private VPlayPlayer vPlayPlayer;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
+    private final Context mContext;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -123,6 +133,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     public MainView(FragmentActivity context) {
         super(context);
+        mContext = context;
         initializeViews(context);
     }
 
@@ -267,6 +278,101 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         setChannelList();
+        checkVersion();
+    }
+
+    /**
+     * 检测是否自动升级
+     */
+    private void checkVersion() {
+//        showUpdateDialogT();
+        User mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
+        VersionRequest<Version> versionRequest = new VersionRequest<Version>(Request.Method.GET,
+                Version.class, HttpConstant.URL_APK_UPDATE + (mUser != null ? "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid() : "") + "&ctype=" + CommonConstant.NEWS_CTYPE + "&ptype=" + CommonConstant.NEWS_PTYPE,
+                new Response.Listener<Version>() {
+                    @Override
+                    public void onResponse(Version response) {
+                        Logger.e(TAG, response.toString());
+                        if (DeviceInfoUtil.getApkVersionCode(mContext)<response.getVersion_code())
+                        {
+                            showUpdateDialog(response);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(TAG, "onErrorResponse");
+            }
+        });
+        QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
+    }
+
+
+    /**
+     * 自定义升级弹窗
+     */
+    protected void showUpdateDialog(final Version version) {
+        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+        builder.setTitle("发现新版本");
+        builder.setMessage(version.getUpdateLog());
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (version.isForceUpdate())
+                {
+                    ((Activity)mContext).finish();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Bundle  bundle=new Bundle();
+                Intent intent=new Intent(mContext, UpdateService.class);
+                intent.putExtra("downloadLink",version.getDownloadLink());
+                intent.putExtra("md5",version.getMd5());
+                bundle.putSerializable("version",version);
+
+                mContext.startService(intent);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.create().show();
+
+    }
+
+    /**
+     * 自定义升级弹窗
+     */
+    protected void showUpdateDialogT() {
+        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+        builder.setTitle("发现新版本");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent=new Intent(mContext, UpdateService.class);
+                mContext.startService(intent);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.create().show();
+
     }
 
     private void setChannelList() {

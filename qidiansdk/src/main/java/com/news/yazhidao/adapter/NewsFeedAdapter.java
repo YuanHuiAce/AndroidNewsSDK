@@ -41,7 +41,6 @@ import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -499,7 +498,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
-            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
+//            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
@@ -791,7 +790,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 if (feed.getDataRef() != null) {
-                    MobclickAgent.onEvent(mContext, "clickAd");
+//                    MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
                     NativeADDataRef dataRef = feed.getDataRef();
                     dataRef.onExposured(rlNewsContent);
@@ -801,7 +800,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 3) {
-                    MobclickAgent.onEvent(mContext, "clickAd");
+//                    MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {

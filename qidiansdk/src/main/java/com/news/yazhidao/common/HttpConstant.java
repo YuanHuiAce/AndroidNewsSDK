@@ -231,4 +231,8 @@ public class HttpConstant {
      * 用户映射接口
      */
     public static final String URL_AUTHORIZED_USER = URL_SERVER_HOST + "/au/sin/s";
+    /**
+     * apk升级接口
+     */
+    public static final String URL_APK_UPDATE=URL_SERVER_HOST+"/version/query?";
 }
