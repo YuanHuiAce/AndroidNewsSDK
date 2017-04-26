@@ -79,6 +79,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -103,7 +104,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public static final int REQUEST_CODE = 1060;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
-    private ArrayList<NewsFeed> mUploadArrNewsFeed = new ArrayList<>();
+    private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
@@ -1002,9 +1003,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 }
                             }
                         }
-                        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() >= 4) {
-                            LogUtil.userShowLog(mUploadArrNewsFeed, mContext);
-                            mUploadArrNewsFeed.removeAll(mUploadArrNewsFeed);
+                        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
+                            while (mUploadArrNewsFeed.size() > 9) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                                for (int i = 0; i < 9; i++) {
+                                    newsFeeds.add(mUploadArrNewsFeed.poll());
+                                }
+                                LogUtil.userShowLog(newsFeeds, mContext);
+                            }
                         }
                         break;
                 }

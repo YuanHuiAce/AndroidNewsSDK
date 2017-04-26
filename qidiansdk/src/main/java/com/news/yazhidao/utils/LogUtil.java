@@ -206,7 +206,7 @@ public class LogUtil {
                 } else {
                     object.put("aid", Long.valueOf(newsFeed.getAid()));
                     object.put("source", "feed");
-                    object.put("title", newsFeed.getTitle());
+                    object.put("title", newsFeed.getPname());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
                 }
