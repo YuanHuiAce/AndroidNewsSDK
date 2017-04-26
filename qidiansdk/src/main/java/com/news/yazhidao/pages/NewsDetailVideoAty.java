@@ -120,6 +120,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private String mSource;
     private boolean isShowComment;
     public int cPosition;
+    private RelativeLayout mNoNetShow;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -178,6 +179,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mNoNetShow = (RelativeLayout) findViewById(R.id.video_show);
         mNewsLoadingImg.setOnClickListener(this);
 
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
@@ -372,6 +374,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 public void onResponse(NewsDetail result) {
                     isRefresh = false;
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                    mNoNetShow.setVisibility(View.GONE);
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
@@ -402,6 +405,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             requestQueue.add(feedRequest);
         } else {
             mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            mNoNetShow.setVisibility(View.VISIBLE);
             mNewsLoadingImg.setVisibility(View.VISIBLE);
             bgLayout.setVisibility(View.GONE);
         }
@@ -456,11 +460,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        Intent localIntent = new Intent();
-        localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-        if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
-            localIntent.putExtra("position", vPlayPlayer.getCurrentPosition());
-        setResult(1006, localIntent);
+        if (NetUtil.checkNetWork(this)) {
+            Intent localIntent = new Intent();
+            localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+            if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
+                localIntent.putExtra("position", vPlayPlayer.getCurrentPosition());
+            setResult(1006, localIntent);
+        }
         super.onBackPressed();
 
     }

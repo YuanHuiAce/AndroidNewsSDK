@@ -880,7 +880,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 firstTouch = false;
             }
             contollerbar.setVisibility(View.GONE);
-            if (isAllowTouch)
+            if (isAllowTouch||!portrait)
                 if (seek) {
                     onProgressSlide(-deltaX / mVideoView.getWidth());
                 } else {

@@ -11,6 +11,7 @@
     <RelativeLayout
         android:id="@+id/detial_video_show"
         android:layout_width="match_parent"
+        android:background="#010101"
         android:layout_height="210dp">
 
         <ImageView

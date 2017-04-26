@@ -558,10 +558,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
                         adLayout.setVisibility(View.VISIBLE);
+                        mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
 
                     } else {
-                        mDetailSharedTitleLayout.setVisibility(View.GONE);
+
                         setNoRelatedDate();
                     }
 
@@ -946,6 +947,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (mSmallLayout.getVisibility() == View.VISIBLE) {
             vplayer.stop();
             vplayer.release();
+            mSmallLayout.setVisibility(View.GONE);
             FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
             if (frameLayout != null) {
                 frameLayout.removeAllViews();
