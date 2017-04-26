@@ -176,12 +176,12 @@ public class NewsCommentFgt extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     mNewsCommentList.onRefreshComplete();
+                    mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
                     if (error.toString().contains("服务端未找到数据 2002") && mComments.size() == 0) {
                         mNewsCommentHeaderView.setNoCommentsLayoutVisible();
-                        mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
                     }
                 }
             });
