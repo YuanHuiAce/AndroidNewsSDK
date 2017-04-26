@@ -170,9 +170,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
+        AdUtil.setAdChannel(activity);
         uploadInformation();
         uploadChannelInformation();
-
         mRequestManager = Glide.with(activity);
 //        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         lastTime = System.currentTimeMillis();

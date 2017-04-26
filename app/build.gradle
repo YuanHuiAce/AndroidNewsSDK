@@ -11,8 +11,8 @@ android {
         applicationId "com.falconnect.information"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "3.0"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
         //多个dex支持
         multiDexEnabled true

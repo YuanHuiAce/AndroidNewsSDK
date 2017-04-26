@@ -162,6 +162,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private NativeAD mNativeAD;
     private RelativeLayout mDetailSharedTitleLayout;
     private int adPosition;
+    private List<NativeADDataRef> marrlist;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -730,19 +731,39 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
-        mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
-        beanList.addAll(relatedItemEntities);
-        mAdapter.setNewsFeed(beanList);
-        mAdapter.notifyDataSetChanged();
-        if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
-            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-        }
-        if (footerView_layout.getVisibility() == View.GONE) {
-            footerView_layout.setVisibility(View.VISIBLE);
-        }
-        if (relatedItemEntities.size() < 6) {
-            footView_tv.setText("内容加载完毕");
-            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+        if (!TextUtil.isListEmpty(relatedItemEntities)) {
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size()) {
+                NativeADDataRef dataRelate = null;
+                if (marrlist.size() == 1) {
+                    dataRelate = marrlist.get(0);
+                } else if (marrlist.size() == 2) {
+                    dataRelate = marrlist.get(1);
+                }
+                if (dataRelate != null) {
+                    RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                    relatedItemEntity.setRtype(3);
+                    relatedItemEntity.setStyle(1);
+                    relatedItemEntity.setTitle(dataRelate.getDesc());
+                    relatedItemEntity.setPname(dataRelate.getTitle());
+                    relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
+                    relatedItemEntity.setDataRef(dataRelate);
+                    relatedItemEntities.add(adPosition, relatedItemEntity);
+                    marrlist.removeAll(marrlist);
+                }
+            }
+            beanList.addAll(relatedItemEntities);
+            mAdapter.setNewsFeed(beanList);
+            mAdapter.notifyDataSetChanged();
+            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
+                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+            }
+            if (footerView_layout.getVisibility() == View.GONE) {
+                footerView_layout.setVisibility(View.VISIBLE);
+            }
+            if (relatedItemEntities.size() < 6) {
+                footView_tv.setText("内容加载完毕");
+                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+            }
         }
     }
 
@@ -1004,8 +1025,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
+        marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
-        if (!TextUtil.isListEmpty(list)) {
+        if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
@@ -1029,19 +1051,23 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         dataRef.onClicked(adLayout);
                     }
                 });
-                final NativeADDataRef dataRelate = list.get(1);
-                if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
-                    RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
-                    relatedItemEntity.setRtype(3);
-                    relatedItemEntity.setStyle(1);
-                    relatedItemEntity.setTitle(dataRef.getDesc());
-                    relatedItemEntity.setPname(dataRef.getTitle());
-                    relatedItemEntity.setImgUrl(dataRef.getImgUrl());
-                    relatedItemEntity.setDataRef(dataRelate);
-                    beanList.add(adPosition, relatedItemEntity);
-                    mAdapter.setNewsFeed(beanList);
-                    mAdapter.notifyDataSetChanged();
-                }
+                marrlist.remove(0);
+            }
+        }
+        if (!TextUtil.isListEmpty(marrlist)) {
+            final NativeADDataRef dataRelate = list.get(0);
+            if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
+                RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                relatedItemEntity.setRtype(3);
+                relatedItemEntity.setStyle(1);
+                relatedItemEntity.setTitle(dataRelate.getDesc());
+                relatedItemEntity.setPname(dataRelate.getTitle());
+                relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
+                relatedItemEntity.setDataRef(dataRelate);
+                beanList.add(adPosition, relatedItemEntity);
+                marrlist.remove(0);
+                mAdapter.setNewsFeed(beanList);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

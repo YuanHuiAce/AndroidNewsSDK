@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.IBinder;
 
 import com.news.yazhidao.utils.FileUtils;
@@ -36,12 +35,11 @@ public class UpdateService extends Service {
         super.onCreate();
 
         File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME);
-        Logger.v(TAG,":::"+file.toString());
-        if (file.exists()&&file.isDirectory()) {
-            Logger.v(TAG,":::"+file.toString());
+        Logger.v(TAG, ":::" + file.toString());
+        if (file.exists() && file.isDirectory()) {
+            Logger.v(TAG, ":::" + file.toString());
             FileUtils.clear(file);
-        }else
-        {
+        } else {
             file.mkdirs();
 
         }
@@ -142,40 +140,24 @@ public class UpdateService extends Service {
                 downId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
 //                //自动安装apk
+                File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME+File.separator+DOWNLOAD_FILE_NAME);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     Uri uriForDownloadedFile = manager.getUriForDownloadedFile(downId);
 
-
-                    String apkFilePath = new StringBuilder(Environment
-                            .getExternalStorageDirectory().getAbsolutePath())
-                            .append(File.separator)
-                            .append(DOWNLOAD_FOLDER_NAME)
-                            .append(File.separator).append(DOWNLOAD_FILE_NAME)
-                            .toString();
                     Logger.d(TAG, "uri=" + uriForDownloadedFile);
-                    File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME);
-                    if (file.exists()&&file.isDirectory())
-                    {
-                        File[] files = file.listFiles();
-                        for(File f:files)
-                        {
-                           Logger.v(TAG,f.getName().toString());
-                        }
-                    }
-//                    installApkNew(context,Uri.fromFile(file));
-//                    installApkNew(context,uriForDownloadedFile);
-                    installApk(context,apkFilePath);
                 }
+                installApkNew(Uri.fromFile(file));
                 //停止服务并关闭广播
-
+                UpdateService.this.stopSelf();
 
             }
         }
 
         //安装apk
-        protected void installApkNew(Context context,Uri uri) {
+        protected void installApkNew(Uri uri) {
+
             Logger.v(TAG, "installApkNew:" + uri.toString());
-            Logger.v(TAG, "installApkNew:" + uri.getEncodedPath());
+            Logger.v(TAG, "installApkNew:" + downId);
             Intent intent = new Intent();
             //执行动作
             intent.setAction(Intent.ACTION_VIEW);
@@ -185,27 +167,7 @@ public class UpdateService extends Service {
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             //不加下面这句话是可以的，查考的里面说如果不加上这句的话在apk安装完成之后点击单开会崩溃
 //            android.os.Process.killProcess(android.os.Process.myPid());
-            context.startActivity(intent);
-
-            UpdateService.this.stopSelf();
-
-        }
-
-        //安装apk
-        protected void installApk(Context context,String filePath) {
-            Intent intent = new Intent();
-            //执行动作
-            intent.setAction(Intent.ACTION_VIEW);
-            //执行的数据类型
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            File file = new File(filePath);
-            if (file != null && file.length() > 0 && file.exists() && file.isFile()) {
-                intent.setDataAndType(Uri.parse("file://" + filePath),
-                        "application/vnd.android.package-archive");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-            UpdateService.this.stopSelf();
+            startActivity(intent);
         }
     }
 }

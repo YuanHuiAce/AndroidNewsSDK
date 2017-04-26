@@ -400,6 +400,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             });
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
+        } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            mNewsLoadingImg.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.GONE);
         }
     }
 
@@ -455,7 +459,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         Intent localIntent = new Intent();
         localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
         if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
-            localIntent.putExtra("position",vPlayPlayer.getCurrentPosition());
+            localIntent.putExtra("position", vPlayPlayer.getCurrentPosition());
         setResult(1006, localIntent);
         super.onBackPressed();
 
