@@ -6,6 +6,29 @@
     android:background="@color/bg_detail">
 
     <RelativeLayout
+        android:id="@+id/video_show"
+        android:layout_width="match_parent"
+        android:background="#101010"
+        android:layout_height="210dp"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/detail_image_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/_detail_image_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/video_play" />
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

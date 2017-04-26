@@ -558,10 +558,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     if (!TextUtil.isListEmpty(relatedItemEntities)) {
                         setBeanPageList(relatedItemEntities);
                         adLayout.setVisibility(View.VISIBLE);
+                        mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
 
                     } else {
-                        mDetailSharedTitleLayout.setVisibility(View.GONE);
+
                         setNoRelatedDate();
                     }
 
