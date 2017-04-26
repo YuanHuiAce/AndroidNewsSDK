@@ -112,8 +112,13 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
-            lpCard.width = mCardWidth;
-            lpCard.height = mCardHeight;
+            if (relatedItemEntity.getRtype() == 3) {
+                lpCard.width = mCardWidth;
+                lpCard.height = (int) (mCardWidth * 9 / 16.0f);
+            } else {
+                lpCard.width = mCardWidth;
+                lpCard.height = mCardHeight;
+            }
             ivCard.setLayoutParams(lpCard);
             holder.setGlideDrawViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
@@ -182,10 +187,10 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 //                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
 //                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
 //                    } else {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
+                    lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
+                    lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
+                    lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+                    lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
 //                    }
                     llSourceOnePic.setLayoutParams(lpSourceContent);
                     ivBottomLine.setLayoutParams(lpBottomLine);
