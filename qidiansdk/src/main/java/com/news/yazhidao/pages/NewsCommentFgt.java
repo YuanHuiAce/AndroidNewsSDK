@@ -160,6 +160,9 @@ public class NewsCommentFgt extends Fragment {
                         mComments.addAll(result);
                         mCommentsAdapter.setData(mComments);
                         mNewsCommentHeaderView.setNoCommentsLayoutGone();
+                        if (result.size() < 5) {
+                            mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
+                        }
                     } else {
                         mNewsCommentList.setMode(PullToRefreshBase.Mode.DISABLED);
                         if (!TextUtil.isListEmpty(mComments)) {

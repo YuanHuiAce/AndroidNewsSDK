@@ -2,6 +2,7 @@ package demo.com.myapplication.pages;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -20,7 +21,6 @@ import com.bumptech.glide.RequestManager;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
@@ -36,7 +36,7 @@ import java.util.List;
 import cn.sharesdk.framework.ShareSDK;
 import demo.com.myapplication.R;
 
-public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener {
+public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener, Handler.Callback {
 
     private ImageView mSplashSlogan;
     private ImageView mSplashMask;
@@ -50,8 +50,9 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     private RequestManager mRequestManager;
     //广告
     private ImageView ivAD;
-    private ImageView ivSkip;
+    private TextView tvSkip;
     private NativeAD mNativeAD;
+    private int second = 4;
 
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
@@ -195,9 +196,8 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void setContentView() {
-        mHandler = new Handler();
+        mHandler = new Handler(this);
         ShareSDK.initSDK(this);
-        AdUtil.setAdChannel(this);
         //展示广点通sdk
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
@@ -228,8 +228,8 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void initializeViews() {
-        ivSkip = (ImageView) findViewById(R.id.skip_image);
-        ivSkip.setOnClickListener(new View.OnClickListener() {
+        tvSkip = (TextView) findViewById(R.id.skip_view);
+        tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
@@ -276,12 +276,25 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
+        mHandler.sendEmptyMessage(0);
     }
 
 
     @Override
+    public boolean handleMessage(Message message) {
+        if (0 == message.what) {
+            tvSkip.setText(second + "s 跳过");
+            second--;
+            if (second > 0) {
+                mHandler.sendEmptyMessageDelayed(0, 1000);
+            }
+        }
+        return false;
+    }
+
+    @Override
     protected void loadData() {
-        mHandler.postDelayed(mRunnable, 5000);
+        mHandler.postDelayed(mRunnable, 4000);
     }
 
     @Override
@@ -293,7 +306,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageStart("SplashScreen");
+        MobclickAgent.onPageEnd("SplashScreen");
     }
 
     @Override

@@ -177,6 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/mHeaderDivider"
+            android:layout_marginTop="210dp"
             android:background="@color/white"
             android:visibility="visible">
 
@@ -184,12 +185,22 @@
                 android:id="@+id/mNewsLoadingImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="130dp"
                 android:maxHeight="90dp"
                 android:maxWidth="90dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_news_detail_reload"
                 android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mNewsLoadingImg"
+                android:layout_centerHorizontal="true"
+                android:text="点击屏幕，重新加载"
+                android:textColor="@color/no_net"
+                android:textSize="14sp" />
 
             <include layout="@layout/qd_loading_view_anim" />
 

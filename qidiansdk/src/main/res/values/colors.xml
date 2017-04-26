@@ -69,6 +69,7 @@
     <color name="Gray">#848484</color>
     <color name="LightGray">#CCCCCC</color>
     <color name="Bg">#F0F0F0</color>
+    <color name="no_net">#c3c3c3</color>
     <color name="bg_share">#f0f0f0</color>
     <color name="bg_share_press">#d3d3d3</color>
     <color name="bg_share_text">#1a1a1a</color>

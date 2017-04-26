@@ -77,7 +77,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
     //            ,mDetailRightMore;
-    private ImageView mNewsLoadingImg;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
@@ -153,8 +152,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setOnClickListener(this);
+        mNewsDetailLoaddingWrapper.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
@@ -313,7 +311,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     protected void loadData() {
         if (NetUtil.checkNetWork(this)) {
             isRefresh = true;
-            mNewsLoadingImg.setVisibility(View.GONE);
+            mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
             mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
             bgLayout.setVisibility(View.VISIBLE);
             mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
@@ -363,12 +361,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     isRefresh = false;
-                    mNewsLoadingImg.setVisibility(View.VISIBLE);
+                    mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
                     bgLayout.setVisibility(View.GONE);
                 }
             });
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
+        } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.GONE);
         }
     }
 
@@ -414,7 +415,23 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         int getId = v.getId();
         if (getId == R.id.mDetailLeftBack) {
-            onBackPressed();
+            if (isCommentPage) {
+                isCommentPage = false;
+                mNewsDetailViewPager.setCurrentItem(0);
+                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailAty2.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_COMMENTPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                }
+            } else {
+                onBackPressed();
+            }
         }
 //            case R.id.mDetailRightMore://更多的点击
 //                if (mNewsFeed != null) {
@@ -477,7 +494,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
-        } else if (getId == R.id.mNewsLoadingImg) {
+        } else if (getId == R.id.mNewsDetailLoaddingWrapper) {
             if (!isRefresh) {
                 loadData();
             }

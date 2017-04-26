@@ -142,6 +142,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     //广告
     private NativeAD mNativeAD;
     private int adPosition;
+    private List<NativeADDataRef> marrlist;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -635,7 +636,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_SMALLID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
-                jsonObject.put("ads",SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
+                jsonObject.put("ads", SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -649,7 +650,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                     while (iterator.hasNext()) {
                         RelatedItemEntity relatedItemEntity = iterator.next();
                         String url = relatedItemEntity.getUrl();
-                        //relatedItemEntity.getRtype() != 3&&
                         if (relatedItemEntity.getRtype() != 3 && !url.contains("deeporiginalx.com")) {
                             iterator.remove();
                         }
@@ -659,9 +659,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                             relatedItemEntity.setStyle(0);
                         } else {
                             int rtype = relatedItemEntity.getRtype();
-                            if (rtype == 3) {
-                                relatedItemEntity.setStyle(2);
-                            }
                             if (rtype == 6) {
                                 relatedItemEntity.setStyle(8);
                             } else {
@@ -843,20 +840,41 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     ArrayList<RelatedItemEntity> beanList = new ArrayList<>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
-        beanList.addAll(relatedItemEntities);
-        mAdapter.setNewsFeed(beanList);
-        mAdapter.notifyDataSetChanged();
-        if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
-            mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        if (!TextUtil.isListEmpty(relatedItemEntities)) {
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size()) {
+                NativeADDataRef dataRelate = null;
+                if (marrlist.size() == 1) {
+                    dataRelate = marrlist.get(0);
+                } else if (marrlist.size() == 2) {
+                    dataRelate = marrlist.get(1);
+                }
+                if (dataRelate != null) {
+                    RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
+                    relatedItemEntity.setRtype(3);
+                    relatedItemEntity.setStyle(1);
+                    relatedItemEntity.setTitle(dataRelate.getDesc());
+                    relatedItemEntity.setPname(dataRelate.getTitle());
+                    relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
+                    relatedItemEntity.setDataRef(dataRelate);
+                    relatedItemEntities.add(adPosition, relatedItemEntity);
+                    marrlist.removeAll(marrlist);
+                }
+            }
+            beanList.addAll(relatedItemEntities);
+            mAdapter.setNewsFeed(beanList);
+            mAdapter.notifyDataSetChanged();
+            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
+                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+            }
+            if (footerView_layout.getVisibility() == View.GONE) {
+                footerView_layout.setVisibility(View.VISIBLE);
+            }
+            if (relatedItemEntities.size() < 6) {
+                footView_tv.setText("内容加载完毕");
+                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+            }
+            detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
         }
-        if (footerView_layout.getVisibility() == View.GONE) {
-            footerView_layout.setVisibility(View.VISIBLE);
-        }
-        if (relatedItemEntities.size() < 6) {
-            footView_tv.setText("内容加载完毕");
-            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-        }
-        detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
     }
 
     public void addCommentContent(final ArrayList<NewsDetailComment> result) {
@@ -1166,8 +1184,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
+        marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
-        if (!TextUtil.isListEmpty(list)) {
+        if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
@@ -1191,17 +1210,21 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         dataRef.onClicked(adLayout);
                     }
                 });
+                marrlist.remove(0);
             }
-            final NativeADDataRef dataRelate = list.get(1);
+        }
+        if (!TextUtil.isListEmpty(marrlist)) {
+            final NativeADDataRef dataRelate = list.get(0);
             if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
                 RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
                 relatedItemEntity.setRtype(3);
                 relatedItemEntity.setStyle(1);
-                relatedItemEntity.setTitle(dataRef.getDesc());
-                relatedItemEntity.setPname(dataRef.getTitle());
-                relatedItemEntity.setImgUrl(dataRef.getImgUrl());
+                relatedItemEntity.setTitle(dataRelate.getDesc());
+                relatedItemEntity.setPname(dataRelate.getTitle());
+                relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
                 relatedItemEntity.setDataRef(dataRelate);
                 beanList.add(adPosition, relatedItemEntity);
+                marrlist.remove(0);
                 mAdapter.setNewsFeed(beanList);
                 mAdapter.notifyDataSetChanged();
             }

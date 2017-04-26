@@ -232,7 +232,7 @@ public final class SharedPreManager {
     }
 
     public int getAdChannelInt(String spName, String key) {
-        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 1);
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 2);
     }
 
     public int getAdFeedPosition(String spName, String key) {

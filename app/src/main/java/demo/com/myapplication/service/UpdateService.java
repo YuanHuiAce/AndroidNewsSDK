@@ -35,12 +35,11 @@ public class UpdateService extends Service {
         super.onCreate();
 
         File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME);
-        Logger.v(TAG,":::"+file.toString());
-        if (file.exists()&&file.isDirectory()) {
-            Logger.v(TAG,":::"+file.toString());
+        Logger.v(TAG, ":::" + file.toString());
+        if (file.exists() && file.isDirectory()) {
+            Logger.v(TAG, ":::" + file.toString());
             FileUtils.clear(file);
-        }else
-        {
+        } else {
             file.mkdirs();
 
         }
@@ -141,13 +140,13 @@ public class UpdateService extends Service {
                 downId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
 //                //自动安装apk
+                File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME+File.separator+DOWNLOAD_FILE_NAME);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     Uri uriForDownloadedFile = manager.getUriForDownloadedFile(downId);
 
                     Logger.d(TAG, "uri=" + uriForDownloadedFile);
-
-                    installApkNew(uriForDownloadedFile);
                 }
+                installApkNew(Uri.fromFile(file));
                 //停止服务并关闭广播
                 UpdateService.this.stopSelf();
 
