@@ -1295,6 +1295,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
         showBottomControl(isShowContoller);
     }
+    public void setShow(boolean isShowContoller)
+    {
+        this.isShowContoller = isShowContoller;
+    }
 
     public void play(String url) {
         this.url = url;
