@@ -925,6 +925,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (mSmallLayout.getVisibility() == View.VISIBLE) {
             vplayer.stop();
             vplayer.release();
+            mSmallLayout.setVisibility(View.GONE);
             FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
             if (frameLayout != null) {
                 frameLayout.removeAllViews();
