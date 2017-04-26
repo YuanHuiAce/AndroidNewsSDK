@@ -176,17 +176,17 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
                     RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
                     int lineCount = tvTitle.getLineCount();
-                    if (lineCount >= 3) {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
-                    } else {
+//                    if (lineCount >= 3) {
+//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
+//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
+//                    } else {
                         lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
                         lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
                         lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
                         lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
-                    }
+//                    }
                     llSourceOnePic.setLayoutParams(lpSourceContent);
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }

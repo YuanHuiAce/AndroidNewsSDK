@@ -1839,7 +1839,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
                 mFeedSmallScreen.removeAllViews();
-                vPlayer.setShowContoller(false);
+                vPlayer.setShow(true);
                 vPlayer.isOpenOrientation(true);
                 frameLayout.removeAllViews();
                 frameLayout.addView(vPlayer);
