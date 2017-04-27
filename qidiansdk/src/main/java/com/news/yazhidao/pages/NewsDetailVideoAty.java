@@ -244,11 +244,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void finish() {
-        if (mNewsFeed != null && isUserComment) {
+        if (mNewsFeed != null && isUserComment && mNewsFeed.getNid() != 0) {
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
-
             intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
             sendBroadcast(intent);
         }
@@ -415,6 +414,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         if (mNewsFeed == null) {
             mNewsFeed = new NewsFeed();
         }
+        if (!TextUtil.isEmptyString(mNid)) {
+            mNewsFeed.setNid(Integer.valueOf(mNid));
+        }
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
         mNewsFeed.setTitle(result.getTitle());
@@ -460,7 +462,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if (NetUtil.checkNetWork(this)) {
+        if (NetUtil.checkNetWork(this) && mNewsFeed != null && mNewsFeed.getNid() != 0) {
             Intent localIntent = new Intent();
             localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
             if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))

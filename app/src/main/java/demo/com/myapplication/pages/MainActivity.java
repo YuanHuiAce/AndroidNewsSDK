@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
@@ -127,6 +130,16 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 //        Intent service = new Intent(this,UpdateService.class);
 //        startService(service);
 
+    }
+
+    //设置字体大小不随手机设置而改变
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
     }
 
     private void userLogin() {
