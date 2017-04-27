@@ -3,6 +3,7 @@ package com.news.yazhidao.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -58,6 +61,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                         return R.layout.qd_ll_news_item_no_pic;
                     case 1:
                         return R.layout.qd_ll_news_item_one_pic;
+                    case 50:
+                        return R.layout.ad_ll_news_item_one_pic;
                     case 8:
                         return R.layout.ll_video_item_small;
                     default:
@@ -67,7 +72,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 
             @Override
             public int getViewTypeCount() {
-                return 4;
+                return 5;
             }
 
             @Override
@@ -77,6 +82,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                         return RelatedItemEntity.NO_PIC;
                     case 1:
                         return RelatedItemEntity.ONE_AND_TWO_PIC;
+                    case 50:
+                        return RelatedItemEntity.AD_ONE_PIC;
                     case 8:
                         return RelatedItemEntity.VIDEO_SMALL;
                     default:
@@ -112,13 +119,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
-            if (relatedItemEntity.getRtype() == 3) {
-                lpCard.width = mCardWidth;
-                lpCard.height = (int) (mCardWidth * 9 / 16.0f);
-            } else {
-                lpCard.width = mCardWidth;
-                lpCard.height = mCardHeight;
-            }
+            lpCard.width = mCardWidth;
+            lpCard.height = mCardHeight;
             ivCard.setLayoutParams(lpCard);
             holder.setGlideDrawViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
@@ -154,6 +156,31 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }
             });
+        } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
+            NativeADDataRef dataRef = relatedItemEntity.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_item_one_pic));
+            }
+            int cardWidth = mCardWidth;
+            int cardHeight = (int) (mCardWidth * 9 / 16.0f);
+            final String strTitle = relatedItemEntity.getTitle();
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
+            ImageView ivCard = holder.getView(R.id.title_img_View);
+            RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+            lpCard.width = cardWidth;
+            lpCard.height = cardHeight;
+            ivCard.setLayoutParams(lpCard);
+            if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
+                Glide.with(mContext).load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
+            }
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
+            holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            holder.getView(R.id.ad_image_icon).setVisibility(View.GONE);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
+            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+            holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.ll_video_item_small) {
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
@@ -325,7 +352,6 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, relatedItemEntity.getPname());
                     NativeADDataRef dataRef = relatedItemEntity.getDataRef();
-                    dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
                     return;
                 }

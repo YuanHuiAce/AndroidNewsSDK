@@ -743,7 +743,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (dataRelate != null) {
                     RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
                     relatedItemEntity.setRtype(3);
-                    relatedItemEntity.setStyle(1);
+                    relatedItemEntity.setStyle(50);
                     relatedItemEntity.setTitle(dataRelate.getDesc());
                     relatedItemEntity.setPname(dataRelate.getTitle());
                     relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
@@ -1060,7 +1060,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
                 RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
                 relatedItemEntity.setRtype(3);
-                relatedItemEntity.setStyle(1);
+                relatedItemEntity.setStyle(50);
                 relatedItemEntity.setTitle(dataRelate.getDesc());
                 relatedItemEntity.setPname(dataRelate.getTitle());
                 relatedItemEntity.setImgUrl(dataRelate.getImgUrl());

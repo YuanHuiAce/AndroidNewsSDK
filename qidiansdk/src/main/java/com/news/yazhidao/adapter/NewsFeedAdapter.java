@@ -422,6 +422,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             });
         } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
+            NativeADDataRef dataRef = feed.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_item_one_pic));
+            }
             int cardWidth = mCardWidth;
             int cardHeight = (int) (mCardWidth * 10 / 19.0f);
             final String strTitle = feed.getTitle();
@@ -448,6 +452,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
+            NativeADDataRef dataRef = feed.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_big_pic2));
+            }
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             int height = (int) (with * 10 / 19.0f);
@@ -794,7 +802,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
                     NativeADDataRef dataRef = feed.getDataRef();
-                    dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
                     return;
                 }
