@@ -215,7 +215,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     public void finish() {
-        if (mNewsFeed != null && isUserComment) {
+        if (mNewsFeed != null && isUserComment && mNewsFeed.getNid() != 0) {
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
@@ -376,6 +376,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsFeed convert2NewsFeed(NewsDetail result) {
         if (mNewsFeed == null) {
             mNewsFeed = new NewsFeed();
+        }
+        if (!TextUtil.isEmptyString(mNid)) {
+            mNewsFeed.setNid(Integer.valueOf(mNid));
         }
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
