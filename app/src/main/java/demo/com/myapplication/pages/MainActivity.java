@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
@@ -25,7 +26,7 @@ import com.umeng.analytics.MobclickAgent;
 import demo.com.myapplication.MainView;
 import demo.com.myapplication.R;
 
-public class MainActivity extends BaseActivity implements ThemeManager.OnThemeChangeListener {
+public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     private static final String TAG = "MainActivity";
     RelativeLayout newsLayout;
     MainView mainView;
@@ -34,22 +35,21 @@ public class MainActivity extends BaseActivity implements ThemeManager.OnThemeCh
     private AuthorizedUser authorizedUser;
 
     @Override
-    protected void setContentView() {
+    protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_AppCompat_NoActionBar);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, false);
-    }
-
-    @Override
-    protected void initializeViews() {
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CrashReport.testJavaCrash();
+//                CrashReport.testJavaCrash();
                 int size = SharedPreManager.mInstance(MainActivity.this).getInt("showflag", "textSize");
                 if (size == MainView.FONTSIZE.TEXT_SIZE_BIG.getfontsize()) {
                     mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
@@ -111,10 +111,6 @@ public class MainActivity extends BaseActivity implements ThemeManager.OnThemeCh
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
-    }
-
-    @Override
-    protected void loadData() {
         authorizedUser = (AuthorizedUser) getIntent().getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);
         if (authorizedUser != null) {
             mainView.setAuthorizedUserInformation(authorizedUser);
@@ -130,6 +126,10 @@ public class MainActivity extends BaseActivity implements ThemeManager.OnThemeCh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
+        //启动服务
+//        Intent service = new Intent(this,UpdateService.class);
+//        startService(service);
+
     }
 
     //设置字体大小不随手机设置而改变
