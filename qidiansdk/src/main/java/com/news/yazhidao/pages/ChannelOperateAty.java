@@ -68,7 +68,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
      * 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。
      */
     boolean isMove = false;
-    private ChannelItemDao mDao = new ChannelItemDao(this);
+    private ChannelItemDao mDao;
 
     private View mDetailLeftBack;
     private LinearLayout bgLayout;
@@ -117,6 +117,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
     @Override
     protected void loadData() {
+        mDao = new ChannelItemDao(this);
         selectedChannelList = mDao.queryForSelected();
         selectedChannelListCurrent = mDao.queryForSelected();
         otherChannelList = mDao.queryForNormal();

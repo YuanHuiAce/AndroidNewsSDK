@@ -174,14 +174,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @return
      */
     public static synchronized DatabaseHelper getHelper(Context context) {
-        context=context.getApplicationContext();
         if (instance == null) {
             synchronized (DatabaseHelper.class) {
                 if (instance == null)
                     instance = new DatabaseHelper(context);
             }
         }
-
         return instance;
     }
 

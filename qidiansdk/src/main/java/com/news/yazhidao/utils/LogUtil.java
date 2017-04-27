@@ -597,4 +597,46 @@ public class LogUtil {
         requestQueue.add(request);
     }
 
+    public static void adUserRegist(Context context) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_USER_SIGN_UP + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+
+            }
+        });
+        requestQueue.add(request);
+    }
+
 }

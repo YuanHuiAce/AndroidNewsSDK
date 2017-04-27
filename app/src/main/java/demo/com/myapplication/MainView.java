@@ -273,7 +273,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         UserManager.registerVisitor(activity, new UserManager.RegisterVisitorListener() {
             @Override
             public void registerSuccess() {
-//                LogUtil.userActionLog(activity,CommonConstant);
+                LogUtil.adUserRegist(activity);
                 MobclickAgent.onProfileSignIn(SharedPreManager.mInstance(activity).getUser(activity).getUserId());
             }
         });
@@ -293,19 +293,18 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     @Override
                     public void onResponse(Version response) {
                         Logger.e(TAG, response.toString());
-                        if (DeviceInfoUtil.getApkVersionCode(mContext)<response.getVersion_code())
-                        {
+                        if (DeviceInfoUtil.getApkVersionCode(mContext) < response.getVersion_code()) {
                             showUpdateDialog(response);
                         }
 
                     }
                 },
                 new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Logger.e(TAG, "onErrorResponse");
-            }
-        });
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Logger.e(TAG, "onErrorResponse");
+                    }
+                });
         QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
     }
 
@@ -320,9 +319,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (version.isForceUpdate())
-                {
-                    ((Activity)mContext).finish();
+                if (version.isForceUpdate()) {
+                    ((Activity) mContext).finish();
                 }
                 dialog.dismiss();
             }
@@ -331,11 +329,11 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Bundle  bundle=new Bundle();
-                Intent intent=new Intent(mContext, UpdateService.class);
-                intent.putExtra("downloadLink",version.getDownloadLink());
-                intent.putExtra("md5",version.getMd5());
-                bundle.putSerializable("version",version);
+                Bundle bundle = new Bundle();
+                Intent intent = new Intent(mContext, UpdateService.class);
+                intent.putExtra("downloadLink", version.getDownloadLink());
+                intent.putExtra("md5", version.getMd5());
+                bundle.putSerializable("version", version);
 
                 mContext.startService(intent);
                 dialog.dismiss();
@@ -364,7 +362,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent=new Intent(mContext, UpdateService.class);
+                Intent intent = new Intent(mContext, UpdateService.class);
                 mContext.startService(intent);
                 dialog.dismiss();
             }

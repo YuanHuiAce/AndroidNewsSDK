@@ -37,6 +37,8 @@ public class HttpConstant {
 
     public static final String URL_LOG_POST_AD_GET = URL_LOG_HOST + "/ad/get";
 
+    public static final String URL_LOG_POST_USER_SIGN_UP = URL_LOG_HOST + "/users/signup";
+
     public static final String URL_POST_AD_SOURCE = URL_SERVER_HOST + "/ad/source";
     /**
      * 新闻阅读时长日志
