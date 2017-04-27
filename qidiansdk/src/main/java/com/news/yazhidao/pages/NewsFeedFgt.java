@@ -484,7 +484,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     e.printStackTrace();
                 }
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_LOADFEED);
             }
         } else {
             if (mFlag) {
@@ -509,7 +508,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     e.printStackTrace();
                 }
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED);
             }
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
@@ -922,7 +920,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mrlSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK);
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
                 Intent intent = new Intent(mContext, TopicSearchAty.class);
                 mContext.startActivity(intent);
@@ -997,9 +994,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
-                                    if (newsFeed.getRtype() == 3) {
-                                        MobclickAgent.onEvent(mContext, "showAd");
-                                    }
                                 }
                             }
                         }

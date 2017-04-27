@@ -74,7 +74,6 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1159,7 +1158,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        MobclickAgent.onEvent(mContext, "clickAd");
                                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
@@ -1206,7 +1204,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MobclickAgent.onEvent(mContext, "clickAd");
                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }

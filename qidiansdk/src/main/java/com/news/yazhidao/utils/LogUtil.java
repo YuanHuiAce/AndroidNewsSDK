@@ -21,6 +21,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.entity.UserLogBasicInfoEntity;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -204,6 +205,7 @@ public class LogUtil {
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
                 } else {
+                    MobclickAgent.onEvent(context, "showAd");
                     object.put("aid", Long.valueOf(newsFeed.getAid()));
                     object.put("source", newsFeed.getSource());
                     object.put("title", newsFeed.getPname());
@@ -336,6 +338,7 @@ public class LogUtil {
     }
 
     public static void adClickLog(Long aid, Context context, String source, String title) {
+        MobclickAgent.onEvent(context, "clickAd");
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -474,6 +477,7 @@ public class LogUtil {
     }
 
     public static void userActionLog(Context context, String atype, String from, String to, Object params, boolean effective) {
+        MobclickAgent.onEvent(context, atype);
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
