@@ -520,7 +520,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpVideoSmall.width = widthv;
             lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
-//            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f), feed.getRtype());
             holder.setGlideDrawViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
@@ -538,37 +537,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
-            final TextView tvTitle = holder.getView(R.id.title_textView);
-            final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
-            final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-//            tvTitle.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
-//                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
-//                    int lineCount = tvTitle.getLineCount();
-//                    if (lineCount >= 3) {
-//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
-//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
-//                    } else {
-//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
-//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
-//                    }
-//                    llSourceOnePic.setLayoutParams(lpSourceContent);
-//                    ivBottomLine.setLayoutParams(lpBottomLine);
-//                }
-//            });
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
-
         }
     }
 

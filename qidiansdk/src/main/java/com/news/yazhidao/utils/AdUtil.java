@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+import android.webkit.WebSettings;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -83,9 +84,9 @@ public class AdUtil {
             /** 设置屏幕分辨率 */
             adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
             /** 客户端浏览器*/
-            adDeviceEntity.setUa("");
+            adDeviceEntity.setUa(WebSettings.getDefaultUserAgent(mContext));
             /** 设置屏幕密度*/
-            adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().toString());
+            adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().densityDpi + "");
             /** 设置用户 SIM 卡的 imsi 号*/
             adDeviceEntity.setImsi(DeviceInfoUtil.getDeviceImsi(mContext));
             /** 设置IP */
