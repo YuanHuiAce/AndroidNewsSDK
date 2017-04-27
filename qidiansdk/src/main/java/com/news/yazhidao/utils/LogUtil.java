@@ -197,7 +197,7 @@ public class LogUtil {
                 JSONObject object = new JSONObject();
                 if (0 != newsFeed.getNid()) {
                     object.put("nid", Long.valueOf(newsFeed.getNid()));
-                    object.put("source", "feed");
+                    object.put("source", newsFeed.getSource());
                     object.put("chid", newsFeed.getChannel());
                     object.put("logtype", newsFeed.getLogtype());
                     object.put("logchid", newsFeed.getLogchid());
@@ -205,7 +205,7 @@ public class LogUtil {
                     object.put("ctime", newsFeed.getCtime());
                 } else {
                     object.put("aid", Long.valueOf(newsFeed.getAid()));
-                    object.put("source", "feed");
+                    object.put("source", newsFeed.getSource());
                     object.put("title", newsFeed.getPname());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());

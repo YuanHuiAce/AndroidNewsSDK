@@ -21,6 +21,7 @@ import com.bumptech.glide.RequestManager;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
@@ -89,6 +90,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                     });
                 }
                 dataRef.onExposured(ivAD);
+                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this);
                 ivAD.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

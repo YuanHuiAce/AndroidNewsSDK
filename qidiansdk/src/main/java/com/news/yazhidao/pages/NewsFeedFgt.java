@@ -1833,7 +1833,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
         RelativeLayout showItemView = getShowItemView(position);
-        if (showItemView != null&&!vPlayer.isPlay() )
+        if (showItemView != null && !vPlayer.isPlay())
             if (getShowItemView(position).getVisibility() == View.GONE) {
                 getShowItemView(position).setVisibility(View.VISIBLE);
             }

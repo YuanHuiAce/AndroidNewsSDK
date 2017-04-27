@@ -1186,6 +1186,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     public void onADLoaded(List<NativeADDataRef> list) {
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
+        AdUtil.upLogAdShowGDTSDK(list, mContext);
         if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
