@@ -67,7 +67,6 @@ public class UpdateService extends Service {
 //        }
 
         manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-
         receiver = new DownloadCompleteReceiver();
 
         //设置下载地址
@@ -83,7 +82,7 @@ public class UpdateService extends Service {
 
         // 显示下载界面
         down.setVisibleInDownloadsUi(true);
-
+        down.setMimeType( "application/vnd.android.package-archive");
         // 设置下载后文件存放的位置
 
         down.setDestinationInExternalFilesDir(this, DOWNLOAD_FOLDER_NAME, DOWNLOAD_FILE_NAME);
@@ -143,8 +142,7 @@ public class UpdateService extends Service {
                 File file = getExternalFilesDir(DOWNLOAD_FOLDER_NAME+File.separator+DOWNLOAD_FILE_NAME);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     Uri uriForDownloadedFile = manager.getUriForDownloadedFile(downId);
-
-                    Logger.d(TAG, "uri=" + uriForDownloadedFile);
+                    Logger.d(TAG, "uri=" + uriForDownloadedFile.getEncodedPath()+":::"+uriForDownloadedFile.getPath());
                 }
                 installApkNew(Uri.fromFile(file));
                 //停止服务并关闭广播

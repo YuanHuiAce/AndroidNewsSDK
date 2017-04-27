@@ -1832,6 +1832,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 break;
             }
         }
+        RelativeLayout showItemView = getShowItemView(position);
+        if (showItemView != null&&!vPlayer.isPlay() )
+            if (getShowItemView(position).getVisibility() == View.GONE) {
+                getShowItemView(position).setVisibility(View.VISIBLE);
+            }
+
         if (isExist) {
             View item = lv.getChildAt(position);
             Log.e(TAG, "item:" + item.toString() + "position:" + position);
