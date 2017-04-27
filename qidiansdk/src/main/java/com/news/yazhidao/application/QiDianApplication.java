@@ -2,6 +2,7 @@ package com.news.yazhidao.application;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -27,6 +28,8 @@ public class QiDianApplication {
         mContext = context;
         mInstance = new QiDianApplication();
         PlayerApplication.initApp(context);
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+        displayMetrics.scaledDensity = displayMetrics.density;
         Context ctx = context.getApplicationContext();
         // 获取当前包名
         String packageName = context.getPackageName();
