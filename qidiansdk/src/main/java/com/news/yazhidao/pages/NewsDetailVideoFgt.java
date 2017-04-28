@@ -462,6 +462,15 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                    if (!TextUtil.isEmptyString(mNewID)) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("nid", Long.valueOf(mNewID));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
+                    }
                 }
             }
         });

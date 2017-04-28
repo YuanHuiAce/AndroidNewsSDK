@@ -20,6 +20,26 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
+
+    productFlavors {
+        yz01{}
+        yz02{}
+        yyh{}
+
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+    }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("../toutiaobaoke.keystore")
+            storePassword "yazhidao"
+            keyAlias "yazhidao"
+            keyPassword "yazhidao"
+            v2SigningEnabled false
+        }
+    }
     sourceSets {
         main {
             jniLibs.srcDir('libs/jniLibs')
@@ -29,8 +49,29 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myConfig
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    if (output.outputFile != null && output.outputFile.name.endsWith('.apk')
+                            && 'release'.equals(variant.buildType.name)) {
+                        def apkFile = new File(
+                                output.outputFile.getParent(),
+                                "资讯_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
+                        output.outputFile = apkFile
+                    }
+                }
+            }
+        }
+        debug {
+            signingConfig signingConfigs.myConfig
         }
     }
+}
+
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
 }
 
 dependencies {
