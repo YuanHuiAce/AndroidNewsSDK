@@ -141,7 +141,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
     private ImageView mFeedClose;
-    private int adPosition;
+    private int adPosition, adFlag;
 
     @Override
     public void onThemeChanged() {
@@ -339,6 +339,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                adFlag = PULL_DOWN_REFRESH;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
             }
@@ -346,6 +347,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                adFlag = PULL_UP_REFRESH;
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
             }
@@ -1149,7 +1151,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
-                        mArrNewsFeed.add(mArrNewsFeed.size() - 2, newsFeed);
+                        mArrNewsFeed.add(mArrNewsFeed.size() - 8, newsFeed);
                     } else {
                         if (mArrNewsFeed.size() > adPosition) {
                             mArrNewsFeed.add(adPosition, newsFeed);
@@ -1167,7 +1169,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (!TextUtil.isListEmpty(list)) {
             LogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             mADs = list;
-            addADToList(PULL_DOWN_REFRESH);
+            addADToList(adFlag);
         }
         isADRefresh = false;
     }
