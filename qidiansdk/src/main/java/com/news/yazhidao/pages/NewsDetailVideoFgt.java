@@ -560,13 +560,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         adLayout.setVisibility(View.VISIBLE);
                         mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
-
                     } else {
-
                         setNoRelatedDate();
                     }
-
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -755,9 +751,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             beanList.addAll(relatedItemEntities);
             mAdapter.setNewsFeed(beanList);
             mAdapter.notifyDataSetChanged();
-            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
-                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-            }
+//            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
+//                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+//            }
             if (footerView_layout.getVisibility() == View.GONE) {
                 footerView_layout.setVisibility(View.VISIBLE);
             }
