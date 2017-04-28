@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        vPlayPlayer = new VPlayPlayer(this);
-
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
@@ -129,10 +127,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
-        //启动服务
-//        Intent service = new Intent(this,UpdateService.class);
-//        startService(service);
-
     }
 
     //设置字体大小不随手机设置而改变
