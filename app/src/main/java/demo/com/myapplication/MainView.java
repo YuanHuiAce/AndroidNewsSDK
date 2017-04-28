@@ -274,7 +274,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             @Override
             public void registerSuccess() {
                 LogUtil.adUserRegist(activity);
-                MobclickAgent.onProfileSignIn(SharedPreManager.mInstance(activity).getUser(activity).getUserId());
+                MobclickAgent.onProfileSignIn(DeviceInfoUtil.getDeviceImei(mContext));
             }
         });
         setChannelList();

@@ -1138,14 +1138,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
                 if (PULL_DOWN_REFRESH == flag) {
-                    if (mArrNewsFeed.size() > adPosition) {
+                    if (mArrNewsFeed.size() > adPosition && adPosition > 0) {
                         mArrNewsFeed.add(adPosition, newsFeed);
                     }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
                         mArrNewsFeed.add(mArrNewsFeed.size() - 2, newsFeed);
                     } else {
-                        if (mArrNewsFeed.size() > adPosition) {
+                        if (mArrNewsFeed.size() > adPosition && adPosition > 0) {
                             mArrNewsFeed.add(adPosition, newsFeed);
                         }
                     }
