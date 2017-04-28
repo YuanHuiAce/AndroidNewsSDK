@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
@@ -33,12 +34,14 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
     private AuthorizedUser authorizedUser;
+    private VPlayPlayer vPlayPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        vPlayPlayer = new VPlayPlayer(this);
 
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
@@ -214,6 +217,11 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
             }
+            if (vPlayPlayer!=null)
+            {
+                if (vPlayPlayer.onKeyDown(keyCode, event))
+                    return true;
+            }
         }
 
         return super.onKeyDown(keyCode, event);
@@ -229,7 +237,12 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.unregisterNetWorkReceiver();
         if (PlayerManager.videoPlayView != null) {
             PlayerManager.videoPlayView.onDestory();
-            PlayerManager.videoPlayView = null;
+//            PlayerManager.videoPlayView = null;
+        }
+        if (vPlayPlayer!=null)
+        {
+            vPlayPlayer.onDestory();
+            vPlayPlayer=null;
         }
         super.onDestroy();
     }

@@ -1359,9 +1359,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                                 RelativeLayout showBg = getItemView(getPlayItemPosition());
                                                 if (showBg != null)
                                                     showBg.setVisibility(View.GONE);
+                                                isAuto = false;
                                             }
-                                        }, 300);
-                                        isAuto = false;
+                                        }, 500);
+
                                     }
                                 } else {
                                     if (vPlayer != null) {
@@ -1501,6 +1502,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mFeedClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAuto = false;
                 if (vPlayer.isPlay()) {
                     vPlayer.stop();
                     vPlayer.release();
@@ -1515,7 +1517,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mFeedSmallLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    isAuto = false;
                     if (PlayerManager.newsFeed == null)
                         return;
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
