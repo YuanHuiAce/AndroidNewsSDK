@@ -133,9 +133,9 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     @Override
     public Resources getResources() {
         Resources res = super.getResources();
-        Configuration config=new Configuration();
+        Configuration config = new Configuration();
         config.setToDefaults();
-        res.updateConfiguration(config,res.getDisplayMetrics() );
+        res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
     }
 
@@ -211,8 +211,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
             }
-            if (vPlayPlayer!=null)
-            {
+            if (vPlayPlayer != null) {
                 if (vPlayPlayer.onKeyDown(keyCode, event))
                     return true;
             }
@@ -229,14 +228,16 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             unregisterReceiver(mReceiver);
         }
         mainView.unregisterNetWorkReceiver();
-        if (PlayerManager.videoPlayView  != null) {
-            PlayerManager.videoPlayView .onDestory();
+
+        if (PlayerManager.videoPlayView != null) {
+            PlayerManager.videoPlayView.onDestory();
             PlayerManager.videoPlayView = null;
         }
-        if (vPlayPlayer!=null)
-        {
+
+
+        if (vPlayPlayer != null) {
             vPlayPlayer.onDestory();
-            vPlayPlayer=null;
+            vPlayPlayer = null;
         }
         super.onDestroy();
     }

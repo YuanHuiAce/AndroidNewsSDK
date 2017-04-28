@@ -402,15 +402,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     @Override
     public void onDestroy() {
+        Logger.e(TAG,"fragment");
         ThemeManager.unregisterThemeChangeListener(this);
         if (mRefreshReceiver != null) {
             mContext.unregisterReceiver(mRefreshReceiver);
         }
-        if (vPlayer != null) {
-            if (vPlayer.getParent() != null)
-                ((ViewGroup) vPlayer.getParent()).removeAllViews();
-        }
-        vPlayer = null;
+//        if (vPlayer != null) {
+//            if (vPlayer.getParent() != null)
+//                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+//        }
+//        vPlayer = null;
         super.onDestroy();
     }
 
@@ -419,6 +420,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.onDestroyView();
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
+        }
+        if (mstrChannelId.equals("44")&&vPlayer!=null)
+        {
+            if (vPlayer.getParent() != null)
+                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+            vPlayer.onDestory();
+            vPlayer=null;
         }
         if (rootView != null) {
             unbindDrawables(rootView);
@@ -1433,18 +1441,22 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (null == vPlayer) {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         }
+//        if (vPlayer != null) {
+//            if (vPlayer.getParent() != null)
+//                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+//        }
 
-        if (vPlayer != null) {
-            if (vPlayer.getParent() != null)
-                ((ViewGroup) vPlayer.getParent()).removeAllViews();
-        }
-
+//
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
                 isAuto = false;
                 if (!NetworkUtils.isConnectionAvailable(mContext))
                     return;
+                if (vPlayer != null) {
+                    if (vPlayer.getParent() != null)
+                        ((ViewGroup) vPlayer.getParent()).removeAllViews();
+                }
                 relativeLayout.setVisibility(View.GONE);
                 PlayerManager.newsFeed = feed;
                 isAd = false;
