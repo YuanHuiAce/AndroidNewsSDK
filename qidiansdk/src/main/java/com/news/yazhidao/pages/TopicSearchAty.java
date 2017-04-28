@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -39,9 +40,9 @@ import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.FetchElementaryRequestPost;
 import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -54,7 +55,6 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -311,26 +311,36 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
         mSearchTip.setText("暂无热门搜索热词");
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        FetchElementaryRequestPost<ArrayList<Element>> fetchElementaryRequestPost = new FetchElementaryRequestPost("http://121.40.34.56/news/baijia/fetchElementary", "", new Response.Listener<ArrayList<Element>>() {
-            @Override
-            public void onResponse(final ArrayList<Element> result) {
-                mHotLabels = result;
-                if (!TextUtil.isListEmpty(mHotLabels)) {
-                    int temp = mHotLabels.size() % PAGE_CAPACITY;
-                    mTotalPage = (temp == 0) ? mHotLabels.size() / PAGE_CAPACITY : mHotLabels.size() / PAGE_CAPACITY + 1;
-                    setHotLabelLayoutData(mCurrPageIndex++);
-                    mSearchLoaddingWrapper.setVisibility(View.GONE);
-                } else {
-                    mSearchTipImg.setVisibility(View.VISIBLE);
-                    mSearchTip.setVisibility(View.VISIBLE);
-                    mSearchLoaddingWrapper.setVisibility(View.GONE);
-                    HotSearchLayout.setVisibility(View.GONE);
-                }
-                if (bgLayout.getVisibility() == View.VISIBLE) {
-                    bgLayout.setVisibility(View.GONE);
-                }
-            }
-        }, new Response.ErrorListener() {
+        StringRequest request = new StringRequest(Request.Method.GET, HttpConstant.URL_SERVER_HOST + "/hot/words",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String result = null;
+                        if (!TextUtil.isEmptyString(response)) {
+                            try {
+                                result = new String(response.getBytes("iso-8859-1"), "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            mHotLabels = GsonUtil.deSerializedByType(result, new TypeToken<ArrayList<Element>>() {
+                            }.getType());
+                        }
+                        if (!TextUtil.isListEmpty(mHotLabels)) {
+                            int temp = mHotLabels.size() % PAGE_CAPACITY;
+                            mTotalPage = (temp == 0) ? mHotLabels.size() / PAGE_CAPACITY : mHotLabels.size() / PAGE_CAPACITY + 1;
+                            setHotLabelLayoutData(mCurrPageIndex++);
+                            mSearchLoaddingWrapper.setVisibility(View.GONE);
+                        } else {
+                            mSearchTipImg.setVisibility(View.VISIBLE);
+                            mSearchTip.setVisibility(View.VISIBLE);
+                            mSearchLoaddingWrapper.setVisibility(View.GONE);
+                            HotSearchLayout.setVisibility(View.GONE);
+                        }
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
+                            bgLayout.setVisibility(View.GONE);
+                        }
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 HotSearchLayout.setVisibility(View.GONE);
@@ -343,12 +353,8 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 }
             }
         });
-        HashMap<String, String> header = new HashMap<>();
-//        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-        header.put("Content-Type", "application/json");
-        fetchElementaryRequestPost.setRequestHeaders(header);
-        fetchElementaryRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(fetchElementaryRequestPost);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
     }
 
     LinearLayout mFootView;

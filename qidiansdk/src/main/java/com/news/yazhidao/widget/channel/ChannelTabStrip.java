@@ -24,7 +24,6 @@ import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -335,7 +334,6 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
                     if (startPosition != position) {
-                        MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_CHANGECHANNEL);
                         JSONObject jsonObject = new JSONObject();
                         try {
                             if (!TextUtil.isListEmpty(channelItems) && channelItems.get(startPosition) != null && channelItems.get(i) != null) {

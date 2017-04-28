@@ -75,18 +75,11 @@
         android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="10dp" />
 
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@+id/source_content_linearLayout"
-        android:background="#f8f8f8"
-        android:visibility="gone" />
-
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
+        android:layout_marginTop="9dp"
         android:background="@drawable/list_divider" />
 </RelativeLayout>

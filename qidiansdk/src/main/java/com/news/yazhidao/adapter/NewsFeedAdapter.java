@@ -41,7 +41,6 @@ import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -422,6 +421,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             });
         } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
+            NativeADDataRef dataRef = feed.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_item_one_pic));
+            }
             int cardWidth = mCardWidth;
             int cardHeight = (int) (mCardWidth * 10 / 19.0f);
             final String strTitle = feed.getTitle();
@@ -448,6 +451,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
+            NativeADDataRef dataRef = feed.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_big_pic2));
+            }
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             int height = (int) (with * 10 / 19.0f);
@@ -513,7 +520,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpVideoSmall.width = widthv;
             lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
-//            holder.setGlideDraweeViewURI(R.id.title_img_View, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f), feed.getRtype());
             holder.setGlideDrawViewURI(R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
@@ -531,37 +537,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-//            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
-            final TextView tvTitle = holder.getView(R.id.title_textView);
-            final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
-            final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-//            tvTitle.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
-//                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
-//                    int lineCount = tvTitle.getLineCount();
-//                    if (lineCount >= 3) {
-//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
-//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
-//                    } else {
-//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
-//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
-//                    }
-//                    llSourceOnePic.setLayoutParams(lpSourceContent);
-//                    ivBottomLine.setLayoutParams(lpBottomLine);
-//                }
-//            });
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -792,17 +772,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 if (feed.getDataRef() != null) {
-                    MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, feed.getPname());
                     NativeADDataRef dataRef = feed.getDataRef();
-                    dataRef.onExposured(rlNewsContent);
                     dataRef.onClicked(rlNewsContent);
                     return;
                 }
                 firstClick = System.currentTimeMillis();
                 int type = feed.getRtype();
                 if (type == 3) {
-                    MobclickAgent.onEvent(mContext, "clickAd");
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
                     AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {

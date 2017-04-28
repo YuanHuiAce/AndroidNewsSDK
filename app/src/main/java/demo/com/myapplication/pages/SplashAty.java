@@ -21,6 +21,7 @@ import com.bumptech.glide.RequestManager;
 import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.LogUtil;
@@ -53,6 +54,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     private TextView tvSkip;
     private NativeAD mNativeAD;
     private int second = 4;
+    private boolean mFirst;
 
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
@@ -89,6 +91,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                     });
                 }
                 dataRef.onExposured(ivAD);
+                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this);
                 ivAD.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -198,17 +201,78 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     protected void setContentView() {
         mHandler = new Handler(this);
         ShareSDK.initSDK(this);
+        UserManager.registerVisitor(this, null);
         //展示广点通sdk
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
-        UserManager.registerVisitor(this, null);
         mRequestManager = Glide.with(this);
         mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
         mNativeAD.loadAD(1);
+//        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false)) {
+//            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
+//            mNativeAD.loadAD(1);
+//            UserManager.registerVisitor(this, null);
+//        } else {
+//            UserManager.registerVisitor(this, new UserManager.RegisterVisitorListener() {
+//                @Override
+//                public void registerSuccess() {
+//                    Log.i("tag","1111");
+//                    if (SharedPreManager.mInstance(SplashAty.this).getUser(SplashAty.this) != null) {
+//                        String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+//                        ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+//                        adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(SplashAty.this).getUser(SplashAty.this).getMuid());
+//                        Gson gson = new Gson();
+//                        //加入详情页广告位id
+//                        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(SplashAty.this, CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID)));
+//                        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+//                        NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+//                            @Override
+//                            public void onResponse(final ArrayList<NewsFeed> result) {
+//                                Log.i("tag","2222");
+//                                if (!TextUtil.isListEmpty(result)) {
+//                                    LogUtil.adGetLog(SplashAty.this, 1, result.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+//                                    final NewsFeed newsFeed = result.get(0);
+//                                    if (newsFeed != null) {
+//                                        final ArrayList<String> imgs = newsFeed.getImgs();
+//                                        if (!TextUtil.isListEmpty(imgs)) {
+//                                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+//                                            ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                                                @Override
+//                                                public void onGlobalLayout() {
+//                                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+//                                                }
+//                                            });
+//                                        }
+//                                        ivAD.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View view) {
+//                                                LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
+//                                                Intent AdIntent = new Intent(SplashAty.this, NewsDetailWebviewAty.class);
+//                                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+//                                                Log.i("tag", newsFeed.getPurl() + "url");
+//                                                SplashAty.this.startActivity(AdIntent);
+//                                            }
+//                                        });
+//                                        AdUtil.upLoadAd(newsFeed, SplashAty.this);
+//                                    }
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//Log.i("tag","3333");
+//                            }
+//                        });
+//                        newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//                        requestQueue.add(newsFeedRequestPost);
+//                    }
+//                }
+//            });
+//        }
         mRunnable = new Runnable() {
             @Override
             public void run() {

@@ -63,9 +63,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("1", "推荐", 1, true));
         mChannels.add(new ChannelItem("44", "视频", 2, true));
         mChannels.add(new ChannelItem("21", "搞笑", 3, true));
-        mChannels.add(new ChannelItem("17", "养生", 4, true));
+        mChannels.add(new ChannelItem("26", "美女", 4, true));
         mChannels.add(new ChannelItem("2", "社会", 5, true));
-        mChannels.add(new ChannelItem("26", "美女", 6, true));
+        mChannels.add(new ChannelItem("17", "养生", 6, true));
         mChannels.add(new ChannelItem("8", "军事", 7, true));
         mChannels.add(new ChannelItem("6", "体育", 8, true));
         mChannels.add(new ChannelItem("5", "汽车", 9, true));
@@ -174,14 +174,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @return
      */
     public static synchronized DatabaseHelper getHelper(Context context) {
-        context=context.getApplicationContext();
         if (instance == null) {
             synchronized (DatabaseHelper.class) {
                 if (instance == null)
                     instance = new DatabaseHelper(context);
             }
         }
-
         return instance;
     }
 

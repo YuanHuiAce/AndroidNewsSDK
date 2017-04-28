@@ -74,7 +74,6 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +139,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private int viewpointPage = 1;
     private int mIntScorllY;
     //广告
+    private int mAdCount = 2;
     private NativeAD mNativeAD;
     private int adPosition;
     private List<NativeADDataRef> marrlist;
@@ -841,7 +841,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
         if (!TextUtil.isListEmpty(relatedItemEntities)) {
-            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size()) {
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size() && adPosition > 0) {
                 NativeADDataRef dataRelate = null;
                 if (marrlist.size() == 1) {
                     dataRelate = marrlist.get(0);
@@ -851,7 +851,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 if (dataRelate != null) {
                     RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
                     relatedItemEntity.setRtype(3);
-                    relatedItemEntity.setStyle(1);
+                    relatedItemEntity.setStyle(50);
                     relatedItemEntity.setTitle(dataRelate.getDesc());
                     relatedItemEntity.setPname(dataRelate.getTitle());
                     relatedItemEntity.setImgUrl(dataRelate.getImgUrl());
@@ -1127,7 +1127,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
-            mNativeAD.loadAD(2);
+            mNativeAD.loadAD(mAdCount);
             adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -1142,7 +1142,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                     @Override
                     public void onResponse(final ArrayList<NewsFeed> result) {
                         if (!TextUtil.isListEmpty(result)) {
-                            LogUtil.adGetLog(mContext, 1, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                            LogUtil.adGetLog(mContext, mAdCount, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                             final NewsFeed newsFeed = result.get(0);
                             if (newsFeed != null) {
                                 adtvTitle.setText(newsFeed.getTitle());
@@ -1159,7 +1159,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        MobclickAgent.onEvent(mContext, "clickAd");
                                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
@@ -1186,8 +1185,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     public void onADLoaded(List<NativeADDataRef> list) {
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
+        AdUtil.upLogAdShowGDTSDK(list, mContext);
         if (!TextUtil.isListEmpty(marrlist)) {
-            LogUtil.adGetLog(mContext, 1, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
                 adtvTitle.setText(dataRef.getDesc());
@@ -1205,7 +1205,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MobclickAgent.onEvent(mContext, "clickAd");
                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }
@@ -1218,7 +1217,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             if (dataRelate != null && !TextUtil.isListEmpty(beanList) && beanList.size() > adPosition) {
                 RelatedItemEntity relatedItemEntity = new RelatedItemEntity();
                 relatedItemEntity.setRtype(3);
-                relatedItemEntity.setStyle(1);
+                relatedItemEntity.setStyle(50);
                 relatedItemEntity.setTitle(dataRelate.getDesc());
                 relatedItemEntity.setPname(dataRelate.getTitle());
                 relatedItemEntity.setImgUrl(dataRelate.getImgUrl());

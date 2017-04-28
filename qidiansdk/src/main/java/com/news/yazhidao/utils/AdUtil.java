@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+import android.webkit.WebSettings;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -28,6 +29,7 @@ import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.qq.e.ads.nativ.NativeADDataRef;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,9 +84,9 @@ public class AdUtil {
             /** 设置屏幕分辨率 */
             adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
             /** 客户端浏览器*/
-            adDeviceEntity.setUa("");
+            adDeviceEntity.setUa(WebSettings.getDefaultUserAgent(mContext));
             /** 设置屏幕密度*/
-            adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().toString());
+            adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().densityDpi + "");
             /** 设置用户 SIM 卡的 imsi 号*/
             adDeviceEntity.setImsi(DeviceInfoUtil.getDeviceImsi(mContext));
             /** 设置IP */
@@ -193,6 +195,21 @@ public class AdUtil {
         };
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
+    }
+
+    public static void upLogAdShowGDTSDK(List<NativeADDataRef> dataRefs, Context context) {
+        if (!TextUtil.isListEmpty(dataRefs)) {
+            ArrayList<NewsFeed> arrayList = new ArrayList<>();
+            for (NativeADDataRef dataRef : dataRefs) {
+                NewsFeed newsFeed = new NewsFeed();
+                newsFeed.setPname(dataRef.getTitle());
+                newsFeed.setCtime(System.currentTimeMillis());
+                newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
+                arrayList.add(newsFeed);
+            }
+            LogUtil.userShowLog(arrayList, context);
+        }
     }
 
     public static void upLoadAd(NewsFeed feed, Context context) {
