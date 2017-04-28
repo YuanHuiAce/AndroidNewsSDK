@@ -406,6 +406,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mRefreshReceiver != null) {
             mContext.unregisterReceiver(mRefreshReceiver);
         }
+        if (vPlayer != null) {
+            if (vPlayer.getParent() != null)
+                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+        }
+        vPlayer = null;
         super.onDestroy();
     }
 
@@ -1427,6 +1432,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
+        }
+
+        if (vPlayer != null) {
+            if (vPlayer.getParent() != null)
+                ((ViewGroup) vPlayer.getParent()).removeAllViews();
         }
 
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
     private AuthorizedUser authorizedUser;
-    private VPlayPlayer vPlayPlayer;
+    public static VPlayPlayer vPlayPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,9 +229,9 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             unregisterReceiver(mReceiver);
         }
         mainView.unregisterNetWorkReceiver();
-        if (PlayerManager.videoPlayView != null) {
-            PlayerManager.videoPlayView.onDestory();
-//            PlayerManager.videoPlayView = null;
+        if (PlayerManager.videoPlayView  != null) {
+            PlayerManager.videoPlayView .onDestory();
+            PlayerManager.videoPlayView = null;
         }
         if (vPlayPlayer!=null)
         {
