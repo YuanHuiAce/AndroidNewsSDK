@@ -578,7 +578,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
                     }
                 }
             }

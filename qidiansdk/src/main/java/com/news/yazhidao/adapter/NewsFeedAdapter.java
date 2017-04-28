@@ -785,6 +785,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
                     Intent intent = new Intent(mContext, NewsTopicAty.class);
+                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                     intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     mContext.startActivity(intent);

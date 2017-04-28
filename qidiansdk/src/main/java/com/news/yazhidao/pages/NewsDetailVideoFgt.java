@@ -462,6 +462,15 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                    if (!TextUtil.isEmptyString(mNewID)) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("nid", Long.valueOf(mNewID));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
+                    }
                 }
             }
         });
@@ -560,13 +569,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         adLayout.setVisibility(View.VISIBLE);
                         mDetailSharedTitleLayout.setVisibility(View.VISIBLE);
                         mNewsDetailList.getRefreshableView().addFooterView(mVideoDetailFootView);
-
                     } else {
-
                         setNoRelatedDate();
                     }
-
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -755,9 +760,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             beanList.addAll(relatedItemEntities);
             mAdapter.setNewsFeed(beanList);
             mAdapter.notifyDataSetChanged();
-            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
-                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-            }
+//            if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
+//                mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+//            }
             if (footerView_layout.getVisibility() == View.GONE) {
                 footerView_layout.setVisibility(View.VISIBLE);
             }
