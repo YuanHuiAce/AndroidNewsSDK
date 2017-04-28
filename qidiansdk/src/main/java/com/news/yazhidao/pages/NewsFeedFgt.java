@@ -1351,7 +1351,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         playItemView.addView(vPlayer);
                                         vPlayer.showBottomControl(true);
                                     } else {
-                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextPosition() + 1, 0);
+                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 1, 0);
                                         mHandler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
@@ -1712,6 +1712,29 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         return -1;
     }
+
+
+    /**
+     * 获取下一个item位置
+     *
+     * @return
+     */
+    public int getNextItemPosition() {
+        for (int i = 0; i < mArrNewsFeed.size(); i++) {
+            if (mArrNewsFeed.get(i).getNid() == cPostion) {
+//                for (position = i + 1; position < mArrNewsFeed.size(); position++) {
+//                    if (mArrNewsFeed.get(position).getVideourl() != null) {
+//                        if (mArrNewsFeed.get(position - 1).getVideourl() == null)
+//                            isAd = true;
+//                        return position;
+//                    }
+//                }
+                return  i;
+            }
+        }
+        return -1;
+    }
+
 
 
     /**
