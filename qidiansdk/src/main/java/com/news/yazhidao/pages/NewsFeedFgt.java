@@ -1270,8 +1270,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult");
-
-
         if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
