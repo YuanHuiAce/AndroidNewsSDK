@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:background="@android:color/transparent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
 
     <ImageView
         android:id="@+id/player_btn"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:src="@drawable/player_pause_play" />
 
     <LinearLayout
         android:id="@+id/ll_container_tools"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
         android:background="#66000000"
         android:gravity="center_vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_height="40dp"
-        android:layout_width="match_parent"
         android:orientation="horizontal"
         android:paddingLeft="13dp"
         android:paddingRight="13dp">
 
         <ImageView
             android:id="@+id/sound"
-            android:layout_gravity="center_vertical"
-            android:layout_height="20dp"
             android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
             android:src="@mipmap/sound_open_icon" />
 
         <TextView
             android:id="@+id/time"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:paddingLeft="5dp"
             android:paddingRight="0dp"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <com.github.jinsedeyuzhou.view.CustomSeekBar
-            style="@style/SeekBarAppTheme"
             android:id="@+id/seekbar"
+            style="@style/SeekBarAppTheme"
+            android:layout_width="0dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:layout_width="0dp" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/all_time"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/full"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:padding="8dp"
             android:src="@mipmap/ic_fullscreen" />
     </LinearLayout>
 

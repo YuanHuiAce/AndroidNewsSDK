@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -71,6 +72,7 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.CustomDialog;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.VideoContainer;
@@ -1113,6 +1115,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (!NetworkUtils.isConnectionAvailable(mContext)) {
                     ToastUtil.toastShort("无网络，请稍后重试！");
                     return;
+                }else if(NetworkUtils.getNetworkType(mContext)==6)
+                {
+                    showNetworkDialog();
+                    return ;
                 }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
@@ -1195,7 +1201,37 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
         });
     }
+    /**
+     * 自定义升级弹窗
+     */
+    protected void showNetworkDialog() {
+        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+        builder.setTitle("流量使用提示");
+        builder.setMessage("继续播放，运营商收取流量费用");
+        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
+        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mVideoShowBg.setVisibility(View.GONE);
+                mDetailVideo.setVisibility(View.VISIBLE);
+                if (vplayer.getParent() != null)
+                    ((ViewGroup) vplayer.getParent()).removeAllViews();
+                vplayer.setTitle(mResult.getTitle());
+                mDetailVideo.addView(vplayer);
+                vplayer.play(mResult.getVideourl(), position);
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+
+    }
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
