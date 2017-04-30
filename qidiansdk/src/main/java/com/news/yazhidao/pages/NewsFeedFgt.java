@@ -1504,7 +1504,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     return;
                 }
 
-                CrashReport.testJavaCrash();
                 relativeLayout.setVisibility(View.GONE);
                 PlayerManager.newsFeed = feed;
                 isAd = false;
