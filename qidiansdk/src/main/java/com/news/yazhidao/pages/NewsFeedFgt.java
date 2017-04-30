@@ -73,6 +73,7 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.transitionseverywhere.TransitionManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -1418,10 +1419,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SharePopupWindow.ShareDismiss shareDismiss = new SharePopupWindow.ShareDismiss() {
         @Override
         public void shareDismiss() {
-            mivShareBg.startAnimation(mAlphaAnimationOut);
-            mivShareBg.setVisibility(View.INVISIBLE);
+//            mivShareBg.startAnimation(mAlphaAnimationOut);
+//            mivShareBg.setVisibility(View.INVISIBLE);
         }
     };
+    private boolean isFirstPlay;
 
     /**
      * 自定义升级弹窗
@@ -1441,6 +1443,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 relativeLayout.setVisibility(View.GONE);
+
                 PlayerManager.newsFeed = feed;
                 isAd = false;
                 cPostion = feed.getNid();
@@ -1456,11 +1459,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 mItemVideo.removeAllViews();
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.setDuration(feed.getDuration());
-                vPlayer.play(feed.getVideourl());
-                mItemVideo.addView(vPlayer);
+                vPlayer.setAllowModible(true);
                 vPlayer.setShowContoller(false);
+                mItemVideo.addView(vPlayer);
+                vPlayer.play(feed.getVideourl());
+                if (!isFirstPlay)
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            vPlayer.play(feed.getVideourl());
+                        }
+                    }, 100);
                 lastPostion = cPostion;
-                dialog.dismiss();
+                isFirstPlay = true;
                 dialog.dismiss();
             }
         });
@@ -1493,7 +1504,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     return;
                 }
 
-
+                CrashReport.testJavaCrash();
                 relativeLayout.setVisibility(View.GONE);
                 PlayerManager.newsFeed = feed;
                 isAd = false;
@@ -1547,12 +1558,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mivShareBg.startAnimation(mAlphaAnimationIn);
-                        mivShareBg.setVisibility(View.VISIBLE);
-                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
-                        mSharePopupWindow.setVideo(true);
-                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
-                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//                        mivShareBg.startAnimation(mAlphaAnimationIn);
+//                        mivShareBg.setVisibility(View.VISIBLE);
+//                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
+//                        mSharePopupWindow.setVideo(true);
+//                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
+//                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                     }
                 });
 
@@ -1622,7 +1633,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
-                    if (position != -1) {
+                    if (position != -1 && NetworkUtils.getNetworkType(mContext) == 3) {
                         if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                             if (vPlayer != null) {
                                 vPlayer.stop();
