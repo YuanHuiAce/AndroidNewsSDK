@@ -1176,6 +1176,25 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
+        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
+            @Override
+            public void onShare() {
+
+            }
+
+            @Override
+            public void onPlayCancel() {
+                if (vplayer != null) {
+                    vplayer.stop();
+                    vplayer.release();
+                }
+                mVideoShowBg.setVisibility(View.VISIBLE);
+                mDetailVideo.setVisibility(View.GONE);
+                if (vplayer.getParent() != null)
+                    ((ViewGroup) vplayer.getParent()).removeAllViews();
+            }
+        });
+
 
         vplayer.setCompletionListener(new IPlayer.CompletionListener() {
             @Override
