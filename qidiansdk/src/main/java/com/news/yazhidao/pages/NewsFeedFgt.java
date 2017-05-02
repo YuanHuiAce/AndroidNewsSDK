@@ -15,11 +15,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -73,7 +71,6 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.transitionseverywhere.TransitionManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -1501,7 +1498,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext))
                     return;
-                else if (NetworkUtils.getNetworkType(mContext) == 6) {
+                else if (NetworkUtils.isMobileAvailable(mContext)) {
                     showNetworkDialog(relativeLayout, feed);
                     return;
                 }
@@ -1640,7 +1637,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
-                    if (position != -1 && NetworkUtils.getNetworkType(mContext) == 3) {
+                    if (position != -1 && NetworkUtils.isWifiAvailable(mContext)) {
                         if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                             if (vPlayer != null) {
                                 vPlayer.stop();

@@ -1115,7 +1115,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (!NetworkUtils.isConnectionAvailable(mContext)) {
                     ToastUtil.toastShort("无网络，请稍后重试！");
                     return;
-                } else if (NetworkUtils.getNetworkType(mContext) == 6) {
+                } else if (NetworkUtils.isMobileAvailable(mContext)) {
                     showNetworkDialog();
                     return;
                 }
@@ -1168,7 +1168,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        vp.start(mResult.getVideourl());
 
 
-        if (NetworkUtils.getNetworkType(mContext) == 3) {
+        if (NetworkUtils.isWifiAvailable(mContext)) {
             mVideoShowBg.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl(), position);
