@@ -1115,18 +1115,19 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (!NetworkUtils.isConnectionAvailable(mContext)) {
                     ToastUtil.toastShort("无网络，请稍后重试！");
                     return;
-                }else if(NetworkUtils.getNetworkType(mContext)==6)
-                {
+                } else if (NetworkUtils.getNetworkType(mContext) == 6) {
                     showNetworkDialog();
-                    return ;
+                    return;
                 }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
                 if (vplayer.getParent() != null)
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
                 vplayer.setTitle(mResult.getTitle());
-                mDetailVideo.addView(vplayer);
                 vplayer.play(mResult.getVideourl(), position);
+                mDetailVideo.addView(vplayer);
+
+
             }
         });
         mSmallLayout.setClickable(true);
@@ -1175,6 +1176,25 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
+        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
+            @Override
+            public void onShare() {
+
+            }
+
+            @Override
+            public void onPlayCancel() {
+                if (vplayer != null) {
+                    vplayer.stop();
+                    vplayer.release();
+                }
+                mVideoShowBg.setVisibility(View.VISIBLE);
+                mDetailVideo.setVisibility(View.GONE);
+                if (vplayer.getParent() != null)
+                    ((ViewGroup) vplayer.getParent()).removeAllViews();
+            }
+        });
+
 
         vplayer.setCompletionListener(new IPlayer.CompletionListener() {
             @Override
@@ -1201,6 +1221,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
         });
     }
+
+
     /**
      * 自定义升级弹窗
      */
@@ -1220,11 +1242,19 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void onClick(DialogInterface dialog, int which) {
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer.getParent() != null)
+                if (vplayer.getParent() != null) {
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
+                }
                 vplayer.setTitle(mResult.getTitle());
+                vplayer.setAllowModible(true);
                 mDetailVideo.addView(vplayer);
                 vplayer.play(mResult.getVideourl(), position);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        vplayer.play(mResult.getVideourl(), position);
+                    }
+                }, 100);
                 dialog.dismiss();
             }
         });
@@ -1232,12 +1262,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         builder.create().show();
 
     }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-
                 case VIDEO_SMALL:
                     if (vplayer == null)
                         return;

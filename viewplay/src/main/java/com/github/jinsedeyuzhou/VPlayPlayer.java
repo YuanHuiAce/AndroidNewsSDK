@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jinsedeyuzhou.media.IjkVideoView;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
@@ -434,6 +435,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             if (isAllowModible && NetworkUtils.getNetworkType(mContext) == 6 || NetworkUtils.getNetworkType(mContext) == 3) {
                 doPauseResume();
             }
+            else
+            {
+                Toast.makeText(mContext,"请检查您的网络",Toast.LENGTH_SHORT).show();
+            }
 //            else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.getNetworkType(mContext) == 6) {
 //                mVideoDuration.setText(generateTime(duration));
 //                mVideoNetTie.setVisibility(View.VISIBLE);
@@ -442,7 +447,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         } else if (id == R.id.full) {
             toggleFullScreen();
         } else if (id == R.id.sound) {
-            if (!PlayerApplication.getInstance().isSound) {
+            Log.v(TAG,"onclick:"+PlayerApplication.isSound);
+            if (!PlayerApplication.isSound) {
                 //静音
                 sound.setImageResource(R.mipmap.sound_mult_icon);
                 audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
@@ -451,7 +457,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 sound.setImageResource(R.mipmap.sound_open_icon);
                 audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
             }
-            PlayerApplication.getInstance().isSound = !PlayerApplication.getInstance().isSound;
+            PlayerApplication.isSound = !PlayerApplication.isSound;
         } else if (id == R.id.iv_video_finish) {
             if (!onBackPressed())
                 activity.finish();
@@ -527,7 +533,20 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         return super.onTouchEvent(event);
     }
 
-
+    /**
+     * 更新音量键
+     */
+    public void toggleVolume()
+    {
+        Log.v(TAG,"toggleVolume:"+PlayerApplication.isSound);
+        if (PlayerApplication.getInstance().isSound) {
+            //静音
+            sound.setImageResource(R.mipmap.sound_mult_icon);
+        } else {
+            //取消静音
+            sound.setImageResource(R.mipmap.sound_open_icon);
+        }
+    }
     /**
      * 切换全屏
      */
@@ -1266,8 +1285,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             releaseBitmap();
             mVideoView.start();
             play.setSelected(true);
+            toggleVolume();
 //                isAutoPause = false;
-
+            if (NetworkUtils.getNetworkType(mContext)==6)
+                mVideoNetTie.setVisibility(View.GONE);
             statusChange(PlayStateParams.STATE_PLAYING);
 //            }
         }
@@ -1462,10 +1483,14 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
             } else if (NetworkUtils.getNetworkType(activity) == 1) {// 网络链接断开
                 pause();
-                hide();
+                isShowContoller=true;
+                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
+                mVideoNetTie.setVisibility(View.GONE);
             } else {
+                Toast.makeText(mContext, "未知网络", Toast.LENGTH_SHORT).show();
+                isShowContoller=true;
                 pause();
-                hide();
+                mVideoNetTie.setVisibility(View.GONE);
             }
 
 
