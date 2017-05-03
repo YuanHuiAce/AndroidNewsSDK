@@ -35,11 +35,15 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.jinsedeyuzhou.adapter.PlayerAdapter;
+import com.github.jinsedeyuzhou.bean.PlayerFeed;
 import com.github.jinsedeyuzhou.media.IjkVideoView;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.github.jinsedeyuzhou.utils.WindowUtils;
 import com.github.jinsedeyuzhou.view.CustomSeekBar;
 import com.github.jinsedeyuzhou.view.MarqueeTextView;
+
+import java.util.ArrayList;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -190,7 +194,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     };
 
 
-
     public VPlayPlayer(Context context) {
         super(context);
         init(context);
@@ -212,9 +215,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         this.mContext = context;
         activity = (Activity) context;
         initView();
+        initMediaQuality();
         initAction();
         initMediaPlayer();
+
     }
+
 
     private void initView() {
         View.inflate(mContext, R.layout.player_video, this);
@@ -261,8 +267,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         mVideoTitle = (MarqueeTextView) findViewById(R.id.tv_video_title);
         mVideoLock = (ImageView) findViewById(R.id.app_video_lock);
         mVideoShare = (ImageView) findViewById(R.id.app_video_share);
-        mMediaList = (TextView) findViewById(R.id.tv_media_list);
-        mListView = (ListView) findViewById(R.id.lv_media_quality);
+
 
         initHeight = layout.getLayoutParams().height;
         screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
@@ -297,7 +302,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 //      pauseImage.setOnClickListener(onClickListener);
         mVideoNetTieConfirm.setOnClickListener(this);
         mVideoNetTieCancel.setOnClickListener(this);
-        mMediaList.setOnClickListener(this);
+
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
         detector = new GestureDetector(mContext, new PlayGestureListener());
@@ -432,6 +437,22 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     }
 
+    private FrameLayout mMediaQuality;
+    private ArrayList<PlayerFeed> lists;
+    private PlayerAdapter playerAdapter;
+
+    private void initMediaQuality() {
+        //视频列表
+        mMediaQuality = (FrameLayout) findViewById(R.id.fl_media_quality);
+        mMediaList = (TextView) findViewById(R.id.tv_media_list);
+        mListView = (ListView) findViewById(R.id.lv_media_quality);
+        mMediaList.setOnClickListener(this);
+        lists = new ArrayList<>();
+        playerAdapter = new PlayerAdapter(lists, mContext);
+        mListView.setAdapter(playerAdapter);
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -490,8 +511,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mVideoNetTie.setVisibility(View.GONE);
             if (onShareListener != null)
                 onShareListener.onPlayCancel();
-        }else if (id==R.id.tv_media_list)
-        {
+        } else if (id == R.id.tv_media_list) {
 
         }
     }
@@ -513,7 +533,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 } else {
                     MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
                             event.getAction(), x, y, event.getMetaState());
-                 return   seekBar.onTouchEvent(me);
+                    return seekBar.onTouchEvent(me);
 
 
                 }
@@ -529,9 +549,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                     break;
             }
 
-        }else  if (id==R.id.fl_media_quality)
-        {
-            
+        } else if (id == R.id.fl_media_quality) {
+
         }
         return super.onTouchEvent(event);
     }
@@ -678,6 +697,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     private void hideAll() {
         top_box.setVisibility(View.GONE);
+        mMediaQuality.setVisibility(View.GONE);
         showBottomControl(false);
         progressBar.setVisibility(View.GONE);
         appVideoPlay.setVisibility(View.GONE);
@@ -692,8 +712,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
 
     private void hide(boolean show) {
-        if (!portrait)
+        if (!portrait) {
             top_box.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        }
 
         showBottomControl(show);
         bottomProgress.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -744,6 +766,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 return;
             if (portrait) {
                 top_box.setVisibility(View.GONE);
+                mMediaQuality.setVisibility(View.GONE);
                 Log.v(TAG, "initHeight" + initHeight);
                 params.height = initHeight;
                 setLayoutParams(params);
@@ -1011,6 +1034,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     /**
      * 处理音量键，避免外部按音量键后导航栏和状态栏显示出来退不回去的状态
+     *
      * @param keyCode
      * @return
      */
@@ -1176,11 +1200,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     //==========================对外提供方法==============================
 
     public void isOpenOrientation(boolean isOpen) {
-        if (isOpen&&!isLock) {
+        if (isOpen && !isLock) {
             orientationEventListener.enable();
             mVideoLock.setImageResource(R.mipmap.video_unlock);
-        }
-        else {
+        } else {
             orientationEventListener.disable();
             mVideoLock.setImageResource(R.mipmap.video_lock);
         }
@@ -1191,10 +1214,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         return mVideoView.getCurrentPosition();
     }
 
-    public void setAllowTouch(boolean isAllowTouch)
-    {
-        this.isAllowTouch=isAllowTouch;
+    public void setAllowTouch(boolean isAllowTouch) {
+        this.isAllowTouch = isAllowTouch;
     }
+
     public boolean getAllowModible() {
         return isAllowModible;
     }
@@ -1282,12 +1305,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     public void onResume() {
         if (status == PlayStateParams.STATE_PAUSED) {
 //            if (isAutoPause) {
-                releaseBitmap();
-                mVideoView.start();
-                play.setSelected(true);
+            releaseBitmap();
+            mVideoView.start();
+            play.setSelected(true);
 //                isAutoPause = false;
 
-                statusChange(PlayStateParams.STATE_PLAYING);
+            statusChange(PlayStateParams.STATE_PLAYING);
 //            }
         }
     }
@@ -1365,16 +1388,15 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     }
 
-    public void seekToNewPosition(int newPosition)
-    {
-        this.newPosition=newPosition;
+    public void seekToNewPosition(int newPosition) {
+        this.newPosition = newPosition;
         endGesture();
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return url;
     }
+
     public void setDuration(long duration) {
         this.duration = duration;
     }

@@ -5,17 +5,21 @@
 
     <FrameLayout
         android:id="@+id/fl_media_quality"
-        android:layout_width="300dp"
+        android:layout_width="232dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="#191919"
-        android:translationX="300dp"
+        android:background="#2a2a2a"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:translationX="232dp"
        >
         <ListView
             android:id="@+id/lv_media_quality"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:dividerHeight="8dp"
             android:divider="@null" />
     </FrameLayout>
 </merge>

@@ -33,4 +33,5 @@ dependencies {
 //    compile 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.6.2'
     //# ExoPlayer as IMediaPlayer: optional, experimental
     compile 'tv.danmaku.ijk.media:ijkplayer-exo:0.6.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
