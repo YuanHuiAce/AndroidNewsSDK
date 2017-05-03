@@ -2,8 +2,10 @@ package demo.com.myapplication;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.news.yazhidao.application.QiDianApplication;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,6 +19,8 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         QiDianApplication.initQDApp(this);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        displayMetrics.scaledDensity = displayMetrics.density;
 //        Context ctx =getApplicationContext();
 //        // 获取当前包名
 //        String packageName = getPackageName();

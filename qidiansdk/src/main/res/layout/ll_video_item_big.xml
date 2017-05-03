@@ -5,17 +5,17 @@
     android:background="@drawable/bg_feed_list_select">
 
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="8dp"
         android:maxLines="2"
         android:textColor="#333333"
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
 
     <!--<com.news.yazhidao.widget.TextViewExtend-->
     <!--android:id="@+id/type_textView"-->
@@ -35,27 +35,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <ImageView
             android:id="@+id/title_img_View"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />
+
         <ImageView
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:layout_centerInParent="true"
             android:src="@drawable/video_play" />
+
         <TextView
             android:id="@+id/tv_video_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:paddingRight="6dp"
+            android:layout_alignParentRight="true"
             android:paddingBottom="5dp"
+            android:paddingRight="6dp"
             android:textColor="@color/white"
             android:textSize="10sp" />
     </RelativeLayout>
@@ -69,14 +71,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout_video"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="@dimen/usual_margin"
+        android:layout_marginRight="@dimen/usual_margin"
         android:layout_marginTop="10dp" />
-
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
-        android:background="#f8f8f8" />
+        android:layout_marginTop="9dp"
+        android:background="@drawable/list_divider" />
 </RelativeLayout>

@@ -42,6 +42,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsTopicHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +76,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private RelativeLayout mTopicHeader;
     private NewsFeed mUsedNewsFeed;
     long lastTime, nowTime;
+    private String mSource;
 
     @Override
     protected void setContentView() {
@@ -85,6 +87,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initializeViews() {
         mtid = getIntent().getIntExtra(KEY_NID, 0);
+        mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -188,6 +191,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     mAdapter.setTopicData(marrTopicClass);
                     mAdapter.notifyDataSetChanged();
                     bgLayout.setVisibility(View.GONE);
+                    LogUtil.userClickLog(mUsedNewsFeed, NewsTopicAty.this, mSource);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -257,11 +261,13 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("newsTopic");
         lastTime = System.currentTimeMillis();
     }
 
     @Override
     protected void onPause() {
+        MobclickAgent.onPageEnd("newsTopic");
         nowTime = System.currentTimeMillis();
         //上报日志
         LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%");

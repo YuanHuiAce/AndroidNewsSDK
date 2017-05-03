@@ -33,7 +33,7 @@
             android:textSize="10sp" />
     </RelativeLayout>
 
-    <com.news.yazhidao.widget.EllipsizeEndTextView
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,19 +41,19 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/title_img_View"
-        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/newsFeed_titleColor"
-        android:textSize="@dimen/new_font1"  />
+        android:textSize="@dimen/new_font1" />
 
     <include
         android:id="@+id/source_content_linearLayout"
         layout="@layout/ll_news_item_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/layout_video"
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/layout_video" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"

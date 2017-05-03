@@ -61,6 +61,9 @@ public  class PlayStateParams {
      */
     public static final int MESSAGE_HIDE_CONTOLL = 5;
 
+    /**
+     * 网络提示
+     */
 
     public static final int MESSAGE_SHOW_DIALOG = 6;
 

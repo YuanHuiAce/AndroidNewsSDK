@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.entity.AuthorizedUser;
@@ -19,6 +22,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.umeng.analytics.MobclickAgent;
 
 import demo.com.myapplication.MainView;
 import demo.com.myapplication.R;
@@ -30,18 +34,17 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
     private AuthorizedUser authorizedUser;
+    public static VPlayPlayer vPlayPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //umeng统计
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
         SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, false);
-        //展示广点通sdk
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
-        //展示广点通API
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +129,16 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         ThemeManager.registerThemeChangeListener(this);
     }
 
+    //设置字体大小不随手机设置而改变
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config = new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+        return res;
+    }
+
     private void userLogin() {
         //调用自己的登录授权界面
         Intent intent = new Intent(MainActivity.this, GuideLoginAty.class);
@@ -163,6 +176,17 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         }
     }
 
+    @Override
+    protected void onResume() {
+        MobclickAgent.onResume(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPause(this);
+        super.onPause();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,6 +211,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
             }
+            if (vPlayPlayer != null) {
+                if (vPlayPlayer.onKeyDown(keyCode, event))
+                    return true;
+            }
         }
 
         return super.onKeyDown(keyCode, event);
@@ -200,9 +228,16 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             unregisterReceiver(mReceiver);
         }
         mainView.unregisterNetWorkReceiver();
+
         if (PlayerManager.videoPlayView != null) {
             PlayerManager.videoPlayView.onDestory();
             PlayerManager.videoPlayView = null;
+        }
+
+
+        if (vPlayPlayer != null) {
+            vPlayPlayer.onDestory();
+            vPlayPlayer = null;
         }
         super.onDestroy();
     }

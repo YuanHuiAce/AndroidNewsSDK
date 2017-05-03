@@ -6,6 +6,29 @@
     android:background="@color/bg_detail">
 
     <RelativeLayout
+        android:id="@+id/video_show"
+        android:layout_width="match_parent"
+        android:background="#101010"
+        android:layout_height="210dp"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/detail_image_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/_detail_image_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/video_play" />
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -82,8 +105,7 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/detai_video_share"
                     android:paddingRight="15dp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
             </RelativeLayout>
         </FrameLayout>
@@ -93,7 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/bg_home_login_header">
+            android:background="@color/bg_home_login_header"
+            android:visibility="gone">
 
             <View
                 android:layout_width="match_parent"
@@ -177,6 +200,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/mHeaderDivider"
+            android:layout_marginTop="210dp"
             android:background="@color/white"
             android:visibility="visible">
 
@@ -184,12 +208,22 @@
                 android:id="@+id/mNewsLoadingImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="130dp"
                 android:maxHeight="90dp"
                 android:maxWidth="90dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_news_detail_reload"
                 android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mNewsLoadingImg"
+                android:layout_centerHorizontal="true"
+                android:text="点击屏幕，重新加载"
+                android:textColor="@color/no_net"
+                android:textSize="14sp" />
 
             <include layout="@layout/qd_loading_view_anim" />
 
@@ -212,7 +246,6 @@
         android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="48dp"
         android:visibility="gone">
 
         <com.news.yazhidao.widget.SmallVideoContainer

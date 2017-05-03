@@ -2,11 +2,13 @@ package com.news.yazhidao.application;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.github.jinsedeyuzhou.PlayerApplication;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,18 +29,20 @@ public class QiDianApplication {
         mContext = context;
         mInstance = new QiDianApplication();
         PlayerApplication.initApp(context);
-        Context ctx = context.getApplicationContext();
-        // 获取当前包名
-        String packageName = context.getPackageName();
-        // 获取当前进程名
-        String processName = getProcessName(android.os.Process.myPid());
-        // 设置是否为上报进程
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(ctx);
-        strategy.setUploadProcess(processName == null || processName.equals(packageName));
-        // 初始化Bugly
-
-        CrashReport.initCrashReport(context.getApplicationContext(), "876dac1311", isDebug, strategy);
-//        CrashReport.initCrashReport(context.getApplicationContext(), "876dac1311", true);
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+        displayMetrics.scaledDensity = displayMetrics.density;
+//        Context ctx = context.getApplicationContext();
+//        // 获取当前包名
+//        String packageName = context.getPackageName();
+//        // 获取当前进程名
+//        String processName = getProcessName(android.os.Process.myPid());
+//        // 设置是否为上报进程
+//        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(ctx);
+//        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+//        // 初始化Bugly
+//
+//        CrashReport.initCrashReport(context.getApplicationContext(), "876dac1311", isDebug, strategy);
+        CrashReport.initCrashReport(context.getApplicationContext(), "876dac1311", true);
 //        Fresco.initialize(context);
     }
 

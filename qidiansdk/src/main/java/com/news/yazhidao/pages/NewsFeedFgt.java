@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -14,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,15 +66,21 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.news.yazhidao.widget.CustomDialog;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
 import com.transitionseverywhere.TransitionManager;
+import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -99,7 +105,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public static final int REQUEST_CODE = 1060;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
-    private ArrayList<NewsFeed> mUploadArrNewsFeed = new ArrayList<>();
+    private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
@@ -136,6 +142,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
     private ImageView mFeedClose;
+    private int adPosition, adFlag;
 
     @Override
     public void onThemeChanged() {
@@ -210,15 +217,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
         if (vPlayer != null && !isVisibleToUser) {
-
-            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
-                vPlayer.stop();
-                vPlayer.release();
-                mFeedSmallLayout.setVisibility(View.GONE);
-                mFeedSmallScreen.removeAllViews();
-            }  else {
-                vPlayer.onPause();
-            }
+            invisible();
         }
 
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
@@ -287,7 +286,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         intentFilter.addAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
         mContext.registerReceiver(mRefreshReceiver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
-        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NativePosID, this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID, this);
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -296,21 +295,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        if (mstrChannelId.equals("44")) {
+        if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
             mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
             FrameLayout.LayoutParams lpParent = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vPlayerContainer = new FrameLayout(mContext);
             vPlayerContainer.setBackgroundColor(Color.BLACK);
             vPlayerContainer.setVisibility(View.GONE);
             mAndroidContent.addView(vPlayerContainer, lpParent);
-
-
+            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
+        } else {
+            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS);
         }
         //==============================视频==========================
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
         mFeedSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.feed_small_layout);
         mFeedClose = (ImageView) getActivity().findViewById(R.id.feed_video_close);
-
         //======================================================
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
@@ -333,6 +332,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                adFlag = PULL_DOWN_REFRESH;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
             }
@@ -340,6 +340,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                adFlag = PULL_UP_REFRESH;
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
             }
@@ -394,10 +395,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     @Override
     public void onDestroy() {
+        Logger.e(TAG, "fragment");
         ThemeManager.unregisterThemeChangeListener(this);
         if (mRefreshReceiver != null) {
             mContext.unregisterReceiver(mRefreshReceiver);
         }
+//        if (vPlayer != null) {
+//            if (vPlayer.getParent() != null)
+//                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+//        }
+//        vPlayer = null;
         super.onDestroy();
     }
 
@@ -406,6 +413,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         super.onDestroyView();
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
+        }
+        if (mstrChannelId.equals("44") && vPlayer != null) {
+            if (vPlayer.getParent() != null)
+                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+            vPlayer.onDestory();
+            vPlayer = null;
         }
         if (rootView != null) {
             unbindDrawables(rootView);
@@ -454,13 +467,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
+        adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_BIGPOSID)));
         Gson gson = new Gson();
-        //加入feed流广告位id
-        if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE)) {
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NativePosID)));
-        } else {
-            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "")));
-        }
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (int i = 0; i < mArrNewsFeed.size(); i++) {
@@ -474,7 +483,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             tstart = getFirstItemTime(mArrNewsFeed);
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
             //下拉刷新打点
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, null, true);
+            if (!TextUtil.isEmptyString(mstrChannelId)) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("chid", Integer.valueOf(mstrChannelId));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
+                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_LOADFEED);
+            }
         } else {
             if (mFlag) {
                 if (mIsFirst) {
@@ -490,7 +508,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
             requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             //上拉刷新打点
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, null, true);
+            if (!TextUtil.isEmptyString(mstrChannelId)) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("chid", Integer.valueOf(mstrChannelId));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
+                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED);
+            }
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
@@ -571,6 +598,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else if ("35".equals(mstrChannelId)) {
                     newsFeed.setChannel_id(35);
+                    if (newsFeed.getStyle() == 6) {
+                        newsFeed.setStyle(8);
+                    }
                 } else if ("44".equals(mstrChannelId)) {
                     newsFeed.setChannel_id(44);
                 } else {
@@ -578,8 +608,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 if (newsFeed.getRtype() == 3) {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID));
-                    LogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID));
+                    LogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                 } else {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_SOURCE);
                 }
@@ -787,19 +817,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onPause() {
         super.onPause();
-        if (vPlayer != null)
-        {
-            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
-                vPlayer.stop();
-                vPlayer.release();
-                mFeedSmallLayout.setVisibility(View.GONE);
-                mFeedSmallScreen.removeAllViews();
-            }  else {
-               vPlayer.onPause();
-            }
+        MobclickAgent.onPageEnd("feed");
+        if (vPlayer != null) {
+            invisible();
         }
-
-
     }
 
     @Override
@@ -807,15 +828,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        mHomeWatcher = new HomeWatcher(this.getActivity());
 //        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
 //        mHomeWatcher.startWatch();
+        MobclickAgent.onPageStart("feed");
         super.onResume();
-        if (mstrChannelId.equals("44"))
-            Log.v(TAG, "onResume");
-//
-        if (vPlayer != null) {
-
-        }
-//        }
-
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
         }
@@ -835,7 +849,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                    isClickHome = false;
 //                }
 //            },1500);
-
 //            mThread = new Runnable() {
 //                @Override
 //                public void run() {
@@ -845,7 +858,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                }
 //            };
 //            mHandler.postDelayed(mThread, 1000);
-
         } else {
             if (mArrNewsFeed != null && bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
@@ -913,7 +925,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mrlSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
+                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK);
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
                 Intent intent = new Intent(mContext, TopicSearchAty.class);
                 mContext.startActivity(intent);
             }
@@ -987,12 +1000,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
+                                    if (newsFeed.getRtype() == 3) {
+                                        MobclickAgent.onEvent(mContext, "showAd");
+                                    }
                                 }
                             }
                         }
-                        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() >= 4) {
-                            LogUtil.userShowLog(mUploadArrNewsFeed, mContext);
-                            mUploadArrNewsFeed.removeAll(mUploadArrNewsFeed);
+                        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
+                            while (mUploadArrNewsFeed.size() > 9) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                                for (int i = 0; i < 9; i++) {
+                                    newsFeeds.add(mUploadArrNewsFeed.poll());
+                                }
+                                LogUtil.userShowLog(newsFeeds, mContext);
+                            }
                         }
                         break;
                 }
@@ -1017,7 +1038,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         feed.setVisble(true);
                     }
                 }
-                if ("44".equals(mstrChannelId) && portrait && !isAuto) {
+                if ("44".equals(mstrChannelId) && portrait) {
 //                    VideoVisibleControl();
                     VideoShowControl();
                 }
@@ -1100,13 +1121,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
             NativeADDataRef data = mADs.get(0);
             if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
-                NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+//                NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
                 NewsFeed newsFeed = new NewsFeed();
                 newsFeed.setTitle(data.getDesc());
                 newsFeed.setRtype(3);
                 ArrayList<String> imgs = new ArrayList<>();
                 imgs.add(data.getImgUrl());
                 newsFeed.setImgs(imgs);
+                newsFeed.setIcon(data.getIconUrl());
                 newsFeed.setPname(data.getTitle());
 //                int style = newsFeedFirst.getStyle();
 //                if (style == 11 || style == 12 || style == 13 || style == 5) {
@@ -1114,29 +1136,26 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                } else {
 //                    newsFeed.setStyle(51);
 //                }
-                int i = Math.random()>0.5?1:0;
-                if (i == 0) {
-                    newsFeed.setStyle(50);
-                } else {
-                    newsFeed.setStyle(51);
-                }
-                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID));
+//                int i = Math.random() > 0.5 ? 1 : 0;
+//                if (i == 0) {
+//                    newsFeed.setStyle(50);
+//                } else {
+//                    newsFeed.setStyle(51);
+//                }
+                newsFeed.setStyle(51);
+                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
-                int position = 5;
-                if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
-                    position = 3;
-                }
                 if (PULL_DOWN_REFRESH == flag) {
-                    if (mArrNewsFeed.size() > position) {
-                        mArrNewsFeed.add(position, newsFeed);
+                    if (mArrNewsFeed.size() > adPosition) {
+                        mArrNewsFeed.add(adPosition, newsFeed);
                     }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
-                        mArrNewsFeed.add(mArrNewsFeed.size() - 2, newsFeed);
+                        mArrNewsFeed.add(mArrNewsFeed.size() - 8, newsFeed);
                     } else {
-                        if (mArrNewsFeed.size() > position) {
-                            mArrNewsFeed.add(position, newsFeed);
+                        if (mArrNewsFeed.size() > adPosition) {
+                            mArrNewsFeed.add(adPosition, newsFeed);
                         }
                     }
                 }
@@ -1149,9 +1168,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
         if (!TextUtil.isListEmpty(list)) {
-            LogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NativePosID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            LogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             mADs = list;
-            addADToList(PULL_DOWN_REFRESH);
+            addADToList(adFlag);
         }
         isADRefresh = false;
     }
@@ -1239,8 +1258,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult");
-
-
         if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
@@ -1251,10 +1268,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     if (vPlayer.isPlay())
                         if (getPlayItemPosition() != -1) {
                             getShowItemView(getPlayItemPosition()).setVisibility(View.GONE);
-                            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                            if (frameLayout != null) {
-                                frameLayout.removeView(vPlayer);
-                            }
+                            removeVPlayer();
+//                            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                            if (frameLayout != null) {
+//                                frameLayout.removeView(vPlayer);
+//                            }
                             getPlayItemView(getPlayItemPosition()).addView(vPlayer);
                             vPlayer.setShowContoller(false);
 
@@ -1318,7 +1336,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         new Runnable() {
                             @Override
                             public void run() {
-                                vPlayerContainer.removeView(vPlayer);
+//                                vPlayerContainer.removeView(vPlayer);
+                                removeVPlayer();
                                 TransitionManager.beginDelayedTransition(vPlayerContainer);
                                 Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
                                 int position = getPlayItemPosition();
@@ -1332,25 +1351,33 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         }
                                         playItemView.addView(vPlayer);
                                         vPlayer.showBottomControl(true);
+                                        isAuto = false;
                                     } else {
-                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextPosition() + 1, 0);
+                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 1, 0);
                                         mHandler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
-                                                if (videoContainer != null)
+                                                if (videoContainer != null) {
+//                                                    ViewGroup vp = (ViewGroup) vPlayer.getParent();
+//                                                    if (vp != null)
+//                                                        vp.removeAllViews();
+                                                    removeVPlayer();
                                                     videoContainer.addView(vPlayer);
+                                                }
                                                 RelativeLayout showBg = getItemView(getPlayItemPosition());
                                                 if (showBg != null)
                                                     showBg.setVisibility(View.GONE);
+                                                isAuto = false;
                                             }
-                                        }, 300);
-                                        isAuto = false;
+                                        }, 500);
+
                                     }
                                 } else {
                                     if (vPlayer != null) {
                                         vPlayer.stop();
                                         vPlayer.release();
+                                        isAuto = false;
                                     }
                                 }
 
@@ -1396,10 +1423,67 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SharePopupWindow.ShareDismiss shareDismiss = new SharePopupWindow.ShareDismiss() {
         @Override
         public void shareDismiss() {
-            mivShareBg.startAnimation(mAlphaAnimationOut);
-            mivShareBg.setVisibility(View.INVISIBLE);
+//            mivShareBg.startAnimation(mAlphaAnimationOut);
+//            mivShareBg.setVisibility(View.INVISIBLE);
         }
     };
+    private boolean isFirstPlay;
+
+    /**
+     * 自定义升级弹窗
+     */
+    protected void showNetworkDialog(final RelativeLayout relativeLayout, final NewsFeed feed) {
+        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+        builder.setTitle("流量使用提示");
+        builder.setMessage("继续播放，运营商收取流量费用");
+        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                relativeLayout.setVisibility(View.GONE);
+
+                PlayerManager.newsFeed = feed;
+                isAd = false;
+                cPostion = feed.getNid();
+                if (cPostion != lastPostion) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
+                if (lastPostion != -1) {
+                    removeViews();
+                }
+                View view = (View) relativeLayout.getParent();
+                ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
+                mItemVideo.removeAllViews();
+                removeVPlayer();
+                vPlayer.setTitle(feed.getTitle());
+                vPlayer.setDuration(feed.getDuration());
+                vPlayer.setAllowModible(true);
+                vPlayer.setShowContoller(false);
+                mItemVideo.addView(vPlayer);
+                vPlayer.play(feed.getVideourl());
+                if (!isFirstPlay)
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            vPlayer.play(feed.getVideourl());
+                        }
+                    }, 100);
+                lastPostion = cPostion;
+                isFirstPlay = true;
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+
+    }
 
     /**
      * 视频播放控制
@@ -1409,13 +1493,17 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (null == vPlayer) {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         }
-
+        vPlayer.setShowMediaList(true);
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
-                isAuto = false;
-                if (!NetworkUtils.isConnectionAvailable(mContext))
+                if (isAuto || !NetworkUtils.isConnectionAvailable(mContext))
                     return;
+                else if (NetworkUtils.isMobileAvailable(mContext)) {
+                    showNetworkDialog(relativeLayout, feed);
+                    return;
+                }
+                isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 PlayerManager.newsFeed = feed;
                 isAd = false;
@@ -1433,6 +1521,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.setDuration(feed.getDuration());
                 vPlayer.play(feed.getVideourl());
+//                ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
+//                if (frameLayout!=null)
+//                {
+//                    frameLayout.removeAllViews();
+//                }
+                removeVPlayer();
                 mItemVideo.addView(vPlayer);
                 vPlayer.setShowContoller(false);
                 lastPostion = cPostion;
@@ -1456,9 +1550,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
-                   NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                    NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
                 else
-                    ((Activity)mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
+                    ((Activity) mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
 
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = cPostion;
@@ -1469,12 +1563,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mivShareBg.startAnimation(mAlphaAnimationIn);
-                        mivShareBg.setVisibility(View.VISIBLE);
-                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
-                        mSharePopupWindow.setVideo(true);
-                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
-                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//                        mivShareBg.startAnimation(mAlphaAnimationIn);
+//                        mivShareBg.setVisibility(View.VISIBLE);
+//                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
+//                        mSharePopupWindow.setVideo(true);
+//                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
+//                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                     }
                 });
 
@@ -1485,6 +1579,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mFeedClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAuto = false;
                 if (vPlayer.isPlay()) {
                     vPlayer.stop();
                     vPlayer.release();
@@ -1499,7 +1594,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mFeedSmallLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    isAuto = false;
                     if (PlayerManager.newsFeed == null)
                         return;
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
@@ -1543,7 +1638,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void completion(IMediaPlayer mp) {
                     position = getNextPosition();
-                    if (position != -1) {
+                    if (position != -1 && NetworkUtils.isWifiAvailable(mContext)) {
                         if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                             if (vPlayer != null) {
                                 vPlayer.stop();
@@ -1569,6 +1664,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             isAuto = true;
 
                         } else {
+                            isAuto = true;
                             if (vPlayer != null) {
                                 vPlayer.stop();
                                 vPlayer.release();
@@ -1637,8 +1733,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (showBg != null)
                     showBg.setVisibility(View.GONE);
                 FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
-                if (videoContainer != null)
+
+                if (videoContainer != null) {
+//                    ViewGroup vp = (ViewGroup) vPlayer.getParent();
+//                    if (vp != null)
+//                        vp.removeAllViews();
+                    removeVPlayer();
                     videoContainer.addView(vPlayer);
+                }
                 vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
                 vPlayer.setDuration(mArrNewsFeed.get(position).getDuration());
 
@@ -1647,6 +1749,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 lastPostion = cPostion;
 
                 position = 0;
+                isAuto = false;
             }
         }, 1000);
     }
@@ -1688,6 +1791,39 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         return position;
                     }
                 }
+            }
+        }
+        return -1;
+    }
+
+
+    /**
+     * 释放播放器
+     */
+    public void removeVPlayer() {
+        if (vPlayer != null) {
+            ViewGroup parent = (ViewGroup) vPlayer.getParent();
+            if (parent != null)
+                parent.removeAllViews();
+        }
+    }
+
+    /**
+     * 获取下一个item位置
+     *
+     * @return
+     */
+    public int getNextItemPosition() {
+        for (int i = 0; i < mArrNewsFeed.size(); i++) {
+            if (mArrNewsFeed.get(i).getNid() == cPostion) {
+//                for (position = i + 1; position < mArrNewsFeed.size(); position++) {
+//                    if (mArrNewsFeed.get(position).getVideourl() != null) {
+//                        if (mArrNewsFeed.get(position - 1).getVideourl() == null)
+//                            isAd = true;
+//                        return position;
+//                    }
+//                }
+                return i;
             }
         }
         return -1;
@@ -1747,6 +1883,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * 移除播放器
      */
     public void removeViews() {
+        if (vPlayer==null)
+            return ;
         ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
         if (frameLayout != null && frameLayout.getChildCount() > 0) {
             frameLayout.removeView(vPlayer);
@@ -1761,6 +1899,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
+    private void invisible() {
+        if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+            vPlayer.stop();
+            vPlayer.release();
+            mFeedSmallLayout.setVisibility(View.GONE);
+            mFeedSmallScreen.removeAllViews();
+        } else {
+            if (vPlayer.isPlay())
+                vPlayer.onPause();
+        }
+
+
+    }
 
     /**
      * 滑动控制视频是否播放
@@ -1816,24 +1967,66 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 break;
             }
         }
+
+
         if (isExist) {
             View item = lv.getChildAt(position);
             Log.e(TAG, "item:" + item.toString() + "position:" + position);
             FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
             Log.e(TAG, "frameLayout:" + frameLayout.toString());
-
-            if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
-                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-            }
-
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
-                mFeedSmallScreen.removeAllViews();
-                vPlayer.setShowContoller(false);
+//                mFeedSmallScreen.removeAllViews();
+                removeVPlayer();
+                vPlayer.setShow(true);
                 vPlayer.isOpenOrientation(true);
                 frameLayout.removeAllViews();
                 frameLayout.addView(vPlayer);
+            } else {
+                if (frameLayout.getChildCount() <= 0 && vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+//                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
+//                    if (fl != null) {
+//                        fl.removeView(vPlayer);
+//                    }
+                    removeVPlayer();
+                    vPlayer.setShow(true);
+                    vPlayer.isOpenOrientation(true);
+                    frameLayout.addView(vPlayer);
+                }
             }
+            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.getStatus() == PlayStateParams.STATE_PLAYING || vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
+                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+            }
+
+
+//            else {
+//                if (frameLayout.getChildCount() <= 0) {
+//
+//                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
+//                    if (fl != null) {
+//                        fl.removeView(vPlayer);
+//                    }
+//                    frameLayout.removeAllViews();
+//                    if (vPlayer.getStatus() == PlayStateParams.STATE_ERROR) {
+//                        vPlayer.stop();
+//                        vPlayer.release();
+//                    } else {
+//                        frameLayout.addView(vPlayer);
+//                        vPlayer.setShow(true);
+//                        vPlayer.isOpenOrientation(true);
+//                    }
+//                }
+////                    frameLayout.removeAllViews();
+////                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
+////                    if (fl != null) {
+////                        fl.removeView(vPlayer);
+////                    }
+////                    vPlayer.setShow(true);
+////                    vPlayer.isOpenOrientation(true);
+////                    frameLayout.addView(vPlayer);
+//                }
+//
+//            }
 
         } else {
             if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE) {
@@ -1847,15 +2040,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
 
-                if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
-                    mFeedSmallScreen.removeAllViews();
+                if (vPlayer.getStatus() == PlayStateParams.STATE_PLAYING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
+//                    mFeedSmallScreen.removeAllViews();
+                    removeVPlayer();
                     mFeedSmallScreen.addView(vPlayer);
                     vPlayer.setShowContoller(false);
                     vPlayer.isOpenOrientation(false);
                     mFeedSmallLayout.setVisibility(View.VISIBLE);
                 }
+
+
             }
 
         }
     }
+
 }

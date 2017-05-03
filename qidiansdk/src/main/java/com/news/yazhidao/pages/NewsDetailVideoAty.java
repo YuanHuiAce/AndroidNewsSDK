@@ -50,7 +50,9 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -118,6 +120,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private String mSource;
     private boolean isShowComment;
     public int cPosition;
+    private RelativeLayout mNoNetShow;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -176,6 +179,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mNoNetShow = (RelativeLayout) findViewById(R.id.video_show);
         mNewsLoadingImg.setOnClickListener(this);
 
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
@@ -216,6 +220,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("videoDetail");
         mDurationStart = System.currentTimeMillis();
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
@@ -228,6 +233,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onPause() {
+        MobclickAgent.onPageEnd("videoDetail");
         nowTime = System.currentTimeMillis();
         //上报日志
         LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%");
@@ -238,11 +244,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void finish() {
-        if (mNewsFeed != null && isUserComment) {
+        if (mNewsFeed != null && isUserComment && mNewsFeed.getNid() != 0) {
             Intent intent = new Intent();
             intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
             intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
-
             intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
             sendBroadcast(intent);
         }
@@ -368,6 +373,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 public void onResponse(NewsDetail result) {
                     isRefresh = false;
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                    mNoNetShow.setVisibility(View.GONE);
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
@@ -396,12 +402,20 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             });
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
+        } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            mNoNetShow.setVisibility(View.VISIBLE);
+            mNewsLoadingImg.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.GONE);
         }
     }
 
     private NewsFeed convert2NewsFeed(NewsDetail result) {
         if (mNewsFeed == null) {
             mNewsFeed = new NewsFeed();
+        }
+        if (!TextUtil.isEmptyString(mNid)) {
+            mNewsFeed.setNid(Integer.valueOf(mNid));
         }
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
@@ -448,11 +462,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        Intent localIntent = new Intent();
-        localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
-        if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
-            localIntent.putExtra("position",vPlayPlayer.getCurrentPosition());
-        setResult(1006, localIntent);
+        if (NetUtil.checkNetWork(this) && mNewsFeed != null && mNewsFeed.getNid() != 0) {
+            Intent localIntent = new Intent();
+            localIntent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
+            if ((vPlayPlayer != null) && (vPlayPlayer.isPlay()))
+                localIntent.putExtra("position", vPlayPlayer.getCurrentPosition());
+            setResult(1006, localIntent);
+        }
         super.onBackPressed();
 
     }
@@ -484,11 +500,29 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mNewsDetailViewPager.setCurrentItem(1);
                 mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                 mDetailCommentNum.setVisibility(View.GONE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailVideoAty.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
+                }
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
                 mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailVideoAty.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_COMMENTPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, jsonObject, false);
+                }
             }
         } else if (getId == R.id.mDetailShare) {
             if (mNewsFeed != null) {

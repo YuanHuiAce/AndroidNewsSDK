@@ -19,16 +19,17 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/listview_scrollbar"
         android:scrollbars="vertical" />
+
     <TextView
         android:id="@+id/mRefreshTitleBar"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:background="@color/white80"
-        android:textColor="@color/new_color2"
-        android:text="又发现了10条新数据"
-        android:textSize="@dimen/font4"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:text="又发现了10条新数据"
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/font4"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/mHomeRetry"
@@ -44,19 +45,18 @@
 
             <ImageView
                 android:id="@+id/mRetryIcon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_news_detail_reload" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/mRetryIcon"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="\n网络不好\n点击重新加载"
-                android:textColor="@color/color5" />
+                android:layout_gravity="center_horizontal"
+                android:text="点击屏幕，重新加载"
+                android:textColor="@color/no_net"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

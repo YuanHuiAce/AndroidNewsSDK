@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -26,6 +27,7 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jinsedeyuzhou.adapter.PlayerAdapter;
 import com.github.jinsedeyuzhou.bean.PlayerFeed;
@@ -90,8 +93,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private TextView mVideoNetTieConfirm;
     private TextView mVideoNetTieCancel;
     private TextView mVideoDuration;
-    private TextView mMediaList;
-    private ListView mListView;
+
 
 
     //是否展示
@@ -147,8 +149,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private IPlayer.OnErrorListener onErrorListener;
     private IPlayer.OnPreparedListener onPreparedListener;
 
-    private boolean firstPlay;
-
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -185,10 +185,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                         show(PlayStateParams.TIME_OUT);
                     }
                     break;
-                case PlayStateParams.MESSAGE_SHOW_DIALOG:
-                    mVideoDuration.setText(generateTime(duration));
-                    mVideoNetTie.setVisibility(View.VISIBLE);
-                    break;
+//                case MESSAGE_SHOW_DIALOG:
+//                    mVideoDuration.setText(generateTime(duration));
+//                    mVideoNetTie.setVisibility(View.VISIBLE);
+//                    break;
+
+
             }
         }
     };
@@ -226,7 +228,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         View.inflate(mContext, R.layout.player_video, this);
         contollerbar = findViewById(R.id.media_contoller);
         mVideoView = (IjkVideoView) findViewById(R.id.main_video);
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
+        FrameLayout layout = (FrameLayout) findViewById(R.id.layout);
 
         progressBar = (ProgressBar) findViewById(R.id.loading);
         bottomProgress = (ProgressBar) findViewById(R.id.bottom_progressbar);
@@ -437,9 +439,15 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     }
 
+    //===============================视频列表==================================
+    private static final int DEFAULT_QUALITY_TIME = 300;
+    private boolean isShowQuality;
     private FrameLayout mMediaQuality;
     private ArrayList<PlayerFeed> lists;
     private PlayerAdapter playerAdapter;
+    private TextView mMediaList;
+    private ListView mListView;
+    private boolean isShowlist;
 
     private void initMediaQuality() {
         //视频列表
@@ -450,7 +458,48 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         lists = new ArrayList<>();
         playerAdapter = new PlayerAdapter(lists, mContext);
         mListView.setAdapter(playerAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                lists.get(position);
+            }
+        });
+        mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    public void setPlayerFeed(ArrayList<PlayerFeed> lists) {
+        this.lists = lists;
+        playerAdapter.notifyDataSetChanged();
+
+    }
+    public void setShowMediaList(boolean isShowlist)
+    {
+        this.isShowlist=isShowlist;
+    }
+
+    public void toggleMediaQuality() {
+        if (mMediaQuality.getVisibility() == View.GONE)
+            mMediaQuality.setVisibility(View.VISIBLE);
+        if (isShowQuality) {
+            ViewCompat.animate(mMediaQuality).translationX(mMediaQuality.getWidth()).setDuration(DEFAULT_QUALITY_TIME);
+            isShowQuality = false;
+        } else {
+            isShowQuality = true;
+            ViewCompat.animate(mMediaQuality).translationX(0).setDuration(DEFAULT_QUALITY_TIME);
+            handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
+            showBottomControl(false);
+        }
     }
 
 
@@ -458,17 +507,21 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.player_btn) {
-            if (isAllowModible && NetworkUtils.getNetworkType(mContext) == 6 || NetworkUtils.getNetworkType(mContext) == 3) {
+            if (isAllowModible && NetworkUtils.isMobileAvailable(mContext) || NetworkUtils.isWifiAvailable(mContext)) {
                 doPauseResume();
-            } else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.getNetworkType(mContext) == 6) {
-                mVideoDuration.setText(generateTime(duration));
-                mVideoNetTie.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(mContext, "请检查您的网络", Toast.LENGTH_SHORT).show();
             }
+//            else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.isMobileAvailable(mContext)) {
+//                mVideoDuration.setText(generateTime(duration));
+//                mVideoNetTie.setVisibility(View.VISIBLE);
+//            }
 
         } else if (id == R.id.full) {
             toggleFullScreen();
         } else if (id == R.id.sound) {
-            if (!PlayerApplication.getInstance().isSound) {
+            Log.v(TAG, "onclick:" + PlayerApplication.isSound);
+            if (!PlayerApplication.isSound) {
                 //静音
                 sound.setImageResource(R.mipmap.sound_mult_icon);
                 audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
@@ -477,7 +530,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 sound.setImageResource(R.mipmap.sound_open_icon);
                 audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
             }
-            PlayerApplication.getInstance().isSound = !PlayerApplication.getInstance().isSound;
+            PlayerApplication.isSound = !PlayerApplication.isSound;
         } else if (id == R.id.iv_video_finish) {
             if (!onBackPressed())
                 activity.finish();
@@ -501,6 +554,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 onShareListener.onShare();
         } else if (id == R.id.app_video_netTie_confirm) {
             isAllowModible = true;
+            isShowContoller = true;
             mVideoNetTie.setVisibility(View.GONE);
             if (currentPosition == 0) {
                 play(url);
@@ -508,11 +562,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 doPauseResume();
 
         } else if (id == R.id.app_video_netTie_cancel) {
+            isShowContoller = true;
             mVideoNetTie.setVisibility(View.GONE);
             if (onShareListener != null)
                 onShareListener.onPlayCancel();
         } else if (id == R.id.tv_media_list) {
-
+                toggleMediaQuality();
         }
     }
 
@@ -555,6 +610,19 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 更新音量键
+     */
+    public void toggleVolume() {
+        Log.v(TAG, "toggleVolume:" + PlayerApplication.isSound);
+        if (PlayerApplication.getInstance().isSound) {
+            //静音
+            sound.setImageResource(R.mipmap.sound_mult_icon);
+        } else {
+            //取消静音
+            sound.setImageResource(R.mipmap.sound_open_icon);
+        }
+    }
 
     /**
      * 切换全屏
@@ -663,23 +731,15 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             Log.d(TAG, "STATE_PLAYING");
             progressBar.setVisibility(View.GONE);
             mVideoStaus.setVisibility(View.GONE);
-            mVideoNetTie.setVisibility(View.GONE);
+//            mVideoNetTie.setVisibility(View.GONE);
             isShowContoller = true;
             play.setVisibility(View.VISIBLE);
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
             handler.sendEmptyMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
-            if (firstPlay && !isAllowModible && NetworkUtils.getNetworkType(mContext) == 6) {
-                mVideoDuration.setText(generateTime(duration));
-                mVideoNetTie.setVisibility(View.VISIBLE);
-                firstPlay = false;
-                onPause();
-
-            }
-
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
-            isShowContoller = false;
-            showBottomControl(true);
+//            isShowContoller = false;
+//            showBottomControl(true);
         }
 
 
@@ -714,9 +774,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private void hide(boolean show) {
         if (!portrait) {
             top_box.setVisibility(show ? View.VISIBLE : View.GONE);
-
         }
 
+        mMediaList.setVisibility(isShowlist ? View.VISIBLE : View.GONE);
         showBottomControl(show);
         bottomProgress.setVisibility(show ? View.GONE : View.VISIBLE);
 
@@ -872,7 +932,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         public boolean onDoubleTap(MotionEvent e) {
             Log.v(TAG, "onDoubleTap");
 //            mVideoView.toggleAspectRatio();
-            doPauseResume();
+            if (isAllowModible && NetworkUtils.isMobileAvailable(mContext) || NetworkUtils.isWifiAvailable(mContext))
+                doPauseResume();
             return true;
         }
 
@@ -899,7 +960,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp" + isShow);
-            if (isShow) {
+            if (isShowQuality)
+                toggleMediaQuality();
+            else if (isShow) {
                 hide();
             } else {
                 show(PlayStateParams.TIME_OUT);
@@ -918,7 +981,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 firstTouch = false;
             }
             contollerbar.setVisibility(View.GONE);
-            if (isAllowTouch)
+            if (isAllowTouch || !portrait)
                 if (seek) {
                     onProgressSlide(-deltaX / mVideoView.getWidth());
                 } else {
@@ -1130,6 +1193,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         bottomProgress.setProgress(0);
         mVideoStaus.setVisibility(View.GONE);
         mVideoNetTie.setVisibility(View.GONE);
+        mMediaQuality.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         if (PlayerApplication.getInstance().isSound)
             sound.setImageResource(R.mipmap.sound_mult_icon);
@@ -1172,11 +1236,9 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         play.setSelected(false);
         mVideoView.pause();
         statusChange(PlayStateParams.STATE_PAUSED);
-        snapshotsBitmap();
     }
 
     private void reStart() {
-        releaseBitmap();
         play.setSelected(true);
         mVideoView.start();
         statusChange(PlayStateParams.STATE_PLAYING);
@@ -1270,15 +1332,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
-        bottomProgress.setProgress(0);
+        isShowQuality = false;
         seekBar.setProgress(0);
-        status = PlayStateParams.STATE_IDLE;
-    }
-
-    public void release() {
-        orientationEventListener.disable();
-        if (mVideoView != null)
-            mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
         if (bitmap != null) {
@@ -1287,6 +1342,13 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             appVideoPlay.setVisibility(View.GONE);
         }
         status = PlayStateParams.STATE_IDLE;
+    }
+
+    public void release() {
+        orientationEventListener.disable();
+        if (mVideoView != null)
+            mVideoView.release(true);
+
     }
 
     public int getStatus() {
@@ -1308,8 +1370,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             releaseBitmap();
             mVideoView.start();
             play.setSelected(true);
+            toggleVolume();
 //                isAutoPause = false;
-
+            if (NetworkUtils.isNetworkAvailable(mContext))
+                mVideoNetTie.setVisibility(View.GONE);
             statusChange(PlayStateParams.STATE_PLAYING);
 //            }
         }
@@ -1334,9 +1398,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         showBottomControl(isShowContoller);
     }
 
+    public void setShow(boolean isShowContoller) {
+        this.isShowContoller = isShowContoller;
+    }
+
     public void play(String url) {
         this.url = url;
-        firstPlay = true;
         play(url, 0);
     }
 
@@ -1355,6 +1422,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mVideoView.seekTo(position);
             mVideoView.start();
             play.setSelected(true);
+            statusChange(PlayStateParams.STATE_PLAYING);
         }
     }
 
@@ -1366,10 +1434,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         if (!mVideoView.isPlaying()) {
             mVideoView.setVideoURI(uri);
             mVideoView.start();
+            statusChange(PlayStateParams.STATE_PLAYING);
         } else {
             mVideoView.stopPlayback();
             mVideoView.setVideoURI(uri);
             mVideoView.start();
+            statusChange(PlayStateParams.STATE_PLAYING);
         }
         play.setSelected(true);
 
@@ -1481,21 +1551,24 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e(TAG, "网络状态改变");
-            if (NetworkUtils.getNetworkType(activity) == 3) {// 网络是WIFI
-            } else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.getNetworkType(activity) == 6
+            if (NetworkUtils.isWifiAvailable(activity)) {// 网络是WIFI
+                mVideoNetTie.setVisibility(View.GONE);
+                isShowContoller = true;
+            } else if ((mVideoView.isPlaying() || status == PlayStateParams.STATE_PAUSED) && !isAllowModible && NetworkUtils.isMobileAvailable(activity)
                     ) {
                 // TODO 更新状态是暂停状态
                 currentPosition = mVideoView.getCurrentPosition();
                 progressBar.setVisibility(View.GONE);
-                onPause();
-                show(0);
+                pause();
+                hide(false);
+                isShowContoller = false;
                 mVideoDuration.setText(generateTime(duration));
                 mVideoNetTie.setVisibility(View.VISIBLE);
-
-            } else if (NetworkUtils.getNetworkType(activity) == 1) {// 网络链接断开
-                onPause();
             } else {
-                onPause();
+                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
+                isShowContoller = true;
+                pause();
+                mVideoNetTie.setVisibility(View.GONE);
             }
 
 

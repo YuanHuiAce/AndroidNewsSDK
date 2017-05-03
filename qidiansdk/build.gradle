@@ -4,7 +4,7 @@ android {
     compileSdkVersion 22
     buildToolsVersion '25.0.2'
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 22
     }
 
@@ -35,4 +35,6 @@ dependencies {
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile files('libs/GDTUnionSDK.TBS.4.9.542.min.jar')
     compile 'com.tencent.bugly:crashreport:latest.release'
+    compile files('libs/umeng-analytics-v6.1.0.jar')
+    compile files('libs/utdid4all-1.0.4.jar')
 }

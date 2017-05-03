@@ -5,60 +5,94 @@
     android:layout_height="match_parent"
     android:background="@color/bg_splash">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/ad_image"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"
-        android:text="读新闻，阅天下"
-        android:textColor="@color/new_color2"
-        android:textSize="30sp" />
+        android:scaleType="centerCrop" />
 
-    <RelativeLayout
-        android:id="@+id/mSplashContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="130dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_below="@+id/ad_image">
 
         <ImageView
-            android:id="@+id/mSplashSlogan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_splash_slogan"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/mSplashLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mSplashSlogan"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@mipmap/ic_splash_line"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/mSplashMask"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignLeft="@id/mSplashLine"
-            android:layout_alignRight="@id/mSplashLine"
-            android:layout_below="@+id/mSplashSlogan"
-            android:layout_marginTop="12dp"
-            android:background="@color/bg_splash" />
-    </RelativeLayout>
-
+            android:layout_gravity="center"
+            android:background="@mipmap/splash_logo" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/mSplashVersion"
+        android:id="@+id/skip_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:textColor="@color/new_color2"
-        android:textSize="14sp" />
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        android:background="@drawable/skip"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:text="跳过"
+        android:textSize="12sp" />
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="140dp"-->
+    <!--android:text="读新闻，阅天下"-->
+    <!--android:textColor="@color/new_color2"-->
+    <!--android:textSize="30sp" />-->
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/mSplashContent"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:paddingTop="130dp">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/mSplashSlogan"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:background="@mipmap/ic_splash_slogan"-->
+    <!--android:scaleType="centerCrop" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/mSplashLine"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/mSplashSlogan"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="12dp"-->
+    <!--android:background="@mipmap/ic_splash_line"-->
+    <!--android:scaleType="centerCrop" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/mSplashMask"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_alignLeft="@id/mSplashLine"-->
+    <!--android:layout_alignRight="@id/mSplashLine"-->
+    <!--android:layout_below="@+id/mSplashSlogan"-->
+    <!--android:layout_marginTop="12dp"-->
+    <!--android:background="@color/bg_splash" />-->
+    <!--</RelativeLayout>-->
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/mSplashVersion"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginBottom="60dp"-->
+    <!--android:textColor="@color/new_color2"-->
+    <!--android:textSize="14sp" />-->
 
 </RelativeLayout>

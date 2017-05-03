@@ -21,6 +21,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.entity.UserLogBasicInfoEntity;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -197,16 +198,17 @@ public class LogUtil {
                 JSONObject object = new JSONObject();
                 if (0 != newsFeed.getNid()) {
                     object.put("nid", Long.valueOf(newsFeed.getNid()));
-                    object.put("source", newsFeed.getSource());
+                    object.put("source", "feed");
                     object.put("chid", newsFeed.getChannel());
                     object.put("logtype", newsFeed.getLogtype());
                     object.put("logchid", newsFeed.getLogchid());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
                 } else {
+                    MobclickAgent.onEvent(context, "showAd");
                     object.put("aid", Long.valueOf(newsFeed.getAid()));
                     object.put("source", newsFeed.getSource());
-                    object.put("title", newsFeed.getTitle());
+                    object.put("title", newsFeed.getPname());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
                 }
@@ -335,7 +337,8 @@ public class LogUtil {
         requestQueue.add(request);
     }
 
-    public static void adClickLog(Long aid, Context context, String source) {
+    public static void adClickLog(Long aid, Context context, String source, String title) {
+        MobclickAgent.onEvent(context, "clickAd");
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -353,6 +356,7 @@ public class LogUtil {
             JSONObject json = new JSONObject();
             json.put("aid", aid);
             json.put("source", source);
+            json.put("title", title);
             jsonObject.put("extend", null);
             jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);
@@ -473,6 +477,7 @@ public class LogUtil {
     }
 
     public static void userActionLog(Context context, String atype, String from, String to, Object params, boolean effective) {
+        MobclickAgent.onEvent(context, atype);
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -572,6 +577,48 @@ public class LogUtil {
         String url = null;
         try {
             url = HttpConstant.URL_LOG_POST_AD_GET + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String arg0) {
+                        //返回正确后的操作
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError arg0) {
+
+            }
+        });
+        requestQueue.add(request);
+    }
+
+    public static void adUserRegist(Context context) {
+        User user = SharedPreManager.mInstance(context).getUser(context);
+        Long mUserId = null;
+        if (user != null) {
+            mUserId = Long.valueOf(user.getMuid());
+        }
+        Logger.e("aaa", "开始上传日志！");
+        if (mUserId == null) {
+            return;
+        }
+        JSONObject jsonObject = new JSONObject();
+        Gson gson = new Gson();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        UserLogBasicInfoEntity userLogBasicInfoEntity = getLogBasicInfo(context, mUserId);
+        try {
+            jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = null;
+        try {
+            url = HttpConstant.URL_LOG_POST_USER_SIGN_UP + "?log_data=" + URLEncoder.encode(jsonObject.toString(), "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package com.news.yazhidao.entity;
 
+import com.qq.e.ads.nativ.NativeADDataRef;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,7 @@ public class RelatedItemEntity implements Serializable, Comparable {
     public static final int ONE_AND_TWO_PIC = 1;
     public static final int VIDEO_SMALL = 2;
     public static final int EMPTY = 3;
+    public static final int AD_ONE_PIC = 4;
     /**
      * "url": "http://news.163.com/16/0520/08/BNGEG7ID00014Q4P.html",
      * "title": "但愿雷洋事件不是一个小插曲",
@@ -65,6 +68,16 @@ public class RelatedItemEntity implements Serializable, Comparable {
     }
 
     public RelatedItemEntity() {
+    }
+
+    private NativeADDataRef dataRef;
+
+    public NativeADDataRef getDataRef() {
+        return dataRef;
+    }
+
+    public void setDataRef(NativeADDataRef dataRef) {
+        this.dataRef = dataRef;
     }
 
     @Override

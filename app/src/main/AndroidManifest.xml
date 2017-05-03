@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
@@ -52,7 +52,7 @@
         android:supportsRtl="true">
         <!--SplashAty-->
         <activity
-            android:name=".pages.MainActivity"
+            android:name=".pages.SplashAty"
             android:configChanges="orientation|screenSize|keyboardHidden|layoutDirection"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -65,9 +65,11 @@
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
-        <!--<activity-->
-        <!--android:name=".pages.MainActivity"-->
-        <!--android:screenOrientation="portrait" />-->
+        <activity
+            android:name=".pages.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -98,12 +100,28 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="v2VQnOFTF0e3NunDcgoNhGRE" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"></service>
+        <!--umeng-->
+        <!-- Caution! Do not change this app key. It is only for demo usage. -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="58f9d3c904e205169000013b"></meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     //需要权限
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />

@@ -89,19 +89,28 @@ public final class CommonConstant {
     public static final String SHARE_WECHAT_ACTION = "share_wechat_action";
     public static final String SHARE_SINA_WEIBO_ACTION = "share_sina_weibo_action";
     public static final String SHARE_QQ_ACTION = "share_qq_action";
+
+    public static final String AD_CHANNEL = "ad_channel";
+    public static final String AD_FEED_POS = "ad_feed_pos";
+    public static final String AD_FEED_VIDEO_POS = "ad_feed_video_pos";
+    public static final String AD_RELATED_POS = "ad_related_pos";
+    public static final String AD_RELATED_VIDEO_POS = "ad_related_video_pos";
     //广点通SDK id 广告位id
     public static final String APPID = "1105847205";
-    public static final String NativePosID = "2000611873536900";
-    public static final String NEWS_FEED_GDT_SDK_NativePosID = "5090120177109704";
-    public static final String NEWS_DETAIL_GDT_SDK_NativePosID = "1070526117209763";
+    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
+    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "1040627242105512";
+    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "1090626242209528";
+    public static final String NEWS_RELATE_GDT_SDK_SMALLID = "7050727232406589";
     //广点通API id 广告位id
-    public static final String NEWS_FEED_GDT_API_NativePosID = "246";
-    public static final String NEWS_DETAIL_GDT_API_NativePosID = "237";
-    public static final String NEWS_RELATE_GDT_API_NativePosID = "237";
+    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
+    public static final String NEWS_FEED_GDT_API_BIGPOSID = "718";
+    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "717";
+    public static final String NEWS_RELATE_GDT_API_SMALLID = "716";
+
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
-    public static final int NEWS_CTYPE = 3;
+    public static final int NEWS_CTYPE = 5;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
@@ -111,7 +120,7 @@ public final class CommonConstant {
     //wenzi	纹字锁屏
     //lybrowser	猎鹰浏览器
     //baipai 白牌
-    public static final String LOG_CTYPE = "wenzi";
+    public static final String LOG_CTYPE = "baipai";
 
     public static final String LOG_SHOW_FEED_SOURCE = "feed";
     public static final String LOG_CLICK_FEED_SOURCE = "feed";
@@ -126,6 +135,7 @@ public final class CommonConstant {
      * loadFeed	下拉加载feed流	chid
      * detailClick	点击详情页	nid(新闻id)，logchid（点击来源，首页或频道页或相关推荐列表）
      * commentClick	点击获取评论	nid
+     * searchClick	点击获取搜索页
      * changeChannel	切换频道	fchid,tchid
      * subChannel	订阅频道	chids(频道id列表，逗号分隔)
      * subPublisher	订阅来源	publisher(来源名称)
@@ -138,6 +148,8 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_LOGIN = "login";
     public static final String LOG_ATYPE_REFRESHFEED = "refreshFeed";
     public static final String LOG_ATYPE_LOADFEED = "loadFeed";
+    public static final String LOG_ATYPE_LOADAD = "loadAd";
+    public static final String LOG_ATYPE_SEARCHCLICK = "searchClick";
     public static final String LOG_ATYPE_DETAILCLICK = "detailClick";
     public static final String LOG_ATYPE_VIDEO_DETAILCLICK = "videoDetailClick";
     public static final String LOG_ATYPE_CHANNELCLICK = "channelClick";
@@ -168,6 +180,7 @@ public final class CommonConstant {
      */
     public static final String LOG_PAGE_FEEDPAGE = "feedPage";
     public static final String LOG_PAGE_DETAILPAGE = "detailPage";
+    public static final String LOG_PAGE_COMMENTPAGE = "commentPage";
     public static final String LOG_PAGE_VIDEODETAILPAGE = "videoDetailPage";
     public static final String LOG_PAGE_CHANNELPAGE = "channelPage";
     public static final String LOG_PAGE_TOPICPAGE = "topicPage";

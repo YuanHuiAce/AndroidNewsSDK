@@ -3,6 +3,7 @@ package com.news.yazhidao.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -26,8 +29,11 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.widget.EllipsizeEndTextView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.qq.e.ads.nativ.NativeADDataRef;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +60,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                         return R.layout.qd_ll_news_item_no_pic;
                     case 1:
                         return R.layout.qd_ll_news_item_one_pic;
+                    case 50:
+                        return R.layout.ad_ll_news_item_one_pic;
                     case 8:
                         return R.layout.ll_video_item_small;
                     default:
@@ -63,7 +71,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 
             @Override
             public int getViewTypeCount() {
-                return 4;
+                return 5;
             }
 
             @Override
@@ -73,6 +81,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                         return RelatedItemEntity.NO_PIC;
                     case 1:
                         return RelatedItemEntity.ONE_AND_TWO_PIC;
+                    case 50:
+                        return RelatedItemEntity.AD_ONE_PIC;
                     case 8:
                         return RelatedItemEntity.VIDEO_SMALL;
                     default:
@@ -94,18 +104,18 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_no_pic) {
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             if (relatedItemEntity.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
             final String strTitle = relatedItemEntity.getTitle();
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
             ImageView ivCard = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
             lpCard.width = mCardWidth;
@@ -116,12 +126,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             if (relatedItemEntity.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             }
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
-            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final TextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
             tvTitle.post(new Runnable() {
@@ -145,8 +155,33 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }
             });
+        } else if (layoutId == R.layout.ad_ll_news_item_one_pic) {
+            NativeADDataRef dataRef = relatedItemEntity.getDataRef();
+            if (dataRef != null) {
+                dataRef.onExposured(holder.getView(R.layout.ad_ll_news_item_one_pic));
+            }
+            int cardWidth = mCardWidth;
+            int cardHeight = (int) (mCardWidth * 9 / 16.0f);
+            final String strTitle = relatedItemEntity.getTitle();
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, relatedItemEntity.isRead());
+            ImageView ivCard = holder.getView(R.id.title_img_View);
+            RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+            lpCard.width = cardWidth;
+            lpCard.height = cardHeight;
+            ivCard.setLayoutParams(lpCard);
+            if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
+                Glide.with(mContext).load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
+            }
+            setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
+            holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            holder.getView(R.id.ad_image_icon).setVisibility(View.GONE);
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
+            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+            holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
+            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.ll_video_item_small) {
-            setTitleTextBySpannable((EllipsizeEndTextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
+            setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
             lpVideoSmall.width = mCardWidth;
@@ -154,7 +189,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             ivVideoSmall.setLayoutParams(lpVideoSmall);
             holder.setGlideDrawViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
-            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (EllipsizeEndTextView) holder.getView(R.id.title_textView));
+            setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), relatedItemEntity.getDuration());
@@ -163,7 +198,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
 //            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
-            final EllipsizeEndTextView tvTitle = holder.getView(R.id.title_textView);
+            final TextView tvTitle = holder.getView(R.id.title_textView);
             final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
             final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
             tvTitle.post(new Runnable() {
@@ -172,17 +207,17 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
                     RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
                     int lineCount = tvTitle.getLineCount();
-                    if (lineCount >= 3) {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
-                    } else {
-                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
-                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
-                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
-                    }
+//                    if (lineCount >= 3) {
+//                        lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                        lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_img_View);
+//                        lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+//                        lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 30);
+//                    } else {
+                    lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
+                    lpSourceContent.addRule(RelativeLayout.ALIGN_RIGHT, R.id.title_textView);
+                    lpSourceContent.topMargin = DensityUtil.dip2px(mContext, 6);
+                    lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 12);
+//                    }
                     llSourceOnePic.setLayoutParams(lpSourceContent);
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }
@@ -232,9 +267,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 
     }
 
-    private void setTitleTextBySpannable(EllipsizeEndTextView tvTitle, String strTitle, boolean isRead) {
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
-            tvTitle.setMaxLines(2);
             strTitle = strTitle.replace("<font color='#0091fa' >", "").replace("</font>", "");
             tvTitle.setText(strTitle);
             if (isRead) {
@@ -257,11 +291,20 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     }
 
     private void setNewsFeedReadAndUploadUserAction(RelatedItemEntity relatedItemEntity, String formPage, String toPage) {
+        int nid = relatedItemEntity.getNid();
+        JSONObject jsonObject = new JSONObject();
+        if (nid != 0) {
+            try {
+                jsonObject.put("chid", Long.valueOf(nid));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         if (!relatedItemEntity.isRead()) {
             relatedItemEntity.setRead(true);
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, null, true);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), true);
         } else {
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, null, false);
+            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), false);
         }
     }
 
@@ -271,7 +314,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
      * @param rlNewsContent
      * @param relatedItemEntity
      */
-    private void setNewsContentClick(final RelativeLayout rlNewsContent, final RelatedItemEntity relatedItemEntity, final EllipsizeEndTextView tvTitle) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final RelatedItemEntity relatedItemEntity, final TextView tvTitle) {
         TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
         final float[] down_x = new float[1];
         final float[] down_y = new float[1];
@@ -304,9 +347,15 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     return;
                 }
                 firstClick = System.currentTimeMillis();
+                if (relatedItemEntity.getDataRef() != null) {
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, relatedItemEntity.getPname());
+                    NativeADDataRef dataRef = relatedItemEntity.getDataRef();
+                    dataRef.onClicked(rlNewsContent);
+                    return;
+                }
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_NativePosID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
                     AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);

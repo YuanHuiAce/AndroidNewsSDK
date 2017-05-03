@@ -45,7 +45,9 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -75,7 +77,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
     //            ,mDetailRightMore;
-    private ImageView mNewsLoadingImg;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
@@ -151,8 +152,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setOnClickListener(this);
+        mNewsDetailLoaddingWrapper.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
@@ -188,6 +188,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("detail");
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
@@ -198,19 +199,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    public void finish() {
-        if (mNewsFeed != null && isUserComment) {
-            Intent intent = new Intent();
-            intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
-            intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
-            intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
-            sendBroadcast(intent);
-        }
-        super.finish();
-    }
-
-    @Override
     protected void onPause() {
+        MobclickAgent.onPageEnd("detail");
         nowTime = System.currentTimeMillis();
         if (mDetailFgt != null) {
             String percent = mDetailFgt.getPercent();
@@ -221,6 +211,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
         }
         super.onPause();
+    }
+
+    @Override
+    public void finish() {
+        if (mNewsFeed != null && isUserComment && mNewsFeed.getNid() != 0) {
+            Intent intent = new Intent();
+            intent.putExtra(CommonConstant.NEWS_COMMENT_NUM, mCommentNum);
+            intent.putExtra(CommonConstant.NEWS_ID, mNewsFeed.getNid());
+            intent.setAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
+            sendBroadcast(intent);
+        }
+        super.finish();
     }
 
     @Override
@@ -309,7 +311,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     protected void loadData() {
         if (NetUtil.checkNetWork(this)) {
             isRefresh = true;
-            mNewsLoadingImg.setVisibility(View.GONE);
+            mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
             mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
             bgLayout.setVisibility(View.VISIBLE);
             mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
@@ -359,18 +361,24 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     isRefresh = false;
-                    mNewsLoadingImg.setVisibility(View.VISIBLE);
+                    mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
                     bgLayout.setVisibility(View.GONE);
                 }
             });
             feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(feedRequest);
+        } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.GONE);
         }
     }
 
     private NewsFeed convert2NewsFeed(NewsDetail result) {
         if (mNewsFeed == null) {
             mNewsFeed = new NewsFeed();
+        }
+        if (!TextUtil.isEmptyString(mNid)) {
+            mNewsFeed.setNid(Integer.valueOf(mNid));
         }
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
@@ -410,7 +418,23 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         int getId = v.getId();
         if (getId == R.id.mDetailLeftBack) {
-            onBackPressed();
+            if (isCommentPage) {
+                isCommentPage = false;
+                mNewsDetailViewPager.setCurrentItem(0);
+                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailAty2.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_COMMENTPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                }
+            } else {
+                onBackPressed();
+            }
         }
 //            case R.id.mDetailRightMore://更多的点击
 //                if (mNewsFeed != null) {
@@ -440,11 +464,29 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mNewsDetailViewPager.setCurrentItem(1);
                 mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                 mDetailCommentNum.setVisibility(View.GONE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailAty2.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_COMMENTPAGE, jsonObject, false);
+                }
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
                 mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+                if (!TextUtil.isEmptyString(mNid)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(mNid));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(NewsDetailAty2.this, CommonConstant.LOG_ATYPE_COMMENTCLICK, CommonConstant.LOG_PAGE_COMMENTPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                }
             }
         } else if (getId == R.id.mDetailShare) {
             if (mNewsFeed != null) {
@@ -455,7 +497,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
             }
-        } else if (getId == R.id.mNewsLoadingImg) {
+        } else if (getId == R.id.mNewsDetailLoaddingWrapper) {
             if (!isRefresh) {
                 loadData();
             }

@@ -2,12 +2,13 @@ package demo.com.myapplication.pages;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -15,25 +16,45 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.news.yazhidao.application.QiDianApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.AdUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
+import com.news.yazhidao.utils.LogUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
 import cn.sharesdk.framework.ShareSDK;
 import demo.com.myapplication.R;
 
-public class SplashAty extends BaseActivity {
+public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener, Handler.Callback {
 
     private ImageView mSplashSlogan;
     private ImageView mSplashMask;
     private TextView mSplashVersion;
+    private int mScreenWidth;
+    private Handler mHandler;
+    private Runnable mRunnable;
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    private RequestManager mRequestManager;
+    //广告
+    private ImageView ivAD;
+    private TextView tvSkip;
+    private NativeAD mNativeAD;
+    private int second = 4;
+    private boolean mFirst;
 
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
@@ -50,6 +71,51 @@ public class SplashAty extends BaseActivity {
         option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         mLocationClient.setLocOption(option);
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        if (!TextUtil.isListEmpty(list)) {
+            LogUtil.adGetLog(this, 1, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            final NativeADDataRef dataRef = list.get(0);
+            if (dataRef != null) {
+//                adtvTitle.setText(dataRef.getDesc());
+                final String url = dataRef.getImgUrl();
+                if (!TextUtil.isEmptyString(url)) {
+                    mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+                    ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+                        }
+                    });
+                }
+                dataRef.onExposured(ivAD);
+                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this);
+                ivAD.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
+                        dataRef.onClicked(ivAD);
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onNoAD(int i) {
+
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+
     }
 
     public class MyLocationListener implements BDLocationListener {
@@ -133,70 +199,185 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void setContentView() {
+        mHandler = new Handler(this);
         ShareSDK.initSDK(this);
+        UserManager.registerVisitor(this, null);
+        //展示广点通sdk
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        //展示广点通API
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
-        UserManager.registerVisitor(this, null);
+        mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mRequestManager = Glide.with(this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
+        mNativeAD.loadAD(1);
+//        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false)) {
+//            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
+//            mNativeAD.loadAD(1);
+//            UserManager.registerVisitor(this, null);
+//        } else {
+//            UserManager.registerVisitor(this, new UserManager.RegisterVisitorListener() {
+//                @Override
+//                public void registerSuccess() {
+//                    Log.i("tag","1111");
+//                    if (SharedPreManager.mInstance(SplashAty.this).getUser(SplashAty.this) != null) {
+//                        String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+//                        ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+//                        adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(SplashAty.this).getUser(SplashAty.this).getMuid());
+//                        Gson gson = new Gson();
+//                        //加入详情页广告位id
+//                        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(SplashAty.this, CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID)));
+//                        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+//                        NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+//                            @Override
+//                            public void onResponse(final ArrayList<NewsFeed> result) {
+//                                Log.i("tag","2222");
+//                                if (!TextUtil.isListEmpty(result)) {
+//                                    LogUtil.adGetLog(SplashAty.this, 1, result.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+//                                    final NewsFeed newsFeed = result.get(0);
+//                                    if (newsFeed != null) {
+//                                        final ArrayList<String> imgs = newsFeed.getImgs();
+//                                        if (!TextUtil.isListEmpty(imgs)) {
+//                                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+//                                            ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                                                @Override
+//                                                public void onGlobalLayout() {
+//                                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+//                                                }
+//                                            });
+//                                        }
+//                                        ivAD.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View view) {
+//                                                LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
+//                                                Intent AdIntent = new Intent(SplashAty.this, NewsDetailWebviewAty.class);
+//                                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+//                                                Log.i("tag", newsFeed.getPurl() + "url");
+//                                                SplashAty.this.startActivity(AdIntent);
+//                                            }
+//                                        });
+//                                        AdUtil.upLoadAd(newsFeed, SplashAty.this);
+//                                    }
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//Log.i("tag","3333");
+//                            }
+//                        });
+//                        newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//                        requestQueue.add(newsFeedRequestPost);
+//                    }
+//                }
+//            });
+//        }
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+//                boolean showGuidePage = SharedPreManager.mInstance(SplashAty.this).getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
+//                if (!showGuidePage) {
+//                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
+//                    startActivity(intent);
+//                } else {
+                Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
+                startActivity(mainAty);
+//                }
+                SplashAty.this.finish();
+            }
+        };
     }
 
 
     @Override
     protected void initializeViews() {
-        mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
-        mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
-        mSplashVersion = (TextView) findViewById(R.id.mSplashVersion);
-        mSplashVersion.setText(getResources().getString(R.string.app_name) + " v" + getResources().getString(R.string.app_version));
-        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
-        mSplashSlogan.setAnimation(animation);
-        final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
-        new Handler().postDelayed(new Runnable() {
+        tvSkip = (TextView) findViewById(R.id.skip_view);
+        tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                mSplashMask.setAnimation(mask);
-            }
-        }, 100);
-        mask.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mSplashMask.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
+            public void onClick(View view) {
+                Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
+                startActivity(mainAty);
+                finish();
             }
         });
+        ivAD = (ImageView) findViewById(R.id.ad_image);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ivAD.getLayoutParams();
+        layoutParams.width = mScreenWidth;
+        layoutParams.height = (int) (mScreenWidth * 3 / 2.0f);
+        ivAD.setLayoutParams(layoutParams);
+//        mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
+//        mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
+//        mSplashVersion = (TextView) findViewById(R.id.mSplashVersion);
+//        mSplashVersion.setText(getResources().getString(R.string.app_name) + " v" + getResources().getString(R.string.app_version));
+//        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
+//        mSplashSlogan.setAnimation(animation);
+//        final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSplashMask.setAnimation(mask);
+//            }
+//        }, 100);
+//        mask.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mSplashMask.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
         //baidu Map
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
+        mHandler.sendEmptyMessage(0);
     }
 
 
     @Override
-    protected void loadData() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                boolean showGuidePage = SharedPreManager.mInstance(SplashAty.this).getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
-                if (!showGuidePage) {
-                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
-                    startActivity(intent);
-                } else {
-                    Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
-                    startActivity(mainAty);
-                }
-                SplashAty.this.finish();
+    public boolean handleMessage(Message message) {
+        if (0 == message.what) {
+            tvSkip.setText(second + "s 跳过");
+            second--;
+            if (second > 0) {
+                mHandler.sendEmptyMessageDelayed(0, 1000);
             }
-        }, 2000);
+        }
+        return false;
     }
 
+    @Override
+    protected void loadData() {
+        mHandler.postDelayed(mRunnable, 4000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("SplashScreen");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("SplashScreen");
+    }
+
+    @Override
+    public void finish() {
+        mHandler.removeCallbacks(mRunnable);
+        super.finish();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

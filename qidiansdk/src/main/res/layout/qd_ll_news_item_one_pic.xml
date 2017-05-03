@@ -14,13 +14,14 @@
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop" />
 
-    <com.news.yazhidao.widget.EllipsizeEndTextView
+    <TextView
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:maxLines="3"
         android:layout_toLeftOf="@+id/title_img_View"
         android:textColor="@color/newsFeed_titleColor"
         android:textSize="@dimen/new_font1" />

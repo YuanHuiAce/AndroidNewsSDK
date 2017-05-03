@@ -14,10 +14,8 @@
         android:layout_marginLeft="15dip"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
-        android:ellipsize="end"
-        android:maxLines="3"
         android:textColor="#333333"
-        android:textSize="15sp" />
+        android:textSize="17sp" />
     <RelativeLayout
         android:id="@+id/detail_container_onlines"
         android:layout_width="match_parent"
@@ -134,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:visibility="gone">
+       >
 
         <!--<ImageView-->
         <!--android:id="@+id/detail_point"-->

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/source_content_linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ad_image_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:scaleType="centerCrop" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/news_source_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:lines="1"
+        android:maxEms="8"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/new_font6" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/type_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5dp"
+        android:textSize="@dimen/new_font7"
+        android:visibility="gone" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/comment_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/new_font6" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/comment_num_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="-10dp"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/new_font6" />
+
+    <ImageView
+        android:id="@+id/delete_imageView"
+        android:layout_width="35dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:src="@drawable/btn_news_feed_delete_selector" />
+</LinearLayout>
