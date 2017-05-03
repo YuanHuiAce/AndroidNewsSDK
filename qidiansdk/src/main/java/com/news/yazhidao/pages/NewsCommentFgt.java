@@ -37,6 +37,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AuthorizedUserUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -277,41 +278,41 @@ public class NewsCommentFgt extends Fragment {
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if (user != null && user.isVisitor()) {
-//                        AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
-//                    } else {
-////                        if ((user.getMuid() + "").equals(comment.getUid())) {
-////                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
-////                            return;
-////                        }
-//                        if (comment.getUpflag() == 0) {
-//                            comment.setUpflag(1);
-//                            holder.ivPraise.setImageResource(R.drawable.bg_praised);
-//                            int num = 0;
-//                            if (comment.getCommend() == 0) {
-//                                num = 1;
-//                            } else {
-//                                num = comment.getCommend() + 1;
-//                            }
-//                            holder.tvPraiseCount.setVisibility(View.VISIBLE);
-//                            comment.setCommend(num);
-//                            holder.tvPraiseCount.setText(num + "");
-//                            addNewsLove(user, comment, true);
-//                        } else {
-//                            comment.setUpflag(0);
-//                            holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-//                            int num = 0;
-//                            if (comment.getCommend() != 0) {
-//                                num = comment.getCommend() - 1;
-//                            }
-//                            if (num == 0) {
-//                                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
-//                            }
-//                            comment.setCommend(num);
-//                            holder.tvPraiseCount.setText(num + "");
-//                            addNewsLove(user, comment, false);
+                    if (user != null && user.isVisitor()) {
+                        AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+                    } else {
+//                        if ((user.getMuid() + "").equals(comment.getUid())) {
+//                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+//                            return;
 //                        }
-//                    }
+                        if (comment.getUpflag() == 0) {
+                            comment.setUpflag(1);
+                            holder.ivPraise.setImageResource(R.drawable.bg_praised);
+                            int num = 0;
+                            if (comment.getCommend() == 0) {
+                                num = 1;
+                            } else {
+                                num = comment.getCommend() + 1;
+                            }
+                            holder.tvPraiseCount.setVisibility(View.VISIBLE);
+                            comment.setCommend(num);
+                            holder.tvPraiseCount.setText(num + "");
+                            addNewsLove(user, comment, true);
+                        } else {
+                            comment.setUpflag(0);
+                            holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+                            int num = 0;
+                            if (comment.getCommend() != 0) {
+                                num = comment.getCommend() - 1;
+                            }
+                            if (num == 0) {
+                                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+                            }
+                            comment.setCommend(num);
+                            holder.tvPraiseCount.setText(num + "");
+                            addNewsLove(user, comment, false);
+                        }
+                    }
                 }
             });
             return convertView;

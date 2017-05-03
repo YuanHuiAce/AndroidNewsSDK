@@ -45,7 +45,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -188,7 +187,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("detail");
+        LogUtil.onPageStart(CommonConstant.LOG_PAGE_DETAILPAGE);
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
             mRefreshReceiver = new RefreshPageBroReceiver();
@@ -200,7 +199,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void onPause() {
-        MobclickAgent.onPageEnd("detail");
+        LogUtil.onPageEnd(CommonConstant.LOG_PAGE_DETAILPAGE);
         nowTime = System.currentTimeMillis();
         if (mDetailFgt != null) {
             String percent = mDetailFgt.getPercent();

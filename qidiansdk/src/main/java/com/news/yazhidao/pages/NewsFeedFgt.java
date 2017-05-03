@@ -14,12 +14,9 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -73,9 +70,7 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.transitionseverywhere.TransitionManager;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,7 +85,6 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
-    public static final String TAG = "NewsFeedFgt";
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
 
@@ -160,7 +154,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mAdapter.notifyDataSetChanged();
     }
 
-
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
     }
@@ -176,7 +169,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void setNewsSaveDataCallBack(NewsSaveDataCallBack listener) {
         this.mNewsSaveCallBack = listener;
     }
-
 
     boolean isNotLoadData;
 
@@ -208,7 +200,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         return percents;
     }
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -222,7 +213,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (vPlayer != null && !isVisibleToUser) {
             invisible();
         }
-
         if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
             loadData(PULL_DOWN_REFRESH);
         }
@@ -282,7 +272,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mNewsFeedDao = new NewsFeedDao(mContext);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
-        /** 梁帅：注册修改字体大小的广播*/
         mRefreshReceiver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
@@ -385,7 +374,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         return rootView;
     }
 
-
     NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
@@ -398,16 +386,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     @Override
     public void onDestroy() {
-        Logger.e(TAG, "fragment");
         ThemeManager.unregisterThemeChangeListener(this);
         if (mRefreshReceiver != null) {
             mContext.unregisterReceiver(mRefreshReceiver);
         }
-//        if (vPlayer != null) {
-//            if (vPlayer.getParent() != null)
-//                ((ViewGroup) vPlayer.getParent()).removeAllViews();
-//        }
-//        vPlayer = null;
         super.onDestroy();
     }
 
@@ -494,7 +476,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     e.printStackTrace();
                 }
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_LOADFEED);
             }
         } else {
             if (mFlag) {
@@ -519,7 +500,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     e.printStackTrace();
                 }
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED);
             }
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
@@ -820,7 +800,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("feed");
+        LogUtil.onPageEnd(CommonConstant.LOG_SHOW_FEED_SOURCE);
         if (vPlayer != null) {
             invisible();
         }
@@ -831,7 +811,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //        mHomeWatcher = new HomeWatcher(this.getActivity());
 //        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
 //        mHomeWatcher.startWatch();
-        MobclickAgent.onPageStart("feed");
+        LogUtil.onPageStart(CommonConstant.LOG_SHOW_FEED_SOURCE);
         super.onResume();
         if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
             mRefreshTitleBar.setVisibility(View.GONE);
@@ -928,7 +908,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mrlSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MobclickAgent.onEvent(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK);
                 LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SEARCHCLICK, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, null, true);
                 Intent intent = new Intent(mContext, TopicSearchAty.class);
                 mContext.startActivity(intent);
@@ -1003,9 +982,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (!newsFeed.isUpload() && newsFeed.isVisble()) {
                                     newsFeed.setUpload(true);
                                     mUploadArrNewsFeed.add(newsFeed);
-                                    if (newsFeed.getRtype() == 3) {
-                                        MobclickAgent.onEvent(mContext, "showAd");
-                                    }
                                 }
                             }
                         }
@@ -1042,7 +1018,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
                 if ("44".equals(mstrChannelId) && portrait) {
-//                    VideoVisibleControl();
                     VideoShowControl();
                 }
             }
@@ -1260,7 +1235,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v(TAG, "onActivityResult");
         if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
@@ -1326,7 +1300,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        Log.v(TAG, "onConfigurationChanged");
         if (!"44".equals(mstrChannelId))
             return;
         super.onConfigurationChanged(newConfig);
@@ -1342,7 +1315,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                                vPlayerContainer.removeView(vPlayer);
                                 removeVPlayer();
                                 TransitionManager.beginDelayedTransition(vPlayerContainer);
-                                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
                                 int position = getPlayItemPosition();
                                 if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
                                     if (position != -1) {
@@ -1392,7 +1364,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         new Runnable() {
                             @Override
                             public void run() {
-                                Log.v(TAG, "onConfigurationChanged:::" + newConfig.orientation);
                                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                                 if (frameLayout != null) {
                                     frameLayout.removeView(vPlayer);
@@ -1402,7 +1373,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                                         if (videoSHow != null) {
                                             videoSHow.setVisibility(View.VISIBLE);
-                                            Log.v(TAG, "onConfigurationChanged");
                                         }
                                     }
                                 }
@@ -1885,8 +1855,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * 移除播放器
      */
     public void removeViews() {
-        if (vPlayer==null)
-            return ;
+        if (vPlayer == null)
+            return;
         ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
         if (frameLayout != null && frameLayout.getChildCount() > 0) {
             frameLayout.removeView(vPlayer);
@@ -1895,7 +1865,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 View show = itemView.findViewById(R.id.rl_video_show);
                 if (show != null) {
                     show.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "removeViews");
                 }
             }
         }
@@ -1919,7 +1888,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * 滑动控制视频是否播放
      */
     private void VideoVisibleControl() {
-        Log.v(TAG, "VideoVisibleControl");
         try {
             if (vPlayer == null)
                 return;
@@ -1933,7 +1901,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     if (itemView != null) {
                         View videoSHow = itemView.findViewById(R.id.rl_video_show);
                         if (videoSHow != null) {
-                            Log.e(TAG, "rl_video_show");
                             videoSHow.setVisibility(View.VISIBLE);
                         }
 
@@ -1948,14 +1915,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
             }
         } catch (Exception e) {
-            Log.v(TAG, e.toString());
         }
     }
 
 
     private void VideoShowControl() {
         ListView lv = mlvNewsFeed.getRefreshableView();
-        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition() + "ChannelId::" + mstrChannelId);
         boolean isExist = false;
         int position = -1;
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
@@ -1973,9 +1938,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
         if (isExist) {
             View item = lv.getChildAt(position);
-            Log.e(TAG, "item:" + item.toString() + "position:" + position);
             FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
-            Log.e(TAG, "frameLayout:" + frameLayout.toString());
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
 //                mFeedSmallScreen.removeAllViews();

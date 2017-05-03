@@ -225,6 +225,11 @@ public class HttpConstant {
     public static final String URL_NEWS_DETAIL_AD = URL_SERVER_HOST + "/ns/ad";
 
     /**
+     * 开屏页广告
+     */
+    public static final String URL_NEWS_SPLASH_AD = URL_SERVER_HOST + "/ns/oad";
+
+    /**
      * 滑动接口
      */
     public static final String URL_SCROLL_AD = URL_SERVER_HOST + "/sl/ins";

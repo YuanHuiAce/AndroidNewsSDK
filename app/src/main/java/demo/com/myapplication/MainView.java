@@ -93,7 +93,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
     private ArrayList<ChannelItem> mUnSelChannelItems;
     RelativeLayout view;
-
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
     private MyViewPagerAdapter mViewPagerAdapter;
@@ -106,7 +105,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
-    //    private VPlayPlayer vPlayPlayer;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
     private final Context mContext;
@@ -174,7 +172,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         uploadInformation();
         uploadChannelInformation();
         mRequestManager = Glide.with(activity);
-//        vPlayPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         lastTime = System.currentTimeMillis();
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
@@ -278,7 +275,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         setChannelList();
-        checkVersion();
+//        checkVersion();
     }
 
     /**
@@ -339,7 +336,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 dialog.dismiss();
             }
         });
-
         builder.setCancelable(false);
         builder.create().show();
 
@@ -418,7 +414,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                             }
                         }
                         if (index == -1) {
-                            Logger.e("jigang", "index = " + index);
                             index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
                         }
                         mViewPager.setCurrentItem(index);

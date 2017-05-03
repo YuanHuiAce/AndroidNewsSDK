@@ -17,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".pages.MainAty"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".pages.ChannelOperateAty"
             android:screenOrientation="portrait" />
         <!--/**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/-->

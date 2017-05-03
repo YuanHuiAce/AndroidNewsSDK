@@ -46,6 +46,14 @@ public class LogUtil {
         return userLogBasicInfoEntity;
     }
 
+    public static void onPageStart(String source) {
+        MobclickAgent.onPageStart(source);
+    }
+
+    public static void onPageEnd(String source) {
+        MobclickAgent.onPageEnd(source);
+    }
+
     public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         String mUserId = "";

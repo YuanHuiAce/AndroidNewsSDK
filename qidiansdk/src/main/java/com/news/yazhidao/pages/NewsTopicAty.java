@@ -39,10 +39,8 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsTopicHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -201,7 +199,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 }
             });
             HashMap<String, String> header = new HashMap<>();
-            header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+//            header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
             topicRequestGet.setRequestHeader(header);
             topicRequestGet.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(topicRequestGet);
@@ -261,13 +259,13 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("newsTopic");
+        LogUtil.onPageStart(CommonConstant.LOG_PAGE_TOPICPAGE);
         lastTime = System.currentTimeMillis();
     }
 
     @Override
     protected void onPause() {
-        MobclickAgent.onPageEnd("newsTopic");
+        LogUtil.onPageEnd(CommonConstant.LOG_PAGE_TOPICPAGE);
         nowTime = System.currentTimeMillis();
         //上报日志
         LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%");

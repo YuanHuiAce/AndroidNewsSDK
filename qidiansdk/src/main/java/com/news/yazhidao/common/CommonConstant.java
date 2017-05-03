@@ -82,6 +82,7 @@ public final class CommonConstant {
     public static final String CHANGE_TEXT_ACTION = "change_text";
     public static final String CHANGE_COMMENT_NUM_ACTION = "change_comment_num";
     public static final String TYPE_SHOWIMAGES = "showImagesType";
+    public static final String SPLASH_SCREEN = "SplashScreen";
     //分享action
     public static final String SHARE_TITLE = "share_title";
     public static final String SHARE_URL = "share_url";
@@ -109,8 +110,8 @@ public final class CommonConstant {
 
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
-    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
-    public static final int NEWS_CTYPE = 5;
+    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
+    public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
@@ -120,7 +121,8 @@ public final class CommonConstant {
     //wenzi	纹字锁屏
     //lybrowser	猎鹰浏览器
     //baipai 白牌
-    public static final String LOG_CTYPE = "baipai";
+    //yingyonghui 应用汇
+    public static final String LOG_CTYPE = "wenzi";
 
     public static final String LOG_SHOW_FEED_SOURCE = "feed";
     public static final String LOG_CLICK_FEED_SOURCE = "feed";
