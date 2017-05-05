@@ -199,7 +199,6 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                         SplashADRequestPost<AdDetailEntity> newsFeedRequestPost = new SplashADRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<AdDetailEntity>() {
                             @Override
                             public void onResponse(final AdDetailEntity result) {
-                                Log.i("tag", "2222");
 //                                if (!TextUtil.isEmptyString(result)) {
 //                                    LogUtil.adGetLog(SplashAty.this, 1, result.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
 //                                    final AdDetailEntity newsFeed = result.get(0);
@@ -335,6 +334,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
 //                adtvTitle.setText(dataRef.getDesc());
+                Log.i("tag",dataRef.getAPPScore()+"=="+dataRef.getAPPPrice()+"==="+dataRef.getAPPStatus()+"=="+dataRef.isAPP());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
                     mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(ivAD);
