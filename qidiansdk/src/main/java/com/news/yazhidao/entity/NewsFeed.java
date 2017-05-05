@@ -181,6 +181,8 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private int duration;
 
+    private boolean isPlaying;
+
     /**
      * 播放数
      */
@@ -191,6 +193,14 @@ public class NewsFeed implements Serializable {
 
     private int logchid;
 
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
 
     @Override
     public String toString() {

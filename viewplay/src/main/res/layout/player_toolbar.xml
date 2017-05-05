@@ -36,7 +36,7 @@
         android:padding="6dp"
         android:src="@mipmap/video_unlock" />
 
-    <TextView
+    <Button
         android:id="@+id/tv_media_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,8 +45,9 @@
         android:gravity="center"
         android:text="视频列表"
         android:layout_marginRight="15dp"
+        android:background="@null"
         android:paddingLeft="10dp"
-        android:textColor="@android:color/white"
+        android:textColor="@drawable/play_feed_select"
         android:textSize="14sp"
         android:visibility="gone"
         />

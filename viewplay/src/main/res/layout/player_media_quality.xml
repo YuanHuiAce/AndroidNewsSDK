@@ -5,7 +5,7 @@
 
     <FrameLayout
         android:id="@+id/fl_media_quality"
-        android:layout_width="200dp"
+        android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:background="#2a2a2a"
@@ -13,7 +13,7 @@
         android:layout_marginTop="44dp"
         android:padding="8dp"
         android:visibility="gone"
-        android:translationX="200dp"
+        android:translationX="260dp"
        >
         <ListView
             android:id="@+id/lv_media_quality"

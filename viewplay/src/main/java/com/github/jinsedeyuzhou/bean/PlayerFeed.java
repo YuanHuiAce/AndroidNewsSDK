@@ -7,10 +7,30 @@ import java.io.Serializable;
  */
 
 public class PlayerFeed implements Serializable {
+
+
+    private int nid;
     private String streamUrl;
     private String img;
     private String title;
+    private int typeSelected;
 
+
+    public int getTypeSelected() {
+        return typeSelected;
+    }
+
+    public void setTypeSelected(int typeSelected) {
+        this.typeSelected = typeSelected;
+    }
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
+    }
 
     public String getTitle() {
         return title;

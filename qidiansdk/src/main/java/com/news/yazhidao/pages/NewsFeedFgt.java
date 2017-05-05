@@ -39,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.github.jinsedeyuzhou.bean.PlayerFeed;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -603,6 +604,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else if ("44".equals(mstrChannelId)) {
                     newsFeed.setChannel_id(44);
+                    PlayerFeed playerFeed=new PlayerFeed();
+                    playerFeed.setNid(newsFeed.getNid());
+                    playerFeed.setTitle(newsFeed.getTitle());
+                    playerFeed.setImg(newsFeed.getThumbnail());
+                    playerFeed.setStreamUrl(newsFeed.getVideourl());
+                    playerFeeds.add(playerFeed);
+                    playerFeed=null;
+
                 } else {
                     newsFeed.setChannel_id(newsFeed.getChannel());
                 }
@@ -700,6 +709,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
         mIsFirst = false;
+        if (vPlayer!=null&&mstrChannelId.equals("44"))
+        {
+            vPlayer.setPlayerFeed(playerFeeds);
+        }
         mlvNewsFeed.onRefreshComplete();
     }
 
@@ -772,6 +785,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
                     mAdapter.setNewsFeed(newsFeeds);
+                    for (NewsFeed newsFeed:newsFeeds)
+                    {
+                        PlayerFeed playerFeed=new PlayerFeed();
+                        playerFeed.setNid(newsFeed.getNid());
+                        playerFeed.setTitle(newsFeed.getTitle());
+                        playerFeed.setImg(newsFeed.getThumbnail());
+                        playerFeed.setStreamUrl(newsFeed.getVideourl());
+                        playerFeeds.add(playerFeed);
+                        playerFeed=null;
+                    }
                     mAdapter.notifyDataSetChanged();
                     mHomeRetry.setVisibility(View.GONE);
                 }
@@ -1248,12 +1271,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     //========================================视频部分======================================//
-
-    private void initPlayer() {
-
-    }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1262,7 +1279,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
                 int newId = data.getIntExtra(NewsFeedFgt.KEY_NEWS_ID, 0);
-                if (position != 0 && cPostion == newId && newId != 0) {
+                if (position != 0 && vPlayer.cPostion == newId && newId != 0) {
                     vPlayer.seekToNewPosition(position);
                     vPlayer.onResume();
                     if (vPlayer.isPlay())
@@ -1310,11 +1327,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayer = PlayerManager.videoPlayView;
     }
 
-    public int cPostion = -1;
-    private int lastPostion = -1;
+//    public int vPlayer.cPostion = -1;
+    public int lastPostion = -1;
     private VPlayPlayer vPlayer;
     private boolean portrait = true;
 //    private NewsFeed newsFeed;
+    private ArrayList<PlayerFeed> playerFeeds=new ArrayList<>();
 
     /**
      * 横竖屏切换
@@ -1328,6 +1346,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             return;
         super.onConfigurationChanged(newConfig);
         if (vPlayer != null) {
+            vPlayer.setPlayerFeed(playerFeeds);
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 portrait = true;
@@ -1430,7 +1449,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isFirstPlay;
 
     /**
-     * 自定义升级弹窗
+     * 无网络提示
      */
     protected void showNetworkDialog(final RelativeLayout relativeLayout, final NewsFeed feed) {
         CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
@@ -1450,8 +1469,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                 PlayerManager.newsFeed = feed;
                 isAd = false;
-                cPostion = feed.getNid();
-                if (cPostion != lastPostion) {
+                vPlayer.cPostion = feed.getNid();
+                if (vPlayer.cPostion != lastPostion) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
@@ -1475,7 +1494,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             vPlayer.play(feed.getVideourl());
                         }
                     }, 100);
-                lastPostion = cPostion;
+                lastPostion = vPlayer.cPostion;
                 isFirstPlay = true;
                 dialog.dismiss();
             }
@@ -1507,8 +1526,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 relativeLayout.setVisibility(View.GONE);
                 PlayerManager.newsFeed = feed;
                 isAd = false;
-                cPostion = feed.getNid();
-                if (cPostion != lastPostion) {
+                vPlayer.cPostion = feed.getNid();
+                if (vPlayer.cPostion != lastPostion) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
@@ -1521,15 +1540,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.setDuration(feed.getDuration());
                 vPlayer.play(feed.getVideourl());
-//                ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
-//                if (frameLayout!=null)
-//                {
-//                    frameLayout.removeAllViews();
-//                }
                 removeVPlayer();
                 mItemVideo.addView(vPlayer);
                 vPlayer.setShowContoller(false);
-                lastPostion = cPostion;
+                lastPostion = vPlayer.cPostion;
             }
 
             @Override
@@ -1537,8 +1551,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 isAuto = false;
                 if (feed == null && !NetworkUtils.isConnectionAvailable(mContext))
                     return;
-                cPostion = feed.getNid();
-                if (cPostion != lastPostion && lastPostion != -1) {
+                vPlayer.cPostion = feed.getNid();
+                if (vPlayer.cPostion != lastPostion && lastPostion != -1) {
                     vPlayer.stop();
                     vPlayer.release();
                     removeViews();
@@ -1555,7 +1569,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     ((Activity) mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
 
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
-                lastPostion = cPostion;
+                lastPostion = vPlayer.cPostion;
             }
 
             @Override
@@ -1583,7 +1597,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (vPlayer.isPlay()) {
                     vPlayer.stop();
                     vPlayer.release();
-                    cPostion = -1;
+                    vPlayer.cPostion = -1;
                     lastPostion = -1;
                     mFeedSmallScreen.removeAllViews();
                     mFeedSmallLayout.setVisibility(View.GONE);
@@ -1648,7 +1662,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             vPlayer.setTitle(mArrNewsFeed.get(position).getTitle());
                             vPlayer.start(mArrNewsFeed.get(position).getVideourl());
                             mFeedSmallScreen.addView(vPlayer);
-                            lastPostion = cPostion;
+                            lastPostion = vPlayer.cPostion;
                         } else if (vPlayerContainer.getVisibility() == View.VISIBLE) {
                             if (vPlayer != null) {
                                 vPlayer.stop();
@@ -1660,8 +1674,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             vPlayer.setDuration(mArrNewsFeed.get(position).getDuration());
                             vPlayer.play(mArrNewsFeed.get(position).getVideourl());
                             vPlayerContainer.addView(vPlayer);
-                            lastPostion = cPostion;
+                            lastPostion = vPlayer.cPostion;
                             isAuto = true;
+                            mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 1, 0);
 
                         } else {
                             isAuto = true;
@@ -1746,7 +1761,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                 vPlayer.play(mArrNewsFeed.get(position).getVideourl());
 
-                lastPostion = cPostion;
+                lastPostion = vPlayer.cPostion;
 
                 position = 0;
                 isAuto = false;
@@ -1782,12 +1797,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public int getNextPosition() {
         int position = -1;
         for (int i = 0; i < mArrNewsFeed.size(); i++) {
-            if (mArrNewsFeed.get(i).getNid() == cPostion) {
+            if (mArrNewsFeed.get(i).getNid() == vPlayer.cPostion) {
                 for (position = i + 1; position < mArrNewsFeed.size(); position++) {
                     if (mArrNewsFeed.get(position).getVideourl() != null) {
                         if (mArrNewsFeed.get(position - 1).getVideourl() == null)
                             isAd = true;
-                        cPostion = mArrNewsFeed.get(position).getNid();
+                        vPlayer.cPostion = mArrNewsFeed.get(position).getNid();
                         return position;
                     }
                 }
@@ -1815,7 +1830,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     public int getNextItemPosition() {
         for (int i = 0; i < mArrNewsFeed.size(); i++) {
-            if (mArrNewsFeed.get(i).getNid() == cPostion) {
+            if (mArrNewsFeed.get(i).getNid() == vPlayer.cPostion) {
 //                for (position = i + 1; position < mArrNewsFeed.size(); position++) {
 //                    if (mArrNewsFeed.get(position).getVideourl() != null) {
 //                        if (mArrNewsFeed.get(position - 1).getVideourl() == null)
@@ -1842,7 +1857,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 continue;
             if (i > mArrNewsFeed.size())
                 return -1;
-            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+            if (mArrNewsFeed.get(i - 1).getNid() == vPlayer.cPostion) {
                 return (i - lv.getFirstVisiblePosition());
             }
         }
@@ -1961,7 +1976,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 continue;
             if (i > mArrNewsFeed.size())
                 break;
-            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+            if (mArrNewsFeed.get(i - 1).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
                 break;
