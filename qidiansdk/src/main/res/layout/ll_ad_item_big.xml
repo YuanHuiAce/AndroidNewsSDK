@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         android:textSize="@dimen/font4"
         android:visibility="visible" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/type_textView"
         android:layout_width="28dp"
         android:layout_height="14dp"

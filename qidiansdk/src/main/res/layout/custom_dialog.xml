@@ -15,7 +15,7 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="43dp"

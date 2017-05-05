@@ -244,7 +244,7 @@
         android:layout_alignParentRight="true"
         android:visibility="gone">
 
-        <com.news.yazhidao.widget.SmallVideoContainer
+        <com.news.sdk.widget.SmallVideoContainer
             android:id="@+id/detail_small_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -261,7 +261,7 @@
 
     </RelativeLayout>
 
-    <com.news.yazhidao.widget.VideoContainer
+    <com.news.sdk.widget.VideoContainer
         android:id="@+id/detail_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

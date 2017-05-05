@@ -44,7 +44,6 @@ import com.github.jinsedeyuzhou.view.MarqueeTextView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-import static com.github.jinsedeyuzhou.PlayStateParams.MESSAGE_SHOW_DIALOG;
 import static com.github.jinsedeyuzhou.utils.StringUtils.generateTime;
 
 /**
@@ -140,8 +139,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private IPlayer.OnNetChangeListener onNetChangeListener;
     private IPlayer.OnErrorListener onErrorListener;
     private IPlayer.OnPreparedListener onPreparedListener;
-
-
 
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -432,14 +429,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.player_btn) {
-            if (isAllowModible && NetworkUtils.getNetworkType(mContext) == 6 || NetworkUtils.getNetworkType(mContext) == 3) {
+            if (isAllowModible && NetworkUtils.isMobileAvailable(mContext) || NetworkUtils.isWifiAvailable(mContext)) {
                 doPauseResume();
+            } else {
+                Toast.makeText(mContext, "请检查您的网络", Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Toast.makeText(mContext,"请检查您的网络",Toast.LENGTH_SHORT).show();
-            }
-//            else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.getNetworkType(mContext) == 6) {
+//            else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.isMobileAvailable(mContext)) {
 //                mVideoDuration.setText(generateTime(duration));
 //                mVideoNetTie.setVisibility(View.VISIBLE);
 //            }
@@ -447,7 +442,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         } else if (id == R.id.full) {
             toggleFullScreen();
         } else if (id == R.id.sound) {
-            Log.v(TAG,"onclick:"+PlayerApplication.isSound);
+            Log.v(TAG, "onclick:" + PlayerApplication.isSound);
             if (!PlayerApplication.isSound) {
                 //静音
                 sound.setImageResource(R.mipmap.sound_mult_icon);
@@ -481,7 +476,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 onShareListener.onShare();
         } else if (id == R.id.app_video_netTie_confirm) {
             isAllowModible = true;
-            isShowContoller=true;
+            isShowContoller = true;
             mVideoNetTie.setVisibility(View.GONE);
             if (currentPosition == 0) {
                 play(url);
@@ -489,7 +484,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 doPauseResume();
 
         } else if (id == R.id.app_video_netTie_cancel) {
-            isShowContoller=true;
+            isShowContoller = true;
             mVideoNetTie.setVisibility(View.GONE);
             if (onShareListener != null)
                 onShareListener.onPlayCancel();
@@ -536,9 +531,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     /**
      * 更新音量键
      */
-    public void toggleVolume()
-    {
-        Log.v(TAG,"toggleVolume:"+PlayerApplication.isSound);
+    public void toggleVolume() {
+        Log.v(TAG, "toggleVolume:" + PlayerApplication.isSound);
         if (PlayerApplication.getInstance().isSound) {
             //静音
             sound.setImageResource(R.mipmap.sound_mult_icon);
@@ -547,6 +541,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             sound.setImageResource(R.mipmap.sound_open_icon);
         }
     }
+
     /**
      * 切换全屏
      */
@@ -850,7 +845,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         public boolean onDoubleTap(MotionEvent e) {
             Log.v(TAG, "onDoubleTap");
 //            mVideoView.toggleAspectRatio();
-            if (isAllowModible && NetworkUtils.getNetworkType(mContext) == 6||NetworkUtils.getNetworkType(mContext)==3)
+            if (isAllowModible && NetworkUtils.isMobileAvailable(mContext) || NetworkUtils.isWifiAvailable(mContext))
                 doPauseResume();
             return true;
         }
@@ -1287,7 +1282,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             play.setSelected(true);
             toggleVolume();
 //                isAutoPause = false;
-            if (NetworkUtils.getNetworkType(mContext)==6)
+            if (NetworkUtils.isNetworkAvailable(mContext))
                 mVideoNetTie.setVisibility(View.GONE);
             statusChange(PlayStateParams.STATE_PLAYING);
 //            }
@@ -1466,29 +1461,23 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e(TAG, "网络状态改变");
-            if (NetworkUtils.getNetworkType(activity) == 3) {// 网络是WIFI
+            if (NetworkUtils.isWifiAvailable(activity)) {// 网络是WIFI
                 mVideoNetTie.setVisibility(View.GONE);
-                isShowContoller=true;
-            } else if ((mVideoView.isPlaying()||status==PlayStateParams.STATE_PAUSED) && !isAllowModible && NetworkUtils.getNetworkType(activity) == 6
+                isShowContoller = true;
+            } else if ((mVideoView.isPlaying() || status == PlayStateParams.STATE_PAUSED) && !isAllowModible && NetworkUtils.isMobileAvailable(activity)
                     ) {
                 // TODO 更新状态是暂停状态
                 currentPosition = mVideoView.getCurrentPosition();
                 progressBar.setVisibility(View.GONE);
                 pause();
                 hide(false);
-                isShowContoller=false;
+                isShowContoller = false;
                 mVideoDuration.setText(generateTime(duration));
                 mVideoNetTie.setVisibility(View.VISIBLE);
-//                handler.sendEmptyMessage(MESSAGE_SHOW_DIALOG);
-
-            } else if (NetworkUtils.getNetworkType(activity) == 1) {// 网络链接断开
-                pause();
-                isShowContoller=true;
+            }
+            else {
                 Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
-                mVideoNetTie.setVisibility(View.GONE);
-            } else {
-                Toast.makeText(mContext, "未知网络", Toast.LENGTH_SHORT).show();
-                isShowContoller=true;
+                isShowContoller = true;
                 pause();
                 mVideoNetTie.setVisibility(View.GONE);
             }

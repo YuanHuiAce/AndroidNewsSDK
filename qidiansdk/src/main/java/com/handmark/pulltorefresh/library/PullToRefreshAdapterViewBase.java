@@ -18,7 +18,6 @@ package com.handmark.pulltorefresh.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
-import com.news.yazhidao.R;
-import com.news.yazhidao.utils.Logger;
+import com.news.sdk.R;
+import com.news.sdk.utils.Logger;
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
 		OnScrollListener {

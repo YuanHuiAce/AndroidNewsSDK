@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="4dp"
+            android:visibility="gone"
             android:drawableRight="@mipmap/ic_login_arrow_skip"
             android:text="@string/aty_guide_login_txt3"
             android:textColor="@color/new_color3"

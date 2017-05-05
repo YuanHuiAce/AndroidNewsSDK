@@ -21,11 +21,10 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.news.yazhidao.R;
+import com.news.sdk.R;
 
 public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 

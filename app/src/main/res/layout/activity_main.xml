@@ -58,7 +58,7 @@
         android:background="#88000000"
         android:visibility="invisible" />
 
-    <com.news.yazhidao.widget.VideoContainer
+    <com.news.sdk.widget.VideoContainer
         android:id="@+id/feed_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

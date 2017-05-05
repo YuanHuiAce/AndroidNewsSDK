@@ -1,8 +1,6 @@
 package com.handmark.pulltorefresh.library.internal;
 
-import android.util.Log;
-
-import com.news.yazhidao.utils.Logger;
+import com.news.sdk.utils.Logger;
 
 public class Utils {
 
