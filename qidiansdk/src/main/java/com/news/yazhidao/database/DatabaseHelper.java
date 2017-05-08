@@ -14,6 +14,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.VideoChannel;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -118,6 +119,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                          ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
+            TableUtils.createTableIfNotExists(connectionSource, VideoChannel.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);
             /**初始化数据库或者升级数据库的时候,插入默认值*/
@@ -156,6 +158,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN clicktimes INTEGER;");
             }
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
+            TableUtils.dropTable(connectionSource, VideoChannel.class,true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);
             onCreate(database, connectionSource);

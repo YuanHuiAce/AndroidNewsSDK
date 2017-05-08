@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.entity.VideoChannel;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
@@ -943,6 +945,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         ListView lv = mlvNewsFeed.getRefreshableView();
         if (!mstrChannelId.equals("44"))
             lv.addHeaderView(mSearchHeaderView);
+        else if (mstrChannelId.equals("44"))
+        {
+            addTabView(LayoutInflater);
+        }
         lv.setHeaderDividersEnabled(false);
         mrlSearch = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
         mrlSearch.setOnClickListener(new View.OnClickListener() {
@@ -1271,6 +1277,42 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     //========================================视频部分======================================//
+
+    private ArrayList<VideoChannel> mVideoChannels;
+    public void addTabView(LayoutInflater LayoutInflater)
+    {
+        initChannel();
+        View tabView=LayoutInflater.inflate(R.layout.second_channel_layout,null);
+//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+//        tabView.setLayoutParams(layoutParams);
+
+        TabLayout mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
+        for (int i=0;i<mVideoChannels.size();i++)
+        {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+            TextView tv= (TextView) view.findViewById(R.id.tv_tabtitle);
+            tv.setText(mVideoChannels.get(i).getCname());
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+//            mTabLayout.addTab(mTabLayout.newTab().setText("新闻"));
+        }
+        mlvNewsFeed.getRefreshableView().addHeaderView(tabView);
+
+    }
+
+    private void initChannel() {
+        mVideoChannels=new ArrayList<>();
+//        String[] channels=this.getResources().getStringArray(R.array.vchannels);
+        for(int i=4401, j=0;i<=4412;i++,j++)
+        {
+            VideoChannel vChannel=new VideoChannel();
+            vChannel.setChannelId(i);
+            vChannel.setCname("搞笑搞笑");
+            mVideoChannels.add(vChannel);
+        }
+
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
