@@ -45,6 +45,7 @@ public class AuthorizedUserUtil {
                                     user.setUserIcon(jsonObject.getString("avatar"));
                                     user.setVisitor(false);
                                     SharedPreManager.mInstance(context).saveUser(user);
+                                    context.sendBroadcast(new Intent(CommonConstant.USER_LOGIN_SUCCESS_ACTION));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

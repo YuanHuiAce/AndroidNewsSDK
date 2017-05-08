@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.ThemeManager;
-import com.news.sdk.entity.AuthorizedUser;
 import com.news.sdk.entity.User;
 import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -27,13 +26,12 @@ import com.news.yazhidao.R;
 import com.umeng.analytics.MobclickAgent;
 
 
+
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
-    private static final String TAG = "MainActivity";
     RelativeLayout newsLayout;
     MainView mainView;
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
-    private AuthorizedUser authorizedUser;
     public static VPlayPlayer vPlayPlayer;
 
     @Override
@@ -112,14 +110,14 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
-        authorizedUser = (AuthorizedUser) getIntent().getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);
-        if (authorizedUser != null) {
-            mainView.setAuthorizedUserInformation(authorizedUser);
-        }
+        User user = SharedPreManager.mInstance(this).getUser(this);
+        mainView.setUserCenterImg(user.getUserIcon());
         //注册登录监听广播
         mReceiver = new UserReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(CommonConstant.USER_LOGIN_ACTION);
+        filter.addAction(CommonConstant.USER_LOGOUT_ACTION);
+        filter.addAction(CommonConstant.USER_LOGIN_SUCCESS_ACTION);
         filter.addAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
         filter.addAction(CommonConstant.SHARE_WECHAT_ACTION);
         filter.addAction(CommonConstant.SHARE_SINA_WEIBO_ACTION);
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     private void userLogin() {
         //调用自己的登录授权界面
         Intent intent = new Intent(MainActivity.this, GuideLoginAty.class);
-        startActivityForResult(intent, CommonConstant.REQUEST_LOGIN_CODE);
+        startActivity(intent);
     }
 
     private class UserReceiver extends BroadcastReceiver {
@@ -152,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             String action = intent.getAction();
             if (CommonConstant.USER_LOGIN_ACTION.equals(action)) {
                 userLogin();
+            } else if (CommonConstant.USER_LOGOUT_ACTION.equals(action)) {
+                mainView.setUserCenterImg("");
+            } else if (CommonConstant.USER_LOGIN_SUCCESS_ACTION.equals(action)) {
+                User user = SharedPreManager.mInstance(MainActivity.this).getUser(MainActivity.this);
+                mainView.setUserCenterImg(user.getUserIcon());
             } else if (CommonConstant.SHARE_WECHAT_MOMENTS_ACTION.equals(action)) {
                 //调用微信朋友圈分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
@@ -193,10 +196,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //设置频道的回调
         super.onActivityResult(requestCode, resultCode, data);
         mainView.onActivityResult(requestCode, resultCode, data);
-        if (CommonConstant.REQUEST_LOGIN_CODE == requestCode && CommonConstant.RESULT_LOGIN_CODE == resultCode) {
-            AuthorizedUser user = (AuthorizedUser) data.getSerializableExtra(CommonConstant.LOGIN_AUTHORIZEDUSER_ACTION);
-            mainView.setAuthorizedUserInformation(user);
-        }
     }
 
     //梁帅: 点击返回如果不喜欢窗口是显示的，隐藏它；
@@ -233,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             PlayerManager.videoPlayView.onDestory();
             PlayerManager.videoPlayView = null;
         }
-
 
         if (vPlayPlayer != null) {
             vPlayPlayer.onDestory();

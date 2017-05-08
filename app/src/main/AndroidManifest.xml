@@ -66,6 +66,27 @@
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".pages.UserCenterAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.SettingAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.MyCommentAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.MyFavoriteAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.MyMessageAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.AboutAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.PrivacyPolicyAty"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".pages.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"

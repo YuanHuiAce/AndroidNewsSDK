@@ -6,7 +6,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.news.sdk.entity.NewsDetailComment;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,7 @@ import java.util.List;
  * Created by xiao on 2016/5/6.
  * 处理评论的DAO
  */
-public class NewsDetailCommentDao implements Serializable {
-    private static final long serialVersionUID = 8897789878602695966L;
+public class NewsDetailCommentDao {
     private Context mContext;
     private Dao<NewsDetailComment, Integer> newsDetailCommentDaoOpe;
     private DatabaseHelper helper;
@@ -43,6 +41,15 @@ public class NewsDetailCommentDao implements Serializable {
         } catch (SQLException e) {
             // TODO: handle exception
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 增加一条评论
+     */
+    public void addList(List<NewsDetailComment> newsDetailCommentItem){
+        for(NewsDetailComment bean:newsDetailCommentItem){
+            add(bean);
         }
     }
 

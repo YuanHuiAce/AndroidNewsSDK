@@ -133,7 +133,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
         for (int i = 0; i < tabCount; i++) {
             addTab(i, pager.getAdapter().getPageTitle(i).toString());
         }
-        TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
+        if (bgFrameLayout != null) {
+            TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
+        }
 //        if (tabCount > 0) {
 //            ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(0);
 //            TextView child = (TextView) tab.findViewById(R.id.category_text);

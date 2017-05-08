@@ -62,10 +62,15 @@ public class NewsDetailComment implements Serializable{
     private boolean isPraise;
     @DatabaseField(columnName = "original")
     private String original;
-
+    @DatabaseField(columnName = "ntitle")
+    private String ntitle;
     private User user;
     /** 用户是否为该条评论点赞过，0、1 对应 未点、已点 */
     private int upflag;
+    @DatabaseField(columnName = "rtype")
+    private int rtype;
+    @DatabaseField(columnName="nid")
+    private int nid;
 
     public int getUpflag() {
         return upflag;
@@ -211,5 +216,29 @@ public class NewsDetailComment implements Serializable{
 
     public void setUname(String uname) {
         this.uname = uname;
+    }
+
+    public String getNtitle() {
+        return ntitle;
+    }
+
+    public void setNtitle(String ntitle) {
+        this.ntitle = ntitle;
+    }
+
+    public int getRtype() {
+        return rtype;
+    }
+
+    public void setRtype(int rtype) {
+        this.rtype = rtype;
+    }
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
     }
 }

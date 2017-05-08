@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9"
+    >
+
+    <RelativeLayout
+        android:id="@+id/mFavoriteTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/common_header_bg"
+        android:visibility="visible"
+        >
+
+        <TextView
+            android:id="@+id/mFavoriteLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="收藏"
+            android:textColor="@color/new_color7"
+            android:textSize="@dimen/font1"
+            />
+
+        <TextView
+            android:id="@+id/mFavoriteRightManage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingRight="14dp"
+            android:text="管理"
+            android:textSize="@dimen/new_font2"
+            android:textColor="@color/new_color1"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:text="暂无收藏内容"
+        android:textSize="@dimen/font3"
+
+        android:gravity="center"
+        />
+    <!--android:textColor="@color/newscomment_noData"-->
+    <!--android:drawableTop="@drawable/ic_comment_building"-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/aty_myFavorite_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color7"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:drawingCacheQuality="auto"
+        android:animationCache="false"
+        android:clipToPadding="false"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_below="@id/mFavoriteTopLayout"/>
+    <LinearLayout
+        android:id="@+id/aty_myFavorite_Deletelayout"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:background="#eb5e41"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:clickable="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <!--android:src="@drawable/favorite_delete"-->
+        <TextView
+            android:id="@+id/aty_myFavorite_number"
+            android:layout_marginLeft="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font3"/>
+    </LinearLayout>
+    <!--<include layout="@layout/loading_view_anim" />-->
+</RelativeLayout>

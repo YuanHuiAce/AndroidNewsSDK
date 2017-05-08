@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">资讯</string>
     <string name="app_version">3.7.0</string>
+    <string name="aty_about_copy_right">Copyring@2016 lieying.All Rights Reserved</string>
 </resources>

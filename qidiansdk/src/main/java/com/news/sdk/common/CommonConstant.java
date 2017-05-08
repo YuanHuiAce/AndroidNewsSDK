@@ -72,6 +72,7 @@ public final class CommonConstant {
     public static final String KEY_ATTENTIN_LIST = "key_attentin_list";
     public static final int TEXT_SIZE_NORMAL = 18;
     public static final int TEXT_SIZE_SMALL = 16;
+    public static final int TEXT_SIZE_BIG = 20;
     public static final int REQUEST_ATTENTION_CODE = 1040;
     public static final int RESULT_ATTENTION_CODE = 2040;
     public static final int REQUEST_SUBSCRIBE_LIST_CODE = 3040;
@@ -120,6 +121,8 @@ public final class CommonConstant {
 
     //通知登录action
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
+    public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
+    public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
     public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
@@ -156,6 +159,7 @@ public final class CommonConstant {
      * myComments	我的评论
      * myCollections	我的收藏
      * myMessages	我的消息
+     * mySetting	我的设置
      */
     public static final String LOG_ATYPE_LOGIN = "login";
     public static final String LOG_ATYPE_REFRESHFEED = "refreshFeed";
@@ -174,6 +178,7 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_MYCOMMENTS = "myComments";
     public static final String LOG_ATYPE_MYCOLLECTIONS = "myCollections";
     public static final String LOG_ATYPE_MYMESSAGES = "myMessages";
+    public static final String LOG_ATYPE_MYSETTING = "mySetting";
 
     /**
      * page取值	对应页面
@@ -189,6 +194,7 @@ public final class CommonConstant {
      * myCollectionPage	我的收藏页面
      * myMessagePage	我的消息页面
      * settingPage	设置页面
+     * userCenterPage	用户中心页面
      */
     public static final String LOG_PAGE_FEEDPAGE = "feedPage";
     public static final String LOG_PAGE_DETAILPAGE = "detailPage";
@@ -204,5 +210,6 @@ public final class CommonConstant {
     public static final String LOG_PAGE_MYCOLLECTIONPAGE = "myCollectionPage";
     public static final String LOG_PAGE_MYMESSAGEPAGE = "myMessagePage";
     public static final String LOG_PAGE_SETTINGPAGE = "settingPage";
+    public static final String LOG_PAGE_USERCENTERPAGE = "userCenterPage";
 
 }

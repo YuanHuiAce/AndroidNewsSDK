@@ -22,8 +22,11 @@ public class ChannelItemDao {
      * 频道排序id
      */
     private static final String COLUMN_ORDERID = "orderId";
-    /**用户是否选择了该频道*/
+    /**
+     * 用户是否选择了该频道
+     */
     private static final String COLUMN_SELECTED = "selected";
+    private static final String COLUMN_STATE = "state";
     private final Context mContext;
     private Dao<ChannelItem, String> mChannelItemDao;
 
@@ -53,22 +56,25 @@ public class ChannelItemDao {
 
     /**
      * 插入一个新闻频道集合
+     *
      * @param pItems
      */
-    public void insertList(List<ChannelItem> pItems){
-        if (!TextUtil.isListEmpty(pItems)){
-            for (ChannelItem item: pItems){
+    public void insertList(List<ChannelItem> pItems) {
+        if (!TextUtil.isListEmpty(pItems)) {
+            for (ChannelItem item : pItems) {
                 insert(item);
             }
         }
     }
+
     /**
      * 插入用户选择的新闻频道集合
+     *
      * @param pItems 新闻频道集合
      */
-    public void insertSelectedList(List<ChannelItem> pItems){
-        if (!TextUtil.isListEmpty(pItems)){
-            for (int i = 0; i < pItems.size(); i++){
+    public void insertSelectedList(List<ChannelItem> pItems) {
+        if (!TextUtil.isListEmpty(pItems)) {
+            for (int i = 0; i < pItems.size(); i++) {
                 ChannelItem channelItem = pItems.get(i);
                 channelItem.setOrderId(i);
                 channelItem.setSelected(true);
@@ -76,13 +82,15 @@ public class ChannelItemDao {
             }
         }
     }
+
     /**
      * 插入用户未选择新闻频道集合
+     *
      * @param pItems 新闻频道集合
      */
-    public void insertNormalList(List<ChannelItem> pItems){
-        if (!TextUtil.isListEmpty(pItems)){
-            for (int i = 0; i < pItems.size(); i++){
+    public void insertNormalList(List<ChannelItem> pItems) {
+        if (!TextUtil.isListEmpty(pItems)) {
+            for (int i = 0; i < pItems.size(); i++) {
                 ChannelItem channelItem = pItems.get(i);
                 channelItem.setOrderId(i);
                 channelItem.setSelected(false);
@@ -137,34 +145,39 @@ public class ChannelItemDao {
         return new ArrayList<>();
     }
 
-    private ArrayList<ChannelItem> queryForSelected(boolean isSelected){
-        try{
+    private ArrayList<ChannelItem> queryForSelected(boolean isSelected) {
+        try {
             QueryBuilder<ChannelItem, String> builder = mChannelItemDao.queryBuilder();
             builder.where().eq(COLUMN_SELECTED, isSelected);
             builder.orderBy(COLUMN_ORDERID, true);
             List<ChannelItem> list = builder.query();
-            if (!TextUtil.isListEmpty(list)){
+            if (!TextUtil.isListEmpty(list)) {
                 return new ArrayList<>(list);
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
+
     /**
      * 查询用户已经选择的新闻频道
+     *
      * @return
      */
-    public ArrayList<ChannelItem> queryForSelected(){
+    public ArrayList<ChannelItem> queryForSelected() {
         return queryForSelected(true);
     }
+
     /**
      * 查询用户未选择的新闻频道
+     *
      * @return
      */
-    public ArrayList<ChannelItem> queryForNormal(){
+    public ArrayList<ChannelItem> queryForNormal() {
         return queryForSelected(false);
     }
+
     /**
      * 更新一个新闻频道
      *

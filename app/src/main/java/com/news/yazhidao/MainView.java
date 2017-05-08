@@ -44,7 +44,6 @@ import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
-import com.news.sdk.entity.AuthorizedUser;
 import com.news.sdk.entity.ChannelItem;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
@@ -53,7 +52,6 @@ import com.news.sdk.net.volley.ChannelListRequest;
 import com.news.sdk.net.volley.VersionRequest;
 import com.news.sdk.pages.ChannelOperateAty;
 import com.news.sdk.pages.NewsFeedFgt;
-import com.news.yazhidao.service.UpdateService;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -67,6 +65,8 @@ import com.news.sdk.widget.CustomDialog;
 import com.news.sdk.widget.FeedDislikePopupWindow;
 import com.news.sdk.widget.channel.ChannelTabStrip;
 import com.news.sdk.widget.tag.TagCloudLayout;
+import com.news.yazhidao.pages.UserCenterAty;
+import com.news.yazhidao.service.UpdateService;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
@@ -174,7 +174,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
-        mChannelItemDao = new ChannelItemDao(mContext);
+        mChannelItemDao = new ChannelItemDao(activity);
         mSelChannelItems = new ArrayList<>();
         mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
         mtvNewWorkBar.setOnClickListener(new OnClickListener() {
@@ -272,7 +272,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 MobclickAgent.onProfileSignIn(DeviceInfoUtil.getDeviceImei(mContext));
             }
         });
-        setChannelList();
+//        setChannelList();
 //        checkVersion();
     }
 
@@ -280,7 +280,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
      * 检测是否自动升级
      */
     private void checkVersion() {
-//        showUpdateDialogT();
         User mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         VersionRequest<Version> versionRequest = new VersionRequest<Version>(Request.Method.GET,
                 Version.class, HttpConstant.URL_APK_UPDATE + (mUser != null ? "&uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid() : "") + "&ctype=" + CommonConstant.NEWS_CTYPE + "&ptype=" + CommonConstant.NEWS_PTYPE,
@@ -336,7 +335,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         });
         builder.setCancelable(false);
         builder.create().show();
-
     }
 
     /**
@@ -431,16 +429,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
 
-
-    public void setAuthorizedUserInformation(AuthorizedUser user) {
-        //授权用户映射
-        AuthorizedUserUtil.authorizedUser(user, activity);
-        //更新user图标
-        if (SharedPreManager.mInstance(activity).getUserCenterIsShow()) {
-            setUserCenterImg(user.getAvatar());
-        }
-    }
-
     public void setUserCenterImg(String url) {
         if (!TextUtil.isEmptyString(url)) {
             mRequestManager.load(Uri.parse(url)).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
@@ -520,8 +508,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             if (user != null && user.isVisitor()) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(activity);
             } else {
-//                Intent userCenterAty = new Intent(this, UserCenterAty.class);
-//                startActivity(userCenterAty);
+                Intent userCenterAty = new Intent(activity, UserCenterAty.class);
+                activity.startActivity(userCenterAty);
             }
         }
     }

@@ -145,12 +145,12 @@ public final class SharedPreManager {
     public void deleteUser(Context mContext) {
         User user = getUser(mContext);
         if (user != null) {
-//            if (!"meizu".equals(user.getPlatformType())){
-//                ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
-//            }
+            user.setUtype("2");
+            user.setUserName("");
+            user.setUserIcon("");
+            user.setVisitor(true);
+            saveUser(user);
         }
-        user.setUtype("2");
-        saveUser(user);
 //        remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
     }
 

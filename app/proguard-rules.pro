@@ -89,7 +89,7 @@ java.lang.Object readResolve();
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);
 }
--keep public class com.news.yazhidao.R$*{
+-keep public class com.news.sdk.R$*{
     public static final int *;
 }
 -keep public class com.umeng.fb.ui.ThreadView {
@@ -154,7 +154,7 @@ java.lang.Object readResolve();
 
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
--keep class com.news.yazhidao.entity.** { *; }
+-keep class com.news.sdk.entity.** { *; }
 -keep class org.json.** {*;}
 -keep class com.google.gson.** {*;}
 -keep class com.nostra13.**{*;}
@@ -185,7 +185,7 @@ java.lang.Object readResolve();
 # # -------------------------------------------
 
 
--keep class com.news.yazhidao.adapter.NewsFeedAdapter$ViewWrapper{
+-keep class com.news.sdk.adapter.NewsFeedAdapter$ViewWrapper{
     public <fields>;
     public <methods>;
 
@@ -197,7 +197,7 @@ java.lang.Object readResolve();
 
 
 ##js 和java互调
--keep class com.news.yazhidao.javascript.VideoJavaScriptBridge{
+-keep class com.news.sdk.javascript.VideoJavaScriptBridge{
     public <fields>;
     public <methods>;
 }
