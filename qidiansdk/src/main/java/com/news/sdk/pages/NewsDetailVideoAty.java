@@ -195,6 +195,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
         mDetailFavorite.setOnClickListener(this);
+        if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
+            mDetailFavorite.setVisibility(View.GONE);
+        }
         carefor_Text = (TextView) findViewById(R.id.carefor_Text);
         carefor_Image = (ImageView) findViewById(R.id.carefor_Image);
         mDetailComment = findViewById(R.id.mDetailComment);
@@ -278,6 +281,20 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
      */
     private void displayDetailAndComment(final NewsDetail result) {
         result.setIcon(mNewsFeed.getIcon());
+        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mNid);
+        if (result.getColflag() == 1) {
+            if (!isFavorite) {
+                SharedPreManager.mInstance(this).myFavoriteSaveList(mNewsFeed);
+            }
+            isFavorite = true;
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+        } else {
+            if (isFavorite) {
+                SharedPreManager.mInstance(this).myFavoritRemoveItem(mNid);
+            }
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+            isFavorite = false;
+        }
         mNewsDetailViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -541,7 +558,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             if (user == null) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(this);
             } else {
-                Logger.e("bbb", "收藏触发的点击事件！！！！！");
                 loadOperate();
             }
         }

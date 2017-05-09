@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/mSettingHeader"
         android:layout_width="match_parent"
-        android:layout_height="49dp"
+        android:layout_height="48dp"
         android:background="@color/common_header_bg">
 
         <TextView

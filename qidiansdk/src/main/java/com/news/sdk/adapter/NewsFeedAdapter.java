@@ -64,7 +64,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private int mCardWidth, mCardHeight;
-    private boolean isFavorite;
+    private introductionNewsFeed mIntroductionNewsFeed;
+    private boolean isFavorite , isCkeckVisity;
     private boolean isNeedShowDisLikeIcon = true;
     private boolean isAttention;
 
@@ -178,6 +179,28 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             feed.setCtime(System.currentTimeMillis());
         }
         int layoutId = holder.getLayoutId();
+        if (layoutId == R.layout.qd_ll_news_item_no_pic ||layoutId == R.layout.qd_ll_news_item_one_pic||layoutId == R.layout.ll_news_big_pic2||layoutId == R.layout.qd_ll_news_card||layoutId == R.layout.ll_video_item_player||layoutId == R.layout.ll_video_item_big) {
+                if (isCkeckVisity) {
+                    holder.getView(R.id.checkFavoriteDelete_image).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
+                    holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
+                }
+                if (feed.isFavorite()) {
+                    holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_check);
+                } else {
+                    holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
+                }
+                if (isFavorite) {
+//                    holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
+//                    holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+//                    holder.getView(R.id.line_bottom_imageView).setBackgroundColor(mContext.getResources().getColor(R.color.new_color5));
+//                    if (getCount() == position + 1) {//去掉最后一条的线
+//                        holder.getView(R.id.line_bottom_imageView).setVisibility(View.INVISIBLE);
+//                    }
+                    ClickDeleteFavorite((ImageView) holder.getView(R.id.checkFavoriteDelete_image), feed);
+                }
+        }
         if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
@@ -559,12 +582,31 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         ((Activity) mContext).startActivityForResult(intent, CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE);
     }
 
-    private void setAdImageIcon(ImageView imageIcon, String iconUrl) {
-        if (TextUtil.isEmptyString(iconUrl)) {
-
-        }
+    public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
+        isCkeckVisity = isVisity;
+        notifyDataSetChanged();
     }
 
+    public void setIntroductionNewsFeed(introductionNewsFeed mIntroductionNewsFeed) {
+        this.mIntroductionNewsFeed = mIntroductionNewsFeed;
+    }
+
+    public void ClickDeleteFavorite(final ImageView checkDelete, final NewsFeed feed) {
+        checkDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (feed.isFavorite()) {
+                    feed.setFavorite(false);
+                    mIntroductionNewsFeed.getDate(feed, false);
+                    checkDelete.setImageResource(R.drawable.favorite_uncheck);
+                } else {
+                    mIntroductionNewsFeed.getDate(feed, true);
+                    feed.setFavorite(true);
+                    checkDelete.setImageResource(R.drawable.favorite_check);
+                }
+            }
+        });
+    }
 
     private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
         view.setOnClickListener(new View.OnClickListener() {
@@ -655,7 +697,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             tvComment.setText(updateTime);
             e.printStackTrace();
         }
-
     }
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {

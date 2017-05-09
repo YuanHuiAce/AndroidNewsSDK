@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="49dp"
+        android:layout_height="48dp"
         android:background="@color/common_header_bg">
 
         <TextView
@@ -46,11 +46,6 @@
             android:id="@+id/mCenterUserIcon"
             android:layout_width="70dp"
             android:layout_height="70dp" />
-        <!--fresco:placeholderImage="@drawable/ic_user_comment_default"-->
-        <!--fresco:roundAsCircle="true"-->
-        <!--fresco:roundingBorderColor="@color/white"-->
-        <!--fresco:roundingBorderWidth="5dp"-->
-        <!--/>-->
 
         <TextView
             android:id="@+id/mCenterUserName"

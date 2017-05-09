@@ -272,7 +272,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 MobclickAgent.onProfileSignIn(DeviceInfoUtil.getDeviceImei(mContext));
             }
         });
-//        setChannelList();
+        setChannelList();
 //        checkVersion();
     }
 

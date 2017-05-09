@@ -1,13 +1,11 @@
 package com.news.yazhidao.adapter;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,14 +13,12 @@ import android.widget.TextView;
 
 import com.news.sdk.adapter.abslistview.CommonAdapter;
 import com.news.sdk.adapter.abslistview.CommonViewHolder;
-import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.NewsDetailComment;
 import com.news.sdk.pages.NewsDetailAty2;
 import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.TextUtil;
-import com.news.sdk.utils.ToastUtil;
 import com.news.yazhidao.R;
 
 import java.text.DateFormat;
@@ -32,32 +28,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by xiao on 2016/5/9.
- */
 public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
-    private int daoHeight;
-    private TextView clip_pic;
-    public static final String KEY_NEWS_FEED = "key_news_feed";
 
-    public void setClip_pic(TextView clip_pic) {
-        this.clip_pic = clip_pic;
-    }
-
-    private OnDataIsNullListener onDataIsNullListener;
-
-
-    private ArrayList<NewsDetailComment> mDatas = new ArrayList<NewsDetailComment>();
+    private ArrayList<NewsDetailComment> mDatas = new ArrayList<>();
     private Context mContext;
-    private NewsDetailCommentDao newsDetailCommentDao = null;
-
-    public NewsDetailCommentDao getNewsDetailCommentDao() {
-        return newsDetailCommentDao;
-    }
-
-    public void setNewsDetailCommentDao(NewsDetailCommentDao newsDetailCommentDao) {
-        this.newsDetailCommentDao = newsDetailCommentDao;
-    }
 
     public NewsDetailCommentAdapter(int layoutId, Context context, ArrayList<NewsDetailComment> datas) {
         super(layoutId, context, datas);
@@ -66,7 +40,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
     }
 
     @Override
-    public void convert(CommonViewHolder holder, final NewsDetailComment newsDetailCommentItem, int positon) {
+    public void convert(CommonViewHolder holder, final NewsDetailComment newsDetailCommentItem, final int position) {
         TextView pub_time = holder.getView(R.id.pub_time);
         pub_time.setText(convertTime(newsDetailCommentItem.getCtime()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
@@ -77,11 +51,11 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         CharSequence titleStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
         original.setText(titleStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
-//        if(newsDetailCommentItem.getUpflag() == 1){
-//            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
-//        }else {
-//            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
-//        }
+        if (newsDetailCommentItem.getUpflag() == 0) {
+            love_imagebt.setImageResource(R.mipmap.list_icon_gif_nor_icon_heart_nor);
+        } else {
+            love_imagebt.setImageResource(R.mipmap.list_icon_gif_nor_icon_heart_selected);
+        }
         int love_num = newsDetailCommentItem.getCommend();
         final TextView love_count = holder.getView(R.id.love_count);
         if (love_num > 0) {
@@ -96,127 +70,34 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
             love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.GONE);
         }
-
-//        ImageView del_icon = holder.getView(R.id.del_icon);
         original.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!TextUtil.isEmptyString(strTitle)) {
                     int nid = newsDetailCommentItem.getNid();
                     Intent intent;
-                    if (newsDetailCommentItem.getRtype() == 6) {
+                    int pType = newsDetailCommentItem.getRtype();
+                    if (pType == 6 || pType == 8) {
                         intent = new Intent(mContext, NewsDetailVideoAty.class);
                     } else {
                         intent = new Intent(mContext, NewsDetailAty2.class);
                     }
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, nid+"");
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, nid + "");
                     mContext.startActivity(intent);
                 }
             }
         });
-
         love_imagebt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-
                 if (newsDetailCommentItem.getUpflag() == 1) {//用户是否能对该条评论点赞，0、1 对应 可点、不可点
-                    ToastUtil.toastShort("不可以给自己点赞！");
+                    clickAddorDeleteLoveItemListener.addOrDele(1, position);
                 } else {
-                    ToastUtil.toastShort("不可以给自己点赞！");
-                    //点赞动画
-//                    newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
-//                    if (newsDetailCommentItem.isPraise()) {
-//                        newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend() + 1);
-//                        ((ImageButton) view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
-//                        int[] location = new int[2];
-//                        view.getLocationOnScreen(location);
-//                        AnimatorSet set = new AnimatorSet();
-//                        set.playTogether(ObjectAnimator.ofFloat(view,
-//                                "scaleX", 1, 2, 1), ObjectAnimator
-//                                .ofFloat(view, "scaleY", 1, 2, 1));
-//                        set.setDuration(1 * 1000).start();
-//                        clip_pic.setVisibility(View.VISIBLE);
-//                        int l = location[0] + view.getMeasuredWidth() / 2;
-//                        int t = location[1] - daoHeight - 60;
-//                        int r = location[0] + view.getMeasuredWidth() / 2 + clip_pic.getMeasuredWidth();
-//                        int b = location[1] + clip_pic.getMeasuredHeight() - daoHeight - 30;
-////                    Toast.makeText(mContext, "l="+l+"  t="+t+"  r="+r+"  b="+b, Toast.LENGTH_SHORT).show();
-////                    Log.e("xzj","l="+l+"  t="+t+"  r="+r+"  b="+b);
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                        layoutParams.leftMargin = l;
-//                        layoutParams.topMargin = t;
-//                        clip_pic.setLayoutParams(layoutParams);
-//                        clip_pic.requestLayout();
-////                    clip_pic.layout(l,t,r,b);
-////                    clip_pic.requestLayout();
-//
-////                    clip_pic.layout(
-////                            location[0] + view.getMeasuredWidth()
-////                                    / 2,
-////                            location[1] - daoHeight,
-////                            location[0]
-////                                    + view.getMeasuredWidth()
-////                                    / 2
-////                                    + clip_pic
-////                                    .getMeasuredWidth(),
-////                            location[1]
-////                                    + clip_pic
-////                                    .getMeasuredHeight()
-////                                    - daoHeight);
-//
-//                        AnimatorSet set1 = new AnimatorSet();
-//                        set1.addListener(new Animator.AnimatorListener() {
-//                            @Override
-//                            public void onAnimationStart(Animator animation) {
-//                                //动画开始时将按钮设置成不可点击，防止用户频繁点击
-//                                view.setClickable(false);
-//                            }
-//
-//                            @Override
-//                            public void onAnimationEnd(Animator animation) {
-//                                //动画结束后恢复按钮可点击
-//                                notifyDataSetChanged();
-//                                view.setClickable(true);
-//                            }
-//
-//                            @Override
-//                            public void onAnimationCancel(Animator animation) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onAnimationRepeat(Animator animation) {
-//
-//                            }
-//                        });
-//                        set1.playTogether(ObjectAnimator.ofFloat(
-//                                clip_pic, "translationY", 0, -100),
-//                                ObjectAnimator.ofFloat(clip_pic,
-//                                        "alpha", 1, 0));
-//                        set1.setInterpolator(new DecelerateInterpolator());
-//                        set1.setDuration(1 * 1000).start();
-//
-//
-//                        set1 = null;
-//
-//
-//                    } else {
-//                        newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend() - 1);
-//
-//                        ((ImageButton) view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
-//                        notifyDataSetChanged();
-//                    }
-//
-//
-//                    newsDetailCommentDao.update(newsDetailCommentItem);
+                    clickAddorDeleteLoveItemListener.addOrDele(0, position);
                 }
-
             }
         });
-
-        deleteCommentItem((ImageView) holder.getView(R.id.del_icon), positon);
-
-//        addorDeleteLoveItem((RelativeLayout) holder.getView(R.id.love_layout), positon,newsDetailCommentItem);
+        deleteCommentItem((ImageView) holder.getView(R.id.del_icon), position);
     }
 
     public void deleteCommentItem(ImageView deleteImage, final int position) {
@@ -242,24 +123,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
                 builder.create().show();
             }
         });
-//        deleteImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                clickDeleteCommentItemListener.delete(position);
-//            }
-//        });
-
     }
-//    public void addorDeleteLoveItem(RelativeLayout loveLayout,final int position,final NewsDetailComment newsDetailCommentItem){
-//        loveLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int upflag = newsDetailCommentItem.getUpflag();
-//                clickAddorDeleteLoveItemListener.addorDele(position, upflag);
-//            }
-//        });
-//
-//    }
 
     ClickDeleteCommentItemListener clickDeleteCommentItemListener;
 
@@ -267,18 +131,19 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         this.clickDeleteCommentItemListener = clickDeleteCommentItemListener;
     }
 
-//    ClickAddorDeleteLoveItemListener clickAddorDeleteLoveItemListener;
-//    public void setClickAddorDeleteLoveItemListener(ClickAddorDeleteLoveItemListener clickAddorDeleteLoveItemListener){
-//        this.clickAddorDeleteLoveItemListener = clickAddorDeleteLoveItemListener;
-//    }
+    ClickAddOrDeleteLoveItemListener clickAddorDeleteLoveItemListener;
+
+    public void setClickAddOrDeleteLoveItemListener(ClickAddOrDeleteLoveItemListener clickAddOrDeleteLoveItemListener) {
+        this.clickAddorDeleteLoveItemListener = clickAddOrDeleteLoveItemListener;
+    }
 
     public interface ClickDeleteCommentItemListener {
-        public void delete(int position);
+        void delete(int position);
     }
-//    public interface  ClickAddorDeleteLoveItemListener{
-//        public void addorDele(int upflag,int position);
-//    }
 
+    public interface ClickAddOrDeleteLoveItemListener {
+        void addOrDele(int upFlag, int position);
+    }
 
     private static String convertTime(String oldTime) {
         String temp;
@@ -291,8 +156,6 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         }
         long timeGap = System.currentTimeMillis() - old.getTime();
         DateFormat sdf = new SimpleDateFormat("MM月dd日");
-
-
         if (timeGap < 60000) {//一分钟
             temp = "刚刚";
         } else if (timeGap < 60 * 60000) {//一小时
@@ -306,8 +169,6 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         } else {
             temp = sdf.format(old);
         }
-
-
         return temp;
     }
 
@@ -325,32 +186,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         l = System.currentTimeMillis() - date.getTime();
-
         return l;
     }
-
-    public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = ((Activity) mContext).getWindow().getAttributes();
-        lp.alpha = bgAlpha;
-        ((Activity) mContext).getWindow().setAttributes(lp);
-    }
-
-    public interface OnDataIsNullListener {
-        void onChangeLayout();
-    }
-
-    public void setOnDataIsNullListener(OnDataIsNullListener onDataIsNullListener) {
-        this.onDataIsNullListener = onDataIsNullListener;
-    }
-
-    public int getDaoHeight() {
-        return daoHeight;
-    }
-
-    public void setDaoHeight(int daoHeight) {
-        this.daoHeight = daoHeight;
-    }
-
 }

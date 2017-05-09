@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fff0efef"
     android:orientation="vertical"
     android:paddingBottom="15dp"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp" >
+    android:paddingRight="15dp">
 
     <RelativeLayout
         android:id="@+id/header"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp">
 
@@ -35,30 +35,29 @@
             android:layout_marginTop="9dp"
             android:clickable="true"
             android:padding="6dp"
-            />
-        <!--android:src="@drawable/user_detail_record_del_icon_selector"-->
+            android:src="@drawable/user_detail_record_del_icon_selector" />
+
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/marks_bg"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:background="@drawable/center_bg_notation"
         android:orientation="horizontal"
         android:paddingBottom="8.0dip"
-        android:paddingLeft="15.0dip"
-        >
-        <!--android:background="@drawable/center_bg_notation"-->
+        android:paddingLeft="15.0dip">
+
         <TextView
             android:id="@+id/comment_item_comment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:textSize="@dimen/font2"
-            android:text="is"
-            android:paddingTop="13dp"
             android:layout_marginBottom="13dp"
+            android:layout_weight="8"
+            android:paddingTop="13dp"
+            android:text="is"
             android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2"
             android:visibility="visible" />
 
         <RelativeLayout
@@ -66,8 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:gravity="center_vertical"
-            >
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/love_imagebt"
@@ -76,35 +74,33 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="19dp"
                 android:background="#00000000"
+                android:src="@mipmap/list_icon_gif_nor_icon_heart_nor" />
 
-
-
-                 />
-            <!--android:src="@drawable/list_icon_gif_nor_icon_heart_nor"-->
             <TextView
                 android:id="@+id/love_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"
+                android:paddingTop="3dp"
                 android:text="1"
                 android:textColor="@color/new_color7"
-                android:textSize="12sp"
-                android:paddingTop="3dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="13dp"/>
+                android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/original"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10.0dip"
-
+        android:drawableRight="@mipmap/notationdetails_icn_more"
         android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="@color/new_color7"
-        android:textSize="@dimen/font3"
         android:paddingBottom="2dp"
-        android:paddingRight="3dp"/>
-    <!--android:drawableRight="@drawable/notationdetails_icn_more"-->
+        android:paddingRight="3dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/new_color7"
+        android:textSize="@dimen/font3" />
+
 </LinearLayout>
