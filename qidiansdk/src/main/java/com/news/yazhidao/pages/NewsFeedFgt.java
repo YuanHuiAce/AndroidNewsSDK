@@ -52,6 +52,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.database.VideoChannelDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
@@ -146,6 +147,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private RelativeLayout mFeedSmallLayout;
     private ImageView mFeedClose;
     private int adPosition, adFlag;
+    private VideoChannelDao videoChannelDao;
+    private long scid=0;
+    private ArrayList<VideoChannel> localChannelItems;
 
     @Override
     public void onThemeChanged() {
@@ -470,6 +474,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
+        adLoadNewsFeedEntity.setScid(scid);
         adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_BIGPOSID)));
         Gson gson = new Gson();
@@ -1069,6 +1074,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 if ("44".equals(mstrChannelId) && portrait) {
 //                    VideoVisibleControl();
+                    Logger.v(TAG,"firstVisibleItem:"+firstVisibleItem+"getFirstVisibleItem:"+view.getFirstVisiblePosition());
                     VideoShowControl();
                 }
             }
@@ -1278,40 +1284,40 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //========================================视频部分======================================//
 
-    private ArrayList<VideoChannel> mVideoChannels;
     public void addTabView(LayoutInflater LayoutInflater)
     {
-        initChannel();
+        videoChannelDao = new VideoChannelDao(mContext);
+        localChannelItems = videoChannelDao.queryForAll();
         View tabView=LayoutInflater.inflate(R.layout.second_channel_layout,null);
-//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//        tabView.setLayoutParams(layoutParams);
-
         TabLayout mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
-        for (int i=0;i<mVideoChannels.size();i++)
+        for(VideoChannel videoChannel: localChannelItems)
         {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
             TextView tv= (TextView) view.findViewById(R.id.tv_tabtitle);
-            tv.setText(mVideoChannels.get(i).getCname());
+            tv.setText(videoChannel.getCname());
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
-//            mTabLayout.addTab(mTabLayout.newTab().setText("新闻"));
         }
         mlvNewsFeed.getRefreshableView().addHeaderView(tabView);
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                scid= localChannelItems.get(tab.getPosition()).getId();
+                loadData(PULL_DOWN_REFRESH);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
-    private void initChannel() {
-        mVideoChannels=new ArrayList<>();
-//        String[] channels=this.getResources().getStringArray(R.array.vchannels);
-        for(int i=4401, j=0;i<=4412;i++,j++)
-        {
-            VideoChannel vChannel=new VideoChannel();
-            vChannel.setChannelId(i);
-            vChannel.setCname("搞笑搞笑");
-            mVideoChannels.add(vChannel);
-        }
-
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1895,11 +1901,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public int getPlayItemPosition() {
         ListView lv = mlvNewsFeed.getRefreshableView();
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0)
+            if (i == 0||i==1)
                 continue;
             if (i > mArrNewsFeed.size())
                 return -1;
-            if (mArrNewsFeed.get(i - 1).getNid() == vPlayer.cPostion) {
+            if (mArrNewsFeed.get(i - 2).getNid() == vPlayer.cPostion) {
                 return (i - lv.getFirstVisiblePosition());
             }
         }
@@ -2014,23 +2020,22 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         boolean isExist = false;
         int position = -1;
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0)
+            if (i == 0||i==1)
                 continue;
             if (i > mArrNewsFeed.size())
                 break;
-            if (mArrNewsFeed.get(i - 1).getNid() == vPlayer.cPostion) {
+            if (mArrNewsFeed.get(i -2).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
                 break;
             }
         }
 
+        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition() + "ChannelId::" + mstrChannelId);
 
         if (isExist) {
             View item = lv.getChildAt(position);
-            Log.e(TAG, "item:" + item.toString() + "position:" + position);
             FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
-            Log.e(TAG, "frameLayout:" + frameLayout.toString());
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
 //                mFeedSmallScreen.removeAllViews();

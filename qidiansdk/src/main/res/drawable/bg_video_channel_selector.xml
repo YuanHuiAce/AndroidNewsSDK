@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:state_pressed="true" android:state_selected="true">
+    <item android:state_selected="true">
         <shape>
             <corners android:radius="2dp" />
 
-            <solid android:color="@color/green" />
+            <solid android:color="#d1d1d1" />
 
             <padding android:bottom="5dp" android:left="9dp" android:right="9dp" android:top="5dp" />
         </shape>

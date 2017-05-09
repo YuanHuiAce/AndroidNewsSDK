@@ -237,4 +237,9 @@ public class HttpConstant {
      * apk升级接口
      */
     public static final String URL_APK_UPDATE=URL_SERVER_HOST+"/version/query?";
+
+    /**
+     * 获取二级频道接口
+     */
+    public static final String URL_VIDEO_CHANNEL_LIST=URL_SERVER_HOST+"/ns/ch/scho?";
 }

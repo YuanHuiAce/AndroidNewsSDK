@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     app:tabGravity="fill"
     app:tabPaddingStart="4dp"
+    android:background="@color/white"
     app:tabPaddingEnd="0dp"
     app:tabBackground="@color/white"
     app:tabIndicatorHeight="0dp"
