@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,6 +40,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.LogUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.PlayerManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -511,6 +513,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
+            }
+
+            if (PlayerManager.videoPlayView!=null&&feed.getNid()!=PlayerManager.videoPlayView.cPostion)
+            {
+                FrameLayout view = holder.getView(R.id.layout_item_video);
+                view.removeAllViews();
+                holder.getView(R.id.rl_video_show).setVisibility(View.VISIBLE);
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
             int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);

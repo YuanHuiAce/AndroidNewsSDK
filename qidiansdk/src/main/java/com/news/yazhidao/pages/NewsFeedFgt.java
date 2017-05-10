@@ -54,6 +54,7 @@ import com.news.yazhidao.common.ThemeManager;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.database.VideoChannelDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
+import com.news.yazhidao.entity.ADLoadVideoFeedEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.entity.VideoChannel;
@@ -148,7 +149,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private ImageView mFeedClose;
     private int adPosition, adFlag;
     private VideoChannelDao videoChannelDao;
-    private long scid=0;
+    private long scid = 0;
     private ArrayList<VideoChannel> localChannelItems;
 
     @Override
@@ -469,12 +470,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
         String requestUrl;
         String tstart = "";
-        ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+        ADLoadNewsFeedEntity adLoadNewsFeedEntity=new ADLoadNewsFeedEntity();
+
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
-        adLoadNewsFeedEntity.setScid(scid);
         adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_BIGPOSID)));
         Gson gson = new Gson();
@@ -528,8 +529,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
+        String params;
+        if (mstrChannelId.equals("44")&&scid!=0)
+        {
+            ADLoadVideoFeedEntity adLoadVideoFeedEntity= new ADLoadVideoFeedEntity();
+            adLoadVideoFeedEntity.setNid(adLoadNewsFeedEntity.getNid());
+            adLoadVideoFeedEntity.setCid(adLoadNewsFeedEntity.getCid());
+            adLoadVideoFeedEntity.setUid(adLoadNewsFeedEntity.getUid());
+            adLoadVideoFeedEntity.setT(adLoadNewsFeedEntity.getT());
+            adLoadVideoFeedEntity.setV(adLoadNewsFeedEntity.getV());
+            adLoadVideoFeedEntity.setAds(adLoadNewsFeedEntity.getAds());
+            adLoadVideoFeedEntity.setB(adLoadNewsFeedEntity.getB());
+            adLoadVideoFeedEntity.setTcr(adLoadNewsFeedEntity.getTcr());
+            adLoadVideoFeedEntity.setScid(scid);
+            params=gson.toJson(adLoadVideoFeedEntity);
+            Logger.v(TAG,"adLoadVideoFeedEntity:"+params);
+        }else
+        {
+            params=gson.toJson(adLoadNewsFeedEntity);
+            Logger.v(TAG,"ADLoadNewsFeedEntity:"+params);
+        }
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+        NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl,params, new Response.Listener<ArrayList<NewsFeed>>() {
             @Override
             public void onResponse(final ArrayList<NewsFeed> result) {
                 loadNewFeedSuccess(result, flag);
@@ -611,13 +632,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else if ("44".equals(mstrChannelId)) {
                     newsFeed.setChannel_id(44);
-                    PlayerFeed playerFeed=new PlayerFeed();
+                    PlayerFeed playerFeed = new PlayerFeed();
                     playerFeed.setNid(newsFeed.getNid());
                     playerFeed.setTitle(newsFeed.getTitle());
                     playerFeed.setImg(newsFeed.getThumbnail());
                     playerFeed.setStreamUrl(newsFeed.getVideourl());
                     playerFeeds.add(playerFeed);
-                    playerFeed=null;
+                    playerFeed = null;
 
                 } else {
                     newsFeed.setChannel_id(newsFeed.getChannel());
@@ -716,8 +737,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
         mIsFirst = false;
-        if (vPlayer!=null&&mstrChannelId.equals("44"))
-        {
+        if (vPlayer != null && mstrChannelId.equals("44")) {
             vPlayer.setPlayerFeed(playerFeeds);
         }
         mlvNewsFeed.onRefreshComplete();
@@ -792,15 +812,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
                     mAdapter.setNewsFeed(newsFeeds);
-                    for (NewsFeed newsFeed:newsFeeds)
-                    {
-                        PlayerFeed playerFeed=new PlayerFeed();
+                    for (NewsFeed newsFeed : newsFeeds) {
+                        PlayerFeed playerFeed = new PlayerFeed();
                         playerFeed.setNid(newsFeed.getNid());
                         playerFeed.setTitle(newsFeed.getTitle());
                         playerFeed.setImg(newsFeed.getThumbnail());
                         playerFeed.setStreamUrl(newsFeed.getVideourl());
                         playerFeeds.add(playerFeed);
-                        playerFeed=null;
+                        playerFeed = null;
                     }
                     mAdapter.notifyDataSetChanged();
                     mHomeRetry.setVisibility(View.GONE);
@@ -950,8 +969,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         ListView lv = mlvNewsFeed.getRefreshableView();
         if (!mstrChannelId.equals("44"))
             lv.addHeaderView(mSearchHeaderView);
-        else if (mstrChannelId.equals("44"))
-        {
+        else if (mstrChannelId.equals("44")) {
             addTabView(LayoutInflater);
         }
         lv.setHeaderDividersEnabled(false);
@@ -1074,7 +1092,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 if ("44".equals(mstrChannelId) && portrait) {
 //                    VideoVisibleControl();
-                    Logger.v(TAG,"firstVisibleItem:"+firstVisibleItem+"getFirstVisibleItem:"+view.getFirstVisiblePosition());
+                    Logger.v(TAG, "firstVisibleItem:" + firstVisibleItem + "getFirstVisibleItem:" + view.getFirstVisiblePosition());
                     VideoShowControl();
                 }
             }
@@ -1284,16 +1302,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //========================================视频部分======================================//
 
-    public void addTabView(LayoutInflater LayoutInflater)
-    {
+    public void addTabView(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
         localChannelItems = videoChannelDao.queryForAll();
-        View tabView=LayoutInflater.inflate(R.layout.second_channel_layout,null);
+        View tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
         TabLayout mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
-        for(VideoChannel videoChannel: localChannelItems)
-        {
+        for (VideoChannel videoChannel : localChannelItems) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-            TextView tv= (TextView) view.findViewById(R.id.tv_tabtitle);
+            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
             tv.setText(videoChannel.getCname());
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
         }
@@ -1301,7 +1317,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                scid= localChannelItems.get(tab.getPosition()).getId();
+                scid = localChannelItems.get(tab.getPosition()).getId();
                 loadData(PULL_DOWN_REFRESH);
             }
 
@@ -1375,12 +1391,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayer = PlayerManager.videoPlayView;
     }
 
-//    public int vPlayer.cPostion = -1;
+    //    public int vPlayer.cPostion = -1;
     public int lastPostion = -1;
     private VPlayPlayer vPlayer;
     private boolean portrait = true;
-//    private NewsFeed newsFeed;
-    private ArrayList<PlayerFeed> playerFeeds=new ArrayList<>();
+    //    private NewsFeed newsFeed;
+    private ArrayList<PlayerFeed> playerFeeds = new ArrayList<>();
 
     /**
      * 横竖屏切换
@@ -1420,7 +1436,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         vPlayer.showBottomControl(true);
                                         isAuto = false;
                                     } else {
-                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 1, 0);
+                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 2, 0);
                                         mHandler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
@@ -1724,7 +1740,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             vPlayerContainer.addView(vPlayer);
                             lastPostion = vPlayer.cPostion;
                             isAuto = true;
-                            mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 1, 0);
+                            mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 2, 0);
 
                         } else {
                             isAuto = true;
@@ -1785,7 +1801,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 1, 0);
+                mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 2, 0);
             }
         }, 200);
 
@@ -1901,7 +1917,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public int getPlayItemPosition() {
         ListView lv = mlvNewsFeed.getRefreshableView();
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0||i==1)
+            if (i == 0 || i == 1)
                 continue;
             if (i > mArrNewsFeed.size())
                 return -1;
@@ -1946,8 +1962,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      * 移除播放器
      */
     public void removeViews() {
-        if (vPlayer==null)
-            return ;
+        if (vPlayer == null)
+            return;
         ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
         if (frameLayout != null && frameLayout.getChildCount() > 0) {
             frameLayout.removeView(vPlayer);
@@ -2020,11 +2036,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         boolean isExist = false;
         int position = -1;
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0||i==1)
+            if (i == 0 || i == 1)
                 continue;
             if (i > mArrNewsFeed.size())
                 break;
-            if (mArrNewsFeed.get(i -2).getNid() == vPlayer.cPostion) {
+            if (mArrNewsFeed.get(i - 2).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
                 break;
