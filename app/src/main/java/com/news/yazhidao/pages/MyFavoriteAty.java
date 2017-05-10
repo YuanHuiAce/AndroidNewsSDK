@@ -5,7 +5,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -16,11 +15,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.sdk.adapter.NewsFeedAdapter;
+import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.NewsFeed;
@@ -28,7 +27,8 @@ import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsLoveRequest;
 import com.news.sdk.utils.DensityUtil;
-import com.news.sdk.utils.Logger;
+import com.news.sdk.utils.NetUtil;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.yazhidao.R;
@@ -37,20 +37,23 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class MyFavoriteAty extends BaseActivity implements View.OnClickListener {
     private View mFavoriteLeftBack;
-    private RelativeLayout bgLayout;
+    private RelativeLayout bgLayout, mHomeRetry;
     private PullToRefreshListView mFavoriteListView;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> newsFeedList = new ArrayList<>();
-    private ArrayList<NewsFeed> deleteFeedList = new ArrayList<>();
-    private boolean isHaveFooterView;
+    private boolean isRefresh;
+    private TextView comment_nor;
     private TextView mFavoriteRightManage, aty_myFavorite_number;
     private LinearLayout aty_myFavorite_Deletelayout;
     private boolean isDeleteyFavorite;
     private User user;
     private Context mContext;
+    private int pager = 1;
+    private int mDeleteNum;
 
     @Override
     protected void setContentView() {
@@ -62,43 +65,52 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         mContext = this;
         user = SharedPreManager.mInstance(mContext).getUser(mContext);
         mFavoriteLeftBack = findViewById(R.id.mFavoriteLeftBack);
-
+        mFavoriteLeftBack.setOnClickListener(this);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
+        mHomeRetry.setOnClickListener(this);
+        comment_nor = (TextView) findViewById(R.id.nor_comment);
         mFavoriteRightManage = (TextView) findViewById(R.id.mFavoriteRightManage);
         mFavoriteRightManage.setOnClickListener(this);
         aty_myFavorite_number = (TextView) findViewById(R.id.aty_myFavorite_number);
         aty_myFavorite_Deletelayout = (LinearLayout) findViewById(R.id.aty_myFavorite_Deletelayout);
         aty_myFavorite_Deletelayout.setOnClickListener(this);
-
+        aty_myFavorite_Deletelayout.setVisibility(View.GONE);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mFavoriteListView = (PullToRefreshListView) findViewById(R.id.aty_myFavorite_PullToRefreshListView);
+        mFavoriteListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mFavoriteListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isRefresh = false;
+                loadFavorite();
+            }
+        });
         mAdapter = new NewsFeedAdapter(this, null, null);
         mAdapter.isFavoriteList();
         mAdapter.setIntroductionNewsFeed(mIntroductionNewsFeed);
+        mFavoriteListView.setAdapter(mAdapter);
+        isLoading(true);
     }
 
     NewsFeedAdapter.introductionNewsFeed mIntroductionNewsFeed = new NewsFeedAdapter.introductionNewsFeed() {
         @Override
         public void getDate(NewsFeed feed, boolean isCheck) {
-
             if (isCheck) {
-//                for (NewsFeed bean:deleteFeedList) {
-//                    if(bean.getUrl().equals(feed.getUrl())){
-//                        return;
-//                    }
-//                }
-                deleteFeedList.add(feed);
-
-                Logger.e("aaa", " deleteFeedList.size()===添加===" + deleteFeedList.size());
+                mDeleteNum++;
             } else {
-//                for (NewsFeed bean:deleteFeedList) {
-//                    if(bean.getUrl().equals(feed.getUrl())){
-//                        return;
-//                    }
-//                }
-                deleteFeedList.remove(feed);
-                Logger.e("aaa", " deleteFeedList.size()===删除===" + deleteFeedList.size());
+                mDeleteNum--;
             }
-            aty_myFavorite_number.setText("(" + deleteFeedList.size() + ")");
+            if (mDeleteNum > 0) {
+                aty_myFavorite_number.setText("(" + mDeleteNum + ")");
+            } else {
+                aty_myFavorite_number.setText("");
+            }
         }
     };
 
@@ -109,98 +121,69 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void loadData() {
-        aty_myFavorite_Deletelayout.setVisibility(View.GONE);
-        mFavoriteLeftBack.setOnClickListener(this);
-        mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
-        mFavoriteListView.setAdapter(mAdapter);
-        loadFavorite();
+        if (NetUtil.checkNetWork(mContext)) {
+            bgLayout.setVisibility(View.VISIBLE);
+            mHomeRetry.setVisibility(View.GONE);
+            user = SharedPreManager.mInstance(mContext).getUser(this);
+            if (user != null && !user.isVisitor()) {
+                loadFavorite();
+            }
+        } else {
+            bgLayout.setVisibility(View.GONE);
+            mHomeRetry.setVisibility(View.VISIBLE);
+        }
     }
 
     public void loadFavorite() {
-        showBGLayout(true);
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        Logger.e("aaa", "URL=======" + HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
+        if (isRefresh) {
+            return;
+        }
+        isRefresh = true;
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsLoveRequest<ArrayList<NewsFeed>> request = new NewsLoveRequest<ArrayList<NewsFeed>>(Request.Method.GET,
                 new TypeToken<ArrayList<NewsFeed>>() {
-                }.getType(), HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + user.getMuid()
+                }.getType(), HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + user.getMuid() + "&c=8&p=" + pager
                 , new Response.Listener<ArrayList<NewsFeed>>() {
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
-                Logger.e("aaa", "收藏内容======" + response.toString());
-                newsFeedList = response;
-                mAdapter.setNewsFeed(newsFeedList);
-                mAdapter.notifyDataSetChanged();
-
-                if (newsFeedList.size() == 0) {
-                    mFavoriteListView.setVisibility(View.GONE);
+                pager++;
+                if (TextUtil.isListEmpty(response)) {
+                    mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                    isHaveData();
                 } else {
-                    if (!isHaveFooterView) {
-                        isHaveFooterView = true;
-                        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-                        ListView lv = mFavoriteListView.getRefreshableView();
-                        LinearLayout mNewsDetailFootView = (LinearLayout) getLayoutInflater().inflate(R.layout.detail_footview_layout, null);
-                        mNewsDetailFootView.setLayoutParams(layoutParams);
-                        lv.addFooterView(mNewsDetailFootView);
-                    }
-                    mFavoriteListView.setVisibility(View.VISIBLE);
-
+                    newsFeedList.addAll(response);
+                    mAdapter.setNewsFeed(newsFeedList);
+                    mAdapter.notifyDataSetChanged();
+                    isHaveData();
                 }
-                showBGLayout(false);
-
-
+                isRefresh = false;
+                mFavoriteListView.onRefreshComplete();
+                isLoading(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //这里有问题，比如点击进入详情页，后关闭网络回来会没有数据（实际是有数据的）
-
-                mFavoriteListView.setVisibility(View.GONE);
-                newsFeedList = new ArrayList<NewsFeed>();
-                mAdapter.setNewsFeed(newsFeedList);
-                mAdapter.notifyDataSetChanged();
-
-
-                showBGLayout(false);
+                isRefresh = false;
+                mFavoriteListView.onRefreshComplete();
+                mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                isHaveData();
+                isLoading(false);
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
-
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        bgLayout.setVisibility(View.GONE);
-
-//        try {
-//            newsFeedList = SharedPreManager.myFavoriteGetList();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        Logger.e("aaa", "newsFeedList==" + newsFeedList);
-        mAdapter.setNewsFeed(newsFeedList);
-        mAdapter.notifyDataSetChanged();
-
-        if (newsFeedList.size() == 0) {
-            mFavoriteListView.setVisibility(View.GONE);
+    public void isHaveData() {
+        if (!TextUtil.isListEmpty(newsFeedList)) {
+            comment_nor.setVisibility(View.GONE);
         } else {
-            if (!isHaveFooterView) {
-                isHaveFooterView = true;
-                AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-                ListView lv = mFavoriteListView.getRefreshableView();
-                LinearLayout mNewsDetailFootView = (LinearLayout) getLayoutInflater().inflate(R.layout.detail_footview_layout, null);
-                mNewsDetailFootView.setLayoutParams(layoutParams);
-                lv.addFooterView(mNewsDetailFootView);
-            }
-            mFavoriteListView.setVisibility(View.VISIBLE);
-
+            comment_nor.setVisibility(View.VISIBLE);
         }
     }
 
@@ -210,70 +193,59 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
             case R.id.mFavoriteLeftBack:
                 finish();
                 break;
+            case R.id.mHomeRetry:
+                loadData();
+                break;
             case R.id.mFavoriteRightManage:
                 if (isDeleteyFavorite) {
-                    for (int i = 0; i < deleteFeedList.size(); i++) {
-                        deleteFeedList.get(i).setFavorite(false);
-                    }
+//                    for (int i = 0; i < deleteFeedList.size(); i++) {
+//                        deleteFeedList.get(i).setFavorite(false);
+//                    }
                     setDeleteType(false);
                 } else {
                     setDeleteType(true);
-
                 }
                 break;
             case R.id.aty_myFavorite_Deletelayout:
-                if (deleteFeedList.size() == 0) {
-                    ToastUtil.toastShort("无删除数据。");
-                    setDeleteType(false);
-                    return;
-                }
-
-                for (int i = 0; i < deleteFeedList.size(); i++) {
-                    deleteFeedList.get(i).setFavorite(false);
-                }
-                deleteFavorite(deleteFeedList);
-
-
+                deleteFavorite();
                 break;
         }
     }
 
-    public void deleteFavorite(final ArrayList<NewsFeed> list) {
-        showBGLayout(true);
-        SharedPreManager.mInstance(this).myFavoritRemoveList(list);
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        for (int i = 0; i < list.size(); i++) {
-            final int position = i;
-            NewsFeed bean = list.get(i);
-            JSONObject json = new JSONObject();
-            Logger.e("aaa", "nid==" + bean.getNid());
-            DetailOperateRequest request = new DetailOperateRequest(Request.Method.DELETE, HttpConstant.URL_ADDORDELETE_FAVORITE + "uid=" + user.getMuid() + "&nid=" + bean.getNid(), json.toString(), new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    if (position == list.size() - 1) {
-                        aty_myFavorite_number.setText("");
-                        loadFavorite();
-                    }
-
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    showBGLayout(false);
-                }
-            });
-            HashMap<String, String> header = new HashMap<>();
-            header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
-            header.put("Content-Type", "application/json");
-            header.put("X-Requested-With", "*");
-            request.setRequestHeader(header);
-//            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(request);
+    public void deleteFavorite() {
+        if (mDeleteNum == 0 || TextUtil.isListEmpty(newsFeedList)) {
+            ToastUtil.toastShort("无删除数据。");
+            setDeleteType(false);
+            return;
         }
-
-
+        String nid = "";
+        for (Iterator it = newsFeedList.iterator(); it.hasNext(); ) {
+            NewsFeed newsFeed = (NewsFeed) it.next();
+            if (newsFeed.isFavorite()) {
+                nid += newsFeed.getNid() + ",";
+                it.remove();
+            }
+        }
+        nid = nid.substring(0, nid.length() - 1);
+        mAdapter.notifyDataSetChanged();
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        DetailOperateRequest request = new DetailOperateRequest(Request.Method.DELETE, HttpConstant.URL_ADDORDELETE_FAVORITE + "uid=" + user.getMuid() + "&nid=" + nid, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                setDeleteType(false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                setDeleteType(true);
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(mContext).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        requestQueue.add(request);
     }
 
     public void setDeleteType(boolean isType) {
@@ -288,7 +260,6 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
             mAdapter.setNewsFeed(newsFeedList);
             mAdapter.setVisitycheckFavoriteDeleteLayout(isDeleteyFavorite);
             mFavoriteRightManage.setText("管理");
-            deleteFeedList = new ArrayList<>();
             aty_myFavorite_number.setText("");
         }
     }
@@ -323,7 +294,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-//
+
                 }
 
                 @Override
@@ -356,7 +327,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    public void showBGLayout(boolean isShow) {
+    public void isLoading(boolean isShow) {
         if (isShow) {
             if (bgLayout.getVisibility() == View.GONE) {
                 bgLayout.setVisibility(View.VISIBLE);
@@ -367,5 +338,4 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
             }
         }
     }
-
 }

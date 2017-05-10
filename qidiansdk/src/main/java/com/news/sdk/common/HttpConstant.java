@@ -61,7 +61,7 @@ public class HttpConstant {
     /**
      * 获取频道列表接口
      */
-    public static final String URL_FETCH_CHANNEL_LIST = URL_SERVER_HOST + "/ns/chs?";
+    public static final String URL_FETCH_CHANNEL_LIST = URL_SERVER_HOST + "/ns/ch/cho?";
     /**
      * 获取专辑列表接口
      */

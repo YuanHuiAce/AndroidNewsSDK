@@ -66,6 +66,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:scaleType="center"
+        android:visibility="gone"
         android:src="@drawable/favorite_uncheck" />
     <ImageView
         android:id="@+id/line_bottom_imageView"

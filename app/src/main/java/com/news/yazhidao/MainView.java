@@ -368,7 +368,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private void setChannelList() {
         final ArrayList<ChannelItem> localChannelItems = mChannelItemDao.queryForAll();
         ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
-        }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
+        }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST + "channel=" + CommonConstant.NEWS_CTYPE, new Response.Listener<ArrayList<ChannelItem>>() {
             @Override
             public void onResponse(final ArrayList<ChannelItem> result) {
                 boolean isChannelChanged = false;

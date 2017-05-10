@@ -1,7 +1,6 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -13,6 +12,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.HttpConstant;
@@ -20,7 +21,6 @@ import com.news.sdk.entity.NewsDetailComment;
 import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsLoveRequest;
-import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -36,15 +36,16 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 
     private TextView mCommentLeftBack;
     private TextView mCommentUserName;
-    private ListView mCommentListView;
+    private PullToRefreshListView mCommentListView;
     private ArrayList<NewsDetailComment> newsDetailCommentItems = new ArrayList<>();
     private TextView comment_nor;
     private Context mContext;
     private User user;
     private NewsDetailCommentAdapter newsDetailCommentAdapter;
     private RelativeLayout bgLayout, mHomeRetry;
-    private boolean isNetWork;
+    private boolean isRefresh, isNetWork;
     private View footer;
+    private int pager = 1;
 
     @Override
     protected void setContentView() {
@@ -60,15 +61,28 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(this);
         mCommentUserName = (TextView) findViewById(R.id.mCommentUserName);
-        mCommentListView = (ListView) this.findViewById(R.id.myCommentListView);
+        mCommentListView = (PullToRefreshListView) this.findViewById(R.id.myCommentListView);
+        mCommentListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         comment_nor = (TextView) findViewById(R.id.nor_comment);
         newsDetailCommentAdapter = new NewsDetailCommentAdapter(R.layout.user_detail_record_item, this, newsDetailCommentItems);
         mCommentListView.setAdapter(newsDetailCommentAdapter);
+        mCommentListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isRefresh = false;
+                loadComment();
+            }
+        });
         NewsDetailCommentAdapter.ClickAddOrDeleteLoveItemListener clickAddOrDeleteLoveItemListener = new NewsDetailCommentAdapter.ClickAddOrDeleteLoveItemListener() {
             @Override
             public void addOrDele(int upFlag, int position) {
                 NewsDetailComment bean = newsDetailCommentItems.get(position);
-                addNewsLove(bean.getComment_id(), position, upFlag == 0);
+                addNewsLove(bean.getId(), position, upFlag == 0);
             }
         };
         NewsDetailCommentAdapter.ClickDeleteCommentItemListener clickDeleteCommentItemListener = new NewsDetailCommentAdapter.ClickDeleteCommentItemListener() {
@@ -80,8 +94,8 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         };
         newsDetailCommentAdapter.setClickAddOrDeleteLoveItemListener(clickAddOrDeleteLoveItemListener);
         newsDetailCommentAdapter.setClickDeleteCommentItemListener(clickDeleteCommentItemListener);
-        footer = LayoutInflater.from(this).inflate(R.layout.detail_footview_layout, null);
-        mCommentListView.addFooterView(footer, null, false);
+//        footer = LayoutInflater.from(this).inflate(R.layout.detail_footview_layout, null);
+//        mCommentListView.getRefreshableView().addFooterView(footer, null, false);
         isLoading(true);
     }
 
@@ -93,7 +107,6 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void loadData() {
         if (NetUtil.checkNetWork(mContext)) {
-            footer.setVisibility(View.VISIBLE);
             bgLayout.setVisibility(View.VISIBLE);
             mHomeRetry.setVisibility(View.GONE);
             user = SharedPreManager.mInstance(mContext).getUser(this);
@@ -103,7 +116,6 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
             }
         } else {
             comment_nor.setVisibility(View.GONE);
-            footer.setVisibility(View.GONE);
             bgLayout.setVisibility(View.GONE);
             mHomeRetry.setVisibility(View.VISIBLE);
         }
@@ -122,27 +134,38 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     }
 
     public void loadComment() {
+        if (isRefresh) {
+            return;
+        }
+        isRefresh = true;
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
         NewsLoveRequest<ArrayList<NewsDetailComment>> request = new NewsLoveRequest<>(Request.Method.GET,
                 new TypeToken<ArrayList<NewsDetailComment>>() {
-                }.getType(), HttpConstant.URL_USER_CREATEORDELETE_COMMENTLIST + "uid=" + user.getMuid()
+                }.getType(), HttpConstant.URL_USER_CREATEORDELETE_COMMENTLIST + "uid=" + user.getMuid() + "&c=5&p=" + pager
                 , new Response.Listener<ArrayList<NewsDetailComment>>() {
             @Override
             public void onResponse(ArrayList<NewsDetailComment> response) {
-                newsDetailCommentItems = response;
-                if (TextUtil.isListEmpty(newsDetailCommentItems)) {
-                    isHaveData(false);
+                pager++;
+                if (TextUtil.isListEmpty(response)) {
+                    mCommentListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                    isHaveData();
                 } else {
-                    isHaveData(true);
+                    newsDetailCommentItems.addAll(response);
                     newsDetailCommentAdapter.setNewsFeed(newsDetailCommentItems);
                     newsDetailCommentAdapter.notifyDataSetChanged();
+                    isHaveData();
                 }
+                isRefresh = false;
+                mCommentListView.onRefreshComplete();
                 isLoading(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                isHaveData(false);
+                isRefresh = false;
+                mCommentListView.onRefreshComplete();
+                mCommentListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                isHaveData();
                 isLoading(false);
             }
         });
@@ -152,13 +175,11 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         requestQueue.add(request);
     }
 
-    public void isHaveData(boolean isVisity) {
-        if (isVisity) {
+    public void isHaveData() {
+        if (!TextUtil.isListEmpty(newsDetailCommentItems)) {
             comment_nor.setVisibility(View.GONE);
-            footer.setVisibility(View.VISIBLE);
         } else {
             comment_nor.setVisibility(View.VISIBLE);
-            footer.setVisibility(View.GONE);
         }
     }
 
@@ -180,14 +201,12 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         }
         isNetWork = true;
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        JSONObject json = new JSONObject();
         DetailOperateRequest request = new DetailOperateRequest(isAdd ? Request.Method.POST : Request.Method.DELETE,
                 HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + cid
-                , json.toString(), new Response.Listener<JSONObject>() {
+                , new JSONObject().toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
-                Logger.e("jigang", "network success, love" + data);
                 if (!TextUtil.isEmptyString(data)) {
                     if (isAdd) {
                         newsDetailCommentItems.get(position).setUpflag(1);
@@ -196,8 +215,8 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
                     }
                     newsDetailCommentItems.get(position).setCommend(Integer.parseInt(data));
                     newsDetailCommentAdapter.notifyDataSetChanged();
+                    isNetWork = false;
                 }
-                isNetWork = false;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -206,6 +225,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
             }
         });
         HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.mInstance(mContext).getUser(getActivity()).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);
@@ -226,13 +246,10 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
-                Logger.e("jigang", "network success, 删除成功===" + data);
                 if (!TextUtil.isEmptyString(data)) {
                     NewsDetailComment bean = newsDetailCommentItems.get(position);
                     newsDetailCommentItems.remove(bean);
-                    if (newsDetailCommentItems.size() == 0) {
-                        isHaveData(false);
-                    }
+                    isHaveData();
                     newsDetailCommentAdapter.notifyDataSetChanged();
                 }
                 isLoading(false);

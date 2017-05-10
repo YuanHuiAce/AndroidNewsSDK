@@ -44,6 +44,8 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
      */
     @DatabaseField
     private int orderId;
+
+    private int order_num;
     /**
      * 栏目是否选中
      */
@@ -115,6 +117,14 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
 
     public void setCname(String cname) {
         this.cname = cname;
+    }
+
+    public int getOrder_num() {
+        return order_num;
+    }
+
+    public void setOrder_num(int order_num) {
+        this.order_num = order_num;
     }
 
     public String toString() {

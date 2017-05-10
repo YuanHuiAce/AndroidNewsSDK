@@ -34,10 +34,10 @@
             android:background="@color/new_color5" />
     </RelativeLayout>
 
-    <ListView
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/myCommentListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/layout"
         android:divider="#e0e0e0"
         android:dividerHeight="8dp" />

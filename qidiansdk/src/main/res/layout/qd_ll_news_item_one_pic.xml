@@ -21,8 +21,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:maxLines="3"
         android:layout_toLeftOf="@+id/title_img_View"
+        android:maxLines="3"
         android:textColor="@color/newsFeed_titleColor"
         android:textSize="@dimen/new_font1" />
 
@@ -47,7 +47,8 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:scaleType="center"
-        android:src="@drawable/favorite_uncheck" />
+        android:src="@drawable/favorite_uncheck"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
