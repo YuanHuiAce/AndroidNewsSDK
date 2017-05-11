@@ -99,7 +99,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
 
     @Override
     public void convert(CommonViewHolder holder, RelatedItemEntity relatedItemEntity, int position) {
-        AdUtil.upLoadAd(relatedItemEntity, mContext);
+        AdUtil.upLoadFeedAd(relatedItemEntity, mContext);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
@@ -356,7 +356,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
-                    AdUtil.upLoadContentClick(relatedItemEntity, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
+                    AdUtil.upLoadContentClick(relatedItemEntity.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);

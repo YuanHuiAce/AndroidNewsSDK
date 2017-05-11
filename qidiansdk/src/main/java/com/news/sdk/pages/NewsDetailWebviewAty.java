@@ -30,6 +30,7 @@ import com.news.sdk.utils.ToastUtil;
 public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "NewsDetailWebviewAty";
     public static final String KEY_URL = "key_url";
+    public static final String KEY_SPLASH = "isSplash";
     private WebView mNewsSourcesiteWebview;
     private String mNewsUrl;
     private View mNewsSourcesiteFooterPraise;
@@ -43,6 +44,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private int mClickNum = 0;
     private ProgressBar mNewsSourcesiteProgress;
     private View mLeftBack;
+    private boolean mIsSplash;
 
     @Override
     protected boolean translucentStatus() {
@@ -143,8 +145,8 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initializeViews() {
-
         mNewsUrl = getIntent().getStringExtra(KEY_URL);
+        mIsSplash = getIntent().getBooleanExtra(KEY_SPLASH,false);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
@@ -173,7 +175,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("http:")||(url.startsWith("https:"))){
+                if (url.startsWith("http:") || (url.startsWith("https:"))) {
                     view.loadUrl(url);
                     return false;
                 }
@@ -235,6 +237,15 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 //        }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void finish() {
+//        if (mIsSplash) {
+//            Intent intent = new Intent(NewsDetailWebviewAty.this, MainAct.class);
+//            startActivity(intent);
+//        }
+        super.finish();
     }
 
     @Override

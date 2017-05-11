@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -29,6 +30,7 @@ import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.AdDetailEntity;
 import com.news.sdk.net.volley.SplashADRequestPost;
+import com.news.sdk.pages.NewsDetailWebviewAty;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.GsonUtil;
@@ -167,14 +169,14 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         ShareSDK.initSDK(this);
         UserManager.registerVisitor(this, null);
         //展示广点通sdk
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false);
         //展示广点通API
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, true);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mRequestManager = Glide.with(this);
-        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true)) {
+        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false)) {
             mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
             mNativeAD.loadAD(mAdCount);
             UserManager.registerVisitor(this, null);
@@ -199,33 +201,54 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                         SplashADRequestPost<AdDetailEntity> newsFeedRequestPost = new SplashADRequestPost(requestUrl, jsonObject.toString(), new Response.Listener<AdDetailEntity>() {
                             @Override
                             public void onResponse(final AdDetailEntity result) {
-//                                if (!TextUtil.isEmptyString(result)) {
-//                                    LogUtil.adGetLog(SplashAty.this, 1, result.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-//                                    final AdDetailEntity newsFeed = result.get(0);
-//                                    if (newsFeed != null) {
-//                                        final ArrayList<String> imgs = newsFeed.getImgs();
-//                                        if (!TextUtil.isListEmpty(imgs)) {
-//                                            mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
-//                                            ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                                                @Override
-//                                                public void onGlobalLayout() {
-//                                                    mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(ivAD);
-//                                                }
-//                                            });
-//                                        }
-//                                        ivAD.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View view) {
-//                                                LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
-//                                                Intent AdIntent = new Intent(SplashAty.this, NewsDetailWebviewAty.class);
-//                                                AdIntent.putExtra("key_url", newsFeed.getPurl());
-//                                                Log.i("tag", newsFeed.getPurl() + "url");
-//                                                SplashAty.this.startActivity(AdIntent);
-//                                            }
-//                                        });
-//                                        AdUtil.upLoadAd(newsFeed, SplashAty.this);
-//                                    }
-//                                }
+                                if (result != null) {
+                                    LogUtil.adGetLog(SplashAty.this, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                    final String img = result.getData().getAdspace().get(0).getCreative().get(0).getBanner().getCreative_url();
+                                    if (!TextUtil.isEmptyString(img)) {
+                                        mRequestManager.load(img).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+                                        ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                            @Override
+                                            public void onGlobalLayout() {
+                                                mRequestManager.load(img).placeholder(R.drawable.bg_load_default_small).into(ivAD);
+                                            }
+                                        });
+                                    }
+                                    final float[] down_x = new float[1];
+                                    final float[] down_y = new float[1];
+                                    final float[] up_x = new float[1];
+                                    final float[] up_y = new float[1];
+                                    ivAD.setOnTouchListener(new View.OnTouchListener() {
+                                        @Override
+                                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                                            switch (motionEvent.getAction()) {
+                                                case MotionEvent.ACTION_DOWN:
+                                                    down_x[0] = motionEvent.getX(0);
+                                                    down_y[0] = ivAD.getY() + motionEvent.getY(0);
+                                                    break;
+                                                case MotionEvent.ACTION_UP:
+                                                    up_x[0] = motionEvent.getX(0);
+                                                    up_y[0] = ivAD.getY() + motionEvent.getY(0);
+                                                    break;
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                    ivAD.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
+                                            startActivity(mainAty);
+                                            AdUtil.upLoadContentClick(result, SplashAty.this, down_x[0], down_y[0], up_x[0], up_y[0]);
+                                            LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, "");
+                                            Intent AdIntent = new Intent(SplashAty.this, NewsDetailWebviewAty.class);
+                                            AdIntent.putExtra("key_url", result.getData().getAdspace().get(0).getCreative().get(0).getEvent().get(0).getEventValue());
+                                            AdIntent.putExtra("isSplash", true);
+                                            SplashAty.this.startActivity(AdIntent);
+                                            SplashAty.this.finish();
+                                        }
+                                    });
+                                    AdUtil.upLoadAd(result, SplashAty.this);
+                                }
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -324,7 +347,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void loadData() {
-        mHandler.postDelayed(mRunnable, 4000);
+        mHandler.postDelayed(mRunnable, 40000);
     }
 
     @Override
@@ -334,7 +357,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
 //                adtvTitle.setText(dataRef.getDesc());
-                Log.i("tag",dataRef.getAPPScore()+"=="+dataRef.getAPPPrice()+"==="+dataRef.getAPPStatus()+"=="+dataRef.isAPP());
+                Log.i("tag", dataRef.getAPPScore() + "==" + dataRef.getAPPPrice() + "===" + dataRef.getAPPStatus() + "==" + dataRef.isAPP());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
                     mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(ivAD);

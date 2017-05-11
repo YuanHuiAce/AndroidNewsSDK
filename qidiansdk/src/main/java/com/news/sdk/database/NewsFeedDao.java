@@ -104,7 +104,7 @@ public class NewsFeedDao {
      * @param channelId
      * @return
      */
-    public ArrayList<NewsFeed> queryByChannelId(String channelId) {
+    public ArrayList<NewsFeed> queryByChannelId(int channelId) {
         List subItems = new ArrayList();
         try {
             QueryBuilder<NewsFeed, String> builder = mNewsFeedDao.queryBuilder();

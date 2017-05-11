@@ -172,7 +172,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     @Override
     public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
         //广告
-        AdUtil.upLoadAd(feed, mContext);
+        AdUtil.upLoadFeedAd(feed, mContext);
         boolean isVisble = feed.isVisble();
         if (!isVisble) {
             feed.setVisble(true);
@@ -822,7 +822,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 int type = feed.getRtype();
                 if (type == 3) {
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, feed.getPname());
-                    AdUtil.upLoadContentClick(feed, mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
+                    AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
                     Intent intent = new Intent(mContext, NewsTopicAty.class);

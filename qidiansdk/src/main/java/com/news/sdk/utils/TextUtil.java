@@ -100,8 +100,8 @@ public class TextUtil {
             ChannelItem oldItem = oldList.get(i);
             for (int j = 0; j < newList.size(); j++) {
                 ChannelItem newItem = newList.get(j);
-                if (oldItem.getId().equals(newItem.getId())) {
-                    if (!oldItem.getOrderId().equals(newItem.getOrderId())) {
+                if (oldItem.getId()==(newItem.getId())) {
+                    if (oldItem.getOrder_num()!=(newItem.getOrder_num())) {
                         return true;
                     }
                 }

@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -1156,16 +1157,39 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                         }
                                     });
                                 }
+                                final float[] down_x = new float[1];
+                                final float[] down_y = new float[1];
+                                final float[] up_x = new float[1];
+                                final float[] up_y = new float[1];
+                                adLayout.setOnTouchListener(new View.OnTouchListener() {
+                                    @Override
+                                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                                        if (newsFeed.getRtype() == 3) {
+                                            switch (motionEvent.getAction()) {
+                                                case MotionEvent.ACTION_DOWN:
+                                                    down_x[0] = motionEvent.getX(0);
+                                                    down_y[0] = adLayout.getY() + motionEvent.getY(0);
+                                                    break;
+                                                case MotionEvent.ACTION_UP:
+                                                    up_x[0] = motionEvent.getX(0);
+                                                    up_y[0] = adLayout.getY() + motionEvent.getY(0);
+                                                    break;
+                                            }
+                                        }
+                                        return false;
+                                    }
+                                });
                                 adLayout.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        AdUtil.upLoadContentClick(newsFeed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                                         LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
                                         mContext.startActivity(AdIntent);
                                     }
                                 });
-                                AdUtil.upLoadAd(newsFeed, mContext);
+                                AdUtil.upLoadAd(newsFeed.getAdDetailEntity(), mContext);
                             }
                         }
                     }

@@ -18,7 +18,7 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
      * 栏目对应ID
      */
     @DatabaseField(id = true)
-    private String id;
+    private int id;
     /**
      * 栏目对应的频道名称
      */
@@ -44,13 +44,20 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
      */
     @DatabaseField
     private int orderId;
-
+    @DatabaseField
     private int order_num;
+    @DatabaseField
+    private int version_code;
+    @DatabaseField
+    private int parent;
+    @DatabaseField
+    private int channel;
+
     /**
      * 栏目是否选中
      */
     @DatabaseField
-    private boolean selected;
+    private int selected;
     /**
      * 栏目是否上线,1表示上线
      */
@@ -60,18 +67,18 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
     public ChannelItem() {
     }
 
-    public ChannelItem(String id, String cname, int orderId, boolean selected) {
+    public ChannelItem(int id, String cname, int orderId, int selected) {
         this.id = id;
         this.cname = cname;
         this.orderId = orderId;
         this.selected = selected;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -83,11 +90,11 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
         this.orderId = orderId;
     }
 
-    public boolean getSelected() {
+    public int getSelected() {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    public void setSelected(int selected) {
         this.selected = selected;
     }
 
@@ -125,6 +132,34 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
 
     public void setOrder_num(int order_num) {
         this.order_num = order_num;
+    }
+
+    public int getVersion_code() {
+        return version_code;
+    }
+
+    public void setVersion_code(int version_code) {
+        this.version_code = version_code;
+    }
+
+    public int getParent() {
+        return parent;
+    }
+
+    public void setParent(int parent) {
+        this.parent = parent;
+    }
+
+    public int getChannel() {
+        return channel;
+    }
+
+    public void setChannel(int channel) {
+        this.channel = channel;
+    }
+
+    public int isSelected() {
+        return selected;
     }
 
     public String toString() {

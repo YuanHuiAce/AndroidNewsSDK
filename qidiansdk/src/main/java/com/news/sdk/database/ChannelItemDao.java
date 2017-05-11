@@ -21,7 +21,7 @@ public class ChannelItemDao {
     /**
      * 频道排序id
      */
-    private static final String COLUMN_ORDERID = "orderId";
+    private static final String COLUMN_ORDER_NUM = "order_num";
     /**
      * 用户是否选择了该频道
      */
@@ -76,8 +76,8 @@ public class ChannelItemDao {
         if (!TextUtil.isListEmpty(pItems)) {
             for (int i = 0; i < pItems.size(); i++) {
                 ChannelItem channelItem = pItems.get(i);
-                channelItem.setOrderId(i);
-                channelItem.setSelected(true);
+                channelItem.setOrder_num(i);
+                channelItem.setSelected(1);
                 insert(channelItem);
             }
         }
@@ -92,8 +92,8 @@ public class ChannelItemDao {
         if (!TextUtil.isListEmpty(pItems)) {
             for (int i = 0; i < pItems.size(); i++) {
                 ChannelItem channelItem = pItems.get(i);
-                channelItem.setOrderId(i);
-                channelItem.setSelected(false);
+                channelItem.setOrder_num(i);
+                channelItem.setSelected(0);
                 insert(channelItem);
             }
         }
@@ -133,7 +133,7 @@ public class ChannelItemDao {
      */
     public ArrayList<ChannelItem> queryForAll() {
         QueryBuilder<ChannelItem, String> builder = mChannelItemDao.queryBuilder();
-        builder.orderBy(COLUMN_ORDERID, true);
+        builder.orderBy(COLUMN_ORDER_NUM, true);
         try {
             List<ChannelItem> list = builder.query();
             if (!TextUtil.isListEmpty(list)) {
@@ -145,11 +145,11 @@ public class ChannelItemDao {
         return new ArrayList<>();
     }
 
-    private ArrayList<ChannelItem> queryForSelected(boolean isSelected) {
+    private ArrayList<ChannelItem> queryForSelected(int isSelected) {
         try {
             QueryBuilder<ChannelItem, String> builder = mChannelItemDao.queryBuilder();
             builder.where().eq(COLUMN_SELECTED, isSelected);
-            builder.orderBy(COLUMN_ORDERID, true);
+            builder.orderBy(COLUMN_ORDER_NUM, true);
             List<ChannelItem> list = builder.query();
             if (!TextUtil.isListEmpty(list)) {
                 return new ArrayList<>(list);
@@ -166,7 +166,7 @@ public class ChannelItemDao {
      * @return
      */
     public ArrayList<ChannelItem> queryForSelected() {
-        return queryForSelected(true);
+        return queryForSelected(1);
     }
 
     /**
@@ -175,7 +175,7 @@ public class ChannelItemDao {
      * @return
      */
     public ArrayList<ChannelItem> queryForNormal() {
-        return queryForSelected(false);
+        return queryForSelected(0);
     }
 
     /**

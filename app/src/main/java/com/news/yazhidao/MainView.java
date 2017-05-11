@@ -101,7 +101,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
-    private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
+    private HashMap<Integer, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private RelativeLayout mMainView;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
@@ -135,7 +135,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
 
     @Override
-    public void result(String channelId, ArrayList<NewsFeed> results) {
+    public void result(int channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
     }
 
@@ -166,7 +166,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
-        AdUtil.setAdChannel(activity);
+//        AdUtil.setAdChannel(activity);
         uploadInformation();
         uploadChannelInformation();
         mRequestManager = Glide.with(activity);
@@ -366,61 +366,23 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     private void setChannelList() {
-        final ArrayList<ChannelItem> localChannelItems = mChannelItemDao.queryForAll();
         ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
         }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST + "channel=" + CommonConstant.NEWS_CTYPE, new Response.Listener<ArrayList<ChannelItem>>() {
             @Override
             public void onResponse(final ArrayList<ChannelItem> result) {
-                boolean isChannelChanged = false;
-                boolean isChangedList = false;
-                for (ChannelItem item : result) {
-                    boolean isHaveSameItem = false;
-                    String id = item.getId();
-                    for (ChannelItem localChannelItem : localChannelItems) {
-                        if (!id.equals("1") && id.equals(localChannelItem.getId()) && !item.getCname().equals(localChannelItem.getCname())) {
-                            localChannelItem.setCname(item.getCname());
-                            mChannelItemDao.update(localChannelItem);
-                            isChannelChanged = true;
-                        }
-                        if (result.size() != localChannelItems.size() && id.equals(localChannelItem.getId())) {
-                            isHaveSameItem = true;
+                if (!TextUtil.isListEmpty(result)) {
+                    ArrayList<ChannelItem> arrayList = mChannelItemDao.queryForSelected();
+                    if (!TextUtil.isListEmpty(arrayList) && arrayList.get(0).getVersion_code() != 0) {
+                        int version_code = mChannelItemDao.queryForSelected().get(0).getVersion_code();
+                        int resultVersion = result.get(0).getVersion_code();
+                        if (version_code == resultVersion) {
+                            return;
                         }
                     }
-                    if (!isHaveSameItem) {
-                        isChangedList = true;
-                        isChannelChanged = true;
-                        ChannelItem channelItem = new ChannelItem();
-                        channelItem.setOrderId(mChannelItemDao.queryForSelected().size() + 1);
-                        channelItem.setSelected(true);
-                        channelItem.setCname(item.getCname());
-                        channelItem.setId(item.getId());
-                        mChannelItemDao.insert(channelItem);
-                    }
-                }
-                if (isChannelChanged) {
-                    if (isChangedList) {
-                        channelItems = mChannelItemDao.queryForSelected();
-                        int currPosition = mViewPager.getCurrentItem();
-                        item1 = mSelChannelItems.get(currPosition);
-                        int index = -1;
-                        for (int i = 0; i < channelItems.size(); i++) {
-                            ChannelItem item = channelItems.get(i);
-                            if (item1.getId().equals(item.getId())) {
-                                index = i;
-                            }
-                        }
-                        if (index == -1) {
-                            index = currPosition > channelItems.size() - 1 ? channelItems.size() - 1 : currPosition;
-                        }
-                        mViewPager.setCurrentItem(index);
-                        Fragment item = mViewPagerAdapter.getItem(index);
-                        if (item != null) {
-                            ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
-                        }
-                        mViewPagerAdapter.setmChannelItems(channelItems);
-
-                        mViewPagerAdapter.notifyDataSetChanged();
-                    }
+                    mChannelItemDao.deletaForAll();
+                    mChannelItemDao.insertList(result);
+                    ArrayList<ChannelItem> channelItems = mChannelItemDao.queryForSelected();
+                    mViewPagerAdapter.setmChannelItems(channelItems);
                     mChannelTabStrip.setViewPager(mViewPager);
                     mChannelTabStrip.notifyDataSetChanged();
                 }
@@ -525,7 +487,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             int index = -1;
             for (int i = 0; i < channelItems.size(); i++) {
                 ChannelItem item = channelItems.get(i);
-                if (item1.getId().equals(item.getId())) {
+                if (item1.getId() == (item.getId())) {
                     index = i;
                 }
             }
@@ -573,7 +535,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             if (channelItems != null && channelItems.size() > 0) {
                 for (int i = 0; i < channelItems.size(); i++) {
                     ChannelItem item = channelItems.get(i);
-                    if (item1.getId().equals(item.getId())) {
+                    if (item1.getId() == (item.getId())) {
                         index = i;
                     }
                 }
@@ -593,7 +555,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         @Override
         public Fragment getItem(int position) {
-            String channelId = "";
+            int channelId;
             try {
                 channelId = mSelChannelItems.get(position).getId();
             } catch (Exception e) {
@@ -607,7 +569,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            String channelId = mSelChannelItems.get(position).getId();
+            int channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
             ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
             if (TextUtil.isListEmpty(newsFeeds)) {

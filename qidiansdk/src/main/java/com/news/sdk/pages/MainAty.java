@@ -58,7 +58,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
-    private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
+    private HashMap<Integer, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private ConnectivityManager mConnectivityManager;
     private TextView mtvNewWorkBar;
     //baidu Map
@@ -73,7 +73,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
 
     @Override
-    public void result(String channelId, ArrayList<NewsFeed> results) {
+    public void result(int channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
     }
 
@@ -289,7 +289,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             int index = -1;
             for (int i = 0; i < channelItems.size(); i++) {
                 ChannelItem item = channelItems.get(i);
-                if (item1.getId().equals(item.getId())) {
+                if (item1.getId()==(item.getId())) {
                     index = i;
                 }
             }
@@ -354,7 +354,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (channelItems != null && channelItems.size() > 0) {
                 for (int i = 0; i < channelItems.size(); i++) {
                     ChannelItem item = channelItems.get(i);
-                    if (item1.getId().equals(item.getId())) {
+                    if (item1.getId()==(item.getId())) {
                         index = i;
                     }
                 }
@@ -373,7 +373,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Fragment getItem(int position) {
-            String channelId = mSelChannelItems.get(position).getId();
+            int channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
             feedFgt.setNewsFeedFgtPopWindow(mNewsFeedFgtPopWindow);
             feedFgt.setNewsSaveDataCallBack(MainAty.this);
@@ -382,7 +382,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            String channelId = mSelChannelItems.get(position).getId();
+            int channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
             ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
             if (TextUtil.isListEmpty(newsFeeds)) {

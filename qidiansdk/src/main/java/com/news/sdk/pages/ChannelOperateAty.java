@@ -341,7 +341,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
             setResult(MainAty.REQUEST_CODE, data);
         } else {
             for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
-                if (!selectedChannelListCurrent.get(i).getId().equals(channelItems.get(i).getId())) {
+                if (selectedChannelListCurrent.get(i).getId() != channelItems.get(i).getId()) {
                     Intent data = new Intent();
                     data.putExtra(KEY_USER_SELECT, channelItems);
                     setResult(MainAty.REQUEST_CODE, data);

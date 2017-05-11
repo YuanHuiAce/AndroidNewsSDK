@@ -83,6 +83,8 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+import static com.news.sdk.utils.manager.PlayerManager.newsFeed;
+
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     public static final String KEY_NEWS_FEED = "key_news_feed";
@@ -106,7 +108,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrChannelId, mstrKeyWord;
+    private int mChannelId;
+    private String mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -155,13 +158,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public interface NewsSaveDataCallBack {
-        void result(String channelId, ArrayList<NewsFeed> results);
+        void result(int channelId, ArrayList<NewsFeed> results);
     }
 
-    public static NewsFeedFgt newInstance(String pChannelId) {
+    public static NewsFeedFgt newInstance(int pChannelId) {
         NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_CHANNEL_ID, pChannelId);
+        bundle.putInt(KEY_CHANNEL_ID, pChannelId);
         newsFeedFgt.setArguments(bundle);
         return newsFeedFgt;
     }
@@ -206,7 +209,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         isNewVisity = isVisibleToUser;
         if (getUserVisibleHint() && !isLoad) {
             isLoad = true;
-            if (!TextUtil.isEmptyString(mstrChannelId) && mHandler != null && mThread != null) {
+            if (mChannelId != 0 && mHandler != null && mThread != null) {
                 mHandler.postDelayed(mThread, 500);
             }
         }
@@ -284,10 +287,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
+            mChannelId = arguments.getInt(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
+        if (mChannelId != 0 && mChannelId == 44) {
             mAndroidContent = (ViewGroup) getActivity().findViewById(Window.ID_ANDROID_CONTENT);
             FrameLayout.LayoutParams lpParent = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vPlayerContainer = new FrameLayout(mContext);
@@ -355,7 +358,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                  *  如果有数据，拿数据的一条的是时间是下拉刷新
                  *  如果没有数据，直接加载
                  */
-                ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mChannelId);
                 if (!TextUtil.isListEmpty(arrNewsFeed)) {
                     loadData(PULL_DOWN_REFRESH);
                 } else {
@@ -365,7 +368,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         };
         int delay = 1500;
-        if (mstrChannelId != null && mstrChannelId.equals("1")) {
+        if (mChannelId != 0 && mChannelId == 1) {
             delay = 500;
         }
         if (isLoad) {
@@ -399,7 +402,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        if (mstrChannelId.equals("44") && vPlayer != null) {
+        if (mChannelId == 44 && vPlayer != null) {
             if (vPlayer.getParent() != null)
                 ((ViewGroup) vPlayer.getParent()).removeAllViews();
             vPlayer.onDestory();
@@ -451,7 +454,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         String requestUrl;
         String tstart = "";
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
-        adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
+        adLoadNewsFeedEntity.setCid(mChannelId == 0 ? null : Long.valueOf(mChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
@@ -471,10 +474,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             tstart = getFirstItemTime(mArrNewsFeed);
             requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
             //下拉刷新打点
-            if (!TextUtil.isEmptyString(mstrChannelId)) {
+            if (mChannelId != 0) {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("chid", Integer.valueOf(mstrChannelId));
+                    jsonObject.put("chid", mChannelId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -483,7 +486,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         } else {
             if (mFlag) {
                 if (mIsFirst) {
-                    ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                    ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mChannelId);
                     tstart = getFirstItemTime(arrNewsFeed);
                 } else {
                     tstart = getLastItemTime(mArrNewsFeed);
@@ -495,10 +498,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
             requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             //上拉刷新打点
-            if (!TextUtil.isEmptyString(mstrChannelId)) {
+            if (mChannelId != 0) {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("chid", Integer.valueOf(mstrChannelId));
+                    jsonObject.put("chid", mChannelId);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -575,19 +578,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mRefreshTitleBarAnimation();
         }
         //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-        if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
+        if (mChannelId != 0 && 1 == mChannelId || 35 == mChannelId || 44 == mChannelId) {
             for (NewsFeed newsFeed : result) {
-                if ("1".equals(mstrChannelId)) {
+                if (1 == mChannelId) {
                     newsFeed.setChannel_id(1);
                     if (newsFeed.getStyle() == 6) {
                         newsFeed.setStyle(8);
                     }
-                } else if ("35".equals(mstrChannelId)) {
+                } else if (35 == mChannelId) {
                     newsFeed.setChannel_id(35);
                     if (newsFeed.getStyle() == 6) {
                         newsFeed.setStyle(8);
                     }
-                } else if ("44".equals(mstrChannelId)) {
+                } else if (44 == mChannelId) {
                     newsFeed.setChannel_id(44);
                 } else {
                     newsFeed.setChannel_id(newsFeed.getChannel());
@@ -644,7 +647,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     break;
             }
             if (mNewsSaveCallBack != null) {
-                mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
+                mNewsSaveCallBack.result(mChannelId, mArrNewsFeed);
             }
             new Thread(new Runnable() {
                 @Override
@@ -668,7 +671,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         } else {
             //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
             if (TextUtil.isListEmpty(mArrNewsFeed)) {
-                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
@@ -705,7 +708,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
             }
-        } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
+        } else if (error.toString().contains("4003") && mChannelId == 1) {//说明三方登录已过期,防止开启3个loginty
             User user = SharedPreManager.mInstance(mContext).getUser(getActivity());
             user.setUtype("2");
             SharedPreManager.mInstance(mContext).saveUser(user);
@@ -720,7 +723,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             });
         }
         if (TextUtil.isListEmpty(mArrNewsFeed)) {
-            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
             if (TextUtil.isListEmpty(newsFeeds)) {
                 mHomeRetry.setVisibility(View.VISIBLE);
             } else {
@@ -744,7 +747,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (!isNotLoadData) {
                     if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
-                    } else if (!TextUtil.isEmptyString(mstrChannelId))
+                    } else if (mChannelId != 0)
                         loadNewsFeedData("recommend", flag);
                     startTopRefresh();
                 } else {
@@ -753,7 +756,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             } else {
                 setRefreshComplete();
-                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
@@ -904,8 +907,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        if (!mstrChannelId.equals("44"))
+        if (mChannelId != 44) {
             lv.addHeaderView(mSearchHeaderView);
+        }
         lv.setHeaderDividersEnabled(false);
         mrlSearch = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
         mrlSearch.setOnClickListener(new View.OnClickListener() {
@@ -1005,7 +1009,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
                 int num = 0;
-                if (!TextUtil.isEmptyString(mstrChannelId) && mstrChannelId.equals("44")) {
+                if (mChannelId != 0 && mChannelId == 44) {
                     num = firstVisibleItem + visibleItemCount - 2;
                 } else {
                     num = firstVisibleItem + visibleItemCount - 3;
@@ -1020,7 +1024,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         feed.setVisble(true);
                     }
                 }
-                if ("44".equals(mstrChannelId) && portrait) {
+                if (mChannelId == 44 && portrait) {
                     VideoShowControl();
                 }
             }
@@ -1238,7 +1242,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (vPlayer != null && resultCode == 1006 && mstrChannelId.equals("44") && data != null) {
+        if (vPlayer != null && resultCode == 1006 && mChannelId == 44 && data != null) {
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                 int position = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
                 int newId = data.getIntExtra(NewsFeedFgt.KEY_NEWS_ID, 0);
@@ -1303,7 +1307,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
      */
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        if (!"44".equals(mstrChannelId))
+        if (mChannelId != 44)
             return;
         super.onConfigurationChanged(newConfig);
         if (vPlayer != null) {
@@ -1424,7 +1428,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onClick(DialogInterface dialog, int which) {
                 relativeLayout.setVisibility(View.GONE);
 
-                PlayerManager.newsFeed = feed;
+                newsFeed = feed;
                 isAd = false;
                 cPostion = feed.getNid();
                 if (cPostion != lastPostion) {
@@ -1480,7 +1484,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
-                PlayerManager.newsFeed = feed;
+                newsFeed = feed;
                 isAd = false;
                 cPostion = feed.getNid();
                 if (cPostion != lastPostion) {
@@ -1565,15 +1569,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             }
         });
-        if (mstrChannelId.equals("44")) {
+        if (mChannelId == 44) {
             mFeedSmallLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     isAuto = false;
-                    if (PlayerManager.newsFeed == null)
+                    if (newsFeed == null)
                         return;
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, PlayerManager.newsFeed);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
                     intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                     NewsFeedFgt.this.startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
@@ -1584,14 +1588,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         vPlayer.stop();
                         vPlayer.release();
                     }
-                    PlayerManager.newsFeed = null;
+                    newsFeed = null;
                 }
 
 
             });
         }
-
-        if (mstrChannelId.equals("44")) {
+        if (mChannelId == 44) {
             vPlayer.setOnShareListener(new IPlayer.OnShareListener() {
                 @Override
                 public void onShare() {

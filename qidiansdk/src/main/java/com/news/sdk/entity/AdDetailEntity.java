@@ -139,6 +139,7 @@ public class AdDetailEntity implements Serializable {
 
         private int cid;
         private int index;
+        private Banner banner;
         private List<String> impression;
         private List<String> click;
         private List<Event> event;
@@ -209,9 +210,60 @@ public class AdDetailEntity implements Serializable {
         public void setTracking(List<Tracking> tracking) {
             this.tracking = tracking;
         }
+
+        public Banner getBanner() {
+            return banner;
+        }
+
+        public void setBanner(Banner banner) {
+            this.banner = banner;
+        }
+
+        public List<AdNative> getAd_native() {
+            return ad_native;
+        }
     }
 
-    public class Tracking{
+    public class Banner {
+        private int width;
+        private int height;
+        private String type;
+        private String creative_url;
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getCreative_url() {
+            return creative_url;
+        }
+
+        public void setCreative_url(String creative_url) {
+            this.creative_url = creative_url;
+        }
+    }
+
+    public class Tracking {
         private String tracking_key;
         private List<String> tracking_value;
 
@@ -266,6 +318,7 @@ public class AdDetailEntity implements Serializable {
 
     public class Data {
         private List<Adspace> adspace;
+
         public void setAdspace(List<Adspace> adspace) {
             this.adspace = adspace;
         }
