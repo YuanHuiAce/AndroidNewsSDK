@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
@@ -40,15 +43,13 @@ import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.NewsTopicHeaderView;
+import com.news.sdk.widget.SharePopupWindow;
 import com.news.sdk.widget.TextViewExtend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by fengjigang on 16/4/6.
- */
-public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
+public class NewsTopicAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
@@ -56,17 +57,21 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     private Context mContext;
     private ImageView mTopicLeftBack, mNewsLoadingImg;
     private TextView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper;
-    private ExpandableListView mlvSpecialNewsFeed;
-    //    private ExpandableListView mExpandableListView;
+    private PullToRefreshExpandableListView mlvSpecialNewsFeed;
+    private ExpandableListView mExpandableListView;
     private boolean isListRefresh;
     private TopicBaseInfo mTopicBaseInfo;
     private ArrayList<TopicClass> marrTopicClass;
     private NewsTopic mNewTopic;
+    private View mDetailView;
+    private ImageView mivShareBg;
     private Handler mHandler;
+    private SharePopupWindow mSharePopupWindow;
     private SharedPreferences mSharedPreferences;
     private int mScreenWidth, mCardWidth, mCardHeight;
     private NewsTopicHeaderView mSpecialNewsHeaderView;
@@ -80,6 +85,10 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     protected void setContentView() {
         setContentView(R.layout.aty_news_topic);
         mContext = this;
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
     }
 
     @Override
@@ -93,7 +102,9 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
+        mDetailView = findViewById(R.id.mDetailWrapper);
         mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
+        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mTopicHeader = (RelativeLayout) findViewById(R.id.mTopicHeader);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
@@ -105,30 +116,28 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 loadData();
             }
         });
-        mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
-        mlvSpecialNewsFeed.setAdapter(mAdapter);
-        mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
+        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
         TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.white);
         TextUtil.setTextColor(mContext, mTopicTitle, R.color.new_color7);
-//        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
-//        mlvSpecialNewsFeed.setMainFooterView(true);
-//        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
-//        mExpandableListView.setAdapter(mAdapter);
-//        mExpandableListView.addHeaderView(mSpecialNewsHeaderView);
-//        mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-//                isListRefresh = true;
+        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mlvSpecialNewsFeed.setMainFooterView(true);
+        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
+        mExpandableListView.setAdapter(mAdapter);
+        mExpandableListView.addHeaderView(mSpecialNewsHeaderView);
+        mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+                isListRefresh = true;
 //                loadData();
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-//                isListRefresh = true;
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+                isListRefresh = true;
 //                loadData();
-//            }
-//        });
-        mlvSpecialNewsFeed.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            }
+        });
+        mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
@@ -146,15 +155,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             }
         });
         mTopicRightMore = (TextView) findViewById(R.id.mTopicRightMore);
-        mTopicRightMore.setVisibility(View.GONE);
         mTopicRightMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SharePopupWindow  mSharePopupWindow = new SharePopupWindow(this, this);
-//                String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-//                mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
-//                mSharePopupWindow.setOnFavoritListener(listener);
-//                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                if (mUsedNewsFeed != null) {
+                    mivShareBg.startAnimation(mAlphaAnimationIn);
+                    mivShareBg.setVisibility(View.VISIBLE);
+                    mSharePopupWindow = new SharePopupWindow(NewsTopicAty.this, NewsTopicAty.this);
+                    mSharePopupWindow.setTopic(true);
+                    mSharePopupWindow.setTitleAndNid(mUsedNewsFeed.getTitle(), mUsedNewsFeed.getNid(), mUsedNewsFeed.getDescr());
+                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                }
             }
         });
     }
@@ -183,7 +194,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     mTopicTitle.setText(mTopicBaseInfo.getName());
                     marrTopicClass = mNewTopic.getTopicClass();
                     for (int i = 0; i < marrTopicClass.size(); i++) {
-                        mlvSpecialNewsFeed.expandGroup(i);
+                        mExpandableListView.expandGroup(i);
                     }
                     mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth);
                     mAdapter.setTopicData(marrTopicClass);
@@ -271,6 +282,12 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         LogUtil.upLoadLog(mUsedNewsFeed, this, nowTime - lastTime, "100%");
         LogUtil.userReadLog(mUsedNewsFeed, this, lastTime, nowTime);
         super.onPause();
+    }
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mivShareBg.setVisibility(View.INVISIBLE);
     }
 
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {

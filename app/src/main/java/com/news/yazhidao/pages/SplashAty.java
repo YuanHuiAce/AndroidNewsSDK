@@ -62,7 +62,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     public BDLocationListener myListener = new MyLocationListener();
     private RequestManager mRequestManager;
     //广告
-    private ImageView ivAD;
+    private ImageView ivAD, ivAdLogo;
     private TextView tvSkip;
     private NativeAD mNativeAD;
     private int mAdCount = 5;
@@ -169,14 +169,14 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         ShareSDK.initSDK(this);
         UserManager.registerVisitor(this, null);
         //展示广点通sdk
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, true);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mRequestManager = Glide.with(this);
-        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, false)) {
+        if (SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true)) {
             mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID, this);
             mNativeAD.loadAD(mAdCount);
             UserManager.registerVisitor(this, null);
@@ -203,7 +203,10 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                             public void onResponse(final AdDetailEntity result) {
                                 if (result != null) {
                                     LogUtil.adGetLog(SplashAty.this, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-                                    final String img = result.getData().getAdspace().get(0).getCreative().get(0).getBanner().getCreative_url();
+                                    AdDetailEntity.Creative creative = result.getData().getAdspace().get(0).getCreative().get(0);
+                                    String logo = creative.getAdmark();
+                                    mRequestManager.load(logo).into(ivAdLogo);
+                                    final String img = creative.getBanner().getCreative_url();
                                     if (!TextUtil.isEmptyString(img)) {
                                         mRequestManager.load(img).placeholder(R.drawable.bg_load_default_small).into(ivAD);
                                         ivAD.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -253,7 +256,6 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.i("tag", "3333");
                             }
                         });
                         newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -295,6 +297,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         layoutParams.width = mScreenWidth;
         layoutParams.height = (int) (mScreenWidth * 3 / 2.0f);
         ivAD.setLayoutParams(layoutParams);
+        ivAdLogo = (ImageView) findViewById(R.id.ad_logo);
 //        mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
 //        mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
 //        mSplashVersion = (TextView) findViewById(R.id.mSplashVersion);
@@ -347,7 +350,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
 
     @Override
     protected void loadData() {
-        mHandler.postDelayed(mRunnable, 40000);
+        mHandler.postDelayed(mRunnable, 4000);
     }
 
     @Override

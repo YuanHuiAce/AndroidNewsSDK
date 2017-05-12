@@ -494,7 +494,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mSharePopupWindow = new SharePopupWindow(this, this);
                 mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), mNewsFeed.getDescr());
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
             }
         } else if (getId == R.id.mNewsDetailLoaddingWrapper) {
             if (!isRefresh) {

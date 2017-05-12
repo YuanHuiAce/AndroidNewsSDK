@@ -413,11 +413,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else if (layoutId == R.layout.ll_news_item_topic) {
             ImageView ivTopic = holder.getView(R.id.title_img_View);
             int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-            RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
-            lpTopic.width = ivWidth;
-            lpTopic.height = (int) (ivWidth * 76 / 310.0f);
-            ivTopic.setLayoutParams(lpTopic);
-            holder.setGlideDrawViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
+            ArrayList<String> imgs = feed.getImgs();
+            if (TextUtil.isListEmpty(imgs)) {
+                holder.getView(R.id.title_img_View).setVisibility(View.GONE);
+            } else {
+                holder.getView(R.id.title_img_View).setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
+                lpTopic.width = ivWidth;
+                lpTopic.height = (int) (ivWidth * 76 / 310.0f);
+                ivTopic.setLayoutParams(lpTopic);
+                holder.setGlideDrawViewURI(R.id.title_img_View, imgs.get(0), 0, 0, feed.getRtype());
+            }
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));

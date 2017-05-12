@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,9 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.User;
+import com.news.sdk.utils.TextUtil;
+import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
@@ -25,6 +29,15 @@ import com.news.yazhidao.MainView;
 import com.news.yazhidao.R;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 
 public class MainActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
@@ -160,21 +173,25 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
                 Log.i("tag", shareTitle + "<====>" + shareUrl);
+                ShareToPlatformByNewsDetail(WechatMoments.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_WECHAT_ACTION.equals(action)) {
                 //调用微信分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
                 Log.i("tag", shareTitle + "<====>" + shareUrl);
+                ShareToPlatformByNewsDetail(Wechat.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_SINA_WEIBO_ACTION.equals(action)) {
                 //调用新浪微博分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
                 Log.i("tag", shareTitle + "<====>" + shareUrl);
+                ShareToPlatformByNewsDetail(SinaWeibo.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_QQ_ACTION.equals(action)) {
                 //调用QQ分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
                 Log.i("tag", shareTitle + "<====>" + shareUrl);
+                ShareToPlatformByNewsDetail(QQ.NAME, shareTitle, shareUrl, "");
             }
         }
     }
@@ -252,5 +269,67 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     public void changeDayNightMode() {
         ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
                 ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+    }
+
+    public void ShareToPlatformByNewsDetail(final String argPlatform, final String title, final String url, final String remark) {
+        PlatformActionListener pShareListner = new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
+                ToastUtil.toastShort("分享成功");
+            }
+
+            @Override
+            public void onError(Platform platform, final int i, Throwable throwable) {
+                ToastUtil.toastShort("分享失败");
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+
+            }
+        };
+
+        Platform.ShareParams pShareParams = new Platform.ShareParams();
+        pShareParams.setImageData(BitmapFactory.decodeResource(QiDianApplication.getAppContext().getResources(), R.mipmap.ic_launcher));
+//        pShareParams.setImageUrl("http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg");
+        if (argPlatform.equals(Wechat.NAME) || argPlatform.equals(WechatMoments.NAME)) {
+            pShareParams.setShareType(Platform.SHARE_WEBPAGE);
+            pShareParams.setTitle(title);
+            pShareParams.setUrl(url);
+        } else {
+            pShareParams.setText(title + url);
+        }
+        if (argPlatform.equals(Wechat.NAME)) {
+            Platform platform = ShareSDK.getPlatform(Wechat.NAME);
+            if (!platform.isClientValid()) {
+                ToastUtil.toastShort("未安装微信");
+                return;
+            }
+            platform.setPlatformActionListener(pShareListner);
+            if (TextUtil.isEmptyString(remark))
+                pShareParams.setText("资讯分享社区");
+            else
+                pShareParams.setText(remark);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(WechatMoments.NAME)) {
+            Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);
+            if (!platform.isClientValid()) {
+                ToastUtil.toastShort("未安装微信");
+                return;
+            }
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(SinaWeibo.NAME)) {
+            Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(QQ.NAME)) {
+            Platform platform = ShareSDK.getPlatform(QQ.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            pShareParams.setTitle(title);
+            pShareParams.setTitleUrl(url);
+            pShareParams.setText("奇点资讯分享社区");
+            platform.share(pShareParams);
+        }
     }
 }

@@ -166,7 +166,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
-//        AdUtil.setAdChannel(activity);
+        AdUtil.setAdChannel(activity);
         uploadInformation();
         uploadChannelInformation();
         mRequestManager = Glide.with(activity);
