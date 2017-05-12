@@ -501,11 +501,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
         } else if (getId == R.id.mDetailFavorite) {
             User user = SharedPreManager.mInstance(this).getUser(this);
-            if (user == null) {
-                AuthorizedUserUtil.sendUserLoginBroadcast(this);
-            } else {
-                loadOperate();
+            if (user != null && user.isVisitor()) {
+                AuthorizedUserUtil.sendUserLoginBroadcast(NewsDetailAty2.this);
+                return;
             }
+            loadOperate();
         }
     }
 

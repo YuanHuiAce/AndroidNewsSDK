@@ -469,10 +469,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             User user = SharedPreManager.mInstance(activity).getUser(activity);
             if (user != null && user.isVisitor()) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(activity);
-            } else {
-                Intent userCenterAty = new Intent(activity, UserCenterAty.class);
-                activity.startActivity(userCenterAty);
+                return;
             }
+            Intent userCenterAty = new Intent(activity, UserCenterAty.class);
+            activity.startActivity(userCenterAty);
         }
     }
 
