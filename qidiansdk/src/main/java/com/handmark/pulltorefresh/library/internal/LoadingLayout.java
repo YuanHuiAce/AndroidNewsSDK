@@ -39,11 +39,11 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.news.yazhidao.R;
-import com.news.yazhidao.common.ThemeManager;
-import com.news.yazhidao.utils.TextUtil;
+import com.news.sdk.R;
+import com.news.sdk.common.ThemeManager;
+import com.news.sdk.utils.TextUtil;
 
-import static com.news.yazhidao.R.id.pull_to_refresh_sub_text;
+import static com.news.sdk.R.id.pull_to_refresh_sub_text;
 
 @SuppressLint("ViewConstructor")
 public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {

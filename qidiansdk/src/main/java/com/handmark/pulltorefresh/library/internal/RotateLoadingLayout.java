@@ -22,8 +22,8 @@ import android.graphics.drawable.Drawable;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.news.yazhidao.R;
-import com.news.yazhidao.utils.Logger;
+import com.news.sdk.R;
+import com.news.sdk.utils.Logger;
 
 public class RotateLoadingLayout extends LoadingLayout {
 

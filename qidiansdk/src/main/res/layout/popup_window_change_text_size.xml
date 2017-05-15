@@ -10,7 +10,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/new_color9">
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -47,7 +47,7 @@
             android:layout_marginTop="44dp"
             android:background="@color/new_color5" />
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font3" />
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -66,7 +66,7 @@
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font3" />
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

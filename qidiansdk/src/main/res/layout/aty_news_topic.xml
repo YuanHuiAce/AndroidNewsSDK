@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -47,7 +48,7 @@
         android:layout_below="@+id/mTopicHeader"
         android:background="@color/new_color5" />
 
-    <ExpandableListView
+    <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
         android:id="@+id/news_Topic_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,6 +88,12 @@
             android:visibility="gone" />
 
         <include layout="@layout/qd_loading_view_anim" />
-
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone" />
 </RelativeLayout>

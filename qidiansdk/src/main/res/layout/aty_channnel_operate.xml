@@ -66,7 +66,7 @@
 
             </LinearLayout>
 
-            <com.news.yazhidao.widget.channel.SelectedGridView
+            <com.news.sdk.widget.channel.SelectedGridView
                 android:id="@+id/userGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
             </LinearLayout>
 
 
-            <com.news.yazhidao.widget.channel.NormalGridView
+            <com.news.sdk.widget.channel.NormalGridView
                 android:id="@+id/otherGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

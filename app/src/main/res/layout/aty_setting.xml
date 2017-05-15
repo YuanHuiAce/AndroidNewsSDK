@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9">
+
+    <RelativeLayout
+        android:id="@+id/mSettingHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/common_header_bg">
+
+        <TextView
+            android:id="@+id/mSettingLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="设置"
+            android:textColor="@color/new_color7"
+            android:textSize="@dimen/font1" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.56dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/new_color5" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/mSettingSection1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mSettingHeader"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_setting_selector"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/mSettingPushSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/bg_setting_item_top_selector"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:drawableLeft="@mipmap/ic_setting_push_switch"
+                android:drawablePadding="12dp"
+                android:text="推送设置"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+
+            <ImageView
+                android:id="@+id/mSettingPushImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:src="@mipmap/ic_setting_push_on" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mSettingFont"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/bg_setting_item_top_selector">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:background="@color/new_color5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:drawableLeft="@mipmap/ic_setting_font"
+                android:drawablePadding="12dp"
+                android:text="字体大小"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+
+            <RadioGroup
+                android:id="@+id/mRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:checkedButton="@+id/mRadioNormal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/mRadioSmall"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_font_radio_1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="小"
+                    android:textColor="@color/txt_font_radio_1"
+                    android:textSize="@dimen/font4" />
+
+                <RadioButton
+                    android:id="@+id/mRadioNormal"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_font_radio_2"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="标准"
+                    android:textColor="@color/txt_font_radio_1"
+                    android:textSize="@dimen/font4" />
+
+                <RadioButton
+                    android:id="@+id/mRadioBig"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_font_radio_3"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="大"
+                    android:textColor="@color/txt_font_radio_1"
+                    android:textSize="@dimen/font4" />
+            </RadioGroup>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/mSettingClearCacheParent"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@id/mSettingSection1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_setting_selector">
+
+        <TextView
+            android:id="@+id/mSettingClearCache"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_setting_item_all_selector"
+            android:clickable="true"
+            android:drawableLeft="@mipmap/ic_setting_clear_cache"
+            android:drawablePadding="12dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="18dp"
+            android:text="清除缓存"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/mSettingSection3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mSettingClearCacheParent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_setting_selector"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/mSettingAbout"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/bg_setting_item_top_selector"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:drawableLeft="@mipmap/ic_setting_about"
+                android:drawablePadding="12dp"
+                android:text="关于"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:src="@mipmap/ic_user_center_right_arrow" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mSettingPrivacyPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/bg_setting_item_middle_selector"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:background="@color/new_color5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:drawableLeft="@mipmap/ic_setting_privacy_policy"
+                android:drawablePadding="12dp"
+                android:text="隐私政策"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:src="@mipmap/ic_user_center_right_arrow" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mSettingUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/bg_setting_item_bottom_selector"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:background="@color/new_color5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:drawableLeft="@mipmap/ic_setting_update"
+                android:drawablePadding="12dp"
+                android:text="检查更新"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:src="@mipmap/ic_user_center_right_arrow" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/mSettingLogout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/mSettingSection3"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_setting_login_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="退出登录"
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/new_font2" />
+
+</RelativeLayout>

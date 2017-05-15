@@ -88,8 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bg_home_login_header"
-        android:visibility="gone">
+        android:background="@color/bg_home_login_header">
 
         <View
             android:layout_width="match_parent"
@@ -104,8 +103,7 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/mDetailShare"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_favorite_normal"
-            android:visibility="gone" />
+            android:src="@drawable/btn_detail_favorite_normal" />
 
         <ImageView
             android:id="@+id/mDetailShare"
@@ -143,8 +141,7 @@
                 android:background="@color/bg_detail"
                 android:gravity="center"
                 android:textColor="@color/new_color2"
-                android:textSize="10sp"
-                android:visibility="gone" />
+                android:textSize="10sp" />
             <!--android:background="@drawable/bg_news_detail_commit_num"-->
         </FrameLayout>
 

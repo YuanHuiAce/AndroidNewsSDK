@@ -8,7 +8,10 @@ android {
         abortOnError false
     }
     defaultConfig {
-        applicationId "com.falconnect.information"
+        //ly  com.falconnect.information
+        //yyh com.yira.information
+        //sdk com.news.yazhidao
+        applicationId "com.news.yazhidao"
         minSdkVersion 17
         targetSdkVersion 22
         versionCode 1
@@ -22,9 +25,9 @@ android {
     }
 
     productFlavors {
-        yz01{}
-        yz02{}
-        yyh{}
+        yz01 {}
+        yz02 {}
+        yyh {}
 
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]

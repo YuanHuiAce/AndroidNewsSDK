@@ -32,7 +32,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/tv_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:textColor="@color/new_color2"
             android:textSize="@dimen/new_font3" />
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/tv_praise_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:textSize="@dimen/new_font5" />
     </LinearLayout>
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         android:textColor="@color/new_color3"
         android:textSize="@dimen/new_font5" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/tv_comment_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

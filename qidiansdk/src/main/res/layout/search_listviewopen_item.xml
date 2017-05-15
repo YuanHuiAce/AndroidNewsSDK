@@ -12,7 +12,7 @@
             android:background="@color/search_lineBlack"
             android:layout_below="@id/mSearchHotLabel"
             android:layout_alignParentBottom="true"/>
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/search_listviewopen_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="13dp"
             />
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/focus_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

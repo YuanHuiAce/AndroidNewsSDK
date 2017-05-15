@@ -16,7 +16,7 @@
         android:textColor="#333333"
         android:textSize="15sp" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/type_textView"
         android:layout_width="28dp"
         android:layout_height="14dp"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_video_title">
-        <com.news.yazhidao.widget.VideoItemContainer
+        <com.news.sdk.widget.VideoItemContainer
             android:id="@+id/layout_item_video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,6 +80,20 @@
     <include
         android:id="@+id/item_bottom_video"
         layout="@layout/item_bottom_video" />
+
+    <ImageView
+        android:id="@+id/checkFavoriteDelete_image"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/line_bottom_imageView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/favorite_surface"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:src="@drawable/favorite_uncheck" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"

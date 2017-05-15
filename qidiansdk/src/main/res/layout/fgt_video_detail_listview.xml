@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.news.yazhidao.widget.VideoContainer
+    <com.news.sdk.widget.VideoContainer
         android:id="@+id/fgt_new_detail_video"
         android:layout_width="match_parent"
         android:layout_height="210dp" />

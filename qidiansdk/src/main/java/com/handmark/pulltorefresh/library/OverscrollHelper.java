@@ -16,12 +16,11 @@
 package com.handmark.pulltorefresh.library;
 
 import android.annotation.TargetApi;
-import android.util.Log;
 import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
-import com.news.yazhidao.utils.Logger;
+import com.news.sdk.utils.Logger;
 
 @TargetApi(9)
 public final class OverscrollHelper {

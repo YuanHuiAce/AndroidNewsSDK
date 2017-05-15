@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.news.yazhidao"
+    package="com.news.sdk"
     android:versionCode="200"
     android:versionName="@string/version_name">
 
@@ -16,9 +16,6 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".pages.MainAty"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.ChannelOperateAty"
             android:screenOrientation="portrait" />

@@ -12,7 +12,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginRight="8dp"/>
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

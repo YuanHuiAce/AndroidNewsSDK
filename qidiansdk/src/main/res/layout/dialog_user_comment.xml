@@ -12,7 +12,7 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_user_comment_et">
 
-        <com.news.yazhidao.widget.CommentEditText
+        <com.news.sdk.widget.CommentEditText
             android:id="@+id/mCommentContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
