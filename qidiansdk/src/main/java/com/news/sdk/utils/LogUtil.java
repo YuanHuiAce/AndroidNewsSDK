@@ -2,7 +2,6 @@ package com.news.sdk.utils;
 
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,12 +13,9 @@ import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
-import com.news.sdk.entity.LocationEntity;
 import com.news.sdk.entity.NewsFeed;
-import com.news.sdk.entity.UploadLogDataEntity;
 import com.news.sdk.entity.User;
 import com.news.sdk.entity.UserLogBasicInfoEntity;
-import com.news.sdk.net.volley.UpLoadLogRequest;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -54,66 +50,7 @@ public class LogUtil {
         MobclickAgent.onPageEnd(source);
     }
 
-    public static void upLoadLog(NewsFeed newsFeed, Context context, Long lastTime, String percent) {
-        User user = SharedPreManager.mInstance(context).getUser(context);
-        String mUserId = "";
-        if (user != null) {
-            mUserId = user.getMuid() + "";
-        }
-        Logger.e("aaa", "开始上传日志！");
-        if (newsFeed == null || TextUtil.isEmptyString(mUserId)) {
-            Logger.e("tag", "percent kong");
-            return;
-        }
-        final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-        uploadLogDataEntity.setN((long) newsFeed.getNid());
-        uploadLogDataEntity.setC(newsFeed.getChannel());
-        uploadLogDataEntity.setT(newsFeed.getRtype());
-        uploadLogDataEntity.setS((int) (lastTime / 1000));
-        uploadLogDataEntity.setF(0);
-        uploadLogDataEntity.setLt(newsFeed.getLogtype());
-        uploadLogDataEntity.setLc(newsFeed.getLogchid());
-        uploadLogDataEntity.setPe(percent);
-        uploadLogDataEntity.setV(context.getString(R.string.version_name));
-        final String locationJsonString = SharedPreManager.mInstance(context).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        final String LogData = SharedPreManager.mInstance(context).upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);
-        Gson gson = new Gson();
-        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-        if (!TextUtil.isEmptyString(LogData)) {
-            SharedPreManager.mInstance(context).upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-        }
-        Logger.e("aaa", "确认上传日志！");
-        final RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
-        String userid = null, p = null, t = null, i = null;
-        try {
-            userid = URLEncoder.encode(mUserId + "", "utf-8");
-            if (locationEntity != null) {
-                if (locationEntity.getProvince() != null)
-                    p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
-                if (locationEntity.getCity() != null)
-                    t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                if (locationEntity.getDistrict() != null)
-                    i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(gson.toJson(uploadLogDataEntity));
-        final UpLoadLogRequest<String> request = new UpLoadLogRequest<>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("aaa", "上传日志成功！");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        requestQueue.add(request);
-    }
-
-    public static void userReadLog(NewsFeed newsFeed, Context context, Long begintime, Long endtime) {
+    public static void userReadLog(NewsFeed newsFeed, Context context, Long begintime, Long endtime,String percent) {
         User user = SharedPreManager.mInstance(context).getUser(context);
         Long mUserId = null;
         if (user != null) {
@@ -133,6 +70,7 @@ public class LogUtil {
             json.put("nid", Long.valueOf(newsFeed.getNid()));
             json.put("begintime", begintime);
             json.put("endtime", endtime);
+            json.put("percent", percent);
             json.put("readtime", (int) ((endtime - begintime) / 1000));
             jsonObject.put("basicinfo", new JSONObject(gson.toJson(userLogBasicInfoEntity)));
             jsonObject.put("data", json);

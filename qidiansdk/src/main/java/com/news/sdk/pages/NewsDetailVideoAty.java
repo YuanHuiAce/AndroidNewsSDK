@@ -238,8 +238,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         LogUtil.onPageEnd(CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
         nowTime = System.currentTimeMillis();
         //上报日志
-        LogUtil.upLoadLog(mNewsFeed, this, nowTime - lastTime, "100%");
-        LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime);
+        LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime, "100%");
         super.onPause();
     }
 

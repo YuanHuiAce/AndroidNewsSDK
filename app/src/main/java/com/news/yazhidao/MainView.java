@@ -383,6 +383,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     mChannelItemDao.insertList(result);
                     ArrayList<ChannelItem> channelItems = mChannelItemDao.queryForSelected();
                     mViewPagerAdapter.setmChannelItems(channelItems);
+                    mViewPagerAdapter.notifyDataSetChanged();
                     mChannelTabStrip.setViewPager(mViewPager);
                     mChannelTabStrip.notifyDataSetChanged();
                 }

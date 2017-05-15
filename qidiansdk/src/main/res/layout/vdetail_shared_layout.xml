@@ -16,36 +16,36 @@
         android:layout_marginTop="12dp"
         android:textColor="#333333"
         android:textSize="17sp" />
+
     <RelativeLayout
         android:id="@+id/detail_container_onlines"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <com.news.sdk.widget.TextViewExtend
             android:id="@+id/tv_detail_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
-            android:lines="1"
-            android:gravity="center_vertical"
             android:background="@drawable/tag_video_shape"
+            android:gravity="center_vertical"
+            android:lines="1"
             android:textColor="#837c78"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp" />
+
         <TextView
             android:id="@+id/tv_detail_onlines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_detail_tag"
-            android:textColor="#9a9a9a"
-            android:layout_marginLeft="15dp"
             android:layout_marginBottom="30dp"
-            android:textSize="11sp"
-            />
+            android:layout_marginLeft="15dp"
+            android:textColor="#9a9a9a"
+            android:textSize="11sp" />
 
     </RelativeLayout>
 
@@ -55,7 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp">
+        android:paddingRight="18dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/detail_shared_PraiseLayout"
@@ -66,9 +67,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:visibility="gone"
-            >
+            android:paddingRight="14dp">
 
             <ImageView
                 android:id="@+id/detail_shared_AttentionImage"
@@ -95,8 +94,7 @@
             android:orientation="horizontal"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -131,8 +129,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-       >
+        android:layout_marginRight="16dp">
 
         <!--<ImageView-->
         <!--android:id="@+id/detail_point"-->
