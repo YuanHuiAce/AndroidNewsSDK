@@ -98,6 +98,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     /**
      * 当前fragment 所对应的新闻频道
      */
+    public static final String VALUE_NEWS_NOTIFICATION = "notification";
+    public static String KEY_COLLECTION = "key_collection";
+    public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
     public static String KEY_CHANNEL_ID = "key_channel_id";
     public static String KEY_WORD = "key_word";
     public static String KEY_NEWS_SOURCE = "key_news_source";

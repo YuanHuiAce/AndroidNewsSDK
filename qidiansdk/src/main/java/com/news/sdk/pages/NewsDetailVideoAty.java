@@ -57,6 +57,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
+
 /**
  * Created by fengjigang on 15/9/6.
  * 视频详情页
@@ -254,6 +256,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             sendBroadcast(intent);
         }
         super.finish();
+        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
+        if (mNewsFeed == null&&VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+//            Intent main = new Intent(this, MainAty.class);
+            Intent main = new Intent();
+            main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            startActivity(main);
+        }
     }
 
     @Override

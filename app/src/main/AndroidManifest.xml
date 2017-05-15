@@ -128,16 +128,25 @@
             android:process=":remote" />
         <service
             android:name=".service.UpdateService"
-            android:enabled="true"></service>
+            android:enabled="true"/>
         <!--umeng-->
         <!--yyh 5907fa5b65b6d661ee000239 -->
         <!--ly 58f9d3c904e205169000013b -->
+        <!--<meta-data-->
+            <!--android:name="UMENG_APPKEY"-->
+            <!--android:value="5907fa5b65b6d661ee000239"></meta-data>-->
+
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5907fa5b65b6d661ee000239"></meta-data>
+            android:value="551a6a28fd98c5b574000788"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="5bb97a8b1477e856c94db429c7f098df">
+        </meta-data>
 
     </application>
 

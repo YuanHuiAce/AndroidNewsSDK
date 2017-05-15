@@ -49,6 +49,8 @@ import com.news.sdk.widget.TextViewExtend;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
+
 public class NewsTopicAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final int REQUEST_CODE = 1006;
@@ -272,6 +274,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         LogUtil.onPageStart(CommonConstant.LOG_PAGE_TOPICPAGE);
         lastTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        if (mUsedNewsFeed == null&&VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+//            Intent main = new Intent(this, MainAty.class);
+            Intent main = new Intent();
+            main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            startActivity(main);
+        }
     }
 
     @Override

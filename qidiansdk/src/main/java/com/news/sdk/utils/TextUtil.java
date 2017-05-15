@@ -18,6 +18,10 @@ import com.news.sdk.entity.NewsDetail;
 import com.news.sdk.widget.EllipsizeEndTextView;
 import com.news.sdk.widget.TextViewExtend;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -393,6 +397,44 @@ public class TextUtil {
 
     public static void setLayoutBgResource(Context context, LinearLayout layout, int bgColor) {
         layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
+    public static boolean isValidate(String text){
+        if(text!=null&&!"".equals(text.trim())){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 获取inputStream中的数据
+     *
+     * @param in
+     * @return
+     */
+    public static String getResponseContent(InputStream in) {
+        StringBuffer sb = new StringBuffer();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        try {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            Logger.i("jigang", "gzip json=" + new String(sb.toString().getBytes(), "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
 }

@@ -56,7 +56,7 @@ public final class SharedPreManager {
     }
 
     @Deprecated
-    public void saveJPushId(String value) {
+    public static void saveJPushId(String value) {
         SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_MULTI_PROCESS).edit();
         e.putString(CommonConstant.KEY_JPUSH_ID, value);
         e.commit();
@@ -159,7 +159,7 @@ public final class SharedPreManager {
      *
      * @return
      */
-    public User getUser(Context mContext) {
+    public static User getUser(Context mContext) {
 //        ShareSDK.initSDK(mContext);
         String userJson = get(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
         if (TextUtils.isEmpty(userJson)) {
