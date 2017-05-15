@@ -3,6 +3,7 @@ package com.news.sdk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
@@ -50,6 +51,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     public static final int REQUEST_CODE = 1030;
     private int mCardWidth, mCardHeight;
     private int mScreenWidth;
+    private SharedPreferences mSharedPreferences;
 
     public NewsDetailFgtAdapter(Context context, ArrayList<RelatedItemEntity> datas) {
         super(context, datas, new MultiItemTypeSupport<RelatedItemEntity>() {
@@ -92,6 +94,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         });
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
     }
@@ -276,6 +279,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             } else {
                 TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
             }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
 

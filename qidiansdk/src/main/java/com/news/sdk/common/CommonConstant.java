@@ -70,9 +70,9 @@ public final class CommonConstant {
     public static final String NEWS_ID = "news_id";
     public static final String FILE_DATA_ATTENTION = "file_data_attention";
     public static final String KEY_ATTENTIN_LIST = "key_attentin_list";
-    public static final int TEXT_SIZE_NORMAL = 18;
-    public static final int TEXT_SIZE_SMALL = 16;
-    public static final int TEXT_SIZE_BIG = 20;
+    public static final int TEXT_SIZE_NORMAL = 16;
+    public static final int TEXT_SIZE_BIG = 18;
+    public static final int TEXT_SIZE_BIGGER = 20;
     public static final int REQUEST_ATTENTION_CODE = 1040;
     public static final int RESULT_ATTENTION_CODE = 2040;
     public static final int REQUEST_SUBSCRIBE_LIST_CODE = 3040;

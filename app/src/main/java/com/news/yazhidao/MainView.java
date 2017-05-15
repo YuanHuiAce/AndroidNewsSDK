@@ -112,7 +112,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private VideoChannelDao videoChannelDao;
 
     public enum FONTSIZE {
-        TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
+        TEXT_SIZE_NORMAL(16), TEXT_SIZE_BIG(18), TEXT_SIZE_BIGGER(20);
         int size;
 
         FONTSIZE(int i) {

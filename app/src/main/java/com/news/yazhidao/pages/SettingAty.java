@@ -65,28 +65,28 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         int saveFont = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
         switch (saveFont) {
-            case CommonConstant.TEXT_SIZE_SMALL:
-                mRadioGroup.check(R.id.mRadioSmall);
-                break;
             case CommonConstant.TEXT_SIZE_NORMAL:
                 mRadioGroup.check(R.id.mRadioNormal);
                 break;
             case CommonConstant.TEXT_SIZE_BIG:
                 mRadioGroup.check(R.id.mRadioBig);
                 break;
+            case CommonConstant.TEXT_SIZE_BIGGER:
+                mRadioGroup.check(R.id.mRadioBigger);
+                break;
         }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
-                    case R.id.mRadioSmall:
-                        mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_SMALL).commit();
-                        break;
                     case R.id.mRadioNormal:
                         mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_NORMAL).commit();
                         break;
                     case R.id.mRadioBig:
                         mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIG).commit();
+                        break;
+                    case R.id.mRadioBigger:
+                        mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIGGER).commit();
                         break;
                 }
             }
