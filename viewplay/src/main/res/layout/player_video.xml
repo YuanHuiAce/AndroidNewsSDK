@@ -79,8 +79,10 @@
         android:textColor="#fff"
         android:textSize="16dp" />
 
-    <include layout="@layout/player_toolbar" />
 
+    <include layout="@layout/player_toolbar"
+        />
+    <include layout="@layout/player_media_quality"/>
     <include
         android:id="@+id/app_video_netTie"
         layout="@layout/player_network"

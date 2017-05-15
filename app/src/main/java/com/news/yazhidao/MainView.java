@@ -44,12 +44,15 @@ import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
+import com.news.sdk.database.VideoChannelDao;
 import com.news.sdk.entity.ChannelItem;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
 import com.news.sdk.entity.Version;
+import com.news.sdk.entity.VideoChannel;
 import com.news.sdk.net.volley.ChannelListRequest;
 import com.news.sdk.net.volley.VersionRequest;
+import com.news.sdk.net.volley.VideoChannelRequest;
 import com.news.sdk.pages.ChannelOperateAty;
 import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.AdUtil;
@@ -106,6 +109,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
     private final Context mContext;
+    private VideoChannelDao videoChannelDao;
 
     public enum FONTSIZE {
         TEXT_SIZE_SMALL(16), TEXT_SIZE_NORMAL(18), TEXT_SIZE_BIG(20);
@@ -174,6 +178,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
+//        mChannelItemDao = new ChannelItemDao(mContext);
+        videoChannelDao = new VideoChannelDao(mContext);
+        setVideChannelList();
         mChannelItemDao = new ChannelItemDao(activity);
         mSelChannelItems = new ArrayList<>();
         mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
@@ -337,31 +344,29 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         builder.create().show();
     }
 
-    /**
-     * 自定义升级弹窗
-     */
-    protected void showUpdateDialogT() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("发现新版本");
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+    private void setVideChannelList() {
+        VideoChannelRequest<List<VideoChannel>> videoFeedRequest = new VideoChannelRequest<List<VideoChannel>>(Request.Method.GET, new TypeToken<List<VideoChannel>>() {
+        }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST + "chid=44" + "&channel=" + CommonConstant.NEWS_CTYPE, new Response.Listener<ArrayList<VideoChannel>>() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onResponse(final ArrayList<VideoChannel> response) {
+                Logger.v(TAG, response.toString());
+                if (response != null && response.size() != 0) {
+                    videoChannelDao.deletaForAll();
+                    for (VideoChannel channel : response) {
+                        videoChannelDao.insert(channel);
+                    }
+                }
 
-                dialog.dismiss();
             }
-        });
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Logger.v(TAG, error.toString());
+                    }
+                });
 
-        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(mContext, UpdateService.class);
-                mContext.startService(intent);
-                dialog.dismiss();
-            }
-        });
-
-        builder.setCancelable(false);
-        builder.create().show();
+        QiDianApplication.getInstance().getRequestQueue().add(videoFeedRequest);
 
     }
 

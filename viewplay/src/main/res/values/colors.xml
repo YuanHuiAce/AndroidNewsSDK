@@ -14,4 +14,12 @@
     <color name="Grey_700">#616161</color>
     <color name="Grey_800">#424242</color>
     <color name="Grey_900">#212121</color>
+    <color name="Grey_1000" >#f8f8f8</color>
+    <color name="bg_playing">#3d9ffa</color>
+    <color name="bg_normal">#191919</color>
+    <color name="bg_next">#32597d</color>
+
+    <color name="bg_feed_pressed">#3d9ffa</color>
+    <color name="bg_feed_normal">#FAFAFA</color>
+
 </resources>

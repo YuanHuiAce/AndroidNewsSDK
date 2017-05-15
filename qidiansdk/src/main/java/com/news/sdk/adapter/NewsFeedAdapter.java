@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,6 +40,7 @@ import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
+import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -50,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -540,6 +543,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
+            }
+
+            if (PlayerManager.videoPlayView!=null&&feed.getNid()!=PlayerManager.videoPlayView.cPostion)
+            {
+                FrameLayout view = holder.getView(R.id.layout_item_video);
+                view.removeAllViews();
+                holder.getView(R.id.rl_video_show).setVisibility(View.VISIBLE);
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
             int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);

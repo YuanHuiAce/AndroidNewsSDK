@@ -252,9 +252,9 @@ public class NewsCommentFgt extends Fragment {
             final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
             holder.tvTime.setText(comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             } else {
-                mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(R.drawable.ic_user_default).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             int count = comment.getCommend();

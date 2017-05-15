@@ -19,8 +19,8 @@
         android:background="#66000000"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="13dp"
-        android:paddingRight="13dp">
+        android:paddingLeft="15dp"
+        android:paddingRight="7dp">
 
         <ImageView
             android:id="@+id/sound"
@@ -59,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
             android:padding="8dp"
             android:src="@mipmap/ic_fullscreen" />
     </LinearLayout>

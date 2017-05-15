@@ -52,6 +52,7 @@ public class ADLoadNewsFeedEntity implements Serializable {
                 '}';
     }
 
+
     public long getCid() {
         return cid;
     }

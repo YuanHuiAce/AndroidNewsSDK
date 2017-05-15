@@ -19,7 +19,7 @@
         android:layout_alignBottom="@+id/title_img_View"
         android:layout_alignLeft="@+id/title_img_View"
         android:layout_alignRight="@+id/title_img_View"
-        android:background="#30000000">
+        android:background="#20000000">
 
         <TextView
             android:id="@+id/tv_video_duration"
