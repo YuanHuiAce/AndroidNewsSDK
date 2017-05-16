@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
-    android:background="#f0f0f0"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/title_textView"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="刚刚看到这里，点击加载更多"
-        android:textColor="@color/new_color2"
-        android:textSize="@dimen/new_font4" />
+        android:textSize="@dimen/font3" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@+id/title_textView"
-        android:background="@drawable/list_divider" />
-</RelativeLayout>
+        android:layout_height="2dp" />
+</LinearLayout>

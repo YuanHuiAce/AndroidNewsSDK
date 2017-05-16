@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,7 +18,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +36,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.google.gson.reflect.TypeToken;
 import com.news.sdk.adapter.NewsFeedAdapter;
-import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
@@ -58,6 +55,7 @@ import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.TextUtil;
@@ -97,7 +95,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
     private MyViewPagerAdapter mViewPagerAdapter;
-    private ImageView mChannelExpand, mivUserCenter;
+    private ImageView mChannelExpand, mivUserCenter, mDividingLine;
     private ChannelItemDao mChannelItemDao;
     private InterNetReceiver mReceiver;
     private long mLastPressedBackKeyTime;
@@ -177,10 +175,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         lastTime = System.currentTimeMillis();
         view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.qd_aty_main, null);
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
-        TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
+        mDividingLine = (ImageView) view.findViewById(R.id.mDividingLine);
 //        mChannelItemDao = new ChannelItemDao(mContext);
         videoChannelDao = new VideoChannelDao(mContext);
-        setVideChannelList();
+        setVideoChannelList();
         mChannelItemDao = new ChannelItemDao(activity);
         mSelChannelItems = new ArrayList<>();
         mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
@@ -256,17 +254,10 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 }
             }
         });
-        /**更新右下角用户登录图标*/
+        /**更新用户登录图标*/
         User user = SharedPreManager.mInstance(activity).getUser(activity);
-        if (user != null) {
-            if (!TextUtil.isEmptyString(user.getUserIcon())) {
-                mRequestManager.load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
-            } else {
-                mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
-            }
-        } else {
-            mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
-        }
+        ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, user.getUserIcon(), R.drawable.btn_user_center);
+        TextUtil.setLayoutBgResource(activity, mivUserCenter, R.color.color6);
         /**注册用户登录广播*/
         mReceiver = new InterNetReceiver();
         IntentFilter filter = new IntentFilter();
@@ -344,7 +335,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         builder.create().show();
     }
 
-    private void setVideChannelList() {
+    private void setVideoChannelList() {
         VideoChannelRequest<List<VideoChannel>> videoFeedRequest = new VideoChannelRequest<List<VideoChannel>>(Request.Method.GET, new TypeToken<List<VideoChannel>>() {
         }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST + "chid=44" + "&channel=" + CommonConstant.NEWS_CTYPE, new Response.Listener<ArrayList<VideoChannel>>() {
             @Override
@@ -356,7 +347,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                         videoChannelDao.insert(channel);
                     }
                 }
-
             }
         },
                 new Response.ErrorListener() {
@@ -365,7 +355,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                         Logger.v(TAG, error.toString());
                     }
                 });
-
         QiDianApplication.getInstance().getRequestQueue().add(videoFeedRequest);
 
     }
@@ -398,11 +387,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     public void setUserCenterImg(String url) {
-        if (!TextUtil.isEmptyString(url)) {
-            mRequestManager.load(Uri.parse(url)).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
-        } else {
-            mRequestManager.load("").placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(activity, 2, getResources().getColor(R.color.white))).into(mivUserCenter);
-        }
+        ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, url, R.drawable.btn_user_center);
     }
 
 
@@ -442,7 +427,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             activity.unregisterReceiver(mReceiver);
         }
         nowTime = System.currentTimeMillis();
-        Log.i("tag", (int) ((nowTime - lastTime) / 1000) + "======time");
         LogUtil.appUseLog(activity, lastTime, nowTime);
     }
 
@@ -609,9 +593,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
 
     public void setTheme() {
-//        TextUtil.setLayoutBgColor(activity,mChannelTabStrip.ge,R.color.white);
-        TextUtil.setLayoutBgColor(activity, mMainView, R.color.white);
-        mChannelTabStrip.setBackgroundColor(ThemeManager.getCurrentThemeRes(activity, R.color.channeltabstrip_bg));
+        User user = SharedPreManager.mInstance(activity).getUser(activity);
+        ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, user.getUserIcon(), R.drawable.btn_user_center);
+        TextUtil.setLayoutBgResource(activity, mivUserCenter, R.color.color6);
+        TextUtil.setLayoutBgResource(activity, mMainView, R.color.color6);
+        TextUtil.setLayoutBgResource(activity, mChannelExpand, R.color.color6);
+        TextUtil.setLayoutBgResource(activity, mDividingLine, R.color.color5);
+        mChannelTabStrip.setBackgroundColor(ThemeManager.getCurrentThemeRes(activity, R.color.color6));
         mChannelTabStrip.notifyDataSetChanged();
     }
 

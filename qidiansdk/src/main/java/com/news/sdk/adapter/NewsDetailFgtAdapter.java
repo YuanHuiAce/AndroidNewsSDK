@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.news.sdk.R;
 import com.news.sdk.adapter.abslistview.CommonViewHolder;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
+
 /**
  * Created by Administrator on 2016/4/22.
  */
@@ -52,6 +54,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     private int mCardWidth, mCardHeight;
     private int mScreenWidth;
     private SharedPreferences mSharedPreferences;
+    private RequestManager mRequestManager;
 
     public NewsDetailFgtAdapter(Context context, ArrayList<RelatedItemEntity> datas) {
         super(context, datas, new MultiItemTypeSupport<RelatedItemEntity>() {
@@ -94,6 +97,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         });
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mRequestManager = Glide.with(mContext);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
@@ -112,8 +116,9 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             if (relatedItemEntity.getPtime() != null)
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+            TextUtil.setLayoutBgColor(mContext, holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
@@ -124,11 +129,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpCard.width = mCardWidth;
             lpCard.height = mCardHeight;
             ivCard.setLayoutParams(lpCard);
-            holder.setGlideDrawViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
+            holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             if (relatedItemEntity.getPtime() != null) {
                 setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             }
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
@@ -175,9 +181,10 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
                 Glide.with(mContext).load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
             }
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
             holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
-            holder.getView(R.id.ad_image_icon).setVisibility(View.GONE);
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
@@ -190,7 +197,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpVideoSmall.width = mCardWidth;
             lpVideoSmall.height = mCardHeight;
             ivVideoSmall.setLayoutParams(lpVideoSmall);
-            holder.setGlideDrawViewURI(R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
+            holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
             TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);

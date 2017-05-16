@@ -834,9 +834,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public void UpdateCCView(final NewsDetailVideoFgt.CommentHolder holder, final NewsDetailComment comment) {
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            mRequestManager.load(uri).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         } else {
-            mRequestManager.load(R.drawable.ic_user_default).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
@@ -1057,7 +1057,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public void onADLoaded(List<NativeADDataRef> list) {
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
-        AdUtil.upLogAdShowGDTSDK(list, mContext);
+        AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
         if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);

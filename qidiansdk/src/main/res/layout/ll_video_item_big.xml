@@ -1,9 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_feed_list_select">
-
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/title_textView"
@@ -12,24 +10,10 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:maxLines="2"
-        android:textColor="#333333"
-        android:textSize="15sp" />
+        android:textSize="@dimen/font3" />
 
-    <!--<com.news.yazhidao.widget.TextViewExtend-->
-    <!--android:id="@+id/type_textView"-->
-    <!--android:layout_width="28dp"-->
-    <!--android:layout_height="14dp"-->
-    <!--android:layout_marginLeft="15dp"-->
-    <!--android:layout_below="@+id/layout_source"-->
-    <!--android:layout_marginRight="3dp"-->
-    <!--android:layout_marginTop="12dp"-->
-    <!--android:background="@drawable/newstag_newhotspot_shape"-->
-    <!--android:gravity="center"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:textSize="10sp"-->
-    <!--android:visibility="gone" />-->
     <RelativeLayout
         android:id="@+id/layout_video"
         android:layout_width="match_parent"
@@ -61,9 +45,6 @@
             android:textColor="@color/white"
             android:textSize="10sp" />
     </RelativeLayout>
-    <!--<include-->
-    <!--android:id="@+id/item_bottom_video"-->
-    <!--layout="@layout/item_bottom_video" />-->
 
     <include
         android:id="@+id/source_content_linearLayout"
@@ -73,7 +54,7 @@
         android:layout_below="@+id/layout_video"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="8dp" />
 
     <ImageView
         android:id="@+id/checkFavoriteDelete_image"
@@ -86,14 +67,13 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:scaleType="center"
-        android:visibility="gone"
-        android:src="@drawable/favorite_uncheck" />
+        android:src="@drawable/favorite_uncheck"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="2dp"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="9dp"
-        android:background="@drawable/list_divider" />
+        android:layout_marginTop="8dp" />
 </RelativeLayout>

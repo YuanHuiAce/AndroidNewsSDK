@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_feed_list_select">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/title_textView"
@@ -11,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:maxLines="2"
         android:textSize="@dimen/font3" />
@@ -24,7 +23,7 @@
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
 
@@ -36,7 +35,8 @@
         android:layout_below="@+id/title_img_View"
         android:layout_marginLeft="@dimen/usual_margin"
         android:layout_marginRight="@dimen/usual_margin"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="8dp" />
+
     <ImageView
         android:id="@+id/checkFavoriteDelete_image"
         android:layout_width="55dp"
@@ -48,15 +48,14 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:scaleType="center"
-        android:visibility="gone"
-        android:src="@drawable/favorite_uncheck" />
+        android:src="@drawable/favorite_uncheck"
+        android:visibility="gone" />
 
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="2dp"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/list_divider" />
+        android:layout_marginTop="8dp" />
 </RelativeLayout>
