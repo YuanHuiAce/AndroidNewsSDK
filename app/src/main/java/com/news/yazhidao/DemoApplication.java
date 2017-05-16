@@ -3,7 +3,6 @@ package com.news.yazhidao;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -22,10 +21,6 @@ import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * Created by wudi on 16/6/21.
@@ -49,7 +44,6 @@ public class DemoApplication extends Application {
             public void onSuccess(String deviceToken) {
                 //注册成功会返回device token
                 Log.v("deviceToken",deviceToken);
-//                UploadUmengPushIdRequest.uploadUmengPushId(this, deviceToken);
             }
 
             @Override
@@ -58,18 +52,6 @@ public class DemoApplication extends Application {
             }
         });
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
-
-//        Context ctx =getApplicationContext();
-//        // 获取当前包名
-//        String packageName = getPackageName();
-//        // 获取当前进程名
-//        String processName = getProcessName(android.os.Process.myPid());
-//        // 设置是否为上报进程
-//        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(ctx);
-//        strategy.setUploadProcess(processName == null || processName.equals(packageName));
-//        // 初始化Bugly
-////        CrashReport.initCrashReport(this, "876dac1311", isDebug, strategy);
-//        CrashReport.initCrashReport(getApplicationContext(), "876dac1311", true);
     }
 
     /**
@@ -87,33 +69,6 @@ public class DemoApplication extends Application {
                 Logger.e("device_token", "token=" + device_token);
                 UploadUmengPushIdRequest.uploadUmengPushId(context, device_token);
             } else if ("action_message_received".equals(messageAction)) {
-//                String title = msg.extra.get("extra_title");
-//                String message = msg.extra.get("extra_message");
-//                String extras = msg.extra.get("extra_extra");
-//                String type = msg.extra.get("extra_content_type");
-//                String file = msg.extra.get("extra_richpush_file_path");
-//                //判断反馈界面是否在前台
-//                boolean isFeedBackForeground = DeviceInfoUtil.isRunningForeground(context, FeedBackActivity.class.getSimpleName());
-//                //判断会话列表是否在前台
-//                boolean isMessageListForeground = DeviceInfoUtil.isRunningForeground(context, ChatAty.class.getSimpleName());
-//                Intent intent1;
-//                if (isFeedBackForeground) {
-//                    intent1 = new Intent("FeedBackMessage");
-//                    intent1.putExtra("message", message);
-//                    context.sendBroadcast(intent1);
-//                } else if (isMessageListForeground) {
-//                    intent1 = new Intent("FeedBackMessageList");
-//                    intent1.putExtra("message", message);
-//                    context.sendBroadcast(intent1);
-//                } else {
-////                    intent1 = new Intent(context, FeedBackActivity.class);
-////                    NotificationHelper.sendNotification(context, "测试title", message, intent1);
-//                }
-//                Logger.i("jigang", "receive custom title=" + title);
-//                Logger.i("jigang", "receive custom message=" + message);
-//                Logger.i("jigang", "receive custom extras=" + extras);
-//                Logger.i("jigang", "receive custom type=" + type);
-//                Logger.i("jigang", "receive custom file=" + file);
             } else if ("action_notification_received".equals(messageAction)) {
                 //umeng statistic notification received
                 MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_RECEIVED);
@@ -124,7 +79,6 @@ public class DemoApplication extends Application {
                 String collection = msg.extra.get("collection");
                 String newVersion = msg.extra.get("version");
                 String rtype = msg.extra.get("rtype");
-                //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
                 if (!TextUtil.isEmptyString(newsid)) {
                     Intent detailIntent = null;
                     if (!TextUtil.isEmptyString(newsid) && rtype.equals("video")) {
@@ -144,9 +98,6 @@ public class DemoApplication extends Application {
                     context.startActivity(detailIntent);
                     MobclickAgent.onEvent(DemoApplication.this, "notification_open");
                 } else if (!TextUtil.isEmptyString(newVersion)) {
-//                    UmengUpdateAgent.silentUpdate(context);
-
-//                    Logger.e("jigang", "need update");
                 } else {
                     Intent HomeIntent = new Intent(context, MainActivity.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -157,33 +108,4 @@ public class DemoApplication extends Application {
         }
     };
 
-
-    /**
-     * 获取进程号对应的进程名
-     *
-     * @param pid 进程号
-     * @return 进程名
-     */
-    private static String getProcessName(int pid) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
-            String processName = reader.readLine();
-            if (!TextUtils.isEmpty(processName)) {
-                processName = processName.trim();
-            }
-            return processName;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        return null;
-    }
 }

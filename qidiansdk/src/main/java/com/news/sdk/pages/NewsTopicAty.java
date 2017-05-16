@@ -279,10 +279,11 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     @Override
     public void finish() {
         super.finish();
-        if (mUsedNewsFeed == null&&VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
             Intent main = new Intent();
             main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(main);
         }
     }

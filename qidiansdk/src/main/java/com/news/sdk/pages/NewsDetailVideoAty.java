@@ -35,6 +35,7 @@ import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.NewsDetail;
 import com.news.sdk.entity.NewsFeed;
@@ -63,7 +64,7 @@ import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
  * Created by fengjigang on 15/9/6.
  * 视频详情页
  */
-public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss ,ThemeManager.OnThemeChangeListener{
     //    public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
@@ -130,6 +131,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     public void setHandler(Handler handler) {
         mHandler = handler;
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 
     /**
@@ -257,10 +263,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         }
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (mNewsFeed == null&&VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
             Intent main = new Intent();
             main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(main);
         }
     }

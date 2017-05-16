@@ -106,6 +106,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsCommentFgt mCommentFgt;
     private boolean isUserComment;
     private String mSource;
+    private boolean isForeground;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -225,10 +226,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (mNewsFeed == null&&VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
             Intent main = new Intent();
             main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(main);
         }
 
@@ -328,6 +330,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mNid = mNewsFeed.getNid() + "";
             } else {
                 mNid = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
+                isForeground = true;
             }
             User user = SharedPreManager.mInstance(this).getUser(NewsDetailAty2.this);
             if (user != null) {

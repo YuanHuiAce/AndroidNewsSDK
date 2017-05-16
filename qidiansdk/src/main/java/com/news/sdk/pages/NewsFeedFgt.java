@@ -1289,9 +1289,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void addTabView(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
         localChannelItems = videoChannelDao.queryForAll();
-        View tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
-        TabLayout mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
+        final View tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
+        TabLayout  mTabLayout = (TabLayout ) tabView.findViewById(R.id.tab_container);
         for (VideoChannel videoChannel : localChannelItems) {
+
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
             TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
             tv.setText(videoChannel.getCname());
@@ -1302,7 +1303,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 scid = localChannelItems.get(tab.getPosition()).getId();
-                loadData(PULL_DOWN_REFRESH);
+                mlvNewsFeed.setRefreshing();;
+//                loadData(PULL_DOWN_REFRESH);
+
             }
 
             @Override
@@ -1312,7 +1315,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
             }
         });
 

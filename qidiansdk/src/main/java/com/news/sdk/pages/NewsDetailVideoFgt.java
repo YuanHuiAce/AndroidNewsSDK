@@ -51,6 +51,7 @@ import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
 import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.ADLoadNewsFeedEntity;
@@ -96,7 +97,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener {
+public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener, ThemeManager.OnThemeChangeListener {
     private static final String TAG = NewsDetailVideoFgt.class.getSimpleName();
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private NewsDetail mResult;
@@ -798,6 +799,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
             mCommentLayout.addView(ccView);
         }
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 
     class CommentHolder {
