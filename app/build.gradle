@@ -15,7 +15,7 @@ android {
         //sdk com.news.yazhidao
         applicationId "com.news.yazhidao"
         minSdkVersion 17
-        targetSdkVersion 22
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
@@ -85,7 +85,7 @@ dependencies {
     compile project(':qidiansdk')
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.4.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
     compile project(':sharesdk_mainlib')
     compile project(':PushSDK')
 }

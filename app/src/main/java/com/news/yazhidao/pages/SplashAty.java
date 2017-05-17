@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -360,7 +359,6 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
 //                adtvTitle.setText(dataRef.getDesc());
-                Log.i("tag", dataRef.getAPPScore() + "==" + dataRef.getAPPPrice() + "===" + dataRef.getAPPStatus() + "==" + dataRef.isAPP());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
                     mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(ivAD);
@@ -372,7 +370,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                     });
                 }
                 dataRef.onExposured(ivAD);
-                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this);
+                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this,CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID);
                 ivAD.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

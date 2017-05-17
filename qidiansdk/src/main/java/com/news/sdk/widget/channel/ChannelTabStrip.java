@@ -79,7 +79,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
     public ChannelTabStrip(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.mContext = context;
-        setBackgroundColor(getResources().getColor(R.color.channeltabstrip_bg));
+        setBackgroundColor(getResources().getColor(R.color.color6));
         mLayoutInflater = LayoutInflater.from(context);
         drawables = new TextDrawable[3];
         int i = 0;
@@ -134,14 +134,14 @@ public class ChannelTabStrip extends HorizontalScrollView {
             addTab(i, pager.getAdapter().getPageTitle(i).toString());
         }
         if (bgFrameLayout != null) {
-            TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
+            TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.color6);
         }
 //        if (tabCount > 0) {
 //            ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(0);
 //            TextView child = (TextView) tab.findViewById(R.id.category_text);
 //            child.setTextColor(getResources().getColor(R.color.new_color2));
 //        }
-        setBackgroundColor(getResources().getColor(R.color.channeltabstrip_bg));
+        setBackgroundColor(getResources().getColor(R.color.color6));
 //        tabsContainer.setBackgroundColor(ThemeManager.getCurrentThemeRes(mContext, R.color.white));
         if (tabCount > 0) {
             int position = pager.getCurrentItem();
@@ -149,9 +149,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
                 TextView child = (TextView) tab.findViewById(category_text);
                 if (i == position) {
-                    TextUtil.setTextColor(mContext, child, R.color.new_color2);
+                    TextUtil.setTextColor(mContext, child, R.color.color1);
                 } else {
-                    TextUtil.setTextColor(mContext, child, R.color.new_color1);
+                    TextUtil.setTextColor(mContext, child, R.color.color3);
                 }
             }
         }
@@ -160,15 +160,14 @@ public class ChannelTabStrip extends HorizontalScrollView {
     // 添加一个标签到导航菜单
     private void addTab(final int position, String title) {
         ViewGroup tab = (ViewGroup) mLayoutInflater.inflate(R.layout.channel_tab, this, false);
-        bgFrameLayout = (FrameLayout) tab.findViewById(R.id.bgLayout);
-        TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.channeltabstrip_bg);
+        bgFrameLayout = (FrameLayout) tab.findViewById(R.id.tabLayout);
+        TextUtil.setLayoutBgResource(mContext, bgFrameLayout, R.color.color6);
         TextView category_text = (TextView) tab.findViewById(R.id.category_text);
         category_text.setText(title);
 //        category_text.setGravity(Gravity.CENTER);
         category_text.setSingleLine();
         category_text.setFocusable(true);
-        TextUtil.setTextColor(mContext, category_text, R.color.new_color1);
-//        category_text.setTextColor(getResources().getColor(R.color.new_color1));
+        TextUtil.setTextColor(mContext, category_text, R.color.color1);
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -350,9 +349,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
                     } else {
                         startPosition = position;
                     }
-                    TextUtil.setTextColor(mContext, child, R.color.new_color2);
+                    TextUtil.setTextColor(mContext, child, R.color.color1);
                 } else {
-                    TextUtil.setTextColor(mContext, child, R.color.new_color1);
+                    TextUtil.setTextColor(mContext, child, R.color.color3);
                 }
             }
         }

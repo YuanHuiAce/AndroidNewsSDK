@@ -14,7 +14,7 @@
     <color name="color12">#ffffff</color>
     <color name="color13">#101010</color>
     <color name="color14">#262626</color>
-    <color name="color1_night">#1168a7</color>
+    <color name="color1_night">#991168a7</color>
     <color name="color2_night">#909090</color>
     <color name="color3_night">#545454</color>
     <color name="color4_night">#444444</color>
@@ -302,14 +302,18 @@
     <color name="channeltabstrip_bg">#f8f8f8</color>
     <color name="channeltabstrip_bg_night">#202124</color>
     <color name="channeltabstrip_divider">#f0f0f0</color>
-    <color name="news_source_bg">#f8f8f8</color>
-    <color name="newsfeed_red">#fff83b3b</color>
-    <color name="news_type_color1">#ff7d68</color>
-    <color name="news_type_color2">#b3e0ff</color>
-    <color name="news_type_color3">#dddddd</color>
-    <color name="news_type_color4">#fac535</color>
-    <color name="news_type_color5">#ff8d9b</color>
-    <color name="news_type_color6">#fab37f</color>
-    <color name="news_type_color7">#97bcf8</color>
-    <color name="news_type_color8">#dddddd</color>
+    <color name="news_source_bg" >#f8f8f8</color>
+    <color name="newsfeed_red" >#fff83b3b</color>
+    <color name="news_type_color1" >#300091fa</color>
+    <color name="news_type_color1_night" >#301168a7</color>
+    <color name="news_type_color2" >#30ff4c4c</color>
+    <color name="news_type_color2_night" >#30d13b3b</color>
+    <color name="news_type_color3" >#30fda062</color>
+    <color name="news_type_color3_night" >#30985f3a</color>
+    <color name="news_type_color4" >#30999999</color>
+    <color name="news_type_color4_night" >#30646464</color>
+    <color name="news_type_color5" >#ff8d9b</color>
+    <color name="news_type_color6" >#fab37f</color>
+    <color name="news_type_color7" >#97bcf8</color>
+    <color name="news_type_color8" >#dddddd</color>
 </resources>

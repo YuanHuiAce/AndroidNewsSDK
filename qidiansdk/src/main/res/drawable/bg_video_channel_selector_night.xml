@@ -4,20 +4,20 @@
 
     <item android:state_selected="true">
         <shape>
-            <stroke android:width="0.5dp"  android:color="@color/color5"/>
             <corners android:radius="2dp" />
 
-            <solid android:color="@color/color4" />
+            <solid android:color="@color/color4_night" />
+            <stroke android:width="0.5dp"  android:color="@color/color5_night"/>
 
             <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <stroke android:width="0.5dp"  android:color="@color/color5"/>
+            <stroke android:width="0.5dp"  android:color="@color/color5_night"/>
             <corners android:radius="2dp" />
 
-            <solid android:color="@color/color6" />
+            <solid android:color="@color/color6_night" />
 
             <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp" />
         </shape>

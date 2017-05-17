@@ -63,6 +63,7 @@ import com.news.sdk.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -115,6 +116,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
+    private View mSearchHeaderView;
+    private ImageView mSearchImg;
+    private TextView mSearchText;
     private View rootView;
     private int mChannelId;
     private String mstrKeyWord;
@@ -154,6 +158,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private VideoChannelDao videoChannelDao;
     private long scid = 0;
     private ArrayList<VideoChannel> localChannelItems;
+    private View tabView;
+    private TabLayout mTabLayout;
 
     @Override
     public void onThemeChanged() {
@@ -161,10 +167,39 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void initTheme() {
-        TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mlvNewsFeed.setHeaderLoadingView();
-        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.news_feed_list);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.news_feed_list);
+        TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, tabView, R.color.color9);
+        TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
+        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
+        ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
+        TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
+        TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
+        mTabLayout.removeAllTabs();
+       for (int i=localChannelItems.size()-1;i<0;i--)
+       {
+
+           View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+           TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
+           TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
+           TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
+           tv.setText(localChannelItems.get(i).getCname());
+           mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+       }
+//        for (VideoChannel videoChannel : localChannelItems) {
+//
+//            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+//            TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
+//            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
+//            TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
+//            tv.setText(videoChannel.getCname());
+//            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+//        }
+
         mAdapter.notifyDataSetChanged();
     }
 
@@ -321,7 +356,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) getActivity().findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
-        TextUtil.setLayoutBgColor(mContext, mRefreshTitleBar, R.color.white80);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRelative = (RelativeLayout) rootView.findViewById(R.id.mHomeRelative);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
@@ -357,6 +391,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mlvNewsFeed.setAdapter(mAdapter);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
+        initTheme();
         playVideoControl();
         //load news data
         mHandler = new Handler();
@@ -626,7 +661,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     playerFeed.setStreamUrl(newsFeed.getVideourl());
                     playerFeeds.add(playerFeed);
                     playerFeed = null;
-
                 } else {
                     newsFeed.setChannel_id(newsFeed.getChannel());
                 }
@@ -950,16 +984,17 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void addHFView(LayoutInflater LayoutInflater) {
-        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        mSearchHeaderView.setLayoutParams(layoutParams);
+        mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         ListView lv = mlvNewsFeed.getRefreshableView();
+        addTabView(LayoutInflater);
         if (mChannelId != 44) {
             lv.addHeaderView(mSearchHeaderView);
         } else
-            addTabView(LayoutInflater);
+            lv.addHeaderView(tabView);
         lv.setHeaderDividersEnabled(false);
         mrlSearch = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
+        mSearchImg = (ImageView) mSearchHeaderView.findViewById(R.id.search_imageBtn);
+        mSearchText = (TextView) mSearchHeaderView.findViewById(R.id.search_text);
         mrlSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -970,7 +1005,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         });
         footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.news_feed_list);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
 //        lv.setFooterDividersEnabled(false);
@@ -1179,7 +1213,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                } else {
 //                    newsFeed.setStyle(51);
 //                }
-                newsFeed.setStyle(51);
+                newsFeed.setStyle(50);
                 newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
@@ -1289,21 +1323,24 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void addTabView(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
         localChannelItems = videoChannelDao.queryForAll();
-        final View tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
-        TabLayout  mTabLayout = (TabLayout ) tabView.findViewById(R.id.tab_container);
+        tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
+        mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
+        mTabLayout.removeAllTabs();
         for (VideoChannel videoChannel : localChannelItems) {
 
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+            TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
             TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
+            TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
             tv.setText(videoChannel.getCname());
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
         }
-        mlvNewsFeed.getRefreshableView().addHeaderView(tabView);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 scid = localChannelItems.get(tab.getPosition()).getId();
-                mlvNewsFeed.setRefreshing();;
+                mlvNewsFeed.setRefreshing();
+                ;
 //                loadData(PULL_DOWN_REFRESH);
 
             }

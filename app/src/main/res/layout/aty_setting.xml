@@ -109,22 +109,10 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/mRadioSmall"
-                    android:layout_width="42dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_font_radio_1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:padding="6dp"
-                    android:text="小"
-                    android:textColor="@color/txt_font_radio_1"
-                    android:textSize="@dimen/font4" />
-
-                <RadioButton
                     android:id="@+id/mRadioNormal"
                     android:layout_width="42dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_font_radio_2"
+                    android:background="@drawable/bg_font_radio_1"
                     android:button="@null"
                     android:gravity="center"
                     android:padding="6dp"
@@ -136,11 +124,23 @@
                     android:id="@+id/mRadioBig"
                     android:layout_width="42dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_font_radio_3"
+                    android:background="@drawable/bg_font_radio_2"
                     android:button="@null"
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="大"
+                    android:textColor="@color/txt_font_radio_1"
+                    android:textSize="@dimen/font4" />
+
+                <RadioButton
+                    android:id="@+id/mRadioBigger"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_font_radio_3"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="超大"
                     android:textColor="@color/txt_font_radio_1"
                     android:textSize="@dimen/font4" />
             </RadioGroup>

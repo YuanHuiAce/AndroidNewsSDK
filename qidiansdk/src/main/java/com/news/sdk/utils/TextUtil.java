@@ -4,10 +4,7 @@ package com.news.sdk.utils;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.view.View;
 import android.widget.TextView;
 
 import com.news.sdk.common.CommonConstant;
@@ -104,8 +101,8 @@ public class TextUtil {
             ChannelItem oldItem = oldList.get(i);
             for (int j = 0; j < newList.size(); j++) {
                 ChannelItem newItem = newList.get(j);
-                if (oldItem.getId()==(newItem.getId())) {
-                    if (oldItem.getOrder_num()!=(newItem.getOrder_num())) {
+                if (oldItem.getId() == (newItem.getId())) {
+                    if (oldItem.getOrder_num() != (newItem.getOrder_num())) {
                         return true;
                     }
                 }
@@ -230,13 +227,13 @@ public class TextUtil {
             titleTextSize = 24;
             commentTextSize = 12;
             contentTextSize = 18;
-        } else if (textSize == CommonConstant.TEXT_SIZE_SMALL) {
-            titleTextSize = 18;
-            commentTextSize = 12;
-            contentTextSize = 14;
-        } else {
+        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
             titleTextSize = 26;
-            commentTextSize = 22;
+            commentTextSize = 14;
+            contentTextSize = 20;
+        } else {
+            titleTextSize = 28;
+            commentTextSize = 16;
             contentTextSize = 22;
         }
         String titleColor = "333333";
@@ -367,35 +364,11 @@ public class TextUtil {
         textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
     }
 
-    public static void setLayoutBgColor(Context context, FrameLayout layout, int bgColor) {
-        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
+    public static void setLayoutBgColor(Context context, View view, int color) {
+        view.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, color)));
     }
 
-    public static void setLayoutBgColor(Context context, LinearLayout layout, int bgColor) {
-        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
-    }
-
-    public static void setLayoutBgColor(Context context, TextView layout, int bgColor) {
-        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
-    }
-
-    public static void setLayoutBgColor(Context context, RelativeLayout layout, int bgColor) {
-        layout.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, bgColor)));
-    }
-
-    public static void setLayoutBgResource(Context context, ImageView imageView, int bgColor) {
-        imageView.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
-    }
-
-    public static void setLayoutBgResource(Context context, RelativeLayout layout, int bgColor) {
-        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
-    }
-
-    public static void setLayoutBgResource(Context context, FrameLayout layout, int bgColor) {
-        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
-    }
-
-    public static void setLayoutBgResource(Context context, LinearLayout layout, int bgColor) {
+    public static void setLayoutBgResource(Context context, View layout, int bgColor) {
         layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
     }
 

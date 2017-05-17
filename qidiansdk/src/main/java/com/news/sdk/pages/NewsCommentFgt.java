@@ -246,15 +246,15 @@ public class NewsCommentFgt extends Fragment {
             }
             TextUtil.setTextColor(mContext, holder.tvName, R.color.new_color2);
             TextUtil.setTextColor(mContext, holder.tvContent, R.color.new_color1);
-            TextUtil.setLayoutBgResource(mContext, (ImageView) convertView.findViewById(R.id.mSelectCommentDivider), R.color.new_color4);
+            TextUtil.setLayoutBgResource(mContext, convertView.findViewById(R.id.mSelectCommentDivider), R.color.new_color4);
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
             final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
             holder.tvTime.setText(comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             } else {
-                mRequestManager.load(R.drawable.ic_user_default).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             int count = comment.getCommend();

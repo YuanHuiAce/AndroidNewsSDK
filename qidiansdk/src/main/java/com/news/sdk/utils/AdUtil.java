@@ -197,7 +197,7 @@ public class AdUtil {
         requestQueue.add(request);
     }
 
-    public static void upLogAdShowGDTSDK(List<NativeADDataRef> dataRefs, Context context) {
+    public static void upLogAdShowGDTSDK(List<NativeADDataRef> dataRefs, Context context, String aid) {
         if (!TextUtil.isListEmpty(dataRefs)) {
             ArrayList<NewsFeed> arrayList = new ArrayList<>();
             for (NativeADDataRef dataRef : dataRefs) {
@@ -205,7 +205,7 @@ public class AdUtil {
                 newsFeed.setPname(dataRef.getTitle());
                 newsFeed.setCtime(System.currentTimeMillis());
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
-                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
+                newsFeed.setAid(Long.valueOf(aid));
                 arrayList.add(newsFeed);
             }
             LogUtil.userShowLog(arrayList, context);

@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -129,15 +129,20 @@ public class CommonViewHolder {
         imageView.setImageResource(Resource);
     }
 
-    public void setGlideDrawViewURI(int drawView, String strImg) {
+    public void setGlideDrawViewURI(RequestManager requestManager, int drawView, String strImg) {
         ImageView imageView = getView(drawView);
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            imageView.setAlpha(0.5f);
+        } else {
+            imageView.setAlpha(1.0f);
+        }
         if (!TextUtil.isEmptyString(strImg)) {
-            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+            requestManager.load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
         } else
-            Glide.with(mContext).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+            requestManager.load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
     }
 
-    public void setGlideDrawViewURI(int drawView, String strImg, int width, int height, int rType) {
+    public void setGlideDrawViewURI(RequestManager requestManager,int drawView, String strImg, int width, int height, int rType) {
         ImageView imageView = getView(drawView);
         if (!TextUtil.isEmptyString(strImg)) {
             if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
@@ -157,15 +162,15 @@ public class CommonViewHolder {
                 } else {
                     imageView.setAlpha(1.0f);
                 }
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+                requestManager.load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
             }
         }
     }
 
-    public void setGlideDrawViewURI(int drawView, String strImg, int position) {
+    public void setGlideDrawViewURI(RequestManager requestManager,int drawView, String strImg, int position) {
         ImageView imageView = getView(drawView);
         if (!TextUtil.isEmptyString(strImg)) {
-            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.m_r_q1).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+            requestManager.load(Uri.parse(strImg)).placeholder(R.drawable.m_r_q1).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
         } else {
             int type = position % 5;
             if (type == 0) {

@@ -11,6 +11,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.sdk.R;
@@ -133,15 +135,17 @@ public class SubscribeListActivity extends SwipeBackActivity {
      */
     public class SubscribeListAdapter extends CommonAdapter<AttentionListEntity> {
         private Context mContext;
+        private RequestManager mRequestManager;
 
         public SubscribeListAdapter(Context mContext) {
             super(R.layout.subscribelist_item, mContext, null);
             this.mContext = mContext;
+            mRequestManager = Glide.with(mContext);
         }
 
         @Override
         public void convert(CommonViewHolder holder, final AttentionListEntity attentionListEntity, final int position) {
-            holder.setGlideDrawViewURI(R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon(), position);
+            holder.setGlideDrawViewURI(mRequestManager, R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon(), position);
             holder.setTextViewText(R.id.tv_SubscribeListItem_name, attentionListEntity.getName());
             int concern = attentionListEntity.getConcern();
             String personNum = "";
