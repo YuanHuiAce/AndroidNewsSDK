@@ -65,6 +65,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -113,11 +114,13 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             detail_shared_CareForLayout, linearlayout_attention,
             mCommentLayout,
             mNewsDetailHeaderView;
-
-    private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
+    private View mViewPointLayout;
+    private RelativeLayout detail_shared_ShareImageLayout,
             detail_Hot_Layout, relativeLayout_attention,
             detail_shared_ViewPointTitleLayout, adLayout;
     private ImageView detail_shared_AttentionImage, image_attention_line, image_attention_success, iv_attention_icon;
+    private TextView detail_shared_MoreComment, detail_hotComment, detail_ViewPoint;
+    private View detail_shared_hotComment_Line1, detail_shared_hotComment_Line2, detail_ViewPoint_Line1, detail_ViewPoint_Line2;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiver mRefreshReceiver;
@@ -174,7 +177,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         this.container = container;
         mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -437,7 +439,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             }
         });
         mNewsDetailHeaderView.addView(mDetailWebView);
-        final View mViewPointLayout = inflater.inflate(R.layout.detail_relate_layout, container, false);
+        mViewPointLayout = inflater.inflate(R.layout.detail_relate_layout, container, false);
         mViewPointLayout.setLayoutParams(layoutParams);
         //延时加载热点评论和相关观点
         new Handler().postDelayed(new Runnable() {
@@ -546,9 +548,15 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         });
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
-        detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
+        detail_shared_MoreComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
         detail_Hot_Layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
+        detail_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_hotComment);
+        detail_shared_hotComment_Line1 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line1);
+        detail_shared_hotComment_Line2 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line2);
+        detail_ViewPoint = (TextView) mViewPointLayout.findViewById(R.id.detail_ViewPoint);
+        detail_ViewPoint_Line1 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line1);
+        detail_ViewPoint_Line2 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line2);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
@@ -584,9 +592,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.color6);
-        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
-
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
@@ -594,6 +599,26 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
         footerView_layout.setVisibility(View.GONE);
         footView_tv.setVisibility(View.VISIBLE);
+        setTheme();
+    }
+
+
+    private void setTheme() {
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
+        TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
+        TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line1, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line2, R.color.color5);
+        TextUtil.setTextColor(mContext, detail_ViewPoint, R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, detail_ViewPoint_Line1, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, detail_ViewPoint_Line2, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
+        TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
+        ImageUtil.setAlphaImage(adImageView);
     }
 
     private void loadData() {
@@ -909,6 +934,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         TextViewExtend tvTime;
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
+        ImageView mSelectCommentDivider;
 
         public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
@@ -917,6 +943,13 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
             tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
+            mSelectCommentDivider = (ImageView) convertView.findViewById(R.id.mSelectCommentDivider);
+            ImageUtil.setAlphaImage(ivHeadIcon);
+            TextUtil.setTextColor(mContext, tvName, R.color.color1);
+            TextUtil.setTextColor(mContext, tvTime, R.color.color3);
+            TextUtil.setTextColor(mContext, tvPraiseCount, R.color.color3);
+            TextUtil.setTextColor(mContext, tvContent, R.color.color2);
+            TextUtil.setLayoutBgResource(mContext, mSelectCommentDivider, R.color.color5);
         }
     }
 
@@ -1209,7 +1242,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     public void onADLoaded(List<NativeADDataRef> list) {
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
-        AdUtil.upLogAdShowGDTSDK(list, mContext,CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
+        AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
         if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);

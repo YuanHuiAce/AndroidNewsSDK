@@ -28,6 +28,14 @@ public class ImageUtil {
         }
     }
 
+    public static void setAlphaImage(ImageView view) {
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            view.setAlpha(0.5f);
+        } else {
+            view.setAlpha(1.0f);
+        }
+    }
+
     public static void setAlphaImage(ImageView view, int drawable) {
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
             view.setAlpha(0.5f);

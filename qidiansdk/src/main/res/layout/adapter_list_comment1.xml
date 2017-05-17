@@ -39,15 +39,13 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="@color/new_color2"
-            android:textSize="@dimen/new_font3" />
+            android:textSize="@dimen/font6" />
 
         <com.news.sdk.widget.TextViewExtend
             android:id="@+id/tv_praise_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font5" />
+            android:textSize="@dimen/font8" />
     </LinearLayout>
 
     <com.news.sdk.widget.TextViewExtend
@@ -56,8 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/layout"
         android:layout_below="@+id/layout"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font5" />
+        android:textSize="@dimen/font9" />
 
     <com.news.sdk.widget.TextViewExtend
         android:id="@+id/tv_comment_content"
@@ -68,8 +65,7 @@
         android:layout_marginRight="26dp"
         android:layout_marginTop="15dp"
         android:lineSpacingMultiplier="1.15"
-        android:textColor="@color/new_color1"
-        android:textSize="@dimen/new_font10" />
+        android:textSize="@dimen/font3" />
 
     <ImageView
         android:id="@+id/mSelectCommentDivider"
@@ -78,7 +74,6 @@
         android:layout_below="@+id/tv_comment_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/new_color4" />
+        android:layout_marginTop="14dp" />
 
 </RelativeLayout>

@@ -20,11 +20,10 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:paddingBottom="3dp"
-        android:layout_marginLeft="8dp"
+        android:paddingLeft="8dp"
         android:paddingTop="3dp"
         android:maxLines="2"
-        android:textColor="#333333"
-        android:textSize="@dimen/font4"
+        android:textSize="@dimen/font5"
         android:visibility="visible" />
 
     <com.news.sdk.widget.TextViewExtend
