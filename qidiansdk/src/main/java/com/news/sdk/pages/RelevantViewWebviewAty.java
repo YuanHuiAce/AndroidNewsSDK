@@ -120,6 +120,11 @@ public class RelevantViewWebviewAty extends BaseActivity {
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
     private class MyWebViewDownLoadListener implements DownloadListener {
 
         @Override

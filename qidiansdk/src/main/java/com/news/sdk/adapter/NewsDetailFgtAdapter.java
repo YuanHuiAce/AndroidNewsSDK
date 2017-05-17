@@ -186,7 +186,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+//            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -200,7 +200,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
+//            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), relatedItemEntity.getDuration());
             if (relatedItemEntity.getPtime() != null) {

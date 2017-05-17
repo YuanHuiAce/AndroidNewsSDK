@@ -3,7 +3,7 @@
     android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_detail">
+    >
 
     <RelativeLayout
         android:id="@+id/video_show"
@@ -114,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/bg_home_login_header">
+            >
 
             <View
                 android:layout_width="match_parent"
@@ -179,13 +179,11 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@+id/mDetailComment"
-                android:background="@drawable/user_add_comment"
                 android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="4dp"
-                android:text="我来说俩句..."
-                android:textColor="@color/user_add_comment_color"
-                android:textSize="14sp" />
+                android:text="说一下..."
+                android:textSize="@dimen/font5" />
         </RelativeLayout>
 
 
@@ -196,7 +194,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/mHeaderDivider"
             android:layout_marginTop="210dp"
-            android:background="@color/white"
             android:visibility="visible">
 
             <ImageView
@@ -232,13 +229,13 @@
             android:background="#88000000"
             android:visibility="gone" />
 
-        <include layout="@layout/detail_carefor_layout" />
+        <include layout="@layout/detail_careful_layout" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/detai_small_layout"
-        android:layout_width="200dp"
-        android:layout_height="120dp"
+        android:layout_width="188dp"
+        android:layout_height="106dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:visibility="gone">

@@ -84,6 +84,11 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
         mLocationClient.setLocOption(option);
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
     public class MyLocationListener implements BDLocationListener {
 
         @Override

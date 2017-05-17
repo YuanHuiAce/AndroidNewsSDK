@@ -42,4 +42,9 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

@@ -167,40 +167,33 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void initTheme() {
-        mlvNewsFeed.setHeaderLoadingView();
-        TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
-        TextUtil.setLayoutBgResource(mContext, tabView, R.color.color9);
-        TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
-        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
-        ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
-        TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
-        TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
-        mTabLayout.removeAllTabs();
-       for (int i=localChannelItems.size()-1;i<0;i--)
-       {
+        if (mlvNewsFeed != null) {
+            mlvNewsFeed.setHeaderLoadingView();
+            TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
+            TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
+            TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
+            ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
+            ImageUtil.setAlphaImage(mFeedClose, R.drawable.video_close);
+            if (vPlayer!=null)
+            ImageUtil.setAlphaView(vPlayer);
+            TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
+            TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
+            mTabLayout.removeAllTabs();
+            for (VideoChannel videoChannel : localChannelItems) {
 
-           View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-           TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
-           TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
-           TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
-           tv.setText(localChannelItems.get(i).getCname());
-           mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
-       }
-//        for (VideoChannel videoChannel : localChannelItems) {
-//
-//            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-//            TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
-//            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
-//            TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
-//            tv.setText(videoChannel.getCname());
-//            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
-//        }
-
-        mAdapter.notifyDataSetChanged();
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+                TextUtil.setLayoutBgResource(mContext,view,R.drawable.bg_video_channel_selector);
+                TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
+                TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
+                tv.setText(videoChannel.getCname());
+                mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+            }
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public interface NewsSaveDataCallBack {
@@ -745,6 +738,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
                     mArrNewsFeed = newsFeeds;
+                    PlayerFeed playerFeed=null;
+                    if (mChannelId == 44) {
+                        for (NewsFeed newsFeed : newsFeeds) {
+                            playerFeed = new PlayerFeed();
+                            playerFeed.setNid(newsFeed.getNid());
+                            playerFeed.setTitle(newsFeed.getTitle());
+                            playerFeed.setImg(newsFeed.getThumbnail());
+                            playerFeed.setStreamUrl(newsFeed.getVideourl());
+                            playerFeeds.add(playerFeed);
+                        }
+
+                    }
                     mHomeRetry.setVisibility(View.GONE);
                     mAdapter.setNewsFeed(newsFeeds);
                     mAdapter.notifyDataSetChanged();
@@ -757,10 +762,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 bgLayout.setVisibility(View.GONE);
             }
         }
-        mIsFirst = false;
-        if (vPlayer != null && mChannelId == 44) {
+        if (vPlayer!=null&&mChannelId==44)
+        {
             vPlayer.setPlayerFeed(playerFeeds);
         }
+        mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
     }
 
@@ -800,6 +806,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 mHomeRetry.setVisibility(View.VISIBLE);
             } else {
                 mArrNewsFeed = newsFeeds;
+                if (mChannelId == 44) {
+                    for (NewsFeed newsFeed : newsFeeds) {
+                        PlayerFeed  playerFeed = new PlayerFeed();
+                        playerFeed.setNid(newsFeed.getNid());
+                        playerFeed.setTitle(newsFeed.getTitle());
+                        playerFeed.setImg(newsFeed.getThumbnail());
+                        playerFeed.setStreamUrl(newsFeed.getVideourl());
+                        playerFeeds.add(playerFeed);
+                        playerFeed=null;
+                    }
+                    if (vPlayer!=null)
+                        vPlayer.setPlayerFeed(playerFeeds);
+                }
                 mHomeRetry.setVisibility(View.GONE);
                 mAdapter.setNewsFeed(newsFeeds);
                 mAdapter.notifyDataSetChanged();
@@ -833,14 +852,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
                     mAdapter.setNewsFeed(newsFeeds);
-                    for (NewsFeed newsFeed : newsFeeds) {
-                        PlayerFeed playerFeed = new PlayerFeed();
-                        playerFeed.setNid(newsFeed.getNid());
-                        playerFeed.setTitle(newsFeed.getTitle());
-                        playerFeed.setImg(newsFeed.getThumbnail());
-                        playerFeed.setStreamUrl(newsFeed.getVideourl());
-                        playerFeeds.add(playerFeed);
-                        playerFeed = null;
+                    if (mChannelId==44) {
+                        for (NewsFeed newsFeed : newsFeeds) {
+                            PlayerFeed  playerFeed = new PlayerFeed();
+                            playerFeed.setNid(newsFeed.getNid());
+                            playerFeed.setTitle(newsFeed.getTitle());
+                            playerFeed.setImg(newsFeed.getThumbnail());
+                            playerFeed.setStreamUrl(newsFeed.getVideourl());
+                            playerFeeds.add(playerFeed);
+                            playerFeed=null;
+                        }
+                        if (vPlayer!=null)
+                            vPlayer.setPlayerFeed(playerFeeds);
                     }
                     mAdapter.notifyDataSetChanged();
                     mHomeRetry.setVisibility(View.GONE);

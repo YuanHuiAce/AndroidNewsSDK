@@ -2,7 +2,9 @@ package com.news.sdk.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.RequestManager;
 import com.news.sdk.R;
@@ -34,5 +36,22 @@ public class ImageUtil {
             view.setAlpha(1.0f);
         }
         view.setImageResource(drawable);
+
+    }
+
+    public static void setAlphaView(View view) {
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            view.setAlpha(0.5f);
+        } else {
+            view.setAlpha(1.0f);
+        }
+    }
+
+    public static void setAlphaProgressBar(ProgressBar progressBar) {
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            progressBar.setAlpha(0.5f);
+        } else {
+            progressBar.setAlpha(1.0f);
+        }
     }
 }

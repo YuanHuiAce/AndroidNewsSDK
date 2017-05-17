@@ -16,6 +16,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.utils.AuthorizedUserUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -74,22 +76,22 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     /**
      * 返回上一级,全文评论,分享
      */
-    private View mDetailComment, mNewsDetailLoaddingWrapper;
+    private View mHeaderDivider, mDetailComment, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
     //            ,mDetailRightMore;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
-
+    private ProgressBar imageAni;
     public boolean isCommentPage;//是否是评论页
-    private View mDetailAddComment;
-    public TextView mDetailCommentNum;
+    private View mBottomLine;
+    public TextView mDetailAddComment, mDetailCommentNum;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
-    private TextView mImageWallDesc, carefor_Text;
+    private TextView mImageWallDesc, careful_Text;
     private View mDetailBottomBanner;
-    public ImageView mDetailCommentPic, mDetailFavorite, carefor_Image;
+    public ImageView mDetailCommentPic, mDetailFavorite, careful_Image;
     public ViewPager mNewsDetailViewPager;
     private RefreshPageBroReceiver mRefreshReceiver;
     private UserCommentDialog mCommentDialog;
@@ -98,7 +100,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private String mNid;
     private NewsDetailCommentDao newsDetailCommentDao;
     private boolean isRefresh = false;
-    private LinearLayout careforLayout;
+    private LinearLayout carefulLayout;
     private boolean isFavorite;
     long lastTime, nowTime;
     private int mCommentNum;
@@ -123,12 +125,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
-
     @Override
     protected boolean translucentStatus() {
         return false;
     }
 
+    @Override
+    public void onThemeChanged() {
+        setTheme();
+    }
 
     @Override
     protected void setContentView() {
@@ -151,14 +156,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
+        carefulLayout = (LinearLayout) findViewById(R.id.carefulLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsDetailLoaddingWrapper.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        imageAni = (ProgressBar) findViewById(R.id.imageAni);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
-        TextUtil.setLayoutBgColor(this, mDetailHeader, R.color.white);
+        mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
 //        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
@@ -170,12 +176,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
-        carefor_Text = (TextView) findViewById(R.id.carefor_Text);
-        carefor_Image = (ImageView) findViewById(R.id.carefor_Image);
+        careful_Text = (TextView) findViewById(R.id.careful_Text);
+        careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment.setOnClickListener(this);
         mDetailShare = (ImageView) findViewById(R.id.mDetailShare);
         mDetailShare.setOnClickListener(this);
-        mDetailAddComment = findViewById(R.id.mDetailAddComment);
+        mBottomLine = findViewById(R.id.mBottomLine);
+        mDetailAddComment = (TextView) findViewById(R.id.mDetailAddComment);
         mDetailAddComment.setOnClickListener(this);
         mDetailCommentNum = (TextView) findViewById(R.id.mDetailCommentNum);
         mDetailBottomBanner = findViewById(R.id.mDetailBottomBanner);
@@ -185,6 +192,19 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);
+        setTheme();
+    }
+
+    private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mDetailAddComment, R.drawable.user_add_comment);
+        TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
+        ImageUtil.setAlphaProgressBar(imageAni);
     }
 
     @Override
@@ -208,7 +228,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             String percent = mDetailFgt.getPercent();
             if (!TextUtil.isEmptyString(percent)) {
                 //上报日志
-                LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime ,percent);
+                LogUtil.userReadLog(mNewsFeed, this, lastTime, nowTime, percent);
             }
         }
         super.onPause();
@@ -521,17 +541,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
-    public void calefulAnimation() {
+    public void carefulAnimation() {
         //图片渐变模糊度始终
         AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
         //渐变时间
         alphaAnimation.setDuration(500);
-        careforLayout.startAnimation(alphaAnimation);
+        carefulLayout.startAnimation(alphaAnimation);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                if (careforLayout.getVisibility() == View.GONE) {
-                    careforLayout.setVisibility(View.VISIBLE);
+                if (carefulLayout.getVisibility() == View.GONE) {
+                    carefulLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -543,7 +563,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                         AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
                         //渐变时间
                         alphaAnimationEnd.setDuration(500);
-                        careforLayout.startAnimation(alphaAnimationEnd);
+                        carefulLayout.startAnimation(alphaAnimationEnd);
                         alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -552,8 +572,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                if (careforLayout.getVisibility() == View.VISIBLE) {
-                                    careforLayout.setVisibility(View.GONE);
+                                if (carefulLayout.getVisibility() == View.VISIBLE) {
+                                    carefulLayout.setVisibility(View.GONE);
                                 }
 
                             }
@@ -590,26 +610,26 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                carefor_Image.setImageResource(R.drawable.hook_image);
+                careful_Image.setImageResource(R.drawable.hook_image);
                 if (isFavorite) {
                     isFavorite = false;
-                    carefor_Text.setText("收藏已取消");
+                    careful_Text.setText("收藏已取消");
                     SharedPreManager.mInstance(NewsDetailAty2.this).myFavoritRemoveItem(mNid);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;
-                    carefor_Text.setText("收藏成功");
+                    careful_Text.setText("收藏成功");
                     Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
                     SharedPreManager.mInstance(NewsDetailAty2.this).myFavoriteSaveList(mNewsFeed);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                 }
-                calefulAnimation();
+                carefulAnimation();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                carefor_Text.setText("收藏失败");
-                calefulAnimation();
+                careful_Text.setText("收藏失败");
+                carefulAnimation();
             }
         });
         HashMap<String, String> header = new HashMap<>();

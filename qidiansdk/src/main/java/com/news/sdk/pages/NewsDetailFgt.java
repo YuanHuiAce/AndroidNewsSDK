@@ -174,7 +174,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         this.container = container;
         mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -584,8 +584,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
-        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.bg_detail);
+        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.color6);
+        TextUtil.setLayoutBgColor(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
 
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);

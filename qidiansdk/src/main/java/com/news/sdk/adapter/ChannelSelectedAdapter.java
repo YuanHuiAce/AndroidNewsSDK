@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.news.sdk.R;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.ChannelItem;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 
 import java.util.ArrayList;
@@ -87,22 +88,20 @@ public class ChannelSelectedAdapter extends BaseAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
         item_text = (TextView) view.findViewById(R.id.text_item);
         icon = (ImageView) view.findViewById(R.id.icon_new);
-        icon.setBackgroundResource(R.drawable.bg_channel_delete);
+        ImageUtil.setAlphaImage(icon, R.drawable.bg_channel_delete);
         int height = context.getResources().getDrawable(R.drawable.bg_channel_delete).getMinimumHeight();
         RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
         rlItemText.topMargin = height / 2;
         item_text.setLayoutParams(rlItemText);
-        item_text.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, R.drawable.subscribe_item_bg));
+        TextUtil.setLayoutBgResource(context, item_text, R.drawable.subscribe_item_bg);
         ChannelItem channel = getItem(position);
         item_text.setText(channel.getCname());
         if (position == 0) {
-//            item_text.setTextColor(context.getResources().getColor(R.color.subscribe_item_drag_stroke));
-            TextUtil.setTextColor(context, item_text, R.color.subscribe_item_drag_stroke);
+            TextUtil.setTextColor(context, item_text, R.color.color3);
             item_text.setEnabled(false);
             icon.setVisibility(View.GONE);
         } else {
-            TextUtil.setTextColor(context, item_text, R.color.newsFeed_titleColor);
-            item_text.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, R.drawable.subscribe_item_bg));
+            TextUtil.setTextColor(context, item_text, R.color.color2);
             icon.setVisibility(View.VISIBLE);
         }
         if (isChanged && (position == holdPosition) && !isItemShow) {

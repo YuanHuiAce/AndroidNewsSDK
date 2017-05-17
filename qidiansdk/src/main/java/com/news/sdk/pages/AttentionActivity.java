@@ -535,5 +535,10 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
 //        }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }
 

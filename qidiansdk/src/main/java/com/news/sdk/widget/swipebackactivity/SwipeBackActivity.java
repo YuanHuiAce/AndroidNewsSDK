@@ -56,4 +56,9 @@ public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivit
         Utils.convertActivityToTranslucent(this);
         getSwipeBackLayout().scrollToFinishActivity();
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

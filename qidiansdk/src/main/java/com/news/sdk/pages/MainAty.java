@@ -77,6 +77,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mSaveData.put(channelId, results);
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
 
     private class UserLoginReceiver extends BroadcastReceiver {
 

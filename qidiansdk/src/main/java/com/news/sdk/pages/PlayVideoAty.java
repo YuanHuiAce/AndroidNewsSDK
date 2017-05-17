@@ -138,6 +138,11 @@ public class PlayVideoAty extends BaseActivity {
         mPlayVideoWebView.loadUrl(mVideoUrl);
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
     private class InsideWebViewClient extends WebViewClient {
 
         @Override

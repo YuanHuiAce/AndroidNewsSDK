@@ -39,7 +39,6 @@ import com.news.sdk.adapter.NewsFeedAdapter;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
-import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
 import com.news.sdk.database.VideoChannelDao;
 import com.news.sdk.entity.ChannelItem;
@@ -254,10 +253,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 }
             }
         });
-        /**更新用户登录图标*/
-        User user = SharedPreManager.mInstance(activity).getUser(activity);
-        ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, user.getUserIcon(), R.drawable.btn_user_center);
-        TextUtil.setLayoutBgResource(activity, mivUserCenter, R.color.color6);
+        setTheme();
         /**注册用户登录广播*/
         mReceiver = new InterNetReceiver();
         IntentFilter filter = new IntentFilter();
@@ -599,7 +595,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         TextUtil.setLayoutBgResource(activity, mMainView, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mChannelExpand, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mDividingLine, R.color.color5);
-        mChannelTabStrip.setBackgroundColor(ThemeManager.getCurrentThemeRes(activity, R.color.color6));
+        TextUtil.setLayoutBgResource(mContext, mtvNewWorkBar, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, mChannelTabStrip, R.color.color6);
+        TextUtil.setTextColor(mContext, mtvNewWorkBar, R.color.color10);
         mChannelTabStrip.notifyDataSetChanged();
     }
 

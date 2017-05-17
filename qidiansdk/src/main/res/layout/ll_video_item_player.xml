@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="@color/color10"
+                android:background="#30101010"
                 android:paddingBottom="4dp"
                 android:paddingLeft="13dp"
                 android:paddingRight="13dp"

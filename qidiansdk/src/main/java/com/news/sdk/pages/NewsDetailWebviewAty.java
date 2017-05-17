@@ -205,6 +205,11 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
     private class MyWebViewDownLoadListener implements DownloadListener {
 
         @Override

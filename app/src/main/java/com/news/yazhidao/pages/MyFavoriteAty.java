@@ -338,4 +338,9 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
             }
         }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

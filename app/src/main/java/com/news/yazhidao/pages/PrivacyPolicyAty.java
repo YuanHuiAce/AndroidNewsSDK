@@ -52,4 +52,9 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

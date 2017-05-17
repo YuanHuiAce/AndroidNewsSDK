@@ -51,7 +51,6 @@ import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
-import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
 import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.ADLoadNewsFeedEntity;
@@ -97,7 +96,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener, ThemeManager.OnThemeChangeListener {
+public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener {
     private static final String TAG = NewsDetailVideoFgt.class.getSimpleName();
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private NewsDetail mResult;
@@ -198,7 +197,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         this.container = container;
         mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
+//        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -477,7 +476,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
+//        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
@@ -798,11 +797,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
             mCommentLayout.addView(ccView);
         }
-    }
-
-    @Override
-    public void onThemeChanged() {
-
     }
 
     class CommentHolder {

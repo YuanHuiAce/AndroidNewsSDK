@@ -99,4 +99,9 @@ public class NewsWebviewAty extends BaseActivity {
         // 加载空白页
         webView.loadUrl("about:blank");
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }
