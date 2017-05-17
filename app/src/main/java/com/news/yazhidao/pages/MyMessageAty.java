@@ -38,4 +38,9 @@ public class MyMessageAty extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

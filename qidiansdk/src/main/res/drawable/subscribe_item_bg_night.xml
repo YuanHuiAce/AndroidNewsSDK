@@ -5,39 +5,39 @@
         <layer-list>
             <item>
                 <shape>
-                    <stroke android:width="1dip" android:color="@color/Gray" android:dashWidth="4.0dip" android:dashGap="2.0dip" />
-                    <solid android:color="@color/Gray" />
-                    <corners android:radius="6dp" />
+                    <stroke android:width="1dip" android:color="@color/color5_night" android:dashWidth="4.0dip" android:dashGap="2.0dip" />
+                    <solid android:color="@color/color9_night" />
+                    <corners android:radius="3dp" />
                 </shape>
             </item>
         </layer-list>
     </item>
     <item android:state_selected="true">
         <shape>
-            <stroke android:width="1dip" android:color="@color/Gray" />
-            <solid android:color="@color/Gray" />
-            <corners android:radius="6dp" />
+            <stroke android:width="1dip" android:color="@color/color5_night" />
+            <solid android:color="@color/color9_night" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape>
-            <stroke android:width="1dip" android:color="@color/Gray" />
-            <solid android:color="@color/Gray" />
-            <corners android:radius="6dp" />
+            <stroke android:width="1dip" android:color="@color/color5_night" />
+            <solid android:color="@color/color6_night" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape>
-            <stroke android:width="1dip" android:color="@color/Gray" />
-            <solid android:color="@color/Gray" />
-            <corners android:radius="6dp" />
+            <stroke android:width="1dip" android:color="@color/color5_night" />
+            <solid android:color="@color/color9_night" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <stroke android:width="1dip" android:color="@color/Gray" />
-            <solid android:color="@color/Gray" />
-            <corners android:radius="6dp" />
+            <stroke android:width="1dip" android:color="@color/color5_night" />
+            <solid android:color="@color/color9_night" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
 </selector>

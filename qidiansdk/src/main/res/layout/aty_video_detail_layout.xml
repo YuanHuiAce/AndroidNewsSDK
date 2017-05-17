@@ -232,7 +232,7 @@
             android:background="#88000000"
             android:visibility="gone" />
 
-        <include layout="@layout/detail_carefor_layout" />
+        <include layout="@layout/detail_careful_layout" />
     </RelativeLayout>
 
     <RelativeLayout

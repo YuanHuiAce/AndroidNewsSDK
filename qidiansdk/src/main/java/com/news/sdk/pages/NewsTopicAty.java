@@ -117,8 +117,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
             }
         });
         mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
-        TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.white);
-        TextUtil.setTextColor(mContext, mTopicTitle, R.color.new_color7);
+        TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.color6);
+        TextUtil.setTextColor(mContext, mTopicTitle, R.color.color2);
         mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mlvSpecialNewsFeed.setMainFooterView(true);
         mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
@@ -287,6 +287,11 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     public void shareDismiss() {
         mivShareBg.startAnimation(mAlphaAnimationOut);
         mivShareBg.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {

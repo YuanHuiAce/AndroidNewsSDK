@@ -74,7 +74,8 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     private LinearLayout bgLayout;
     private LinearLayout bgMyChannel, bgMoreChannel;
     private TextView tvCategory, tvMoreCategory, tvTitle;
-    private RelativeLayout rlTitle;
+    private View mDividingLine, mbgLine, mLine1, mLine2;
+    private RelativeLayout mDetailHeader;
 
     @Override
     protected boolean translucentStatus() {
@@ -89,12 +90,16 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     @Override
     protected void initializeViews() {
         bgLayout = (LinearLayout) findViewById(R.id.subscribe_main_layout);
-        rlTitle = (RelativeLayout) findViewById(R.id.title_bar);
+        mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
         bgMyChannel = (LinearLayout) findViewById(R.id.my_channel_layout);
         bgMoreChannel = (LinearLayout) findViewById(R.id.more_channel_layout);
         userGridView = (SelectedGridView) findViewById(R.id.userGridView);
         otherGridView = (NormalGridView) findViewById(R.id.otherGridView);
         tvTitle = (TextView) findViewById(R.id.title);
+        mDividingLine = findViewById(R.id.mHeaderDivider);
+        mbgLine = findViewById(R.id.bg_line);
+        mLine1 = findViewById(R.id.line1);
+        mLine2 = findViewById(R.id.line2);
         tvCategory = (TextView) findViewById(R.id.my_category_text);
         tvMoreCategory = (TextView) findViewById(R.id.more_category_text);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
@@ -106,13 +111,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
             }
         });
         ThemeManager.registerThemeChangeListener(this);
-        TextUtil.setLayoutBgResource(this, rlTitle, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgLayout, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.white);
-        TextUtil.setTextColor(this, tvCategory, R.color.new_color7);
-        TextUtil.setTextColor(this, tvMoreCategory, R.color.new_color7);
-        TextUtil.setTextColor(this, tvTitle, R.color.newsFeed_titleColor);
+        setTheme();
     }
 
     @Override
@@ -130,15 +129,25 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         userGridView.setOnItemClickListener(this);
     }
 
+    public void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDividingLine, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mbgLine, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine1, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
+        TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.color6);
+        TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.color6);
+        TextUtil.setLayoutBgResource(this, userGridView, R.color.color6);
+        TextUtil.setLayoutBgResource(this, otherGridView, R.color.color6);
+        TextUtil.setTextColor(this, tvCategory, R.color.color3);
+        TextUtil.setTextColor(this, tvMoreCategory, R.color.color3);
+        TextUtil.setTextColor(this, tvTitle, R.color.color2);
+    }
+
     @Override
     public void onThemeChanged() {
-        TextUtil.setLayoutBgResource(this, rlTitle, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgLayout, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.white);
-        TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.white);
-        TextUtil.setTextColor(this, tvCategory, R.color.new_color7);
-        TextUtil.setTextColor(this, tvMoreCategory, R.color.new_color7);
-        TextUtil.setTextColor(this, tvTitle, R.color.newsFeed_titleColor);
+        setTheme();
         userAdapter.notifyDataSetChanged();
         otherAdapter.notifyDataSetChanged();
     }

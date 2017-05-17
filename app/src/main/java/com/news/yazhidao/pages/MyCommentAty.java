@@ -269,4 +269,9 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

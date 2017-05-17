@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:id="@+id/mChannelLayout"
         android:layout_width="match_parent"
@@ -34,7 +33,6 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/color6"
             android:padding="12dp"
             android:scaleType="centerInside"
             android:src="@drawable/channel_more_selector" />
@@ -44,26 +42,23 @@
         android:id="@+id/mDividingLine"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/mChannelLayout"
-        android:background="@color/color5" />
-
-    <TextView
-        android:id="@+id/mNetWorkBar"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_below="@id/mDividingLine"
-        android:background="@color/white80"
-        android:gravity="center"
-        android:text="无法连接到网络,请检查网络设置>"
-        android:textColor="@color/new_color2"
-        android:textSize="@dimen/font4"
-        android:visibility="gone" />
+        android:layout_below="@id/mChannelLayout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mNetWorkBar" />
+        android:layout_below="@+id/mDividingLine" />
+
+    <TextView
+        android:id="@+id/mNetWorkBar"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_below="@+id/mDividingLine"
+        android:gravity="center"
+        android:text="无法连接到网络,请检查网络设置>"
+        android:textSize="@dimen/font4"
+        android:visibility="gone" />
 
     <com.news.sdk.widget.FeedDislikePopupWindow
         android:id="@+id/feedDislike_popupWindow"
@@ -96,6 +91,7 @@
             android:src="@drawable/video_close" />
 
     </RelativeLayout>
+
     <com.news.sdk.widget.VideoContainer
         android:id="@+id/feed_full_screen"
         android:layout_width="match_parent"

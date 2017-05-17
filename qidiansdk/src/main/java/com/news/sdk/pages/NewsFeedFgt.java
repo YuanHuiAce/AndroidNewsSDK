@@ -162,18 +162,20 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
     public void initTheme() {
-        mlvNewsFeed.setHeaderLoadingView();
-        TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
-        TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
-        TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
-        TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
-        ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
-        TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
-        TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
-        mAdapter.notifyDataSetChanged();
+        if (mlvNewsFeed != null) {
+            mlvNewsFeed.setHeaderLoadingView();
+            TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
+            TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
+            TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
+            TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
+            ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
+            TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
+            TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public interface NewsSaveDataCallBack {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/careforLayout"
+    android:id="@+id/carefulLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -16,13 +16,13 @@
         android:paddingRight="17dp">
 
         <ImageView
-            android:id="@+id/carefor_Image"
+            android:id="@+id/careful_Image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/carefor_image" />
 
         <TextView
-            android:id="@+id/carefor_Text"
+            android:id="@+id/careful_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"

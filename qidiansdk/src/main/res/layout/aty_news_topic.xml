@@ -54,7 +54,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/mHeaderDivider"
         android:animationCache="false"
-        android:background="@color/color7"
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:childDivider="@null"
         android:childIndicator="@null"

@@ -14,7 +14,7 @@ import com.news.sdk.widget.swipebackactivity.SwipeBackActivityHelper;
 /**
  * Created by feng on 3/23/15.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener{
 
     protected SwipeBackActivityHelper mHelper;
 

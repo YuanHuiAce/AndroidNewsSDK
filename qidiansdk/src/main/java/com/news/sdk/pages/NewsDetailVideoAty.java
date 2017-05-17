@@ -96,9 +96,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public TextView mDetailCommentNum;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
-    private TextView mImageWallDesc, carefor_Text;
+    private TextView mImageWallDesc, careful_Text;
     private View mDetailBottomBanner;
-    public ImageView mDetailCommentPic, mDetailFavorite, carefor_Image;
+    public ImageView mDetailCommentPic, mDetailFavorite, careful_Image;
     public ViewPager mNewsDetailViewPager;
     private RefreshPageBroReceiver mRefreshReceiver;
     private NewsFeed mNewsFeed;
@@ -106,7 +106,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private String mNid;
     private NewsDetailCommentDao newsDetailCommentDao;
 
-    private LinearLayout careforLayout;
+    private LinearLayout carefulLayout;
     private boolean isFavorite;
     private RelativeLayout mSmallLayout;
     private FrameLayout mSmallScreen;
@@ -128,6 +128,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     public void setHandler(Handler handler) {
         mHandler = handler;
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 
     /**
@@ -174,7 +179,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
         isShowComment = getIntent().getBooleanExtra(NewsCommentFgt.KEY_SHOW_COMMENT, false);
         cPosition = getIntent().getIntExtra("position", 0);
-        careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
+        carefulLayout = (LinearLayout) findViewById(R.id.carefulLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
@@ -198,8 +203,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
-        carefor_Text = (TextView) findViewById(R.id.carefor_Text);
-        carefor_Image = (ImageView) findViewById(R.id.carefor_Image);
+        careful_Text = (TextView) findViewById(R.id.careful_Text);
+        careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailComment.setOnClickListener(this);
         mDetailShare = (ImageView) findViewById(R.id.mDetailShare);
@@ -562,17 +567,17 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void calefulAnimation() {
+    public void carefulAnimation() {
         //图片渐变模糊度始终
         AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
         //渐变时间
         alphaAnimation.setDuration(500);
-        careforLayout.startAnimation(alphaAnimation);
+        carefulLayout.startAnimation(alphaAnimation);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                if (careforLayout.getVisibility() == View.GONE) {
-                    careforLayout.setVisibility(View.VISIBLE);
+                if (carefulLayout.getVisibility() == View.GONE) {
+                    carefulLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -584,7 +589,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                         AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
                         //渐变时间
                         alphaAnimationEnd.setDuration(500);
-                        careforLayout.startAnimation(alphaAnimationEnd);
+                        carefulLayout.startAnimation(alphaAnimationEnd);
                         alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -593,8 +598,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                if (careforLayout.getVisibility() == View.VISIBLE) {
-                                    careforLayout.setVisibility(View.GONE);
+                                if (carefulLayout.getVisibility() == View.VISIBLE) {
+                                    carefulLayout.setVisibility(View.GONE);
                                 }
 
                             }
@@ -634,26 +639,26 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                carefor_Image.setImageResource(R.drawable.hook_image);
+                careful_Image.setImageResource(R.drawable.hook_image);
                 if (isFavorite) {
                     isFavorite = false;
-                    carefor_Text.setText("收藏已取消");
+                    careful_Text.setText("收藏已取消");
                     SharedPreManager.mInstance(NewsDetailVideoAty.this).myFavoritRemoveItem(mNid);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;
-                    carefor_Text.setText("收藏成功");
+                    careful_Text.setText("收藏成功");
                     Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
                     SharedPreManager.mInstance(NewsDetailVideoAty.this).myFavoriteSaveList(mNewsFeed);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                 }
-                calefulAnimation();
+                carefulAnimation();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                carefor_Text.setText("收藏失败");
-                calefulAnimation();
+                careful_Text.setText("收藏失败");
+                carefulAnimation();
             }
         });
         HashMap<String, String> header = new HashMap<>();

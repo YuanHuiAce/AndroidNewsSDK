@@ -107,4 +107,9 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
                 break;
         }
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

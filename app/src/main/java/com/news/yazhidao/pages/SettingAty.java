@@ -270,4 +270,9 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         builder.setCancelable(false);
         builder.create().show();
     }
+
+    @Override
+    public void onThemeChanged() {
+
+    }
 }

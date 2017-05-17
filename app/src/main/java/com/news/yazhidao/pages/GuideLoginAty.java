@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.news.sdk.common.BaseActivity;
@@ -250,5 +249,10 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
             progressDialog.setMessage("登录中...");
             progressDialog.show();
         }
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 }

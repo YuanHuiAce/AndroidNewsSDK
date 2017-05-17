@@ -480,6 +480,11 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onThemeChanged() {
+
+    }
+
 
     private class TopicTextWatcher implements TextWatcher {
 
