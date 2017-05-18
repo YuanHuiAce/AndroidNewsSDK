@@ -1182,10 +1182,12 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                 adtvTitle.setText(newsFeed.getTitle());
                                 final ArrayList<String> imgs = newsFeed.getImgs();
                                 if (!TextUtil.isListEmpty(imgs)) {
+                                    ImageUtil.setAlphaImage(adImageView);
                                     mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
                                     adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                                         @Override
                                         public void onGlobalLayout() {
+                                            ImageUtil.setAlphaImage(adImageView);
                                             mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
                                         }
                                     });
@@ -1250,11 +1252,13 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adtvTitle.setText(dataRef.getDesc());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
+                    ImageUtil.setAlphaImage(adImageView);
                     mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
                     adImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
                             mRequestManager.load(url).placeholder(R.drawable.bg_load_default_small).into(adImageView);
+                            ImageUtil.setAlphaImage(adImageView);
                         }
                     });
                 }

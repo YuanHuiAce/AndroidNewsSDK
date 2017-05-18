@@ -136,8 +136,7 @@
                 android:layout_marginTop="2dp"
                 android:background="@color/bg_detail"
                 android:gravity="center"
-                android:textColor="@color/new_color2"
-                android:textSize="10sp" />
+                android:textSize="@dimen/font6" />
         </FrameLayout>
 
         <TextView

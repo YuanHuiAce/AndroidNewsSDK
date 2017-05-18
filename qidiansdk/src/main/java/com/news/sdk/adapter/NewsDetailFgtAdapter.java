@@ -28,6 +28,7 @@ import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.TextViewExtend;
@@ -167,7 +168,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpCard.height = cardHeight;
             ivCard.setLayoutParams(lpCard);
             if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
-                Glide.with(mContext).load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
+                ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.title_img_View));
+                mRequestManager.load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
             }
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
@@ -255,7 +257,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     }
 
     private void setBottomLineColor(ImageView imageView) {
-        TextUtil.setLayoutBgResource(mContext, imageView, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, imageView, R.color.color5);
     }
 
     private void setNewsFeedReadAndUploadUserAction(RelatedItemEntity relatedItemEntity, String formPage, String toPage) {
@@ -283,7 +285,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
      * @param relatedItemEntity
      */
     private void setNewsContentClick(final RelativeLayout rlNewsContent, final RelatedItemEntity relatedItemEntity, final TextView tvTitle) {
-        TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_feed_list_select);
+        TextUtil.setLayoutBgResource(mContext, rlNewsContent, R.drawable.bg_detail_list_select);
         final float[] down_x = new float[1];
         final float[] down_y = new float[1];
         final float[] up_x = new float[1];
