@@ -743,7 +743,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceViewText(TextViewExtend textView, String strText) {
-        if (strText != null && !"".equals(strText)) {
+        if (!TextUtil.isEmptyString(strText)) {
             textView.setText(strText);
             TextUtil.setTextColor(mContext, textView, R.color.color3);
         }
@@ -946,11 +946,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             return;
         }
         tag.setText(content);
-//        tag.setGravity(Gravity.CENTER_VERTICAL);
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
-//        params.width = DensityUtil.dip2px(mContext, 24);
-//        params.height = DensityUtil.dip2px(mContext, 11);
-//        tag.setLayoutParams(params);
     }
 
     int height;

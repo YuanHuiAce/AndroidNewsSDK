@@ -33,6 +33,7 @@ import com.news.sdk.adapter.SearchListViewOpenAdapter;
 import com.news.sdk.adapter.SearchListViewOpenAdapter.onFocusItemClick;
 import com.news.sdk.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.sdk.application.QiDianApplication;
+import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.AttentionListEntity;
@@ -48,7 +49,6 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.HotLabelsLayout;
-import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONException;
 
@@ -61,9 +61,8 @@ import java.util.List;
 /**
  * 搜索
  */
-public class TopicSearchAty extends SwipeBackActivity implements View.OnClickListener {
+public class TopicSearchAty extends BaseActivity implements View.OnClickListener {
 
-    public final static String KEY_NOT_NEED_OPEN_HOME_ATY = "KEY_NOT_NEED_OPEN_HOME_ATY";
     /**
      * 标签页的容量
      */
@@ -91,6 +90,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
     private RelativeLayout HistoryLayout, HotSearchLayout, bgLayout;
     private boolean misPullUpToRefresh = false;
+    private LinearLayout mFootView;
 
     @Override
     protected boolean translucentStatus() {
@@ -132,7 +132,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         mSearchListView.setAdapter(mNewsFeedAdapter);
         mSearchListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mSearchListViewOpen.setMode(PullToRefreshBase.Mode.DISABLED);
-
         addListViewHFView();
         mSearchListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -356,7 +355,6 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         requestQueue.add(request);
     }
 
-    LinearLayout mFootView;
 
     public void addListViewHFView() {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);

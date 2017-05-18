@@ -138,11 +138,12 @@ public class CommonViewHolder {
         }
         if (!TextUtil.isEmptyString(strImg)) {
             requestManager.load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
-        } else
+        } else {
             requestManager.load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+        }
     }
 
-    public void setGlideDrawViewURI(RequestManager requestManager,int drawView, String strImg, int width, int height, int rType) {
+    public void setGlideDrawViewURI(RequestManager requestManager, int drawView, String strImg, int width, int height, int rType) {
         ImageView imageView = getView(drawView);
         if (!TextUtil.isEmptyString(strImg)) {
             if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
@@ -167,7 +168,7 @@ public class CommonViewHolder {
         }
     }
 
-    public void setGlideDrawViewURI(RequestManager requestManager,int drawView, String strImg, int position) {
+    public void setGlideDrawViewURI(RequestManager requestManager, int drawView, String strImg, int position) {
         ImageView imageView = getView(drawView);
         if (!TextUtil.isEmptyString(strImg)) {
             requestManager.load(Uri.parse(strImg)).placeholder(R.drawable.m_r_q1).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);

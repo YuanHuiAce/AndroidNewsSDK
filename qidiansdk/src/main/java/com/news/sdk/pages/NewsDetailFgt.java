@@ -555,7 +555,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
-        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 36);
+        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
         adLayoutParams.width = imageWidth;
         if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID)) {
             adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
