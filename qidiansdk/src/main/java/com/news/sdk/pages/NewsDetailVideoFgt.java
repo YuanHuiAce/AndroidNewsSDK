@@ -51,6 +51,7 @@ import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
 import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.ADLoadNewsFeedEntity;
@@ -98,7 +99,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener {
+public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdListener, ThemeManager.OnThemeChangeListener {
     private static final String TAG = NewsDetailVideoFgt.class.getSimpleName();
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private NewsDetail mResult;
@@ -175,7 +176,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private View detail_viewPoint_line2;
     private View detail_shared_hotComment_line1;
     private View detail_shared_hotComment_line2;
-    private TextView detail_viewPoint;
+    private TextView detailViewPoint;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -282,6 +283,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
 //            }
 //        });
+        initPlayer();
 
         mAdapter = new NewsDetailFgtAdapter(mContext, null);
         addHeadView(inflater, container);
@@ -294,7 +296,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 loadADData();
             }
         }, 1000);
-        initPlayer();
+
         return rootView;
     }
 
@@ -391,6 +393,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
+        detail_viewPoint_line1 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line1);
+        detail_viewPoint_line2 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line2);
+        detailViewPoint = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         String icon = mResult.getIcon();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
@@ -455,8 +460,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         detail_shared_hotComment_line1 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line1);
         detail_shared_hotComment_line2 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line2);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
-        detail_viewPoint_line1 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line1);
-        detail_viewPoint_line2 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line2);
+
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
@@ -509,15 +513,25 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private void setTheme() {
         TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
-//        TextUtil.setLayoutBgResource(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
         TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
         TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
         TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
-//        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line1, R.color.color1);
-//        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line2, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_line1, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_line2, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, detail_viewPoint_line1, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, detail_viewPoint_line2, R.color.color5);
+        TextUtil.setTextColor(mContext, detailViewPoint, R.color.color2);
+        TextUtil.setTextColor(mContext, mDetailVideoTitle, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
+        TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
+        TextUtil.setLayoutBgResource(mContext,relativeLayout_attention,R.color.color10);
         ImageUtil.setAlphaImage(adImageView);
+        ImageUtil.setAlphaImage(mClose);
+        ImageUtil.setAlphaImage(mDetailBg);
+        ImageUtil.setAlphaView(mDetailLeftBack);
+        if (vplayer!=null)
+            ImageUtil.setAlphaView(vplayer);
     }
 
 
@@ -831,6 +845,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         }
     }
 
+    @Override
+    public void onThemeChanged() {
+        setTheme();
+    }
+
     class CommentHolder {
         ImageView ivHeadIcon;
         TextViewExtend tvName;
@@ -838,6 +857,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextViewExtend tvTime;
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
+        ImageView mSelectCommentDivider;
 
         public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
@@ -846,6 +866,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
             tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
+            mSelectCommentDivider = (ImageView) convertView.findViewById(R.id.mSelectCommentDivider);
+
+            ImageUtil.setAlphaImage(ivHeadIcon);
+            TextUtil.setTextColor(mContext, tvName, R.color.color1);
+            TextUtil.setTextColor(mContext, tvTime, R.color.color3);
+            TextUtil.setTextColor(mContext, tvPraiseCount, R.color.color3);
+            TextUtil.setTextColor(mContext, tvContent, R.color.color2);
+            TextUtil.setLayoutBgResource(mContext, mSelectCommentDivider, R.color.color5);
         }
     }
 

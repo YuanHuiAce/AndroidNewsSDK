@@ -186,6 +186,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpVideoSmall.width = mCardWidth;
             lpVideoSmall.height = mCardHeight;
             ivVideoSmall.setLayoutParams(lpVideoSmall);
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
@@ -224,6 +225,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             } else {
                 holder.getView(R.id.line_bottom_imageView).setVisibility(View.VISIBLE);
             }
+            setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         }
     }
 
@@ -234,6 +236,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         } else {
             durationView.setText("");
         }
+//        TextUtil.setTextColor(mContext, durationView, R.color.color10);
+        ImageUtil.setAlphaView(durationView);
     }
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {

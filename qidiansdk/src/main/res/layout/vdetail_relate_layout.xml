@@ -9,7 +9,7 @@
         android:layout_marginTop="18dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_detail">
+       >
 
         <include
             android:id="@+id/adLayout"
@@ -97,46 +97,5 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/detail_shared_TitleLayout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginLeft="16dp"-->
-    <!--android:layout_marginRight="16dp"-->
-    <!--android:visibility="gone">-->
-
-    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-    <!--&lt;!&ndash;android:id="@+id/detail_point"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_width="20dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_height="20dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_marginTop="14dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:background="@drawable/ic_detail_point" />&ndash;&gt;-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/detail_ViewPoint"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="相关视频"-->
-    <!--android:textColor="@color/detail_share_TopTitleColor"-->
-    <!--android:textSize="@dimen/new_font4" />-->
-
-    <!--<View-->
-    <!--android:id="@+id/detail_ViewPoint_Line1"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_alignRight="@id/detail_ViewPoint"-->
-    <!--android:layout_below="@id/detail_ViewPoint"-->
-    <!--android:layout_marginTop="6dp"-->
-    <!--android:background="@color/new_color2" />-->
-
-    <!--<View-->
-    <!--android:id="@+id/detail_ViewPoint_Line2"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_below="@id/detail_ViewPoint"-->
-    <!--android:layout_marginTop="6dp"-->
-    <!--android:layout_toRightOf="@id/detail_ViewPoint_Line1"-->
-    <!--android:background="@color/new_color4" />-->
-    <!--</RelativeLayout>-->
 
 </LinearLayout>

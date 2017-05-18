@@ -120,7 +120,9 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
-    <include layout="@layout/detail_attention_item" />
+    <include layout="@layout/detail_attention_item"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"

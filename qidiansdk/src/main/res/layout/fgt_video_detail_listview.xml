@@ -11,7 +11,6 @@
     <RelativeLayout
         android:id="@+id/detial_video_show"
         android:layout_width="match_parent"
-        android:background="#010101"
         android:layout_height="210dp">
 
         <ImageView
@@ -22,8 +21,8 @@
 
         <ImageView
             android:id="@+id/_detail_image_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_centerInParent="true"
             android:src="@drawable/video_play" />
     </RelativeLayout>

@@ -1356,8 +1356,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
             TextUtil.setTextColor(mContext,tv,R.drawable.text_video_channel_selector);
             tv.setText(videoChannel.getCname());
+
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
         }
+        if (mChannelId==44)
+        scid=localChannelItems.get(1).getId();
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

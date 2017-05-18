@@ -122,6 +122,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private boolean isShowComment;
     public int cPosition;
     private RelativeLayout mNoNetShow;
+    private View mBottomLine;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -138,12 +139,15 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     private void setTheme() {
-//        TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailAddComment, R.drawable.user_add_comment);
+        TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
+        TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
 
     }
 
@@ -193,9 +197,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         cPosition = getIntent().getIntExtra("position", 0);
         carefulLayout = (LinearLayout) findViewById(R.id.carefulLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
+        mBottomLine = findViewById(R.id.mBottomLine);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNoNetShow = (RelativeLayout) findViewById(R.id.video_show);
+        mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
         mNewsLoadingImg.setOnClickListener(this);
 
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);

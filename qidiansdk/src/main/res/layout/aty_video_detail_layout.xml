@@ -6,7 +6,7 @@
     >
 
     <RelativeLayout
-        android:id="@+id/video_show"
+        android:id="@+id/nonet_show"
         android:layout_width="match_parent"
         android:layout_height="210dp"
         android:background="#101010"
@@ -78,7 +78,9 @@
             android:id="@+id/fl_title_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:background="@color/transparent"
+            >
 
             <RelativeLayout
                 android:id="@+id/mDetailHeader"
@@ -114,8 +116,8 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             >
-
             <View
+                android:id="@+id/mBottomLine"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#e4e4e4" />

@@ -10,7 +10,9 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+
+        />
 
     <com.news.sdk.widget.TextViewExtend
         android:id="@+id/news_source_TextView"
