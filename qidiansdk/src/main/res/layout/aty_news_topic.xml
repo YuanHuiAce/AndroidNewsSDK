@@ -37,16 +37,14 @@
             android:ellipsize="end"
             android:gravity="center"
             android:lines="1"
-            android:textColor="@color/new_color7"
-            android:textSize="@dimen/new_font8" />
+            android:textSize="@dimen/font3" />
     </RelativeLayout>
 
     <View
         android:id="@+id/mHeaderDivider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@+id/mTopicHeader"
-        android:background="@color/new_color5" />
+        android:layout_below="@+id/mTopicHeader" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
         android:id="@+id/news_Topic_listView"
@@ -71,9 +69,7 @@
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/mHeaderDivider"
-        android:background="@color/white"
-        android:visibility="visible">
+        android:layout_below="@+id/mHeaderDivider">
 
         <ImageView
             android:id="@+id/mNewsLoadingImg"
@@ -83,11 +79,10 @@
             android:maxHeight="90dp"
             android:maxWidth="90dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_news_detail_reload"
-            android:visibility="gone" />
-
-        <include layout="@layout/qd_loading_view_anim" />
+            android:src="@drawable/ic_news_detail_reload" />
     </RelativeLayout>
+
+    <include layout="@layout/qd_loading_view_anim" />
 
     <ImageView
         android:id="@+id/share_bg_imageView"

@@ -5,11 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#f0f0f0" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="36dp">
@@ -33,6 +28,5 @@
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/new_color4" />
+        android:layout_height="1dp" />
 </LinearLayout>

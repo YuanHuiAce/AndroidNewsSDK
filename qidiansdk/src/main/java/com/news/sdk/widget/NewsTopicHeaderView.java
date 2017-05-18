@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.news.sdk.R;
 import com.news.sdk.entity.TopicBaseInfo;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 
 public class NewsTopicHeaderView extends RelativeLayout {
@@ -40,7 +41,8 @@ public class NewsTopicHeaderView extends RelativeLayout {
         mTopicDetail = (TextView) root.findViewById(R.id.mTopicDetail);
         mTopicView = (ImageView) root.findViewById(R.id.mTopicView);
         mHeaderLayout = (RelativeLayout) root.findViewById(R.id.mHeaderDivider);
-        TextUtil.setLayoutBgColor(mContext, mHeaderLayout, R.color.white);
+        TextUtil.setLayoutBgColor(mContext, mHeaderLayout, R.color.color6);
+        TextUtil.setTextColor(mContext, mTopicDetail, R.color.color3);
     }
 
     public void setHeaderViewData(TopicBaseInfo topicBaseInfo, int screenWidth) {
@@ -51,7 +53,10 @@ public class NewsTopicHeaderView extends RelativeLayout {
             layoutParams.width = screenWidth;
             layoutParams.height = (int) (screenWidth * 86 / 360.0f);
             mTopicView.setLayoutParams(layoutParams);
-            Glide.with(mContext).load(Uri.parse(mTopicBaseInfo.getCover())).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
+            ImageUtil.setAlphaImage(mTopicView);
+            Glide.with(mContext).load(Uri.parse(url)).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
+        } else {
+            mTopicView.setVisibility(View.GONE);
         }
         String description = mTopicBaseInfo.getDescription();
         if (!TextUtil.isEmptyString(description)) {
