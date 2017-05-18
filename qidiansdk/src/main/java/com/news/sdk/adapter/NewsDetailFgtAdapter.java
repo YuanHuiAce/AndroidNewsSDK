@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,11 +36,7 @@ import com.qq.e.ads.nativ.NativeADDataRef;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 
 
 /**
@@ -113,10 +108,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         } else if (layoutId == R.layout.qd_ll_news_item_no_pic) {
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), relatedItemEntity.getTitle(), relatedItemEntity.isRead());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
-            if (relatedItemEntity.getPtime() != null)
-                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-            TextUtil.setLayoutBgColor(mContext, holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
@@ -131,12 +123,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             ivCard.setLayoutParams(lpCard);
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), mCardWidth, mCardHeight, relatedItemEntity.getRtype());
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
-            if (relatedItemEntity.getPtime() != null) {
-                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
-            }
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -186,7 +174,6 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-//            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -200,12 +187,8 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, relatedItemEntity.getImgUrl(), 0, 0, relatedItemEntity.getRtype());
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), relatedItemEntity, (TextView) holder.getView(R.id.title_textView));
-//            TextUtil.setLayoutBgColor(mContext, (RelativeLayout) holder.getView(R.id.news_content_relativeLayout), R.color.bg_detail);
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), relatedItemEntity.getDuration());
-            if (relatedItemEntity.getPtime() != null) {
-                setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), relatedItemEntity.getPtime());
-            }
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
 //            newsTag((TextViewExtend) holder.getView(R.id.type_textView), relatedItemEntity.getRtype());
             final TextView tvTitle = holder.getView(R.id.title_textView);
@@ -251,40 +234,14 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
         }
     }
 
-    private void setNewsTime(TextViewExtend tvComment, String updateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date date = dateFormat.parse(updateTime);
-            long between = System.currentTimeMillis() - date.getTime();
-            if (between >= (24 * 3600000)) {
-                tvComment.setText("");
-            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvComment.setText("");
-            } else {
-                int time = (int) (between * 60 / 3600000);
-                if (time > 0) {
-                    tvComment.setText(between * 60 / 3600000 + "分钟前");
-                } else if (time <= 0) {
-                    tvComment.setText("");
-                } else {
-                    tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
-                }
-            }
-        } catch (ParseException e) {
-            tvComment.setText(updateTime);
-            e.printStackTrace();
-        }
-
-    }
-
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             strTitle = strTitle.replace("<font color='#0091fa' >", "").replace("</font>", "");
             tvTitle.setText(strTitle);
             if (isRead) {
-                TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);
+                TextUtil.setTextColor(mContext, tvTitle, R.color.color3);
             } else {
-                TextUtil.setTextColor(mContext, tvTitle, R.color.newsFeed_titleColor);
+                TextUtil.setTextColor(mContext, tvTitle, R.color.color2);
             }
             tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
@@ -293,12 +250,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     private void setSourceViewText(TextViewExtend textView, String strText) {
         if (strText != null && !"".equals(strText)) {
             textView.setText(strText);
-            TextUtil.setTextColor(mContext, textView, R.color.new_color3);
+            TextUtil.setTextColor(mContext, textView, R.color.color3);
         }
     }
 
     private void setBottomLineColor(ImageView imageView) {
-        TextUtil.setLayoutBgResource(mContext, imageView, R.drawable.list_divider);
+        TextUtil.setLayoutBgResource(mContext, imageView, R.color.color6);
     }
 
     private void setNewsFeedReadAndUploadUserAction(RelatedItemEntity relatedItemEntity, String formPage, String toPage) {
@@ -405,36 +362,36 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                 tag.setVisibility(View.VISIBLE);
             }
             content = "热点";
-            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
-            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
+            TextUtil.setTextColor(mContext, tag, R.color.color7);
+            TextUtil.setLayoutBgResource(mContext, tag, R.drawable.newstag_hotspot_shape);
         } else if (type == 2) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "推送";
-            tag.setTextColor(mContext.getResources().getColor(R.color.color1));
-            tag.setBackgroundResource(R.drawable.newstag_push_shape);
+            TextUtil.setTextColor(mContext, tag, R.color.color1);
+            TextUtil.setLayoutBgResource(mContext, tag, R.drawable.newstag_push_shape);
         } else if (type == 3) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "广告";
-            tag.setTextColor(mContext.getResources().getColor(R.color.new_color3));
-            tag.setBackgroundResource(R.drawable.newstag_ad_shape);
+            TextUtil.setTextColor(mContext, tag, R.color.color3);
+            TextUtil.setLayoutBgResource(mContext, tag, R.drawable.newstag_ad_shape);
         } else if (type == 4) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "专题";
-            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
-            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
+            TextUtil.setTextColor(mContext, tag, R.color.color8);
+            TextUtil.setLayoutBgResource(mContext, tag, R.drawable.newstag_video_shape);
         } else if (type == 6) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "视频";
-            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
-            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
+            TextUtil.setTextColor(mContext, tag, R.color.color8);
+            TextUtil.setLayoutBgResource(mContext, tag, R.drawable.newstag_video_shape);
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -442,10 +399,10 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             return;
         }
         tag.setText(content);
-        tag.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
-        params.width = DensityUtil.dip2px(mContext, 20);
-        params.height = DensityUtil.dip2px(mContext, 11);
-        tag.setLayoutParams(params);
+//        tag.setGravity(Gravity.CENTER_VERTICAL);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
+//        params.width = DensityUtil.dip2px(mContext, 24);
+//        params.height = DensityUtil.dip2px(mContext, 11);
+//        tag.setLayoutParams(params);
     }
 }

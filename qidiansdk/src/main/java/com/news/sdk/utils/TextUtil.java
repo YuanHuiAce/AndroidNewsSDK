@@ -189,17 +189,17 @@ public class TextUtil {
      * 生成新闻详情中的css样式
      */
     public static String generateCSS() {
-        String bgColor = "f6f6f6";
-        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
-            bgColor = "f6f6f6";
-        } else {
-            bgColor = "202124";
+        String bgColor = "f8f8f8";
+        String lineColor = "e8e8e8";
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            bgColor = "202020";
+            lineColor = "2a2a2a";
         }
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
                 "body { margin: 14px 18px 18px 18px; background-color: #" + bgColor + ";} " +
                 "h3 { margin: 0px; } h1, h2, h3, h4, h5, h6 { line-height: 150%; font-size: 18px;}" +
-                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
+                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#" + lineColor + ";width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
                 ".content img { width: 100%; }" +
                 ".p_img { text-align: center; }" +
@@ -239,8 +239,8 @@ public class TextUtil {
         String titleColor = "333333";
         String commentColor = "999999";
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
-            titleColor = "e0e0e0";
-            commentColor = "969696";
+            titleColor = "909090";
+            commentColor = "545454";
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() + generateJs() +

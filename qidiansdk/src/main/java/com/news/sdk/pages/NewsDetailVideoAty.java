@@ -35,7 +35,6 @@ import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
-import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsDetailCommentDao;
 import com.news.sdk.entity.NewsDetail;
 import com.news.sdk.entity.NewsFeed;
@@ -64,7 +63,7 @@ import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
  * Created by fengjigang on 15/9/6.
  * 视频详情页
  */
-public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss ,ThemeManager.OnThemeChangeListener{
+public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
     //    public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
@@ -139,7 +138,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     private void setTheme() {
-        TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
+//        TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);
@@ -233,6 +232,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);
+        setTheme();
     }
 
     long lastTime, nowTime;

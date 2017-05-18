@@ -67,6 +67,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -91,6 +92,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -166,6 +168,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private RelativeLayout mDetailSharedTitleLayout;
     private int adPosition;
     private List<NativeADDataRef> marrlist;
+    private View mViewPointLayout;
+    private View mCommentTitleView;
+    private TextView detail_hotComment;
+    private View detail_viewPoint_line1;
+    private View detail_viewPoint_line2;
+    private View detail_shared_hotComment_line1;
+    private View detail_shared_hotComment_line2;
+    private TextView detail_viewPoint;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -327,7 +337,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        lv.addFooterView(mVideoDetailFootView);
 
         //第1部分的CommentTitle
-        final View mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
+        mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
@@ -425,7 +435,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         });
 
         //第2部分的viewPointContent
-        final View mViewPointLayout = inflater.inflate(R.layout.vdetail_relate_layout, container, false);
+        mViewPointLayout = inflater.inflate(R.layout.vdetail_relate_layout, container, false);
         mViewPointLayout.setLayoutParams(layoutParams);
         //延时加载热点评论和相关观点
         new Handler().postDelayed(new Runnable() {
@@ -441,7 +451,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_Hot_Layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
+        detail_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_hotComment);
+        detail_shared_hotComment_line1 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line1);
+        detail_shared_hotComment_line2 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line2);
         mCommentLayout = (LinearLayout) mViewPointLayout.findViewById(R.id.detail_CommentLayout);
+        detail_viewPoint_line1 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line1);
+        detail_viewPoint_line2 = mViewPointLayout.findViewById(R.id.detail_ViewPoint_Line2);
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
@@ -487,7 +502,24 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 loadRelatedData();
             }
         });
+        setTheme();
     }
+
+
+    private void setTheme() {
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
+//        TextUtil.setLayoutBgResource(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
+        TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
+        TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
+//        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line1, R.color.color1);
+//        TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line2, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
+        ImageUtil.setAlphaImage(adImageView);
+    }
+
 
     private void loadData() {
         RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();

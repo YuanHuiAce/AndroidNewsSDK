@@ -3,7 +3,6 @@
     android:id="@+id/detail_shared_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_detail"
     android:orientation="vertical">
 
     <TextView
@@ -14,8 +13,7 @@
         android:layout_marginLeft="15dip"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
-        android:textColor="#333333"
-        android:textSize="17sp" />
+        android:textSize="@dimen/font3" />
 
     <RelativeLayout
         android:id="@+id/detail_container_onlines"

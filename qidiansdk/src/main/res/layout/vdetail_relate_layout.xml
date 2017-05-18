@@ -43,7 +43,7 @@
             android:layout_alignRight="@id/detail_hotComment"
             android:layout_below="@id/detail_hotComment"
             android:layout_marginTop="6dp"
-            android:background="@color/new_color2" />
+           />
 
         <View
             android:id="@+id/detail_shared_hotComment_Line2"
@@ -52,7 +52,7 @@
             android:layout_below="@id/detail_hotComment"
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/detail_shared_hotComment_Line1"
-            android:background="@color/new_color4" />
+            />
     </RelativeLayout>
 
     <LinearLayout
@@ -70,7 +70,6 @@
         android:layout_marginLeft="17dp"
         android:layout_marginRight="17dp"
         android:layout_marginTop="17dp"
-        android:background="@drawable/bg_select_comment_more"
         android:visibility="gone">
 
         <LinearLayout

@@ -25,6 +25,7 @@
             android:id="@+id/footerView_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/font5"
             android:text="上拉获取更多文章"/>
     </LinearLayout>
 
