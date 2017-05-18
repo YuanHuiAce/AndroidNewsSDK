@@ -2,91 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout_attention"
     android:layout_width="match_parent"
-    android:layout_height="67dp"
-    android:layout_margin="18dp"
-    >
-
+    android:layout_height="62dp"
+    android:layout_margin="15dp">
 
     <ImageView
         android:id="@+id/iv_attention_icon"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:padding="8dp" />
-    <!--app:failureImage="@drawable/detail_attention_placeholder"-->
-    <!--app:placeholderImage="@drawable/detail_attention_placeholder"/>-->
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp" />
 
-
-    <LinearLayout
-        android:id="@+id/layout_attention_linear"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/image_attention_line"
-            android:layout_width="1dp"
-            android:layout_height="47dp"
-            android:layout_marginLeft="25dp"
-            android:background="@color/attention_line"
-            android:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/image_attention_success"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/attention_success"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/linearlayout_attention"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="23dp"
-            android:layout_marginRight="23dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/attention_add" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text="关注"
-                android:textColor="@color/attention_text"
-                android:textSize="@dimen/font5" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_attention_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="14dp"
-        android:layout_toLeftOf="@id/layout_attention_linear"
-        android:layout_toRightOf="@id/iv_attention_icon"
-        android:orientation="vertical">
+        android:layout_marginLeft="9dp"
+        android:layout_toRightOf="@+id/iv_attention_icon"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="@dimen/font3" />
 
-        <TextView
-            android:id="@+id/tv_attention_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:lines="1"
-            android:text="音乐风云"
-            android:textColor="@color/black"
-            android:textSize="@dimen/new_font2" />
-    </LinearLayout>
-
+    <TextView
+        android:id="@+id/attention_btn"
+        android:layout_width="64dp"
+        android:layout_height="23dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:gravity="center"
+        android:textSize="@dimen/font7" />
 </RelativeLayout>

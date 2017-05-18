@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
-        changeDayNightMode();
+//        changeDayNightMode();
     }
 
     //设置字体大小不随手机设置而改变

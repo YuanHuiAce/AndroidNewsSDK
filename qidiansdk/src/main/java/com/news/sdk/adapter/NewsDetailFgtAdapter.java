@@ -261,6 +261,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     }
 
     private void setBottomLineColor(ImageView imageView) {
+        RelativeLayout.LayoutParams layout = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+        layout.height = 1;
+        layout.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        layout.leftMargin = DensityUtil.dip2px(mContext, 15);
+        layout.rightMargin = DensityUtil.dip2px(mContext, 15);
+        imageView.setLayoutParams(layout);
         TextUtil.setLayoutBgResource(mContext, imageView, R.color.color5);
     }
 

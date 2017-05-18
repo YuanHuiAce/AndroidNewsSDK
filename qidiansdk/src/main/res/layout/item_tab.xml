@@ -1,20 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:id="@+id/ll_tab_container"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:layout_marginBottom="14dp"--><!--android:layout_marginTop="7dp"--><!--android:gravity="center"--><!--android:orientation="horizontal">--><!--&lt;!&ndash;android:textColor="@drawable/text_video_channel_selector"&ndash;&gt;--><!--android:background="@drawable/bg_video_channel_selector"-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_tabtitle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_video_channel_selector"
-    android:layout_marginBottom="14dp"
-    android:layout_marginTop="7dp"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:textSize="13sp" />
 
-    <TextView
-        android:id="@+id/tv_tabtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@drawable/text_video_channel_selector"
-        android:textSize="13sp"
-        />
-
-</LinearLayout>
+    <!--</LinearLayout>-->

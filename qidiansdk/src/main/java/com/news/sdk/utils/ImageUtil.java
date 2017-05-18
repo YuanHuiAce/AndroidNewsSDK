@@ -29,7 +29,7 @@ public class ImageUtil {
         }
     }
 
-    public static void setAlphaImage(ImageView view) {
+    public static void setAlphaImage(View view) {
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
             view.setAlpha(0.5f);
         } else {
