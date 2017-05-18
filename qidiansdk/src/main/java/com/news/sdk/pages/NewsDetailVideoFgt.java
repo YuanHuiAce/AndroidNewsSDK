@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +68,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -92,6 +94,8 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+
+
 /**
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
@@ -111,14 +115,15 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
     private LinearLayout detail_shared_FriendCircleLayout,
-            detail_shared_CareForLayout, linearlayout_attention,
+            detail_shared_CareForLayout,
             mCommentLayout,
             mNewsDetailHeaderView;
-    private TextView detail_shared_Text, detail_shared_hotComment;
+    private View mCommentTitleView;
+    private TextView detail_shared_Text, detail_shared_hotComment ,attention_btn;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_Hot_Layout, relativeLayout_attention,
             detail_shared_ViewPointTitleLayout, adLayout;
-    private ImageView detail_shared_AttentionImage, image_attention_line, image_attention_success, iv_attention_icon;
+    private ImageView detail_shared_AttentionImage, iv_attention_icon;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiver mRefreshReceiver;
@@ -197,7 +202,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         this.container = container;
         mUser = SharedPreManager.mInstance(mContext).getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.bg_detail);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -302,14 +306,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (requestCode == CommonConstant.REQUEST_ATTENTION_CODE && resultCode == CommonConstant.RESULT_ATTENTION_CODE) {
             isAttention = data.getBooleanExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, false);
             if (isAttention) {
-                image_attention_success.setVisibility(View.VISIBLE);
-                image_attention_line.setVisibility(View.GONE);
-                linearlayout_attention.setVisibility(View.GONE);
+                setAttentionStatus(true);
                 mResult.setConpubflag(1);
             } else {
-                image_attention_success.setVisibility(View.GONE);
-                image_attention_line.setVisibility(View.VISIBLE);
-                linearlayout_attention.setVisibility(View.VISIBLE);
+                setAttentionStatus(false);
                 mResult.setConpubflag(0);
             }
         }
@@ -327,7 +327,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //        lv.addFooterView(mVideoDetailFootView);
 
         //第1部分的CommentTitle
-        final View mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
+        mCommentTitleView = inflater.inflate(R.layout.vdetail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
@@ -375,31 +375,25 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             }
         });
         //关注
-        linearlayout_attention = (LinearLayout) mCommentTitleView.findViewById(R.id.linearlayout_attention);
-        image_attention_line = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_line);
-        image_attention_success = (ImageView) mCommentTitleView.findViewById(R.id.image_attention_success);
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
+        attention_btn = (TextView) mCommentTitleView.findViewById(R.id.attention_btn);
         String icon = mResult.getIcon();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
-            Glide.with(mContext).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
         } else {
-            Glide.with(mContext).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, getResources().getColor(R.color.white))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
             tv_attention_title.setText(name);
         }
         isAttention = mResult.getConpubflag() == 1;
         if (isAttention) {
-            image_attention_success.setVisibility(View.VISIBLE);
-            image_attention_line.setVisibility(View.GONE);
-            linearlayout_attention.setVisibility(View.GONE);
+            setAttentionStatus(true);
         } else {
-            image_attention_success.setVisibility(View.GONE);
-            image_attention_line.setVisibility(View.VISIBLE);
-            linearlayout_attention.setVisibility(View.VISIBLE);
+            setAttentionStatus(false);
         }
         relativeLayout_attention.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,7 +406,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 startActivityForResult(intent, CommonConstant.REQUEST_ATTENTION_CODE);
             }
         });
-        linearlayout_attention.setOnClickListener(new View.OnClickListener() {
+        attention_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 User user = SharedPreManager.mInstance(mContext).getUser(mContext);
@@ -476,7 +470,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
             }
         });
-        TextUtil.setLayoutBgColor(mContext, (LinearLayout) mViewPointLayout, R.color.bg_detail);
         footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
@@ -487,6 +480,20 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 loadRelatedData();
             }
         });
+        setTheme();
+    }
+
+    private void setTheme() {
+        TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mCommentTitleView, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
+        TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
+        ImageUtil.setAlphaImage(adImageView);
+        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.bg_detail_attention);
+        ImageUtil.setAlphaImage(iv_attention_icon);
+        TextUtil.setTextColor(mContext, tv_attention_title, R.color.color2);
     }
 
     private void loadData() {
@@ -588,6 +595,26 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         }
     }
 
+    public void setAttentionStatus(boolean isAttention) {
+        if (isAttention) {
+            attention_btn.setText("已关注");
+            Drawable drawable = getResources().getDrawable(R.drawable.btn_attention_press);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            attention_btn.setCompoundDrawables(drawable, null, null, null);
+            attention_btn.setPadding(DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2));
+            ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
+        } else {
+            attention_btn.setText("关注");
+            Drawable drawable = getResources().getDrawable(R.drawable.btn_attention_nor);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            attention_btn.setCompoundDrawables(drawable, null, null, null);
+            attention_btn.setPadding(DensityUtil.dip2px(mContext, 13), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 2));
+            ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
+        }
+    }
+
     public void setCareForType() {
         if (!NetUtil.checkNetWork(mContext)) {
             ToastUtil.toastShort("无法连接到网络，请稍后再试");
@@ -670,9 +697,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //                    attentionDetailDialog.show();
                     SharedPreManager.mInstance(mContext).save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, true);
                 }
-                image_attention_success.setVisibility(View.VISIBLE);
-                image_attention_line.setVisibility(View.GONE);
-                linearlayout_attention.setVisibility(View.GONE);
+                setAttentionStatus(true);
                 mResult.setConpubflag(1);
                 isNetWork = false;
             }
@@ -680,10 +705,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error.getMessage().indexOf("2003") != -1) {
+                    setAttentionStatus(true);
                     ToastUtil.toastShort("用户已关注该信息！");
-                    image_attention_success.setVisibility(View.VISIBLE);
-                    image_attention_line.setVisibility(View.GONE);
-                    linearlayout_attention.setVisibility(View.GONE);
                     mResult.setConpubflag(1);
                     return;
                 }
@@ -836,7 +859,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             Uri uri = Uri.parse(comment.getAvatar());
             mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         } else {
-            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
@@ -1037,6 +1060,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                         mContext.startActivity(AdIntent);
                                     }
                                 });
+                                LogUtil.userShowLog(result, mContext);
                                 AdUtil.upLoadAd(newsFeed.getAdDetailEntity(), mContext);
                             }
                         }
@@ -1057,7 +1081,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     public void onADLoaded(List<NativeADDataRef> list) {
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
-        AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
         if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
@@ -1073,6 +1096,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         }
                     });
                 }
+                AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
                 dataRef.onExposured(adLayout);
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1393,7 +1417,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 draweeView.setImageResource(R.drawable.bg_load_default_small);
             } else {
                 Uri uri = Uri.parse(strImg);
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
+                mRequestManager.load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(draweeView);
             }
         }

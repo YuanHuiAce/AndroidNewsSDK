@@ -271,9 +271,9 @@ public class TextUtil {
                     /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
                     String imgColor = "1";
                     if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
-                        imgColor = "0.3";
+                        imgColor = "0.5";
                     }
-                    contentBuilder.append("<p style='background-color:rgba(0,0,0," + imgColor + ")' class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "'," + !isLoadImgs + ")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
+                    contentBuilder.append("<p class=\"p_img\"><img style=\"opacity:" + imgColor + "\" src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "'," + !isLoadImgs + ")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());

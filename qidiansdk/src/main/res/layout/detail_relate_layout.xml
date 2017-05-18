@@ -3,7 +3,6 @@
     android:id="@+id/detail_shared_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_detail"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -67,31 +66,16 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/detail_shared_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:text="关心本文，会推荐更多类似的内容"
-        android:textColor="@color/color3"
-        android:textSize="@dimen/font5"
-        android:visibility="gone" />
-
     <include layout="@layout/detail_attention_item" />
 
-    <RelativeLayout
+    <include
+        android:id="@+id/adLayout"
+        layout="@layout/ll_ad_item_big"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            android:id="@+id/adLayout"
-            layout="@layout/ll_ad_item_big"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="22dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <RelativeLayout
         android:id="@+id/detail_Hot_Layout"
@@ -160,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="相关推荐"
-            android:textSize="@dimen/font6"  />
+            android:textSize="@dimen/font6" />
 
         <View
             android:id="@+id/detail_ViewPoint_Line1"

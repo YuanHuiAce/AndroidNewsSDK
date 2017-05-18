@@ -2,6 +2,7 @@ package com.news.sdk.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -28,7 +29,7 @@ public class ImageUtil {
         }
     }
 
-    public static void setAlphaImage(ImageView view) {
+    public static void setAlphaImage(View view) {
         if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
             view.setAlpha(0.5f);
         } else {

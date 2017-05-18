@@ -1187,7 +1187,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                } else {
 //                    newsFeed.setStyle(51);
 //                }
-                newsFeed.setStyle(50);
+                newsFeed.setStyle(51);
                 newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
