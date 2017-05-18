@@ -201,6 +201,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailAddComment, R.drawable.user_add_comment);
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
+        TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
+        TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
         ImageUtil.setAlphaProgressBar(imageAni);
     }
 

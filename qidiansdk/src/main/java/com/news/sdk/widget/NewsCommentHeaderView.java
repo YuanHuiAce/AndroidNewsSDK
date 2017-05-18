@@ -12,11 +12,13 @@ import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.TextUtil;
 
 import static com.news.sdk.R.id.content_layout;
+import static com.news.sdk.R.id.detail_hotComment;
 
 public class NewsCommentHeaderView extends LinearLayout {
 
     private TextView mtvNewsCommentTitle;
-    private TextView mtvNewsCommentContent;
+    private TextView mtvNewsCommentContent, news_comment_hotComment;
+    private View news_comment_hotComment_Line1, news_comment_hotComment_Line2;
     private LinearLayout mllNewsCommentNoCommentsLayout;
     private LinearLayout mllContentLayout;
     private NewsFeed mNewsFeed;
@@ -39,6 +41,9 @@ public class NewsCommentHeaderView extends LinearLayout {
         mtvNewsCommentContent = (TextView) rootView.findViewById(R.id.news_comment_content);
         mllNewsCommentNoCommentsLayout = (LinearLayout) rootView.findViewById(R.id.news_comment_NoCommentsLayout);
         mllContentLayout = (LinearLayout) rootView.findViewById(content_layout);
+        news_comment_hotComment = (TextView) rootView.findViewById(R.id.news_comment_hotComment);
+        news_comment_hotComment_Line1 = rootView.findViewById(R.id.news_comment_hotComment_Line1);
+        news_comment_hotComment_Line2 = rootView.findViewById(R.id.news_comment_hotComment_Line2);
     }
 
     public void setData(NewsFeed newsFeed) {
@@ -47,10 +52,13 @@ public class NewsCommentHeaderView extends LinearLayout {
     }
 
     private void updateView() {
-        TextUtil.setLayoutBgColor(mContext, mllContentLayout, R.color.news_feed_list);
-        TextUtil.setLayoutBgColor(mContext, mllNewsCommentNoCommentsLayout, R.color.news_feed_list);
-        TextUtil.setTextColor(mContext, mtvNewsCommentTitle, R.color.newsFeed_titleColor);
-        TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.new_color3);
+        TextUtil.setTextColor(mContext, news_comment_hotComment, R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, news_comment_hotComment_Line1, R.color.color1);
+        TextUtil.setLayoutBgResource(mContext, news_comment_hotComment_Line2, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, mllContentLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mllNewsCommentNoCommentsLayout, R.color.color6);
+        TextUtil.setTextColor(mContext, mtvNewsCommentTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.color3);
         if (mNewsFeed != null) {
             String title = mNewsFeed.getTitle();
             if (!TextUtil.isEmptyString(title)) {

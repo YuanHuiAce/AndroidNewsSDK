@@ -39,6 +39,7 @@ import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.NewsCommentHeaderView;
@@ -120,12 +121,11 @@ public class NewsCommentFgt extends Fragment {
             layout.topMargin = DensityUtil.dip2px(mContext, 48);
             mNewsCommentList.setLayoutParams(layout);
         }
-        TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.news_feed_list);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
         mNewsCommentList.setAdapter(mCommentsAdapter);
-        mNewsCommentHeaderView = new NewsCommentHeaderView(getActivity());
+        mNewsCommentHeaderView = new NewsCommentHeaderView(mContext);
         ListView lv = mNewsCommentList.getRefreshableView();
         mNewsCommentHeaderView.setData(mNewsFeed);
         lv.addHeaderView(mNewsCommentHeaderView);
@@ -140,8 +140,14 @@ public class NewsCommentFgt extends Fragment {
                 loadData();
             }
         });
+        setTheme();
         loadData();
         return rootView;
+    }
+
+    public void setTheme(){
+        TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
     }
 
     private void loadData() {
@@ -240,13 +246,17 @@ public class NewsCommentFgt extends Fragment {
                 holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
+                holder.mSelectCommentDivider = (ImageView) convertView.findViewById(R.id.mSelectCommentDivider);
+                ImageUtil.setAlphaImage(holder.ivHeadIcon);
+                TextUtil.setTextColor(mContext, holder.tvName, R.color.color1);
+                TextUtil.setTextColor(mContext, holder.tvTime, R.color.color3);
+                TextUtil.setTextColor(mContext, holder.tvPraiseCount, R.color.color3);
+                TextUtil.setTextColor(mContext, holder.tvContent, R.color.color2);
+                TextUtil.setLayoutBgResource(mContext, holder.mSelectCommentDivider, R.color.color5);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            TextUtil.setTextColor(mContext, holder.tvName, R.color.new_color2);
-            TextUtil.setTextColor(mContext, holder.tvContent, R.color.new_color1);
-            TextUtil.setLayoutBgResource(mContext, convertView.findViewById(R.id.mSelectCommentDivider), R.color.new_color4);
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
             final User user = SharedPreManager.mInstance(mContext).getUser(mContext);
@@ -365,5 +375,6 @@ public class NewsCommentFgt extends Fragment {
         TextViewExtend tvTime;
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
+        ImageView mSelectCommentDivider;
     }
 }
