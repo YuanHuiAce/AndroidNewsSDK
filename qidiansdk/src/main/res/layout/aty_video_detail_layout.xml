@@ -240,6 +240,7 @@
         android:layout_height="106dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="48dp"
         android:visibility="gone">
 
         <com.news.sdk.widget.SmallVideoContainer

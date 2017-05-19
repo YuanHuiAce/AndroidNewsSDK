@@ -220,11 +220,12 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             });
             Log.i("tag", "Count" + getCount());
             int count = getCount();
-            if (count != 0 && position == count - 1) {
-                holder.getView(R.id.line_bottom_imageView).setVisibility(View.GONE);
-            } else {
-                holder.getView(R.id.line_bottom_imageView).setVisibility(View.VISIBLE);
-            }
+//            if (count != 0 && position == count - 1) {
+//                holder.getView(R.id.line_bottom_imageView).setVisibility(View.GONE);
+//            } else {
+//                holder.getView(R.id.line_bottom_imageView).setVisibility(View.VISIBLE);
+//            }
+            holder.getView(R.id.line_bottom_imageView).setVisibility(View.VISIBLE);
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
         }
     }

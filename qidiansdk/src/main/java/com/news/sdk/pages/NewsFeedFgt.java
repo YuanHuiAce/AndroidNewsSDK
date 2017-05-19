@@ -93,6 +93,7 @@ import static com.news.sdk.utils.manager.PlayerManager.newsFeed;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
+    private static final String TAG=NewsFeedFgt.class.getSimpleName();
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
 
@@ -160,6 +161,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private ArrayList<VideoChannel> localChannelItems;
     private View tabView;
     private TabLayout mTabLayout;
+    private FrameLayout mContainerTabLayout;
+    private TabLayout mTabLayout1;
+    private View tabView1;
 
     @Override
     public void onThemeChanged() {
@@ -182,11 +186,21 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 ImageUtil.setAlphaView(vPlayer);
             TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
             TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
-            if (mTabLayout!=null) {
+            if (mTabLayout != null) {
+                TextUtil.setLayoutBgResource(mContext, mTabLayout, R.color.color9);
                 for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-                   TextUtil.setLayoutBgResource(mContext,mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle),R.drawable.bg_video_channel_selector);
-//                    mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.ll_tab_container);
-                    TextUtil.setTextColor(mContext,(TextView) mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle),R.drawable.text_video_channel_selector);
+                    View customView = mTabLayout.getTabAt(i).getCustomView();
+                    TextView tabTitle = (TextView) customView.findViewById(R.id.tv_tabtitle);
+                    TextUtil.setLayoutBgResource(mContext, tabTitle, R.drawable.bg_video_channel_selector);
+                }
+            }
+
+            if (mTabLayout1 != null) {
+                TextUtil.setLayoutBgResource(mContext, mTabLayout1, R.color.color9);
+                for (int i = 0; i < mTabLayout1.getTabCount(); i++) {
+                    View customView = mTabLayout1.getTabAt(i).getCustomView();
+                    TextView tabTitle = (TextView) customView.findViewById(R.id.tv_tabtitle);
+                    TextUtil.setLayoutBgResource(mContext, tabTitle, R.drawable.bg_video_channel_selector);
                 }
             }
             mAdapter.notifyDataSetChanged();
@@ -343,6 +357,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mFeedClose = (ImageView) getActivity().findViewById(R.id.feed_video_close);
         //======================================================
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
+        mContainerTabLayout = (FrameLayout) rootView.findViewById(R.id.ll_container_tablayout);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) getActivity().findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
@@ -1126,11 +1141,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         feed.setVisble(true);
                     }
                 }
+
+
 //                if ("44".equals(mstrChannelId) && portrait) {
 ////                    VideoVisibleControl();
-//                    Logger.v(TAG, "firstVisibleItem:" + firstVisibleItem + "getFirstVisibleItem:" + view.getFirstVisiblePosition());
+                    Logger.v(TAG, "firstVisibleItem:" + firstVisibleItem + "getFirstVisibleItem:" + view.getFirstVisiblePosition());
                 if (mChannelId == 44 && portrait) {
                     VideoShowControl();
+                    if (firstVisibleItem > 1) {
+                        mContainerTabLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mContainerTabLayout.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -1340,31 +1362,25 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //========================================视频部分======================================//
 
-    private  boolean isSelected;
-    public void addTabView(LayoutInflater LayoutInflater) {
-        videoChannelDao = new VideoChannelDao(mContext);
-        localChannelItems = videoChannelDao.queryForAll();
-        tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
-        mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
+    private void suspension() {
+        tabView1 = LayoutInflater.from(mContext).inflate(R.layout.second_channel_layout, null);
+        mTabLayout1 = (TabLayout) tabView1.findViewById(R.id.tab_container);
         for (VideoChannel videoChannel : localChannelItems) {
-
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-            TextUtil.setLayoutBgResource(mContext, view, R.drawable.bg_video_channel_selector);
             TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
-            TextUtil.setTextColor(mContext, tv, R.drawable.text_video_channel_selector);
             tv.setText(videoChannel.getCname());
-            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+            mTabLayout1.addTab(mTabLayout1.newTab().setCustomView(view));
         }
 
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mContainerTabLayout.addView(tabView1);
+
+        mTabLayout1.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 scid = localChannelItems.get(tab.getPosition()).getId();
-                mlvNewsFeed.setRefreshing();
-                isSelected=false;
-                ;
-//                loadData(PULL_DOWN_REFRESH);
-
+//                mlvNewsFeed.setRefreshing();
+                loadData(PULL_DOWN_REFRESH);
+                isSelected = false;
             }
 
             @Override
@@ -1375,23 +1391,71 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
-//                if (!isSelected) {
-//                    tab.getCustomView().setPressed(false);
-//                    tab.getCustomView().setSelected(false);
-//                    scid=0;
-//                }else
-//                {
-//                    tab.getCustomView().setPressed(true);
-//                    tab.getCustomView().setSelected(true);
-//
-//                }
-//                mlvNewsFeed.setRefreshing();
-                isSelected=!isSelected;
+                if (!isSelected) {
+                    tab.getCustomView().setPressed(false);
+                    tab.getCustomView().setSelected(false);
+                    scid = 0;
+                } else {
+                    tab.getCustomView().setPressed(true);
+                    tab.getCustomView().setSelected(true);
+
+                }
+//                isSelected = !isSelected;
+                mlvNewsFeed.setRefreshing();
                 ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
                         ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
             }
         });
 
+    }
+
+    private boolean isSelected;
+
+    public void addTabView(LayoutInflater LayoutInflater) {
+
+        videoChannelDao = new VideoChannelDao(mContext);
+        localChannelItems = videoChannelDao.queryForAll();
+        tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
+        mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
+        for (VideoChannel videoChannel : localChannelItems) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
+            tv.setText(videoChannel.getCname());
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
+        }
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                scid = localChannelItems.get(tab.getPosition()).getId();
+                mlvNewsFeed.setRefreshing();
+                isSelected = false;
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+                if (!isSelected) {
+                    tab.getCustomView().setPressed(false);
+                    tab.getCustomView().setSelected(false);
+                    scid = 0;
+                } else {
+                    tab.getCustomView().setPressed(true);
+                    tab.getCustomView().setSelected(true);
+
+                }
+                isSelected = !isSelected;
+                mlvNewsFeed.setRefreshing();
+                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+            }
+        });
+        suspension();
     }
 
 

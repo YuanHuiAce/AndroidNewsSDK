@@ -438,7 +438,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void run() {
 //                mVideoDetailFootView.addView(footerView);
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
-
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
         }, 1500);
@@ -458,6 +457,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
         adLayoutParams.width = imageWidth;
+        adLayoutParams.topMargin=DensityUtil.dip2px(mContext,30);
         if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID)) {
             adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         } else {

@@ -18,6 +18,13 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/listview_scrollbar"
         android:scrollbars="vertical" />
+    <FrameLayout
+        android:id="@+id/ll_container_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/mRefreshTitleBar"

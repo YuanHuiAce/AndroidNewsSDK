@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 60;
+    private static int DATABASE_VERSION = 61;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -44,18 +44,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static ArrayList<VideoChannel> mVideoChannels=new ArrayList<>();
 
     static {
-        mVideoChannels.add(new VideoChannel(4401,"新闻",false,1));
-        mVideoChannels.add(new VideoChannel(4402,"搞笑",false,2));
-        mVideoChannels.add(new VideoChannel(4403,"萌宠萌娃",false,3));
-        mVideoChannels.add(new VideoChannel(4404,"娱乐",false,4));
-        mVideoChannels.add(new VideoChannel(4405,"生活",false,5));
-        mVideoChannels.add(new VideoChannel(4406,"体育",false,6));
-        mVideoChannels.add(new VideoChannel(4407,"科技",false,7));
-        mVideoChannels.add(new VideoChannel(4408,"游戏",false,8));
-        mVideoChannels.add(new VideoChannel(4409,"影视",false,9));
-        mVideoChannels.add(new VideoChannel(4410,"时尚",false,10));
-        mVideoChannels.add(new VideoChannel(4411,"自媒体",false,11));
-        mVideoChannels.add(new VideoChannel(4412,"汽车",false,12));
+        mVideoChannels.add(new VideoChannel(4401,"新闻",0,1));
+        mVideoChannels.add(new VideoChannel(4402,"搞笑",0,2));
+        mVideoChannels.add(new VideoChannel(4403,"萌宠萌娃",0,3));
+        mVideoChannels.add(new VideoChannel(4404,"娱乐",0,4));
+        mVideoChannels.add(new VideoChannel(4405,"生活",0,5));
+        mVideoChannels.add(new VideoChannel(4406,"体育",0,6));
+        mVideoChannels.add(new VideoChannel(4407,"科技",0,7));
+        mVideoChannels.add(new VideoChannel(4408,"游戏",0,8));
+        mVideoChannels.add(new VideoChannel(4409,"影视",0,9));
+        mVideoChannels.add(new VideoChannel(4410,"时尚",0,10));
+        mVideoChannels.add(new VideoChannel(4411,"自媒体",0,11));
+        mVideoChannels.add(new VideoChannel(4412,"汽车",0,12));
         /**默认用户选择的频道*/
 //        mChannels.add(new ChannelItem("1", "推荐", 1, true));
 //        mChannels.add(new ChannelItem("44", "视频", 2, true));

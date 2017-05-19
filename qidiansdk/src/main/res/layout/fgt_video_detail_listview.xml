@@ -6,7 +6,7 @@
     <com.news.sdk.widget.VideoContainer
         android:id="@+id/fgt_new_detail_video"
         android:layout_width="match_parent"
-        android:layout_height="210dp" />
+        android:layout_height="200dp" />
 
     <RelativeLayout
         android:id="@+id/detial_video_show"
