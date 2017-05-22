@@ -19,17 +19,15 @@
             android:scaleType="centerInside"
             android:src="@drawable/btn_left_back" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/mDetailRightMore"-->
-        <!--android:layout_width="48dp"-->
-        <!--android:layout_height="48dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:drawableRight="@drawable/btn_detail_right_more"-->
-        <!--android:background="@drawable/bg_left_back_selector"-->
-        <!--android:clickable="true"-->
-        <!--android:paddingRight="15dp"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
+        <TextView
+            android:id="@+id/mDetailRightMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableRight="@drawable/btn_detail_right_more"
+            android:paddingRight="15dp" />
 
     </RelativeLayout>
 

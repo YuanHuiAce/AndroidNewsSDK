@@ -118,7 +118,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             detail_shared_CareForLayout,
             mCommentLayout,
             mNewsDetailHeaderView;
-    private TextView detail_shared_Text, detail_shared_hotComment ,attention_btn;
+    private TextView detail_shared_Text, detail_shared_hotComment, attention_btn;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_Hot_Layout, relativeLayout_attention,
             detail_shared_ViewPointTitleLayout, adLayout;
@@ -384,6 +384,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
+        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         detail_viewPoint_line1 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line1);

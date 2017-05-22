@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.news.sdk.common.CommonConstant;
@@ -354,6 +355,9 @@ public class TextUtil {
         } else {
             return "";
         }
+    }
+    public static void setTextColor(Context context, RadioButton textView, int textColor) {
+        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
     }
 
     public static void setTextColor(Context context, EllipsizeEndTextView textView, int textColor) {

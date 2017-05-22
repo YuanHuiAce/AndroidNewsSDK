@@ -13,7 +13,6 @@
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
             android:padding="14dp"
             android:scaleType="centerInside"
@@ -56,10 +55,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/icon_1"
                     android:layout_width="3dp"
                     android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/color1" />
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/my_category_text"
@@ -105,10 +104,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/icon_2"
                     android:layout_width="3dp"
                     android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/color1" />
+                    android:layout_gravity="center_vertical" />
 
                 <TextView
                     android:id="@+id/more_category_text"

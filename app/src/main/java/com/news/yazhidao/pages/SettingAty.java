@@ -8,7 +8,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,6 +26,8 @@ import com.news.sdk.entity.User;
 import com.news.sdk.entity.Version;
 import com.news.sdk.net.volley.VersionRequest;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.CustomDialog;
@@ -34,14 +39,17 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     public final static int RESULT_CODE = 1008;
     public static final String KEY_NEED_NOT_SETTING = "key_need_not_setting";
-
-    private TextView mSettingLogout;
+    private View mHeaderDivider, mLine1, mLine2, mLine3;
+    private LinearLayout mSettingSection1, mSettingSection3;
+    private RelativeLayout bgLayout, mSettingHeader, mSettingSection2;
+    private TextView mSettingLogout, mSetting;
+    private TextView mPushText, mFontSizeText, mSettingClearCache, mAboutText, mPrivacyPolicyText, mUpdateText;
     private User user;
     private View mSettingPushSwitch;
     private ImageView mSettingPushImg;
     private RadioGroup mRadioGroup;
-    private View mSettingClearCache;
-    private View mSettingtLeftBack;
+    private RadioButton mRadioNormal, mRadioBig, mRadioBigger;
+    private ImageView mSettingLeftBack;
     private View mSettingAbout;
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
@@ -54,10 +62,29 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initializeViews() {
-        mSettingtLeftBack = findViewById(R.id.mSettingLeftBack);
-        mSettingtLeftBack.setOnClickListener(this);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        mSettingSection1 = (LinearLayout) findViewById(R.id.mSettingSection1);
+        mSettingSection2 = (RelativeLayout) findViewById(R.id.mSettingSection2);
+        mSettingSection3 = (LinearLayout) findViewById(R.id.mSettingSection3);
+        mLine1 = findViewById(R.id.mLine1);
+        mLine2 = findViewById(R.id.mLine2);
+        mLine3 = findViewById(R.id.mLine3);
+        mSettingHeader = (RelativeLayout) findViewById(R.id.mSettingHeader);
+        mSettingLeftBack = (ImageView) findViewById(R.id.mSettingLeftBack);
+        mSettingLeftBack.setOnClickListener(this);
         mSettingLogout = (TextView) findViewById(R.id.mSettingLogout);
         mSettingLogout.setOnClickListener(this);
+        mRadioNormal = (RadioButton) findViewById(R.id.mRadioNormal);
+        mRadioBig = (RadioButton) findViewById(R.id.mRadioBig);
+        mRadioBigger = (RadioButton) findViewById(R.id.mRadioBigger);
+        mSetting = (TextView) findViewById(R.id.mSetting);
+        mPushText = (TextView) findViewById(R.id.mPushText);
+        mFontSizeText = (TextView) findViewById(R.id.mFontSizeText);
+        mSettingClearCache = (TextView) findViewById(R.id.mSettingClearCache);
+        mAboutText = (TextView) findViewById(R.id.mAboutText);
+        mPrivacyPolicyText = (TextView) findViewById(R.id.mPrivacyPolicyText);
+        mUpdateText = (TextView) findViewById(R.id.mUpdateText);
+        mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mSettingPushSwitch = findViewById(R.id.mSettingPushSwitch);
         mSettingPushSwitch.setOnClickListener(this);
         mSettingPushImg = (ImageView) findViewById(R.id.mSettingPushImg);
@@ -91,7 +118,6 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 }
             }
         });
-        mSettingClearCache = findViewById(R.id.mSettingClearCache);
         mSettingClearCache.setOnClickListener(this);
         mSettingAbout = findViewById(R.id.mSettingAbout);
         mSettingAbout.setOnClickListener(this);
@@ -99,15 +125,42 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingPrivacyPolicy.setOnClickListener(this);
         mSettingUpdate = findViewById(R.id.mSettingUpdate);
         mSettingUpdate.setOnClickListener(this);
+        setTheme();
+    }
+
+    private void setTheme() {
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mSettingLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mSettingHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine1, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine3, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mSettingSection1, R.drawable.bg_setting_selector);
+        TextUtil.setLayoutBgResource(this, mSettingSection2, R.drawable.bg_setting_selector);
+        TextUtil.setLayoutBgResource(this, mSettingSection3, R.drawable.bg_setting_selector);
+        TextUtil.setLayoutBgResource(this, mSettingLogout, R.color.color9);
+        ImageUtil.setAlphaImage(mSettingPushImg);
+//        TextUtil.setLayoutBgResource(this, mLine4, R.color.color5);
+//        TextUtil.setTextColor(this, mTitle, R.color.color2);
+//        TextUtil.setTextColor(this, mTitle1, R.color.color2);
+//        TextUtil.setTextColor(this, mTitle2, R.color.color2);
+//        TextUtil.setTextColor(this, mTitle3, R.color.color2);
+        TextUtil.setTextColor(this, mSetting, R.color.color2);
+        TextUtil.setTextColor(this, mPushText, R.color.color2);
+        TextUtil.setTextColor(this, mFontSizeText, R.color.color2);
+        TextUtil.setTextColor(this, mSettingClearCache, R.color.color2);
+        TextUtil.setTextColor(this, mAboutText, R.color.color2);
+        TextUtil.setTextColor(this, mPrivacyPolicyText, R.color.color2);
+        TextUtil.setTextColor(this, mUpdateText, R.color.color2);
+        TextUtil.setTextColor(this, mSettingLogout, R.color.color1);
+        TextUtil.setTextColor(this, mRadioNormal, R.drawable.txt_font_radio_1);
+        TextUtil.setTextColor(this, mRadioBig, R.drawable.txt_font_radio_1);
+        TextUtil.setTextColor(this, mRadioBigger, R.drawable.txt_font_radio_1);
     }
 
     @Override
     protected void loadData() {
-    }
-
-    @Override
-    protected boolean isNeedAnimation() {
-        return true;
     }
 
     @Override
@@ -273,6 +326,6 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onThemeChanged() {
-
+        setTheme();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -11,6 +12,7 @@ import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.entity.User;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -20,9 +22,12 @@ import com.news.yazhidao.R;
 public class UserCenterAty extends BaseActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1008;
-
-    private View mSettingLeftBack, mCenterComment, mCenterFavorite, mCenterMessage, mCenterSetting;
-    private ImageView mCenterUserIcon;
+    private View mLine1, mLine2, mLine3, mLine4;
+    private View mHeaderDivider, mCenterComment, mCenterFavorite, mCenterMessage;
+    private RelativeLayout bgLayout, mCenterHeader;
+    private ImageView mSettingLeftBack, mCenterUserIcon;
+    private TextView mTitle1, mTitle2, mTitle3;
+    private TextView mSetting, mTitle;
     private TextView mCenterUserName;
 
     @Override
@@ -32,9 +37,18 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initializeViews() {
-        mSettingLeftBack = findViewById(R.id.mSettingLeftBack);
+        mSettingLeftBack = (ImageView) findViewById(R.id.mSettingLeftBack);
         mSettingLeftBack.setOnClickListener(this);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        mCenterHeader = (RelativeLayout) findViewById(R.id.mCenterHeader);
+        mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mCenterUserIcon = (ImageView) findViewById(R.id.mCenterUserIcon);
+        mSetting = (TextView) findViewById(R.id.mSetting);
+        mSetting.setOnClickListener(this);
+        mTitle = (TextView) findViewById(R.id.mTitle);
+        mTitle1 = (TextView) findViewById(R.id.mTitle1);
+        mTitle2 = (TextView) findViewById(R.id.mTitle2);
+        mTitle3 = (TextView) findViewById(R.id.mTitle3);
         mCenterUserName = (TextView) findViewById(R.id.mCenterUserName);
         mCenterComment = findViewById(R.id.mCenterComment);
         mCenterComment.setOnClickListener(this);
@@ -42,14 +56,34 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
         mCenterFavorite.setOnClickListener(this);
         mCenterMessage = findViewById(R.id.mCenterMessage);
         mCenterMessage.setOnClickListener(this);
-        mCenterSetting = findViewById(R.id.mCenterSetting);
-        mCenterSetting.setOnClickListener(this);
-        Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
+        mLine1 = findViewById(R.id.mLine1);
+        mLine2 = findViewById(R.id.mLine2);
+        mLine3 = findViewById(R.id.mLine3);
+        mLine4 = findViewById(R.id.mLine4);
+        Glide.with(UserCenterAty.this).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
+        setTheme();
     }
 
-    @Override
-    protected boolean isNeedAnimation() {
-        return true;
+    private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mSettingLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mSetting, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mCenterHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mCenterComment, R.color.color9);
+        TextUtil.setLayoutBgResource(this, mCenterFavorite, R.color.color9);
+        TextUtil.setLayoutBgResource(this, mCenterMessage, R.color.color9);
+        TextUtil.setLayoutBgResource(this, mLine1, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine3, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine4, R.color.color5);
+        TextUtil.setTextColor(this, mTitle, R.color.color2);
+        TextUtil.setTextColor(this, mTitle1, R.color.color2);
+        TextUtil.setTextColor(this, mTitle2, R.color.color2);
+        TextUtil.setTextColor(this, mTitle3, R.color.color2);
+        TextUtil.setTextColor(this, mSetting, R.color.color2);
+        TextUtil.setTextColor(this, mCenterUserName, R.color.color2);
+        ImageUtil.setAlphaImage(mCenterUserIcon);
     }
 
     @Override
@@ -100,7 +134,7 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
                 Intent myMessageAty = new Intent(this, MyMessageAty.class);
                 startActivity(myMessageAty);
                 break;
-            case R.id.mCenterSetting:
+            case R.id.mSetting:
                 LogUtil.userActionLog(this, CommonConstant.LOG_ATYPE_MYSETTING, CommonConstant.LOG_PAGE_USERCENTERPAGE, CommonConstant.LOG_PAGE_SETTINGPAGE, null, false);
                 Intent settingAty = new Intent(this, SettingAty.class);
                 startActivityForResult(settingAty, REQUEST_CODE);
@@ -110,6 +144,6 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onThemeChanged() {
-
+        setTheme();
     }
 }

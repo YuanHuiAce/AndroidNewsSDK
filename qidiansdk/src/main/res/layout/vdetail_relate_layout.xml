@@ -17,6 +17,7 @@
             layout="@layout/ll_ad_item_big"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="22dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp" />

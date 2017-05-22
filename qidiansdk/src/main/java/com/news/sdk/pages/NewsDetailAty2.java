@@ -54,7 +54,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
 
 
 /**
@@ -79,7 +78,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mHeaderDivider, mDetailComment, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
-    //            ,mDetailRightMore;
+    private TextView mDetailRightMore;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
@@ -167,8 +166,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-//        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
-//        mDetailRightMore.setOnClickListener(this);
+        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
@@ -196,6 +195,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_left_back_selector);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
@@ -247,10 +248,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
             Intent main = new Intent();
-            main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            main.setClassName("com.news.yazhidao", "com.news.yazhidao.pages.MainActivity");
             main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(main);
         }
@@ -468,19 +469,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } else {
                 onBackPressed();
             }
-        }
-//            case R.id.mDetailRightMore://更多的点击
-//                if (mNewsFeed != null) {
-//                    mivShareBg.startAnimation(mAlphaAnimationIn);
-//                    mivShareBg.setVisibility(View.VISIBLE);
-//                    mSharePopupWindow = new SharePopupWindow(this, this);
-//                    String remark = "1";
-//                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-//                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
-//                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//
-//                }
-        else if (getId == R.id.mDetailAddComment) {
+        } else if (getId == R.id.mDetailRightMore) {
+            if (mNewsFeed != null) {
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                mSharePopupWindow = new SharePopupWindow(this, this);
+                mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), mNewsFeed.getDescr());
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            }
+        } else if (getId == R.id.mDetailAddComment) {
             User user = SharedPreManager.mInstance(NewsDetailAty2.this).getUser(NewsDetailAty2.this);
             if (user != null && user.isVisitor()) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(NewsDetailAty2.this);

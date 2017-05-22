@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.sdk.R;
-import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.ChannelItem;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
@@ -88,7 +87,8 @@ public class ChannelSelectedAdapter extends BaseAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
         item_text = (TextView) view.findViewById(R.id.text_item);
         icon = (ImageView) view.findViewById(R.id.icon_new);
-        ImageUtil.setAlphaImage(icon, R.drawable.bg_channel_delete);
+        ImageUtil.setAlphaImage(icon);
+        TextUtil.setLayoutBgResource(context, icon, R.drawable.bg_channel_delete);
         int height = context.getResources().getDrawable(R.drawable.bg_channel_delete).getMinimumHeight();
         RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
         rlItemText.topMargin = height / 2;

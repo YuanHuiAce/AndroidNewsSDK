@@ -75,6 +75,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     private LinearLayout bgMyChannel, bgMoreChannel;
     private TextView tvCategory, tvMoreCategory, tvTitle;
     private View mDividingLine, mbgLine, mLine1, mLine2;
+    private ImageView icon_1, icon_2;
     private RelativeLayout mDetailHeader;
 
     @Override
@@ -95,6 +96,8 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         bgMoreChannel = (LinearLayout) findViewById(R.id.more_channel_layout);
         userGridView = (SelectedGridView) findViewById(R.id.userGridView);
         otherGridView = (NormalGridView) findViewById(R.id.otherGridView);
+        icon_1 = (ImageView) findViewById(R.id.icon_1);
+        icon_2 = (ImageView) findViewById(R.id.icon_2);
         tvTitle = (TextView) findViewById(R.id.title);
         mDividingLine = findViewById(R.id.mHeaderDivider);
         mbgLine = findViewById(R.id.bg_line);
@@ -130,12 +133,15 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     }
 
     public void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setLayoutBgResource(this, mDividingLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mbgLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine1, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
+        TextUtil.setLayoutBgResource(this, icon_1, R.color.color1);
+        TextUtil.setLayoutBgResource(this, icon_2, R.color.color1);
         TextUtil.setLayoutBgResource(this, bgMyChannel, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgMoreChannel, R.color.color6);
         TextUtil.setLayoutBgResource(this, userGridView, R.color.color6);

@@ -222,6 +222,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
@@ -269,6 +272,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -295,6 +301,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
@@ -314,6 +323,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_news_search_item) {
@@ -443,6 +455,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
             TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
             TextUtil.setTextColor(mContext, (TextView) holder.getView(R.id.title_textView), R.color.color1);
@@ -479,6 +494,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
             NativeADDataRef dataRef = feed.getDataRef();
             if (dataRef != null) {
@@ -505,6 +523,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_player) {
@@ -540,6 +561,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
             if (PlayerManager.videoPlayView != null && feed.getNid() != PlayerManager.videoPlayView.cPostion) {
                 FrameLayout view = holder.getView(R.id.layout_item_video);
                 view.removeAllViews();
@@ -573,6 +597,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         }

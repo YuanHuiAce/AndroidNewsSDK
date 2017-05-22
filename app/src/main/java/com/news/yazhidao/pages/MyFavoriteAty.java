@@ -5,8 +5,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsLoveRequest;
 import com.news.sdk.utils.DensityUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
@@ -39,19 +42,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+
 public class MyFavoriteAty extends BaseActivity implements View.OnClickListener {
-    private View mFavoriteLeftBack;
-    private RelativeLayout bgLayout, mHomeRetry;
+
+    private View mHeaderDivider;
+    private ImageView mFavoriteLeftBack;
+    private RelativeLayout mFavoriteTopLayout, bgLayout, mHomeRetry;
     private PullToRefreshListView mFavoriteListView;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> newsFeedList = new ArrayList<>();
     private boolean isRefresh;
     private TextView comment_nor;
-    private TextView mFavoriteRightManage, aty_myFavorite_number;
+    private TextView mFavoriteTitle, mFavoriteRightManage, aty_myFavorite_number;
     private LinearLayout aty_myFavorite_Deletelayout;
     private boolean isDeleteyFavorite;
     private User user;
     private Context mContext;
+    private ProgressBar imageAni;
     private int pager = 1;
     private int mDeleteNum;
 
@@ -64,19 +71,22 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     protected void initializeViews() {
         mContext = this;
         user = SharedPreManager.mInstance(mContext).getUser(mContext);
-        mFavoriteLeftBack = findViewById(R.id.mFavoriteLeftBack);
+        mFavoriteLeftBack = (ImageView) findViewById(R.id.mFavoriteLeftBack);
         mFavoriteLeftBack.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        mFavoriteTopLayout = (RelativeLayout) findViewById(R.id.mFavoriteTopLayout);
+        mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(this);
         comment_nor = (TextView) findViewById(R.id.nor_comment);
+        mFavoriteTitle = (TextView) findViewById(R.id.mFavoriteTitle);
         mFavoriteRightManage = (TextView) findViewById(R.id.mFavoriteRightManage);
         mFavoriteRightManage.setOnClickListener(this);
         aty_myFavorite_number = (TextView) findViewById(R.id.aty_myFavorite_number);
         aty_myFavorite_Deletelayout = (LinearLayout) findViewById(R.id.aty_myFavorite_Deletelayout);
         aty_myFavorite_Deletelayout.setOnClickListener(this);
         aty_myFavorite_Deletelayout.setVisibility(View.GONE);
-        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mFavoriteListView = (PullToRefreshListView) findViewById(R.id.aty_myFavorite_PullToRefreshListView);
         mFavoriteListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mFavoriteListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -96,6 +106,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         mAdapter.setIntroductionNewsFeed(mIntroductionNewsFeed);
         mFavoriteListView.setAdapter(mAdapter);
         isLoading(true);
+        setTheme();
     }
 
     NewsFeedAdapter.introductionNewsFeed mIntroductionNewsFeed = new NewsFeedAdapter.introductionNewsFeed() {
@@ -114,6 +125,20 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         }
     };
 
+    private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mFavoriteListView, R.color.color6);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mFavoriteLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mFavoriteRightManage, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mFavoriteTopLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setTextColor(this, mFavoriteTitle, R.color.color2);
+        TextUtil.setTextColor(this, mFavoriteRightManage, R.color.color2);
+        TextUtil.setTextColor(this, comment_nor, R.color.color4);
+        ImageUtil.setAlphaImage(comment_nor);
+        ImageUtil.setAlphaProgressBar(imageAni);
+    }
+
     @Override
     protected boolean translucentStatus() {
         return false;
@@ -129,6 +154,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
                 loadFavorite();
             }
         } else {
+            comment_nor.setVisibility(View.GONE);
             bgLayout.setVisibility(View.GONE);
             mHomeRetry.setVisibility(View.VISIBLE);
         }
@@ -341,6 +367,6 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onThemeChanged() {
-
+        setTheme();
     }
 }

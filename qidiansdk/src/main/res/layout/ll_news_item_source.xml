@@ -10,9 +10,7 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:scaleType="centerCrop"
-
-        />
+        android:scaleType="centerCrop" />
 
     <com.news.sdk.widget.TextViewExtend
         android:id="@+id/news_source_TextView"
@@ -29,8 +27,8 @@
         android:layout_width="24dp"
         android:layout_height="13dp"
         android:layout_gravity="center_vertical"
-        android:gravity="center"
         android:layout_marginRight="5dp"
+        android:gravity="center"
         android:textSize="@dimen/font9"
         android:visibility="gone" />
 

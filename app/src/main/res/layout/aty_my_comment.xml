@@ -1,60 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/new_color9">
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/layout"
+        android:id="@+id/mCommentTopLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/common_header_bg">
+        android:layout_height="48dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/mCommentLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:paddingLeft="15dp" />
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_left_back" />
 
         <TextView
             android:id="@+id/mCommentUserName"
-            android:layout_width="wrap_content"
+            android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/font2" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.56dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/new_color5" />
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:textSize="@dimen/font3" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mCommentTopLayout" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/myCommentListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layout"
-        android:divider="#e0e0e0"
+        android:layout_below="@+id/mHeaderDivider"
         android:dividerHeight="8dp" />
 
     <TextView
         android:id="@+id/nor_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout"
+        android:layout_below="@+id/mHeaderDivider"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="82dp"
         android:drawableTop="@mipmap/comment_nor_icon"
         android:gravity="center"
         android:text="高冷的ta\n还没有发表过任何评论"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#ffbcbcbc"
-        android:textSize="17sp" />
+        android:textSize="@dimen/font3" />
 
     <include layout="@layout/qd_loading_view_anim" />
 

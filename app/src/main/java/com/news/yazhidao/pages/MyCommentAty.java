@@ -2,7 +2,9 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.news.sdk.entity.NewsDetailComment;
 import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsLoveRequest;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -32,9 +35,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+
 public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 
-    private TextView mCommentLeftBack;
+    private ImageView mCommentLeftBack;
     private TextView mCommentUserName;
     private PullToRefreshListView mCommentListView;
     private ArrayList<NewsDetailComment> newsDetailCommentItems = new ArrayList<>();
@@ -42,10 +47,11 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     private Context mContext;
     private User user;
     private NewsDetailCommentAdapter newsDetailCommentAdapter;
-    private RelativeLayout bgLayout, mHomeRetry;
+    private RelativeLayout mCommentTopLayout,bgLayout, mHomeRetry;
     private boolean isRefresh, isNetWork;
-    private View footer;
+    private View mHeaderDivider,footer;
     private int pager = 1;
+    private ProgressBar imageAni;
 
     @Override
     protected void setContentView() {
@@ -55,11 +61,14 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initializeViews() {
         mContext = this;
-        mCommentLeftBack = (TextView) findViewById(R.id.mCommentLeftBack);
+        mCommentLeftBack = (ImageView) findViewById(R.id.mCommentLeftBack);
         mCommentLeftBack.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(this);
+        mCommentTopLayout = (RelativeLayout) findViewById(R.id.mCommentTopLayout);
+        mHeaderDivider = findViewById(R.id.mHeaderDivider);
+        imageAni = (ProgressBar) findViewById(R.id.imageAni);
         mCommentUserName = (TextView) findViewById(R.id.mCommentUserName);
         mCommentListView = (PullToRefreshListView) this.findViewById(R.id.myCommentListView);
         mCommentListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -97,6 +106,19 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 //        footer = LayoutInflater.from(this).inflate(R.layout.detail_footview_layout, null);
 //        mCommentListView.getRefreshableView().addFooterView(footer, null, false);
         isLoading(true);
+        setTheme();
+    }
+
+    private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mCommentListView, R.color.color6);
+        TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mCommentLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setLayoutBgResource(this, mCommentTopLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setTextColor(this, mCommentUserName, R.color.color2);
+        TextUtil.setTextColor(this, comment_nor, R.color.color4);
+        ImageUtil.setAlphaImage(comment_nor);
+        ImageUtil.setAlphaProgressBar(imageAni);
     }
 
     @Override
@@ -272,6 +294,6 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onThemeChanged() {
-
+        setTheme();
     }
 }

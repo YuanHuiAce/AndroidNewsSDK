@@ -182,11 +182,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 ImageUtil.setAlphaView(vPlayer);
             TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
             TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
-            if (mTabLayout!=null) {
+            if (mTabLayout != null) {
                 for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-                   TextUtil.setLayoutBgResource(mContext,mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle),R.drawable.bg_video_channel_selector);
+                    TextUtil.setLayoutBgResource(mContext, mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle), R.drawable.bg_video_channel_selector);
 //                    mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.ll_tab_container);
-                    TextUtil.setTextColor(mContext,(TextView) mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle),R.drawable.text_video_channel_selector);
+                    TextUtil.setTextColor(mContext, (TextView) mTabLayout.getTabAt(i).getCustomView().findViewById(R.id.tv_tabtitle), R.drawable.text_video_channel_selector);
                 }
             }
             mAdapter.notifyDataSetChanged();
@@ -1340,7 +1340,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //========================================视频部分======================================//
 
-    private  boolean isSelected;
+    private boolean isSelected;
+
     public void addTabView(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
         localChannelItems = videoChannelDao.queryForAll();
@@ -1361,7 +1362,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             public void onTabSelected(TabLayout.Tab tab) {
                 scid = localChannelItems.get(tab.getPosition()).getId();
                 mlvNewsFeed.setRefreshing();
-                isSelected=false;
+                isSelected = false;
                 ;
 //                loadData(PULL_DOWN_REFRESH);
 
@@ -1386,7 +1387,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //
 //                }
 //                mlvNewsFeed.setRefreshing();
-                isSelected=!isSelected;
+                isSelected = !isSelected;
                 ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
                         ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
             }
