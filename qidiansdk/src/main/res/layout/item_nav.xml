@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rb_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:button="@null"
+    android:layout_weight="1"
+    android:background="@drawable/bg_video_channel_selector"
+    android:textColor="@color/text_video_channel_selector"
+    android:textSize="13sp"/>

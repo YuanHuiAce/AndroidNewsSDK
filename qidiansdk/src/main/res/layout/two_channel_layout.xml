@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hsv_container"
+    android:layout_width="match_parent"
+    android:scrollbars="none"
+    android:layout_height="36dp"
+    >
+    <RadioGroup
+        android:id="@+id/rg_container_channel"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        />
+
+</HorizontalScrollView>
