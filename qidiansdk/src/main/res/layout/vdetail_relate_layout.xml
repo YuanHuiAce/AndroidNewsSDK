@@ -17,7 +17,7 @@
             layout="@layout/ll_ad_item_big"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="22dp"
+            android:layout_marginBottom="30dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp" />
     <!--</RelativeLayout>-->
@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="热门评论"
-            android:textColor="@color/detail_share_TopTitleColor"
             android:textSize="@dimen/new_font4" />
 
         <View
@@ -63,8 +62,23 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical" />
 
-    <RelativeLayout
+    <TextView
         android:id="@+id/detail_shared_MoreComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/bg_select_comment_more"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="查看全部评论>"
+        android:textSize="@dimen/font5"
+        android:visibility="gone" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"

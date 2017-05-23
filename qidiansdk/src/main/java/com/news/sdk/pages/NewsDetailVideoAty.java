@@ -123,6 +123,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public int cPosition;
     private RelativeLayout mNoNetShow;
     private View mBottomLine;
+    private View mTitleBottomLine;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -148,6 +149,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
 
     }
 
@@ -199,6 +201,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mDetailView = findViewById(R.id.mDetailWrapper);
         mBottomLine = findViewById(R.id.mBottomLine);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
+        mTitleBottomLine = findViewById(R.id.title_bottom_line);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
         mNewsLoadingImg.setOnClickListener(this);
@@ -339,6 +342,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     mDetailLeftBack.setCompoundDrawables(drawable, null, null, null);
+                    mTitleBottomLine.setVisibility(View.VISIBLE);
 //                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
@@ -351,6 +355,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
                     mDetailLeftBack.setCompoundDrawables(drawable1, null, null, null);
+                    mTitleBottomLine.setVisibility(View.GONE);
 //                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
 //                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
 //                    mDetailRightMore.setCompoundDrawables(null, null, share, null);

@@ -16,8 +16,6 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,6 +173,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private HorizontalScrollView navContainer;
     private RadioGroup mChannelList;
     private int lastChecked;
+    private View nav1;
+    private HorizontalScrollView navContainer1;
+    private RadioGroup mChannelList1;
 
     @Override
     public void onThemeChanged() {
@@ -197,15 +198,27 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 ImageUtil.setAlphaView(vPlayer);
             TextUtil.setTextColor(mContext, mSearchText, R.color.color4);
             TextUtil.setTextColor(mContext, footView_tv, R.color.color3);
-            if (navContainer != null) {
+            if (navContainer != null && mChannelId == 44) {
                 TextUtil.setLayoutBgResource(mContext, nav, R.color.color9);
                 for (int i = 0; i < mChannelList.getChildCount(); i++) {
                     RadioButton rb = (RadioButton) mChannelList.getChildAt(i);
                     TextUtil.setLayoutBg(mContext, rb, R.drawable.bg_video_channel_selector);
-                    TextUtil.setTextColor(mContext,rb,R.color.text_video_channel_selector);
+                    TextUtil.setTextColor(mContext, rb, R.color.text_video_channel_selector);
 
                 }
             }
+
+            if (navContainer1 != null && mChannelId == 44) {
+                TextUtil.setLayoutBgResource(mContext, nav1, R.color.color9);
+                for (int i = 0; i < mChannelList1.getChildCount(); i++) {
+                    RadioButton rb = (RadioButton) mChannelList1.getChildAt(i);
+                    TextUtil.setLayoutBg(mContext, rb, R.drawable.bg_video_channel_selector);
+                    TextUtil.setTextColor(mContext, rb, R.color.text_video_channel_selector);
+
+                }
+            }
+
+
 //            if (mTabLayout != null) {
 //                TextUtil.setLayoutBgResource(mContext, mTabLayout, R.color.color9);
 //                for (int i = 0; i < mTabLayout.getTabCount(); i++) {
@@ -1040,9 +1053,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public void addHFView(LayoutInflater LayoutInflater) {
         mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        addTabNavigation();
+
         if (mChannelId == 44) {
 //            addTabView(LayoutInflater);
+            addTabNavigation(LayoutInflater);
             lv.addHeaderView(nav);
 //            addTabNavigation();
         } else {
@@ -1170,15 +1184,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 Logger.v(TAG, "firstVisibleItem:" + firstVisibleItem + "getFirstVisibleItem:" + view.getFirstVisiblePosition());
                 if (mChannelId == 44 && portrait) {
                     VideoShowControl();
-//                    if (firstVisibleItem > 1) {
-//                        mlvNewsFeed.getRefreshableView().removeView(nav);
-//                        mContainerTabLayout.addView(nav);
-//                        mContainerTabLayout.setVisibility(View.VISIBLE);
-//                    } else {
-//                        mContainerTabLayout.removeView(nav);
-//                        mlvNewsFeed.getRefreshableView().addHeaderView(nav);
-//                        mContainerTabLayout.setVisibility(View.GONE);
-//                    }
+                    if (firstVisibleItem > 1) {
+                        mContainerTabLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mContainerTabLayout.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -1398,7 +1408,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             mTabLayout1.addTab(mTabLayout1.newTab().setCustomView(view));
         }
 
-        mContainerTabLayout.addView(tabView1);
+//        mContainerTabLayout.addView(tabView1);
 
         mTabLayout1.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -1437,10 +1447,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     private boolean isSelected;
 
-    public void addTabNavigation() {
+    public void addTabNavigation(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
         localChannelItems = videoChannelDao.queryForAll();
-        nav = LayoutInflater.from(mContext).inflate(R.layout.two_channel_layout, null);
+        nav = LayoutInflater.inflate(R.layout.two_channel_layout, null);
         navContainer = (HorizontalScrollView) nav.findViewById(R.id.hsv_container);
         mChannelList = (RadioGroup) nav.findViewById(R.id.rg_container_channel);
         RadioGroup.LayoutParams params_rb = new RadioGroup.LayoutParams(
@@ -1464,35 +1474,98 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes final int checkedId) {
                 final RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if (rb!=null)
                 rb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mChannelList1.check(checkedId);
                         if (scid == checkedId) {
-                            scid = 0;
-                            mlvNewsFeed.setRefreshing();
-                           if (rb.isChecked())
-                               rb.setChecked(false);
-                        }else {
+                            if (rb.isChecked()) {
+                                scid=0;
+                                mChannelList.clearCheck();
+                                mlvNewsFeed.setRefreshing();
+                                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                            }
+                        } else {
                             scid = checkedId;
                             mlvNewsFeed.setRefreshing();
                         }
                     }
                 });
-
-                if (scid == 4413) {
-                    ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                            ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                if (rb!=null) {
+                    int scrollX = navContainer.getScrollX();
+                    System.out.println("scrollX----->" + scrollX);
+                    int left = rb.getLeft();
+                    int leftScreen = left - scrollX;
+                    navContainer.smoothScrollBy((leftScreen - mScreenWidth), 0);
                 }
-
-//                int scrollX = navContainer.getScrollX();
-//                System.out.println("scrollX----->"+scrollX);
-//                RadioButton rb = (RadioButton)group.findViewById(checkedId);
-//                int left = rb.getLeft();
-//                int leftScreen = left-scrollX;
-//                navContainer.smoothScrollBy((leftScreen-mScreenWidth), 0);
             }
         });
+        addTabNav();
     }
+
+
+    public void addTabNav() {
+        videoChannelDao = new VideoChannelDao(mContext);
+        localChannelItems = videoChannelDao.queryForAll();
+        nav1 = LayoutInflater.from(mContext).inflate(R.layout.two_channel_layout, null);
+        navContainer1 = (HorizontalScrollView) nav1.findViewById(R.id.hsv_container);
+        mChannelList1 = (RadioGroup) nav1.findViewById(R.id.rg_container_channel);
+        RadioGroup.LayoutParams params_rb = new RadioGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        params_rb.setMargins(DensityUtil.dip2px(mContext, 15), 0, 0, 0);
+        for (VideoChannel videoChannel : localChannelItems) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_nav, null);
+            RadioButton mTitle = (RadioButton) view.findViewById(R.id.rb_title);
+            mTitle.setText(videoChannel.getCname());
+            mTitle.setId(videoChannel.getId());
+//            TextUtil.setLayoutBg(mContext, mTitle, R.drawable.bg_video_channel_selector);
+//            TextUtil.setTextColor(mContext,mTitle,R.drawable.text_video_channel_selector);
+
+            mChannelList1.addView(view, params_rb);
+        }
+//        mlvNewsFeed.getRefreshableView().addHeaderView(nav);
+        final int mScreenWidth = DeviceInfoUtil.getScreenWidth() / 2;
+        mChannelList1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes final int checkedId) {
+                final RadioButton rb = (RadioButton) group.findViewById(checkedId);
+                if (rb!=null)
+                rb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mChannelList.check(checkedId);
+                        if (scid == checkedId) {
+                            if (rb.isChecked()) {
+                                scid=0;
+                                mChannelList1.clearCheck();
+                                loadData(PULL_DOWN_REFRESH);
+//                                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+//                                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                            }
+                        } else {
+                            scid = checkedId;
+                           loadData(PULL_DOWN_REFRESH);
+                        }
+                    }
+                });
+
+
+                if (rb!=null) {
+                    int scrollX = navContainer1.getScrollX();
+                    System.out.println("scrollX----->" + scrollX);
+                    int left = rb.getLeft();
+                    int leftScreen = left - scrollX;
+                    navContainer1.smoothScrollBy((leftScreen - mScreenWidth), 0);
+                }
+            }
+        });
+        mContainerTabLayout.addView(nav1);
+    }
+
 
     public void addTabView(LayoutInflater LayoutInflater) {
 

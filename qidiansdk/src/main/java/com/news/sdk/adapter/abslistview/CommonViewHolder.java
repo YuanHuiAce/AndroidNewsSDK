@@ -206,7 +206,7 @@ public class CommonViewHolder {
             mBorderPaint.setAntiAlias(true);
             mBorderPaint.setColor(borderColor);
             mBorderPaint.setStyle(Paint.Style.STROKE);
-            mBorderPaint.setStrokeWidth(mBorderWidth);
+            mBorderPaint.setStrokeWidth((float) 0.001);
         }
 
 

@@ -9,10 +9,10 @@
         android:id="@+id/detail_video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="15dip"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:textSize="@dimen/font3" />
 
     <RelativeLayout

@@ -84,8 +84,18 @@
                     android:paddingRight="15dp"
                     android:visibility="gone" />
 
+
             </RelativeLayout>
+
+            <View
+                android:id="@+id/title_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                />
         </FrameLayout>
+
 
         <RelativeLayout
             android:id="@+id/mDetailBottomBanner"
@@ -171,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/mHeaderDivider"
-            android:layout_marginTop="210dp"
+            android:layout_marginTop="200dp"
             android:visibility="visible">
 
             <ImageView
@@ -213,7 +223,7 @@
     <RelativeLayout
         android:id="@+id/nonet_show"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
+        android:layout_height="200dp"
         android:background="#101010"
         android:layout_alignParentTop="true"
         android:visibility="gone">
@@ -241,6 +251,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="48dp"
+        android:background="@color/color2"
         android:visibility="gone">
 
         <com.news.sdk.widget.SmallVideoContainer

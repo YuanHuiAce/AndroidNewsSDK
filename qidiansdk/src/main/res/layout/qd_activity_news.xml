@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/news_feed_listView"
         android:layout_width="match_parent"
@@ -23,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_alignParentTop="true"
-        android:visibility="gone"
         />
 
     <TextView
@@ -64,6 +64,7 @@
         </LinearLayout>
 
     </RelativeLayout>
+
 
     <include
         layout="@layout/qd_loading_view_anim"
