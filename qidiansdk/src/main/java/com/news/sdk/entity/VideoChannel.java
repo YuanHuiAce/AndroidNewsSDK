@@ -46,13 +46,16 @@ public class VideoChannel implements Serializable, Comparable<VideoChannel> {
      * 栏目是否选中
      */
     @DatabaseField
-    private boolean selected;
+    private int selected;
+
+    @DatabaseField
+    private int version_code;
 
     public VideoChannel() {
     }
 
 
-    public VideoChannel(int id, String cname, boolean selected, int order_num) {
+    public VideoChannel(int id, String cname, int selected, int order_num) {
         this.id = id;
         this.cname = cname;
         this.selected = selected;
@@ -63,6 +66,14 @@ public class VideoChannel implements Serializable, Comparable<VideoChannel> {
         return serialVersionUID;
     }
 
+
+    public int getVersion_code() {
+        return version_code;
+    }
+
+    public void setVersion_code(int version_code) {
+        this.version_code = version_code;
+    }
 
     public int getId() {
         return id;
@@ -104,14 +115,13 @@ public class VideoChannel implements Serializable, Comparable<VideoChannel> {
         this.parent = parent;
     }
 
-    public boolean isSelected() {
+    public int getSelected() {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
+    public void setSelected(int selected) {
         this.selected = selected;
     }
-
 
     public String getCname() {
         return cname;

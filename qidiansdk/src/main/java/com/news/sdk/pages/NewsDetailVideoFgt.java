@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -120,7 +121,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mCommentLayout,
             mNewsDetailHeaderView;
     private TextView detail_shared_Text, detail_shared_hotComment, attention_btn;
-    private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
+    private RelativeLayout detail_shared_ShareImageLayout,
             detail_Hot_Layout, relativeLayout_attention,
             detail_shared_ViewPointTitleLayout, adLayout;
     private ImageView detail_shared_AttentionImage, iv_attention_icon;
@@ -134,7 +135,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private static final int VIDEO_FULLSCREEN = 3;
     private static final int VIDEO_NORMAL = 5;
     private NewsDetailCommentDao mNewsDetailCommentDao;
-    private TextView detail_shared_PraiseText, tv_attention_title, footView_tv;
+    private TextView detail_shared_PraiseText, tv_attention_title, footView_tv, detail_shared_MoreComment;
     private ProgressBar footView_progressbar;
     private LinearLayout footerView_layout;
     private boolean isBottom;
@@ -166,7 +167,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private LinearLayout mVideoDetailFootView;
     private LinearLayout footerView;
     //广告sdk
-    private int mAdCount = 2;
+    private int mAdCount = 5;
     private NativeAD mNativeAD;
     private RelativeLayout mDetailSharedTitleLayout;
     private int adPosition;
@@ -486,13 +487,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void run() {
 //                mVideoDetailFootView.addView(footerView);
 //                mNewsDetailHeaderView.addView(mViewPointLayout);
-
                 mVideoDetailFootView.addView(mViewPointLayout);
             }
         }, 1500);
         //评论
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
-        detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
+        detail_shared_MoreComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_Hot_Layout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_Hot_Layout);
         detail_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_hotComment);
         detail_shared_hotComment_line1 = mViewPointLayout.findViewById(R.id.detail_shared_hotComment_Line1);
@@ -560,6 +560,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setLayoutBgResource(mContext, detail_viewPoint_line2, R.color.color5);
         TextUtil.setTextColor(mContext, detailViewPoint, R.color.color2);
         TextUtil.setTextColor(mContext, mDetailVideoTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
+
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
         TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
         TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.color.color10);
@@ -838,7 +840,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
         if (!TextUtil.isListEmpty(relatedItemEntities)) {
-            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size() && adPosition > 0) {
+            if (SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE) && !TextUtil.isListEmpty(marrlist) && adPosition < relatedItemEntities.size()) {
                 NativeADDataRef dataRelate = null;
                 if (marrlist.size() == 1) {
                     dataRelate = marrlist.get(0);

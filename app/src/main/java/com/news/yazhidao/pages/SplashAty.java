@@ -175,6 +175,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     protected void setContentView() {
         mHandler = new Handler(this);
         ShareSDK.initSDK(this);
+        AdUtil.setAdChannel(this);
         UserManager.registerVisitor(this, null);
         //展示广点通sdk
         SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);

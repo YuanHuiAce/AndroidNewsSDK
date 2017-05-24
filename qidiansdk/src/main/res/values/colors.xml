@@ -303,6 +303,7 @@
     <color name="channeltabstrip_bg_night">#202124</color>
     <color name="channeltabstrip_divider">#f0f0f0</color>
     <color name="news_source_bg" >#f8f8f8</color>
+    <color name="news_source_bg_night" >#f8f8f8</color>
     <color name="newsfeed_red" >#fff83b3b</color>
     <color name="news_type_color1" >#300091fa</color>
     <color name="news_type_color1_night" >#301168a7</color>

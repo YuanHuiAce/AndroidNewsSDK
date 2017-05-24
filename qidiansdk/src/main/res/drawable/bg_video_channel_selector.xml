@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_selected="true">
+    <item android:state_checked="true">
         <shape>
-            <stroke android:width="0.5dp"  android:color="@color/color5"/>
+            <stroke android:width="0.5dp" android:color="@color/color5" />
             <corners android:radius="2dp" />
             <solid android:color="@color/color4" />
-            <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp" />
+            <padding android:bottom="3dp" android:left="10dp" android:right="10dp" android:top="3dp" />
         </shape>
     </item>
-    <item android:state_selected="false">
+    <item android:state_checked="false">
         <shape>
-            <stroke android:width="0.5dp"  android:color="@color/color5"/>
+            <stroke android:width="0.5dp" android:color="@color/color5" />
             <corners android:radius="2dp" />
-            <solid android:color="@color/color6" />
-            <padding android:bottom="5dp" android:left="10dp" android:right="10dp" android:top="5dp" />
+            <solid android:color="@color/color6"/>
+            <padding android:bottom="3dp" android:left="10dp" android:right="10dp" android:top="3dp" />
         </shape>
     </item>
 </selector>

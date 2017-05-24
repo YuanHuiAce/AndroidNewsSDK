@@ -356,9 +356,6 @@ public class TextUtil {
             return "";
         }
     }
-    public static void setTextColor(Context context, RadioButton textView, int textColor) {
-        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
-    }
 
     public static void setTextColor(Context context, EllipsizeEndTextView textView, int textColor) {
         textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
@@ -372,6 +369,14 @@ public class TextUtil {
         textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
     }
 
+    public static void setTextColor(Context context, RadioButton textView, int textColor) {
+        textView.setTextColor(context.getResources().getColorStateList(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+//    public static void setLayoutBg(Context context, RadioButton view, int color) {
+//        view.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, color)));
+//    }
+
     public static void setLayoutBgColor(Context context, View view, int color) {
         view.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, color)));
     }
@@ -380,12 +385,17 @@ public class TextUtil {
         layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
     }
 
-    public static boolean isValidate(String text){
-        if(text!=null&&!"".equals(text.trim())){
+    public static void setLayoutBg(Context context, RadioButton layout, int bgColor) {
+        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+    }
+
+    public static boolean isValidate(String text) {
+        if (text != null && !"".equals(text.trim())) {
             return true;
         }
         return false;
     }
+
     /**
      * 获取inputStream中的数据
      *

@@ -138,14 +138,14 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="551a6a28fd98c5b574000788"/>
+            android:value="58f9d3c904e205169000013b"/>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
 
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="5bb97a8b1477e856c94db429c7f098df">
+            android:value="9ff4e4befc9c53d8da4ee8b337d9b174">
         </meta-data>
 
     </application>

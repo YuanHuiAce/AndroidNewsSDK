@@ -167,6 +167,8 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
     protected void initializeViews(final FragmentActivity mContext) {
         activity = mContext;
+        videoChannelDao = new VideoChannelDao(mContext);
+        setVideoChannelList();
         AdUtil.setAdChannel(activity);
         uploadInformation();
         uploadChannelInformation();
@@ -176,8 +178,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         mMainView = (RelativeLayout) view.findViewById(R.id.main_layout);
         mDividingLine = (ImageView) view.findViewById(R.id.mDividingLine);
 //        mChannelItemDao = new ChannelItemDao(mContext);
-        videoChannelDao = new VideoChannelDao(mContext);
-        setVideoChannelList();
+
         mChannelItemDao = new ChannelItemDao(activity);
         mSelChannelItems = new ArrayList<>();
         mtvNewWorkBar = (TextView) view.findViewById(R.id.mNetWorkBar);
@@ -332,8 +333,16 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     }
 
     private void setVideoChannelList() {
+        videoChannelDao.queryForAll().get(0).getVersion_code();
+        String params;
+        if (videoChannelDao.queryForAll().get(0).getVersion_code()>0) {
+            params = "chid=" + 44 + "&channel=" + CommonConstant.NEWS_CTYPE+"&version_code="+videoChannelDao.queryForAll().get(0).getVersion_code();
+        }else
+        {
+            params = "chid=" + 44 + "&channel=" + CommonConstant.NEWS_CTYPE;
+        }
         VideoChannelRequest<List<VideoChannel>> videoFeedRequest = new VideoChannelRequest<List<VideoChannel>>(Request.Method.GET, new TypeToken<List<VideoChannel>>() {
-        }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST + "chid=44" + "&channel=" + CommonConstant.NEWS_CTYPE, new Response.Listener<ArrayList<VideoChannel>>() {
+        }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST+params , new Response.Listener<ArrayList<VideoChannel>>() {
             @Override
             public void onResponse(final ArrayList<VideoChannel> response) {
                 Logger.v(TAG, response.toString());
