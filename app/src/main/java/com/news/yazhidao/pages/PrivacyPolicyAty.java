@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.sdk.common.BaseActivity;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.R;
 
@@ -35,14 +36,14 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
 
         mPrivacyLeftBack.setOnClickListener(this);
         mPrivacyWebView = (WebView) findViewById(R.id.mPrivacyWebView);
-        mPrivacyWebView.setBackgroundColor(getResources().getColor(R.color.black));
+        mPrivacyWebView.setBackgroundColor(getResources().getColor(R.color.transparent));
         mPrivacyWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//        setTheme();
-//        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY)
-//            mPrivacyWebView.loadUrl("file:///android_asset/PrivacyPolicy.html");
-//        else
-            mPrivacyWebView.loadUrl("file:///android_asset/PrivacyPolicyNight.html");
 
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY)
+            mPrivacyWebView.loadUrl("file:///android_asset/PrivacyPolicy.html");
+        else
+            mPrivacyWebView.loadUrl("file:///android_asset/PrivacyPolicyNight.html");
+        setTheme();
     }
 
     @Override
@@ -82,6 +83,7 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, mPrivacyContainer, R.color.color6);
         TextUtil.setLayoutBgResource(this, mPrivacyHeader, R.color.color9);
+//        TextUtil.setLayoutBgResource(this, mPrivacyWebView, R.color.color6);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setTextColor(this, mPrivacyTitle, R.color.color2);
     }
