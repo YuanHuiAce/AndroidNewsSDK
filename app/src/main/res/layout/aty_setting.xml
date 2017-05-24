@@ -113,6 +113,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="标准"
+                    android:textColor="@color/txt_font_radio_1"
                     android:textSize="@dimen/font4" />
 
                 <RadioButton
@@ -124,6 +125,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="大"
+                    android:textColor="@color/txt_font_radio_1"
                     android:textSize="@dimen/font4" />
 
                 <RadioButton
@@ -135,6 +137,7 @@
                     android:gravity="center"
                     android:padding="6dp"
                     android:text="超大"
+                    android:textColor="@color/txt_font_radio_1"
                     android:textSize="@dimen/font4" />
             </RadioGroup>
         </RelativeLayout>

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -149,6 +150,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private NativeAD mNativeAD;
     private int adPosition;
     private List<NativeADDataRef> marrlist;
+    private int prcent;
+    private String Aid, source, title;
+    private boolean isUploadBigAd;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -248,6 +252,21 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         } else {
                             isBottom = false;
                         }
+                        if (!TextUtil.isListEmpty(beanList)) {
+                            for (RelatedItemEntity relatedItemEntity : beanList) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                                if (!relatedItemEntity.isUpload() && relatedItemEntity.isVisble() && relatedItemEntity.getRtype() == 3) {
+                                    relatedItemEntity.setUpload(true);
+                                    NewsFeed feed = new NewsFeed();
+                                    feed.setAid(Long.valueOf(Aid));
+                                    feed.setSource(source);
+                                    feed.setPname(relatedItemEntity.getTitle());
+                                    feed.setCtime(System.currentTimeMillis());
+                                    newsFeeds.add(feed);
+                                    LogUtil.userShowLog(newsFeeds, mContext);
+                                }
+                            }
+                        }
                         break;
                 }
             }
@@ -267,6 +286,18 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 }
                 if (mIntScorllY < getScrollY()) {
                     mIntScorllY = getScrollY();
+                }
+                prcent = getVisibilityPercents(adLayout);
+                if (prcent >= 50 && !isUploadBigAd && !TextUtil.isEmptyString(Aid) && !TextUtil.isEmptyString(source) && !TextUtil.isEmptyString(title)) {
+                    isUploadBigAd = true;
+                    ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                    NewsFeed feed = new NewsFeed();
+                    feed.setAid(Long.valueOf(Aid));
+                    feed.setSource(source);
+                    feed.setPname(title);
+                    feed.setCtime(System.currentTimeMillis());
+                    newsFeeds.add(feed);
+                    LogUtil.userShowLog(newsFeeds, mContext);
                 }
             }
 
@@ -297,6 +328,23 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             }
         }, 1000);
         return rootView;
+    }
+
+    public Rect rect = new Rect();
+
+    public int getVisibilityPercents(View view) {
+        View tv = view;
+        tv.getLocalVisibleRect(rect);
+        int height = tv.getHeight();
+        int percents = 100;
+        if (rect.top == 0 && rect.bottom == height) {
+            percents = 100;
+        } else if (rect.top > 0) {
+            percents = (height - rect.top) * 100 / height;
+        } else if (rect.bottom > 0 && rect.bottom < height) {
+            percents = rect.bottom * 100 / height;
+        }
+        return percents;
     }
 
     class ItemRecod {
@@ -876,6 +924,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     }
 
     ArrayList<RelatedItemEntity> beanList = new ArrayList<>();
+    ArrayList<RelatedItemEntity> mUploadArrRelated = new ArrayList<>();
 
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
         if (!TextUtil.isListEmpty(relatedItemEntities)) {
@@ -1174,6 +1223,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(mAdCount);
+            Aid = CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID;
+            source = CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE;
             adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -1182,6 +1233,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
+                Aid = CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID;
+                source = CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
                 adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
@@ -1192,6 +1245,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                             final NewsFeed newsFeed = result.get(0);
                             if (newsFeed != null) {
                                 adtvTitle.setText(newsFeed.getTitle());
+                                title = newsFeed.getTitle();
                                 final ArrayList<String> imgs = newsFeed.getImgs();
                                 if (!TextUtil.isListEmpty(imgs)) {
                                     mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
@@ -1234,7 +1288,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                         mContext.startActivity(AdIntent);
                                     }
                                 });
-                                LogUtil.userShowLog(result, mContext);
                                 AdUtil.upLoadAd(newsFeed.getAdDetailEntity(), mContext);
                             }
                         }
@@ -1259,6 +1312,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
+                title = dataRef.getTitle();
                 adtvTitle.setText(dataRef.getDesc());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
@@ -1270,7 +1324,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                         }
                     });
                 }
-                AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
                 dataRef.onExposured(adLayout);
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -102,6 +102,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     @Override
     public void convert(CommonViewHolder holder, RelatedItemEntity relatedItemEntity, int position) {
         AdUtil.upLoadFeedAd(relatedItemEntity, mContext);
+        relatedItemEntity.setVisble(true);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);

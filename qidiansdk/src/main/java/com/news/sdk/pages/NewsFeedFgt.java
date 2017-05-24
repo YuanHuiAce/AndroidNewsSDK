@@ -365,6 +365,23 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 adFlag = PULL_DOWN_REFRESH;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
+                if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                    for (NewsFeed newsFeed : mArrNewsFeed) {
+                        if (!newsFeed.isUpload() && newsFeed.isVisble()) {
+                            newsFeed.setUpload(true);
+                            mUploadArrNewsFeed.add(newsFeed);
+                        }
+                    }
+                }
+                if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
+                    while (mUploadArrNewsFeed.size() > 4) {
+                        ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                        for (int i = 0; i < 4; i++) {
+                            newsFeeds.add(mUploadArrNewsFeed.poll());
+                        }
+                        LogUtil.userShowLog(newsFeeds, mContext);
+                    }
+                }
             }
 
             @Override
@@ -1095,9 +1112,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             }
                         }
                         if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
-                            while (mUploadArrNewsFeed.size() > 9) {
+                            while (mUploadArrNewsFeed.size() > 4) {
                                 ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
-                                for (int i = 0; i < 9; i++) {
+                                for (int i = 0; i < 4; i++) {
                                     newsFeeds.add(mUploadArrNewsFeed.poll());
                                 }
                                 LogUtil.userShowLog(newsFeeds, mContext);

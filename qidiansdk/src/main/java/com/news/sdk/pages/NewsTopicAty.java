@@ -75,7 +75,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     private RelativeLayout mHomeRetry;
     private boolean isListRefresh;
     private TopicBaseInfo mTopicBaseInfo;
-    private ArrayList<TopicClass> marrTopicClass;
+    private ArrayList<TopicClass> marrTopicClass = new ArrayList<>();
     private NewsTopic mNewTopic;
     private RelativeLayout mDetailView;
     private ImageView mivShareBg;
@@ -90,6 +90,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     long lastTime, nowTime;
     private String mSource;
     private RequestManager mRequestManager;
+    private int mPager = 1;
 
     @Override
     protected boolean translucentStatus() {
@@ -135,7 +136,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
             }
         });
         mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
-        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
+        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mlvSpecialNewsFeed.setMainFooterView(true);
         mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
         mExpandableListView.setAdapter(mAdapter);
@@ -150,7 +151,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
                 isListRefresh = true;
-//                loadData();
+                loadData();
             }
         });
         mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -203,7 +204,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
         }
-        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid;
+        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid + "&c=10&p=" + mPager;
         if (NetUtil.checkNetWork(mContext)) {
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsTopicRequestGet<NewsTopic> topicRequestGet = new NewsTopicRequestGet<>(Request.Method.GET, new TypeToken<NewsTopic>() {
@@ -211,11 +212,28 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
 
                 @Override
                 public void onResponse(final NewsTopic result) {
+                    mlvSpecialNewsFeed.onRefreshComplete();
+                    mPager++;
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                     mNewTopic = result;
                     mTopicBaseInfo = mNewTopic.getTopicBaseInfo();
                     mTopicTitle.setText(mTopicBaseInfo.getName());
-                    marrTopicClass = mNewTopic.getTopicClass();
+//                    NewsFeed feed = new NewsFeed();
+//                    feed.setPtime("2017-05-22 23:22:58");
+//                    feed.setTitle("闺女，咱家的体操冠军梦就交给你了��������#宝宝成长记#");
+//                    feed.setNid(18740404);
+//                    feed.setPname("M小弟和E妹妹的成长记");
+//                    feed.setPurl("http://miaopai.com/show/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6.html");
+//                    feed.setStyle(8);
+//                    feed.setRtype(6);
+//                    feed.setIcon("http://icon-static-images.oss-cn-shanghai.aliyuncs.com/q7_day%403x.png");
+//                    feed.setCollect(0);
+//                    feed.setConcern(0);
+//                    feed.setChannel(44);
+//                    feed.setThumbnail("http://bsyimg3.cdn.krcom.cn/stream/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6_32768.jpg");
+//                    feed.setVideourl("http://gslb.miaopai.com/stream/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6.mp4?yx=&refer=weibo_app&Expires=1495429027&ssig=zpPEJniSJy&KID=unistore,video");
+//                    mNewTopic.getTopicClass().get(0).getNewsFeed().add(feed);
+                    marrTopicClass.addAll(mNewTopic.getTopicClass());
                     for (int i = 0; i < marrTopicClass.size(); i++) {
                         mExpandableListView.expandGroup(i);
                     }
@@ -228,6 +246,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    mlvSpecialNewsFeed.onRefreshComplete();
+                    mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
                     mNewsLoadingImg.setVisibility(View.VISIBLE);
                     bgLayout.setVisibility(View.GONE);
                 }
@@ -397,6 +417,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                 return NewsFeed.THREE_PIC;
             } else if (11 == type || 12 == type || 13 == type) {
                 return NewsFeed.BIG_PIC;
+            } else if (6 == type || 8 == type) {
+                return NewsFeed.VIDEO_SMALL;
             } else {
                 return NewsFeed.EMPTY;
             }
@@ -404,7 +426,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public int getChildTypeCount() {
-            return 5;
+            return 6;
         }
 
         @Override
@@ -442,14 +464,16 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                                  boolean isLastChild, View convertView, ViewGroup parent) {
             NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
             ChildNoPicHolder childNoPicHolderHolder;
-            final ChildOnePicHolder childOnePicHolder;
+            ChildOnePicHolder childOnePicHolder;
             ChildThreePicHolder childThreePicHolder;
             ChildBigPicHolder childBigPicHolder;
+            ChildSmallVideoHolder childSmallVideoHolder;
             View vNoPic;
             View vOnePic;
             View vThreePic;
             View vBigPic;
             View vEmpty;
+            View vSmallVideo;
             currentType = getChildType(groupPosition, childPosition);
             if (currentType == NewsFeed.NO_PIC) {
                 if (convertView == null) {
@@ -578,6 +602,39 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                 newsTag(childBigPicHolder.tvType, feed.getRtype());
                 setSourceIcon(childBigPicHolder.ivIcon, feed.getIcon());
                 childBigPicHolder.ivDelete.setVisibility(View.GONE);
+            } else if (currentType == NewsFeed.VIDEO_SMALL) {
+                if (convertView == null) {
+                    childSmallVideoHolder = new ChildSmallVideoHolder();
+                    vSmallVideo = LayoutInflater.from(mContext).inflate(R.layout.ll_video_item_small, null);
+                    childSmallVideoHolder.rlContent = (RelativeLayout) vSmallVideo.findViewById(R.id.news_content_relativeLayout);
+                    childSmallVideoHolder.tvTitle = (TextView) vSmallVideo.findViewById(R.id.title_textView);
+                    childSmallVideoHolder.tvSource = (TextViewExtend) vSmallVideo.findViewById(R.id.news_source_TextView);
+                    childSmallVideoHolder.tvCommentNum = (TextViewExtend) vSmallVideo.findViewById(R.id.comment_num_textView);
+                    childSmallVideoHolder.tvType = (TextViewExtend) vSmallVideo.findViewById(R.id.type_textView);
+                    childSmallVideoHolder.ivDelete = (ImageView) vSmallVideo.findViewById(R.id.delete_imageView);
+                    childSmallVideoHolder.ivBottomLine = (ImageView) vSmallVideo.findViewById(R.id.line_bottom_imageView);
+                    childSmallVideoHolder.ivIcon = (ImageView) vSmallVideo.findViewById(R.id.icon_source);
+                    childSmallVideoHolder.ivPicture = (ImageView) vSmallVideo.findViewById(R.id.title_img_View);
+                    childSmallVideoHolder.tvDuration = (TextView) vSmallVideo.findViewById(R.id.tv_video_duration);
+                    vSmallVideo.setTag(childSmallVideoHolder);
+                    convertView = vSmallVideo;
+                } else {
+                    childSmallVideoHolder = (ChildSmallVideoHolder) convertView.getTag();
+                }
+                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childSmallVideoHolder.ivPicture.getLayoutParams();
+                lpCard.width = mCardWidth;
+                lpCard.height = mCardHeight;
+                childSmallVideoHolder.ivPicture.setLayoutParams(lpCard);
+                setImageUri(childSmallVideoHolder.ivPicture, feed.getThumbnail(), mCardWidth, mCardHeight, feed.getRtype());
+                setTitleTextBySpannable(childSmallVideoHolder.tvTitle, feed.getTitle(), false);
+                setSourceViewText(childSmallVideoHolder.tvSource, feed.getPname());
+                setCommentViewText(childSmallVideoHolder.tvCommentNum, feed.getComment() + "");
+                setNewsContentClick(childSmallVideoHolder.rlContent, feed);
+                newsTag(childSmallVideoHolder.tvType, feed.getRtype());
+                childSmallVideoHolder.ivDelete.setVisibility(View.GONE);
+                setSourceIcon(childSmallVideoHolder.ivIcon, feed.getIcon());
+                setBottomLineColor(childSmallVideoHolder.ivBottomLine);
+                setBottomLine(childSmallVideoHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
             } else if (currentType == NewsFeed.EMPTY) {
                 if (convertView == null) {
                     childNoPicHolderHolder = new ChildNoPicHolder();
@@ -672,10 +729,16 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                         return;
                     }
                     firstClick = System.currentTimeMillis();
-                    if (feed.getRtype() == 3) {
+                    int type = feed.getRtype();
+                    if (type == 3) {
                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                         AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
                         startActivity(AdIntent);
+                    } else if (type == 6 || type == 8) {
+                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                        intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
+                        intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
+                        startActivity(intent);
                     } else {
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -790,6 +853,11 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
 
         class ChildBigPicHolder extends ChildNoPicHolder {
             ImageView ivBigPicture;
+        }
+
+        class ChildSmallVideoHolder extends ChildNoPicHolder {
+            ImageView ivPicture;
+            TextView tvDuration;
         }
     }
 }

@@ -570,12 +570,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.rl_video_show).setVisibility(View.VISIBLE);
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
-            int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            int width = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
-            lpVideoSmall.width = widthv;
-            lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
+            lpVideoSmall.width = width;
+            lpVideoSmall.height = (int) (width * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
             ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.image_play), R.drawable.video_play);
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());

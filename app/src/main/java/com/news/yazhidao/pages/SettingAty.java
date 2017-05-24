@@ -141,11 +141,6 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         TextUtil.setLayoutBgResource(this, mSettingSection3, R.drawable.bg_setting_selector);
         TextUtil.setLayoutBgResource(this, mSettingLogout, R.color.color9);
         ImageUtil.setAlphaImage(mSettingPushImg);
-//        TextUtil.setLayoutBgResource(this, mLine4, R.color.color5);
-//        TextUtil.setTextColor(this, mTitle, R.color.color2);
-//        TextUtil.setTextColor(this, mTitle1, R.color.color2);
-//        TextUtil.setTextColor(this, mTitle2, R.color.color2);
-//        TextUtil.setTextColor(this, mTitle3, R.color.color2);
         TextUtil.setTextColor(this, mSetting, R.color.color2);
         TextUtil.setTextColor(this, mPushText, R.color.color2);
         TextUtil.setTextColor(this, mFontSizeText, R.color.color2);
@@ -154,9 +149,9 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         TextUtil.setTextColor(this, mPrivacyPolicyText, R.color.color2);
         TextUtil.setTextColor(this, mUpdateText, R.color.color2);
         TextUtil.setTextColor(this, mSettingLogout, R.color.color1);
-        TextUtil.setTextColor(this, mRadioNormal, R.drawable.txt_font_radio_1);
-        TextUtil.setTextColor(this, mRadioBig, R.drawable.txt_font_radio_1);
-        TextUtil.setTextColor(this, mRadioBigger, R.drawable.txt_font_radio_1);
+        ImageUtil.setAlphaImage(mRadioNormal);
+        ImageUtil.setAlphaImage(mRadioBig);
+        ImageUtil.setAlphaImage(mRadioBigger);
     }
 
     @Override

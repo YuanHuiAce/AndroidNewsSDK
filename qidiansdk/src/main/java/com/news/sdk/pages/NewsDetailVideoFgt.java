@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -178,6 +179,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private View detail_shared_hotComment_line1;
     private View detail_shared_hotComment_line2;
     private TextView detailViewPoint;
+    private int prcent;
+    private String Aid, source, title;
+    private boolean isUploadBigAd;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -263,26 +267,53 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //            }
 //        });
 //
-//        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                switch (scrollState) {
-//                    // 当不滚动时
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//                        // 判断滚动到底部
-//                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-//                            isBottom = true;
-//                        } else {
-//                            isBottom = false;
-//                        }
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
-//            }
-//        });
+        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            isBottom = true;
+                        } else {
+                            isBottom = false;
+                        }
+                        if (!TextUtil.isListEmpty(beanList)) {
+                            for (RelatedItemEntity relatedItemEntity : beanList) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                                if (!relatedItemEntity.isUpload() && relatedItemEntity.isVisble() && relatedItemEntity.getRtype() == 3) {
+                                    relatedItemEntity.setUpload(true);
+                                    NewsFeed feed = new NewsFeed();
+                                    feed.setAid(Long.valueOf(Aid));
+                                    feed.setSource(source);
+                                    feed.setPname(relatedItemEntity.getTitle());
+                                    feed.setCtime(System.currentTimeMillis());
+                                    newsFeeds.add(feed);
+                                    LogUtil.userShowLog(newsFeeds, mContext);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                prcent = getVisibilityPercents(adLayout);
+                if (prcent >= 50 && !isUploadBigAd && !TextUtil.isEmptyString(Aid) && !TextUtil.isEmptyString(source) && !TextUtil.isEmptyString(title)) {
+                    isUploadBigAd = true;
+                    ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                    NewsFeed feed = new NewsFeed();
+                    feed.setAid(Long.valueOf(Aid));
+                    feed.setSource(source);
+                    feed.setPname(title);
+                    feed.setCtime(System.currentTimeMillis());
+                    newsFeeds.add(feed);
+                    LogUtil.userShowLog(newsFeeds, mContext);
+                }
+            }
+        });
         initPlayer();
 
         mAdapter = new NewsDetailFgtAdapter(mContext, null);
@@ -300,6 +331,22 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         return rootView;
     }
 
+    public Rect rect = new Rect();
+
+    public int getVisibilityPercents(View view) {
+        View tv = view;
+        tv.getLocalVisibleRect(rect);
+        int height = tv.getHeight();
+        int percents = 100;
+        if (rect.top == 0 && rect.bottom == height) {
+            percents = 100;
+        } else if (rect.top > 0) {
+            percents = (height - rect.top) * 100 / height;
+        } else if (rect.bottom > 0 && rect.bottom < height) {
+            percents = rect.bottom * 100 / height;
+        }
+        return percents;
+    }
 
     @Override
     public void onDetach() {
@@ -1042,6 +1089,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(2);
+            Aid = CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID;
+            source = CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE;
             adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_VIDEO_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
@@ -1050,6 +1099,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
+                Aid = CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID;
+                source = CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
                 adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
@@ -1060,6 +1111,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                             final NewsFeed newsFeed = result.get(0);
                             if (newsFeed != null) {
                                 adtvTitle.setText(newsFeed.getTitle());
+                                title = newsFeed.getTitle();
                                 final ArrayList<String> imgs = newsFeed.getImgs();
                                 if (!TextUtil.isListEmpty(imgs)) {
                                     mRequestManager.load(imgs.get(0)).placeholder(R.drawable.bg_load_default_small).into(adImageView);
@@ -1102,7 +1154,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                         mContext.startActivity(AdIntent);
                                     }
                                 });
-                                LogUtil.userShowLog(result, mContext);
                                 AdUtil.upLoadAd(newsFeed.getAdDetailEntity(), mContext);
                             }
                         }
@@ -1127,6 +1178,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null) {
+                title = dataRef.getTitle();
                 adtvTitle.setText(dataRef.getDesc());
                 final String url = dataRef.getImgUrl();
                 if (!TextUtil.isEmptyString(url)) {
@@ -1138,7 +1190,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                         }
                     });
                 }
-                AdUtil.upLogAdShowGDTSDK(list, mContext, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID);
                 dataRef.onExposured(adLayout);
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

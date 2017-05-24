@@ -33,6 +33,8 @@ import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.User;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
+import com.news.sdk.utils.ImageUtil;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 
@@ -60,6 +62,7 @@ public class SharePopupWindow extends PopupWindow {
     boolean isFavorite;
     boolean isVideo, isTopic;
     private int mNid;
+    private View line_layout;
 
 
     public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
@@ -76,9 +79,9 @@ public class SharePopupWindow extends PopupWindow {
     }
 
     private void findHeadPortraitImageViews() {
-
         mtvClose = (TextViewExtend) mMenuView.findViewById(R.id.close_imageView);
         mShareLayout = (LinearLayout) mMenuView.findViewById(R.id.share_layout);
+        line_layout = mMenuView.findViewById(R.id.line_layout);
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -104,6 +107,10 @@ public class SharePopupWindow extends PopupWindow {
             }
         });
         setOnClick();
+        TextUtil.setTextColor(mContext, mtvClose, R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, mtvClose, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mShareLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, line_layout, R.color.color5);
     }
 
     public void setTitleAndNid(String title, int nid, String remark) {
@@ -155,11 +162,12 @@ public class SharePopupWindow extends PopupWindow {
             Drawable topDrawable = mContext.getResources().getDrawable(mTypedArray.getResourceId(i, 0));
             topDrawable.setBounds(0, 0, topDrawable.getMinimumWidth(), topDrawable.getMinimumHeight());
             viewExtend.setCompoundDrawables(null, topDrawable, null, null);
-            viewExtend.setTextColor(mContext.getResources().getColor(R.color.bg_share_text));
+            TextUtil.setTextColor(mContext, viewExtend, R.color.color2);
             viewExtend.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContext.getResources().getDimensionPixelSize(R.dimen.new_font6));
             viewExtend.setText(mShareName[i]);
             viewExtend.setGravity(Gravity.CENTER_HORIZONTAL);
             viewExtend.setCompoundDrawablePadding(DensityUtil.dip2px(mContext, 8));
+            ImageUtil.setAlphaImage(viewExtend);
             int margin = DensityUtil.dip2px(mContext, 25);
             if (i == mTypedArray.length() - 1) {
                 viewExtend.setPadding(margin, margin, margin, margin);
