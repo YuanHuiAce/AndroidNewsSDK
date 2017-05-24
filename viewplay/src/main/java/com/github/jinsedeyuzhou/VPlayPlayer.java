@@ -38,7 +38,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.jinsedeyuzhou.adapter.PlayerAdapter;
 import com.github.jinsedeyuzhou.bean.PlayerFeed;
@@ -97,7 +96,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private TextView mVideoNetTieConfirm;
     private TextView mVideoNetTieCancel;
     private TextView mVideoDuration;
-
+    private LinearLayout mDurationContainer;
 
     //是否展示
     private boolean isShow;
@@ -259,6 +258,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         mVideoNetTieConfirm = (TextView) findViewById(R.id.app_video_netTie_confirm);
         mVideoNetTieCancel = (TextView) findViewById(R.id.app_video_netTie_cancel);
         mVideoDuration = (TextView) findViewById(R.id.app_video_network_duration);
+        mDurationContainer = (LinearLayout) findViewById(R.id.ll_duration_container);
 
         //触屏
         gestureTouch = (LinearLayout) findViewById(R.id.ll_gesture_touch);
@@ -509,7 +509,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             if (isAllowModible && NetworkUtils.isMobileAvailable(mContext) || NetworkUtils.isWifiAvailable(mContext)) {
                 doPauseResume();
             } else {
-                Toast.makeText(mContext, "请检查您的网络", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "当前网络不可用，请检查您的网络", Toast.LENGTH_SHORT).show();
             }
 //            else if (mVideoView.isPlaying() && !isAllowModible && NetworkUtils.isMobileAvailable(mContext)) {
 //                mVideoDuration.setText(generateTime(duration));
@@ -1461,7 +1461,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         else
             sound.setImageResource(R.mipmap.sound_open_icon);
         status = PlayStateParams.STATE_PREPARE;
-        if (playerSupport) {
+
+       if (playerSupport) {
             start();
             progressBar.setVisibility(View.VISIBLE);
             releaseBitmap();
@@ -1470,7 +1471,13 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mVideoView.start();
             play.setSelected(true);
             statusChange(PlayStateParams.STATE_PLAYING);
+           if (NetworkUtils.isMobileAvailable(mContext) && !isAllowModible) {
+               mDurationContainer.setVisibility(View.GONE);
+               mVideoNetTie.setVisibility(View.VISIBLE);
+               onPause();
+           }
         }
+
     }
 
 
@@ -1489,7 +1496,6 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             statusChange(PlayStateParams.STATE_PLAYING);
         }
         play.setSelected(true);
-
     }
 
 
@@ -1558,7 +1564,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         onShareListener = var1;
     }
 
-    //============================网络监听================================
+//============================网络监听================================
 
     /**
      * 获得某个控件
@@ -1610,9 +1616,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 hide(false);
                 isShowContoller = false;
                 mVideoDuration.setText(generateTime(duration));
+                mDurationContainer.setVisibility(View.VISIBLE);
                 mVideoNetTie.setVisibility(View.VISIBLE);
             } else {
-                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
                 isShowContoller = true;
                 pause();
                 mVideoNetTie.setVisibility(View.GONE);

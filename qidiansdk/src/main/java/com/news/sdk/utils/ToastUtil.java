@@ -89,4 +89,22 @@ public class ToastUtil {
         });
 
     }
+    /**
+     * 显示减少此类型推荐
+     */
+    public static void showNetorkPrompt(final Context mContext) {
+        if (Looper.getMainLooper() != Looper.myLooper()) {
+            return;
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(mContext, "当前网络不可用，请检查网络设置", Toast.LENGTH_SHORT);
+                toast.setView(LayoutInflater.from(mContext).inflate(R.layout.show_noetwork_layout,null));
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        });
+
+    }
 }

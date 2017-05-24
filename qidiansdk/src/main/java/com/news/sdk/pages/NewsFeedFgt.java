@@ -1055,10 +1055,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         ListView lv = mlvNewsFeed.getRefreshableView();
 
         if (mChannelId == 44) {
-//            addTabView(LayoutInflater);
             addTabNavigation(LayoutInflater);
             lv.addHeaderView(nav);
-//            addTabNavigation();
         } else {
             lv.addHeaderView(mSearchHeaderView);
         }
@@ -1184,6 +1182,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 Logger.v(TAG, "firstVisibleItem:" + firstVisibleItem + "getFirstVisibleItem:" + view.getFirstVisiblePosition());
                 if (mChannelId == 44 && portrait) {
                     VideoShowControl();
+                    if (!isSelected)
+                    {
+                        mChannelList.clearCheck();
+                        mChannelList1.clearCheck();
+                    }
+
                     if (firstVisibleItem > 1) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
                     } else {
@@ -1445,7 +1449,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     }
 
-    private boolean isSelected;
+    private boolean isSelected=true;
 
     public void addTabNavigation(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
@@ -1463,43 +1467,42 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             RadioButton mTitle = (RadioButton) view.findViewById(R.id.rb_title);
             mTitle.setText(videoChannel.getCname());
             mTitle.setId(videoChannel.getId());
-//            TextUtil.setLayoutBg(mContext, mTitle, R.drawable.bg_video_channel_selector);
-//            TextUtil.setTextColor(mContext,mTitle,R.drawable.text_video_channel_selector);
-
             mChannelList.addView(view, params_rb);
         }
-//        mlvNewsFeed.getRefreshableView().addHeaderView(nav);
         final int mScreenWidth = DeviceInfoUtil.getScreenWidth() / 2;
         mChannelList.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes final int checkedId) {
                 final RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if (rb!=null)
-                rb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mChannelList1.check(checkedId);
-                        if (scid == checkedId) {
-                            if (rb.isChecked()) {
-                                scid=0;
-                                mChannelList.clearCheck();
+                if (rb != null)
+                    rb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mChannelList1.check(checkedId);
+                            if (scid == checkedId) {
+                                if (rb.isChecked()) {
+                                    scid = 0;
+                                    mChannelList.clearCheck();
+                                    mlvNewsFeed.setRefreshing();
+                                    isSelected=false;
+//                                    ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+//                                            ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                                }
+                            } else {
+                                scid = checkedId;
+                                isSelected=true;
                                 mlvNewsFeed.setRefreshing();
-                                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                                if (rb != null) {
+                                    int scrollX = navContainer.getScrollX();
+                                    System.out.println("scrollX----->" + scrollX);
+                                    int left = rb.getLeft();
+                                    int leftScreen = left - scrollX;
+                                    navContainer.smoothScrollBy((leftScreen - mScreenWidth), 0);
+                                }
                             }
-                        } else {
-                            scid = checkedId;
-                            mlvNewsFeed.setRefreshing();
                         }
-                    }
-                });
-                if (rb!=null) {
-                    int scrollX = navContainer.getScrollX();
-                    System.out.println("scrollX----->" + scrollX);
-                    int left = rb.getLeft();
-                    int leftScreen = left - scrollX;
-                    navContainer.smoothScrollBy((leftScreen - mScreenWidth), 0);
-                }
+                    });
+
             }
         });
         addTabNav();
@@ -1507,8 +1510,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     public void addTabNav() {
-        videoChannelDao = new VideoChannelDao(mContext);
-        localChannelItems = videoChannelDao.queryForAll();
+//        videoChannelDao = new VideoChannelDao(mContext);
+//        localChannelItems = videoChannelDao.queryForAll();
         nav1 = LayoutInflater.from(mContext).inflate(R.layout.two_channel_layout, null);
         navContainer1 = (HorizontalScrollView) nav1.findViewById(R.id.hsv_container);
         mChannelList1 = (RadioGroup) nav1.findViewById(R.id.rg_container_channel);
@@ -1522,48 +1525,51 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             RadioButton mTitle = (RadioButton) view.findViewById(R.id.rb_title);
             mTitle.setText(videoChannel.getCname());
             mTitle.setId(videoChannel.getId());
-//            TextUtil.setLayoutBg(mContext, mTitle, R.drawable.bg_video_channel_selector);
-//            TextUtil.setTextColor(mContext,mTitle,R.drawable.text_video_channel_selector);
-
             mChannelList1.addView(view, params_rb);
         }
-//        mlvNewsFeed.getRefreshableView().addHeaderView(nav);
+
+
         final int mScreenWidth = DeviceInfoUtil.getScreenWidth() / 2;
         mChannelList1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes final int checkedId) {
                 final RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if (rb!=null)
-                rb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mChannelList.check(checkedId);
-                        if (scid == checkedId) {
-                            if (rb.isChecked()) {
-                                scid=0;
-                                mChannelList1.clearCheck();
-                                loadData(PULL_DOWN_REFRESH);
-//                                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-//                                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                if (rb != null)
+                    rb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mChannelList.check(checkedId);
+                            if (scid == checkedId) {
+                                if (rb.isChecked()) {
+                                    scid = 0;
+                                    mChannelList1.clearCheck();
+                                    mlvNewsFeed.setRefreshing();
+                                    isSelected=false;
+                                }
+                            } else {
+                                scid = checkedId;
+                                mlvNewsFeed.setRefreshing();
+                                isSelected=true;
+                                if (rb != null) {
+                                    int scrollX = navContainer1.getScrollX();
+                                    System.out.println("scrollX----->" + scrollX);
+                                    int left = rb.getLeft();
+                                    int leftScreen = left - scrollX;
+                                    navContainer1.smoothScrollBy((leftScreen - mScreenWidth), 0);
+                                }
                             }
-                        } else {
-                            scid = checkedId;
-                           loadData(PULL_DOWN_REFRESH);
                         }
-                    }
-                });
+                    });
 
 
-                if (rb!=null) {
-                    int scrollX = navContainer1.getScrollX();
-                    System.out.println("scrollX----->" + scrollX);
-                    int left = rb.getLeft();
-                    int leftScreen = left - scrollX;
-                    navContainer1.smoothScrollBy((leftScreen - mScreenWidth), 0);
-                }
+
             }
         });
         mContainerTabLayout.addView(nav1);
+        scid=localChannelItems.get(0).getId();
+        mChannelList1.check(localChannelItems.get(0).getId());
+        mChannelList.check(localChannelItems.get(0).getId());
+
     }
 
 
@@ -1629,10 +1635,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         if (getPlayItemPosition() != -1) {
                             getShowItemView(getPlayItemPosition()).setVisibility(View.GONE);
                             removeVPlayer();
-//                            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-//                            if (frameLayout != null) {
-//                                frameLayout.removeView(vPlayer);
-//                            }
                             getPlayItemView(getPlayItemPosition()).addView(vPlayer);
                             vPlayer.setShowContoller(false);
 
@@ -1697,7 +1699,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         new Runnable() {
                             @Override
                             public void run() {
-//                                vPlayerContainer.removeView(vPlayer);
                                 removeVPlayer();
                                 TransitionManager.beginDelayedTransition(vPlayerContainer);
                                 int position = getPlayItemPosition();
@@ -1713,7 +1714,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         vPlayer.showBottomControl(true);
                                         isAuto = false;
                                     } else {
-                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 2, 0);
+                                        mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + tagPosition, 0);
                                         mHandler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
@@ -1856,11 +1857,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext))
-                    return;
-                else if (NetworkUtils.isMobileAvailable(mContext)) {
-                    showNetworkDialog(relativeLayout, feed);
-                    return;
+                {
+//                    ToastUtil.showNetorkPrompt(getActivity());
+                    return ;
                 }
+//                else if (NetworkUtils.isMobileAvailable(mContext)) {
+//                    showNetworkDialog(relativeLayout, feed);
+//                    return;
+//                }
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 newsFeed = feed;
@@ -2014,7 +2018,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             vPlayerContainer.addView(vPlayer);
                             lastPostion = vPlayer.cPostion;
                             isAuto = true;
-                            mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + 2, 0);
+                            mlvNewsFeed.getRefreshableView().setSelectionFromTop(getNextItemPosition() + tagPosition, 0);
 
                         } else {
                             isAuto = true;
@@ -2075,7 +2079,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + 2, 0);
+                mlvNewsFeed.getRefreshableView().setSelectionFromTop(position + tagPosition, 0);
             }
         }, 200);
 
@@ -2088,9 +2092,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
 
                 if (videoContainer != null) {
-//                    ViewGroup vp = (ViewGroup) vPlayer.getParent();
-//                    if (vp != null)
-//                        vp.removeAllViews();
                     removeVPlayer();
                     videoContainer.addView(vPlayer);
                 }
@@ -2169,13 +2170,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public int getNextItemPosition() {
         for (int i = 0; i < mArrNewsFeed.size(); i++) {
             if (mArrNewsFeed.get(i).getNid() == vPlayer.cPostion) {
-//                for (position = i + 1; position < mArrNewsFeed.size(); position++) {
-//                    if (mArrNewsFeed.get(position).getVideourl() != null) {
-//                        if (mArrNewsFeed.get(position - 1).getVideourl() == null)
-//                            isAd = true;
-//                        return position;
-//                    }
-//                }
                 return i;
             }
         }
@@ -2192,10 +2186,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         ListView lv = mlvNewsFeed.getRefreshableView();
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
             if (i == 0 || i == 1)
+//            if (i == 0)
                 continue;
             if (i > mArrNewsFeed.size())
                 return -1;
-            if (mArrNewsFeed.get(i - 2).getNid() == vPlayer.cPostion) {
+            if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 return (i - lv.getFirstVisiblePosition());
             }
         }
@@ -2299,17 +2294,19 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     }
 
+    private int tagPosition = 2;
 
     private void VideoShowControl() {
         ListView lv = mlvNewsFeed.getRefreshableView();
         boolean isExist = false;
         int position = -1;
         for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+//            if (i == 0)
             if (i == 0 || i == 1)
                 continue;
             if (i > mArrNewsFeed.size())
                 break;
-            if (mArrNewsFeed.get(i - 2).getNid() == vPlayer.cPostion) {
+            if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
                 break;
@@ -2323,7 +2320,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 mFeedSmallLayout.setVisibility(View.GONE);
-//                mFeedSmallScreen.removeAllViews();
                 removeVPlayer();
                 vPlayer.setShow(true);
                 vPlayer.isOpenOrientation(true);
@@ -2331,10 +2327,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 frameLayout.addView(vPlayer);
             } else {
                 if (frameLayout.getChildCount() <= 0 && vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-//                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
-//                    if (fl != null) {
-//                        fl.removeView(vPlayer);
-//                    }
                     removeVPlayer();
                     vPlayer.setShow(true);
                     vPlayer.isOpenOrientation(true);
@@ -2345,35 +2337,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
             }
 
-
-//            else {
-//                if (frameLayout.getChildCount() <= 0) {
-//
-//                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
-//                    if (fl != null) {
-//                        fl.removeView(vPlayer);
-//                    }
-//                    frameLayout.removeAllViews();
-//                    if (vPlayer.getStatus() == PlayStateParams.STATE_ERROR) {
-//                        vPlayer.stop();
-//                        vPlayer.release();
-//                    } else {
-//                        frameLayout.addView(vPlayer);
-//                        vPlayer.setShow(true);
-//                        vPlayer.isOpenOrientation(true);
-//                    }
-//                }
-////                    frameLayout.removeAllViews();
-////                    FrameLayout fl = (FrameLayout) vPlayer.getParent();
-////                    if (fl != null) {
-////                        fl.removeView(vPlayer);
-////                    }
-////                    vPlayer.setShow(true);
-////                    vPlayer.isOpenOrientation(true);
-////                    frameLayout.addView(vPlayer);
-//                }
-//
-//            }
 
         } else {
             if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE) {
@@ -2388,7 +2351,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
 
                 if (vPlayer.getStatus() == PlayStateParams.STATE_PLAYING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
-//                    mFeedSmallScreen.removeAllViews();
                     removeVPlayer();
                     mFeedSmallScreen.addView(vPlayer);
                     vPlayer.setShowContoller(false);

@@ -74,15 +74,15 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
     }
 
     private void setTheme() {
-
-        TextUtil.setLayoutBgResource(this,mAboutContainer,R.color.color6);
-        TextUtil.setLayoutBgResource(this,mAboutContainer,R.color.color9);
-        TextUtil.setTextColor(this,mTitle,R.color.color2);
-        TextUtil.setTextColor(this,mAppName,R.color.color2);
-        TextUtil.setTextColor(this,mAboutVersion,R.color.color3);
-        TextUtil.setTextColor(this,mAboutAttestation,R.color.color3);
+        TextUtil.setLayoutBgResource(this, mAboutContainer, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mTitleContainer, R.color.color9);
+        TextUtil.setTextColor(this, mTitle, R.color.color2);
+        TextUtil.setTextColor(this, mAppName, R.color.color2);
+        TextUtil.setTextColor(this, mAboutVersion, R.color.color3);
+        TextUtil.setTextColor(this, mAboutAttestation, R.color.color3);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
-        ImageUtil.setAlphaImage(mCompanyLogo,R.mipmap.ic_about_company_logo);
+        ImageUtil.setAlphaImage(mAppIcon, R.mipmap.ic_launcher);
+        ImageUtil.setAlphaImage(mCompanyLogo, R.mipmap.ic_about_company_logo);
 
     }
 }

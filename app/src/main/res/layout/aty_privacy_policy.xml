@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_privacy_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/new_color5">
+ >
 
     <RelativeLayout
         android:id="@+id/mPrivacyHeader"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/common_header_bg">
+       >
 
         <TextView
             android:id="@+id/mPrivacyLeftBack"
@@ -20,18 +21,20 @@
             android:paddingLeft="15dp" />
 
         <TextView
+            android:id="@+id/tv_privacy_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="隐私政策"
             android:textColor="@color/new_color7"
-            android:textSize="@dimen/font1" />
+            android:textSize="@dimen/font3" />
 
-        <ImageView
+        <View
+            android:id="@+id/privacy_bottom_line"
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/new_color5" />
+           />
     </RelativeLayout>
 
     <WebView
@@ -39,5 +42,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mPrivacyHeader"
-        android:background="@color/white"></WebView>
+        android:background="@color/white"/>
 </RelativeLayout>
