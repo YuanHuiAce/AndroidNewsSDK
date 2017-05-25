@@ -28,6 +28,7 @@ import com.umeng.message.entity.UMessage;
 public class DemoApplication extends Application {
 
     private static  PushAgent mPushAgent;
+    public static boolean isPushOnOff=true;
 
     @Override
     public void onCreate() {

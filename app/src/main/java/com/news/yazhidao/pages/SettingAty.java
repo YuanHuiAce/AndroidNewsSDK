@@ -33,6 +33,7 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.CustomDialog;
+import com.news.yazhidao.DemoApplication;
 import com.news.yazhidao.R;
 import com.news.yazhidao.service.UpdateService;
 import com.umeng.message.IUmengCallback;
@@ -216,34 +217,36 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.mSettingPushSwitch:
                 PushAgent pushAgent = PushAgent.getInstance(this);
-                if (isPushOnOff) {
+                if (!DemoApplication.isPushOnOff) {
                     pushAgent.enable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-                            ToastUtil.toastShort("enable");
+//                            ToastUtil.toastShort("enable");
                         }
 
                         @Override
                         public void onFailure(String s, String s1) {
-                            ToastUtil.toastShort("enable onFailure");
+//                            ToastUtil.toastShort("enable onFailure");
                         }
                     });
+
                     mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_on);
                 } else {
                     pushAgent.disable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-                            ToastUtil.toastShort("disable");
+//                            ToastUtil.toastShort("disable");
                         }
 
                         @Override
                         public void onFailure(String s, String s1) {
-                            ToastUtil.toastShort("disable onFailure");
+//                            ToastUtil.toastShort("disable onFailure");
                         }
                     });
 
                     mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_off);
                 }
+                DemoApplication.isPushOnOff=!DemoApplication.isPushOnOff;
                 break;
             case R.id.mSettingDayNight:
                 if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
