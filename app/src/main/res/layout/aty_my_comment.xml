@@ -24,6 +24,7 @@
             android:layout_centerInParent="true"
             android:ellipsize="end"
             android:gravity="center"
+            android:text="评论"
             android:lines="1"
             android:textSize="@dimen/font3" />
     </RelativeLayout>

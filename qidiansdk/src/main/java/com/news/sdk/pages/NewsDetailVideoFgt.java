@@ -962,6 +962,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         } else {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
+        ImageUtil.setAlphaImage(holder.ivPraise);
         int count = comment.getCommend();
         if (count == 0) {
             holder.tvPraiseCount.setVisibility(View.INVISIBLE);

@@ -34,8 +34,7 @@
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
             android:padding="12dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/channel_more_selector" />
+            android:scaleType="centerInside" />
     </LinearLayout>
 
     <ImageView

@@ -335,14 +335,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private void setVideoChannelList() {
         videoChannelDao.queryForAll().get(0).getVersion_code();
         String params;
-        if (videoChannelDao.queryForAll().get(0).getVersion_code()>0) {
-            params = "chid=" + 44 + "&channel=" + CommonConstant.NEWS_CTYPE+"&version_code="+videoChannelDao.queryForAll().get(0).getVersion_code();
-        }else
-        {
+        if (videoChannelDao.queryForAll().get(0).getVersion_code() > 0) {
+            params = "chid=" + 44 + "&channel=" + CommonConstant.NEWS_CTYPE + "&version_code=" + videoChannelDao.queryForAll().get(0).getVersion_code();
+        } else {
             params = "chid=" + 44 + "&channel=" + CommonConstant.NEWS_CTYPE;
         }
         VideoChannelRequest<List<VideoChannel>> videoFeedRequest = new VideoChannelRequest<List<VideoChannel>>(Request.Method.GET, new TypeToken<List<VideoChannel>>() {
-        }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST+params , new Response.Listener<ArrayList<VideoChannel>>() {
+        }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST + params, new Response.Listener<ArrayList<VideoChannel>>() {
             @Override
             public void onResponse(final ArrayList<VideoChannel> response) {
                 Logger.v(TAG, response.toString());
@@ -598,11 +597,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
 
 
     public void setTheme() {
+        dislikePopupWindow.setTheme();
         User user = SharedPreManager.mInstance(activity).getUser(activity);
         ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, user.getUserIcon(), R.drawable.btn_user_center);
         TextUtil.setLayoutBgResource(activity, mivUserCenter, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mMainView, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mChannelExpand, R.color.color6);
+        TextUtil.setImageResource(activity, mChannelExpand, R.drawable.btn_channel_more_normal);
         TextUtil.setLayoutBgResource(activity, mDividingLine, R.color.color5);
         TextUtil.setLayoutBgResource(mContext, mtvNewWorkBar, R.color.color1);
         TextUtil.setLayoutBgResource(mContext, mChannelTabStrip, R.color.color6);

@@ -134,7 +134,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
             mHomeRetry.setVisibility(View.GONE);
             user = SharedPreManager.mInstance(mContext).getUser(this);
             if (user != null && !user.isVisitor()) {
-                mCommentUserName.setText(user.getUserName());
+//                mCommentUserName.setText(user.getUserName());
                 loadComment();
             }
         } else {

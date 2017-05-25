@@ -77,7 +77,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mHeaderDivider, mDetailComment, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
-    private TextView mDetailRightMore;
+    private ImageView mDetailRightMore;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
@@ -167,7 +167,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore = (ImageView) findViewById(R.id.mDetailRightMore);
         mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
@@ -200,6 +200,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_more_selector);
+        TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);

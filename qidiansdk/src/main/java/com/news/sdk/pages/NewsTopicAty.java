@@ -69,7 +69,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     private ProgressBar imageAni;
     private TextView textAni;
     private ImageView mTopicLeftBack, mNewsLoadingImg;
-    private TextView mTopicRightMore;
+    private ImageView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper, mHeaderDivider;
     private PullToRefreshExpandableListView mlvSpecialNewsFeed;
     private ExpandableListView mExpandableListView;
@@ -173,7 +173,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                 onBackPressed();
             }
         });
-        mTopicRightMore = (TextView) findViewById(R.id.mTopicRightMore);
+        mTopicRightMore = (ImageView) findViewById(R.id.mTopicRightMore);
         mTopicRightMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,6 +194,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         TextUtil.setLayoutBgResource(this, mTopicLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setImageResource(this, mTopicLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mTopicRightMore, R.drawable.bg_more_selector);
+        TextUtil.setImageResource(this, mTopicRightMore, R.drawable.btn_detail_right_more);
         TextUtil.setLayoutBgResource(mContext, mDetailView, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
         TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.color6);

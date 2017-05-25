@@ -15,16 +15,15 @@
             android:layout_height="48dp"
             android:clickable="true"
             android:padding="14dp"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside" />
 
-        <TextView
+        <ImageView
             android:id="@+id/mTopicRightMore"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:drawableRight="@drawable/btn_detail_right_more"
-            android:paddingRight="15dp" />
+            android:scaleType="centerInside" />
 
         <TextView
             android:id="@+id/mTopicTitle"
