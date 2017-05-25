@@ -8,6 +8,7 @@ import com.news.sdk.R;
 import com.news.sdk.adapter.abslistview.CommonAdapter;
 import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.entity.HistoryEntity;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.TextViewExtend;
 
 /**
@@ -30,7 +31,9 @@ public class SearchListViewOpenAdapter extends CommonAdapter<HistoryEntity> {
                 holder.getView(R.id.search_listviewopen_itemLayout).setVisibility(View.VISIBLE);
             }
         }
-        holder.setTextViewExtendText(R.id.search_listviewopen_item_content, historyEntity.getContent());
+
+        setTextViewExtendText((TextViewExtend) holder.getView(R.id.search_listviewopen_item_content), historyEntity.getContent());
+        TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.mSearchLine), R.color.color5);
         setItemClick((RelativeLayout) holder.getView(R.id.search_listviewopen_itemLayout), historyEntity.getContent());
         setFocusClick((TextViewExtend) holder.getView(R.id.focus_item_content), historyEntity);
     }
@@ -59,6 +62,10 @@ public class SearchListViewOpenAdapter extends CommonAdapter<HistoryEntity> {
         });
     }
 
+    public void setTextViewExtendText(TextViewExtend text, String content) {
+        text.setText(content);
+        TextUtil.setTextColor(mContext, text, R.color.color2);
+    }
 
     public void setOnSearchListViewOpenItemClick(onSearchListViewOpenItemClick mOnSearchListViewOpenItemClick) {
         this.mOnSearchListViewOpenItemClick = mOnSearchListViewOpenItemClick;

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/footView_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="内容加载完毕"
         android:gravity="center"
-        android:textSize="@dimen/font3"
-        android:textColor="@color/new_color3"
+        android:paddingBottom="17dp"
         android:paddingTop="15dp"
-        android:paddingBottom="17dp"/>
+        android:text="内容加载完毕"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/font6" />
 
 </LinearLayout>

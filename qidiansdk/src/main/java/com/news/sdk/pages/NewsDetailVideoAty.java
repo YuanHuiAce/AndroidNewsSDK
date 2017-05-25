@@ -28,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.reflect.TypeToken;
 import com.news.sdk.R;
 import com.news.sdk.adapter.NewsFeedAdapter;
@@ -205,6 +206,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mTitleBottomLine = findViewById(R.id.title_bottom_line);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
+        mNoNetShow.setOnClickListener(this);
         mNewsLoadingImg.setOnClickListener(this);
 
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
@@ -596,6 +598,17 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 return;
             }
             loadOperate();
+        }else if (getId==R.id.nonet_show)
+        {
+            if (NetworkUtils.isNetworkAvailable(this))
+            {
+                if (!isRefresh) {
+                    loadData();
+                }
+            }else
+            {
+                ToastUtil.toastShort("当前网络不可用，请检查网络设置");
+            }
         }
     }
 
