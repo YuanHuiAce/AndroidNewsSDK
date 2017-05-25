@@ -141,7 +141,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     private Context mContext;
     private RequestManager mRequestManager;
     private int mScreenWidth, mScreenHeight;
-    private TextViewExtend adtvTitle;
+    private TextViewExtend adtvTitle, adtvType;
     private ImageView adImageView;
     private int viewpointPage = 1;
     private int mIntScorllY;
@@ -602,6 +602,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
+        adtvType = (TextViewExtend) adLayout.findViewById(R.id.type_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -650,6 +651,8 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         TextUtil.setLayoutBgResource(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
         TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, adtvType, R.color.color11);
+        TextUtil.setLayoutBgResource(mContext, adtvType, R.drawable.tag_detail_ad_shape);
         TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
         TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line1, R.color.color1);

@@ -21,6 +21,7 @@ import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.User;
 import com.news.sdk.entity.Version;
@@ -39,14 +40,15 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     public final static int RESULT_CODE = 1008;
     public static final String KEY_NEED_NOT_SETTING = "key_need_not_setting";
-    private View mHeaderDivider, mLine1, mLine2, mLine3;
+    private View mHeaderDivider, mLine0, mLine1, mLine2, mLine3;
     private LinearLayout mSettingSection1, mSettingSection3;
     private RelativeLayout bgLayout, mSettingHeader, mSettingSection2;
     private TextView mSettingLogout, mSetting;
-    private TextView mPushText, mFontSizeText, mSettingClearCache, mAboutText, mPrivacyPolicyText, mUpdateText;
+    private TextView mPushText, mFontSizeText, mDayNightText, mSettingClearCache, mAboutText, mPrivacyPolicyText, mUpdateText;
     private User user;
-    private View mSettingPushSwitch;
-    private ImageView mSettingPushImg;
+    private View mSettingPushSwitch, mSettingDayNight;
+    private ImageView mSettingPushImg, mDayNightImg;
+    private ImageView mPushIcon, mDayNightIcon, mFontSizeIcon, mSettingClearIcon, mAboutIcon, mPrivacyPolicyIcon, mUpdateIcon;
     private RadioGroup mRadioGroup;
     private RadioButton mRadioNormal, mRadioBig, mRadioBigger;
     private ImageView mSettingLeftBack;
@@ -66,9 +68,17 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingSection1 = (LinearLayout) findViewById(R.id.mSettingSection1);
         mSettingSection2 = (RelativeLayout) findViewById(R.id.mSettingSection2);
         mSettingSection3 = (LinearLayout) findViewById(R.id.mSettingSection3);
+        mLine0 = findViewById(R.id.mLine0);
         mLine1 = findViewById(R.id.mLine1);
         mLine2 = findViewById(R.id.mLine2);
         mLine3 = findViewById(R.id.mLine3);
+        mPushIcon = (ImageView) findViewById(R.id.mPushIcon);
+        mDayNightIcon = (ImageView) findViewById(R.id.mDayNightIcon);
+        mFontSizeIcon = (ImageView) findViewById(R.id.mFontSizeIcon);
+        mSettingClearIcon = (ImageView) findViewById(R.id.mSettingClearIcon);
+        mAboutIcon = (ImageView) findViewById(R.id.mAboutIcon);
+        mPrivacyPolicyIcon = (ImageView) findViewById(R.id.mPrivacyPolicyIcon);
+        mUpdateIcon = (ImageView) findViewById(R.id.mUpdateIcon);
         mSettingHeader = (RelativeLayout) findViewById(R.id.mSettingHeader);
         mSettingLeftBack = (ImageView) findViewById(R.id.mSettingLeftBack);
         mSettingLeftBack.setOnClickListener(this);
@@ -80,6 +90,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSetting = (TextView) findViewById(R.id.mSetting);
         mPushText = (TextView) findViewById(R.id.mPushText);
         mFontSizeText = (TextView) findViewById(R.id.mFontSizeText);
+        mDayNightText = (TextView) findViewById(R.id.mDayNightText);
         mSettingClearCache = (TextView) findViewById(R.id.mSettingClearCache);
         mAboutText = (TextView) findViewById(R.id.mAboutText);
         mPrivacyPolicyText = (TextView) findViewById(R.id.mPrivacyPolicyText);
@@ -88,6 +99,14 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingPushSwitch = findViewById(R.id.mSettingPushSwitch);
         mSettingPushSwitch.setOnClickListener(this);
         mSettingPushImg = (ImageView) findViewById(R.id.mSettingPushImg);
+        mSettingDayNight = findViewById(R.id.mSettingDayNight);
+        mSettingDayNight.setOnClickListener(this);
+        mDayNightImg = (ImageView) findViewById(R.id.mDayNightImg);
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+            mDayNightImg.setImageResource(R.mipmap.ic_setting_push_off);
+        } else {
+            mDayNightImg.setImageResource(R.mipmap.ic_setting_push_on);
+        }
         mRadioGroup = (RadioGroup) findViewById(R.id.mRadioGroup);
         mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         int saveFont = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
@@ -131,18 +150,29 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mSettingLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mSettingLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mSettingHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
+        TextUtil.setLayoutBgResource(this, mLine0, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine1, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine3, R.color.color5);
+        TextUtil.setImageResource(this, mPushIcon, R.mipmap.ic_setting_push_switch);
+        TextUtil.setImageResource(this, mDayNightIcon, R.mipmap.ic_setting_night);
+        TextUtil.setImageResource(this, mFontSizeIcon, R.mipmap.ic_setting_font);
+        TextUtil.setImageResource(this, mSettingClearIcon, R.mipmap.ic_setting_clear_cache);
+        TextUtil.setImageResource(this, mAboutIcon, R.mipmap.ic_setting_about);
+        TextUtil.setImageResource(this, mPrivacyPolicyIcon, R.mipmap.ic_setting_privacy_policy);
+        TextUtil.setImageResource(this, mUpdateIcon, R.mipmap.ic_setting_update);
         TextUtil.setLayoutBgResource(this, mSettingSection1, R.drawable.bg_setting_selector);
         TextUtil.setLayoutBgResource(this, mSettingSection2, R.drawable.bg_setting_selector);
         TextUtil.setLayoutBgResource(this, mSettingSection3, R.drawable.bg_setting_selector);
         TextUtil.setLayoutBgResource(this, mSettingLogout, R.color.color9);
         ImageUtil.setAlphaImage(mSettingPushImg);
+        ImageUtil.setAlphaImage(mDayNightImg);
         TextUtil.setTextColor(this, mSetting, R.color.color2);
         TextUtil.setTextColor(this, mPushText, R.color.color2);
+        TextUtil.setTextColor(this, mDayNightText, R.color.color2);
         TextUtil.setTextColor(this, mFontSizeText, R.color.color2);
         TextUtil.setTextColor(this, mSettingClearCache, R.color.color2);
         TextUtil.setTextColor(this, mAboutText, R.color.color2);
@@ -169,10 +199,8 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         user = SharedPreManager.mInstance(this).getUser(this);
         if (user != null && !user.isVisitor()) {
             mSettingLogout.setText("退出登录");
-            mSettingLogout.setTextColor(getResources().getColor(R.color.new_color2));
         } else {
             mSettingLogout.setText("点击登录");
-            mSettingLogout.setTextColor(getResources().getColor(R.color.new_color1));
         }
     }
 
@@ -191,6 +219,15 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 //                    pushAgent.enable();
 //                    mSettingPushImg.setImageResource(R.drawable.ic_setting_push_on);
 //                }
+                break;
+            case R.id.mSettingDayNight:
+                if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+                    ThemeManager.setThemeMode(ThemeManager.ThemeMode.NIGHT);
+                    mDayNightImg.setImageResource(R.mipmap.ic_setting_push_on);
+                } else {
+                    ThemeManager.setThemeMode(ThemeManager.ThemeMode.DAY);
+                    mDayNightImg.setImageResource(R.mipmap.ic_setting_push_off);
+                }
                 break;
             case R.id.mSettingClearCache:
                 AlertDialog.Builder clearBuilder = new AlertDialog.Builder(this);

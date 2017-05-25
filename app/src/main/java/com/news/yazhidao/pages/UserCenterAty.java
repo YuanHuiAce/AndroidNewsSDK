@@ -26,6 +26,7 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
     private View mHeaderDivider, mCenterComment, mCenterFavorite, mCenterMessage;
     private RelativeLayout bgLayout, mCenterHeader;
     private ImageView mSettingLeftBack, mCenterUserIcon;
+    private ImageView mCenterCommentIcon, mCenterFavoriteIcon, mCenterMessageIcon;
     private TextView mTitle1, mTitle2, mTitle3;
     private TextView mSetting, mTitle;
     private TextView mCenterUserName;
@@ -49,6 +50,9 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
         mTitle1 = (TextView) findViewById(R.id.mTitle1);
         mTitle2 = (TextView) findViewById(R.id.mTitle2);
         mTitle3 = (TextView) findViewById(R.id.mTitle3);
+        mCenterCommentIcon = (ImageView) findViewById(R.id.mCenterCommentIcon);
+        mCenterFavoriteIcon = (ImageView) findViewById(R.id.mCenterFavoriteIcon);
+        mCenterMessageIcon = (ImageView) findViewById(R.id.mCenterMessageIcon);
         mCenterUserName = (TextView) findViewById(R.id.mCenterUserName);
         mCenterComment = findViewById(R.id.mCenterComment);
         mCenterComment.setOnClickListener(this);
@@ -66,7 +70,8 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
 
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, mSettingLeftBack, R.drawable.bg_left_back_selector);
-        TextUtil.setLayoutBgResource(this, mSetting, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mSettingLeftBack, R.drawable.btn_left_back);
+        TextUtil.setLayoutBgResource(this, mSetting, R.drawable.bg_more_selector);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mCenterHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
@@ -77,6 +82,9 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
         TextUtil.setLayoutBgResource(this, mLine2, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine3, R.color.color5);
         TextUtil.setLayoutBgResource(this, mLine4, R.color.color5);
+        TextUtil.setImageResource(this, mCenterCommentIcon, R.mipmap.ic_user_center_comment);
+        TextUtil.setImageResource(this, mCenterFavoriteIcon, R.mipmap.ic_user_center_favorite);
+        TextUtil.setImageResource(this, mCenterMessageIcon, R.mipmap.ic_user_center_message);
         TextUtil.setTextColor(this, mTitle, R.color.color2);
         TextUtil.setTextColor(this, mTitle1, R.color.color2);
         TextUtil.setTextColor(this, mTitle2, R.color.color2);

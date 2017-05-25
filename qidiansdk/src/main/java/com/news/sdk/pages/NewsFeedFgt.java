@@ -150,6 +150,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isLoad = false;
     private ViewGroup mAndroidContent;
     private int position;
+    private ProgressBar imageAni;
+    private TextView textAni;
     //广点通
     private NativeAD mNativeAD;
     private boolean isADRefresh;
@@ -192,6 +194,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
             TextUtil.setLayoutBgResource(mContext, mSearchHeaderView, R.color.color6);
             TextUtil.setLayoutBgResource(mContext, mrlSearch, R.drawable.bg_search_header);
+            TextUtil.setTextColor(mContext, textAni, R.color.color3);
+            ImageUtil.setAlphaProgressBar(imageAni);
             ImageUtil.setAlphaImage(mSearchImg, R.drawable.search_btn);
             ImageUtil.setAlphaImage(mFeedClose, R.drawable.video_close);
             if (vPlayer != null)
@@ -204,7 +208,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     RadioButton rb = (RadioButton) mChannelList.getChildAt(i);
                     TextUtil.setLayoutBg(mContext, rb, R.drawable.bg_video_channel_selector);
                     TextUtil.setTextColor(mContext, rb, R.color.text_video_channel_selector);
-
                 }
             }
             if (navContainer1 != null && mChannelId == 44) {
@@ -213,11 +216,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     RadioButton rb = (RadioButton) mChannelList1.getChildAt(i);
                     TextUtil.setLayoutBg(mContext, rb, R.drawable.bg_video_channel_selector);
                     TextUtil.setTextColor(mContext, rb, R.color.text_video_channel_selector);
-
                 }
             }
-
-
 //            if (mTabLayout != null) {
 //                TextUtil.setLayoutBgResource(mContext, mTabLayout, R.color.color9);
 //                for (int i = 0; i < mTabLayout.getTabCount(); i++) {
@@ -379,7 +379,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayerContainer.setBackgroundColor(Color.BLACK);
             vPlayerContainer.setVisibility(View.GONE);
             mAndroidContent.addView(vPlayerContainer, lpParent);
-            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
+            adPosition = SharedPreManager.mInstance(mContext).getAdVideoFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
         } else {
             adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS);
         }
@@ -391,7 +391,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         rootView = LayoutInflater.inflate(R.layout.qd_activity_news, container, false);
         mContainerTabLayout = (FrameLayout) rootView.findViewById(R.id.ll_container_tablayout);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        mivShareBg = (ImageView) getActivity().findViewById(R.id.share_bg_imageView);
+        imageAni = (ProgressBar) rootView.findViewById(R.id.imageAni);
+        textAni = (TextView) rootView.findViewById(R.id.textAni);
+        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRelative = (RelativeLayout) rootView.findViewById(R.id.mHomeRelative);

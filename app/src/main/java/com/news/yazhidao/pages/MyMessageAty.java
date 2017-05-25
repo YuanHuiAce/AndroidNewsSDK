@@ -37,6 +37,7 @@ public class MyMessageAty extends BaseActivity implements View.OnClickListener {
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mMessageLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mMessageLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mMessageTopLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setTextColor(this, mMessageTitle, R.color.color2);

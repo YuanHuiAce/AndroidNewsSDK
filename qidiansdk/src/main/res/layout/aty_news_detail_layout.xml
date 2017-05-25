@@ -13,18 +13,15 @@
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
             android:padding="14dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_left_back" />
+            android:scaleType="centerInside" />
 
         <TextView
             android:id="@+id/mDetailRightMore"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
             android:drawableRight="@drawable/btn_detail_right_more"
             android:paddingRight="15dp" />
@@ -106,8 +103,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
             android:contentDescription="分享"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_share" />
+            android:scaleType="centerInside" />
 
         <FrameLayout
             android:id="@+id/mDetailComment"
@@ -122,8 +118,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="评论"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_no_comment" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/mDetailCommentNum"
@@ -131,7 +126,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
                 android:layout_marginTop="2dp"
-                android:background="@color/bg_detail"
                 android:gravity="center"
                 android:textSize="@dimen/font6" />
         </FrameLayout>

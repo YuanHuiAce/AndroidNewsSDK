@@ -13,13 +13,13 @@
         android:indeterminateDrawable="@drawable/load_progress" />
 
     <TextView
+        android:id="@+id/textAni"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageAni"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
         android:text="正在努力加载..."
-        android:textColor="#ffb2b2b2"
         android:textSize="@dimen/font5" />
 
 </RelativeLayout>

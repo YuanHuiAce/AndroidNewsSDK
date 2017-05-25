@@ -129,7 +129,8 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         TextUtil.setLayoutBgResource(this, mFavoriteListView, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mFavoriteLeftBack, R.drawable.bg_left_back_selector);
-        TextUtil.setLayoutBgResource(this, mFavoriteRightManage, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mFavoriteLeftBack, R.drawable.btn_left_back);
+        TextUtil.setLayoutBgResource(this, mFavoriteRightManage, R.drawable.bg_more_selector);
         TextUtil.setLayoutBgResource(this, mFavoriteTopLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setTextColor(this, mFavoriteTitle, R.color.color2);

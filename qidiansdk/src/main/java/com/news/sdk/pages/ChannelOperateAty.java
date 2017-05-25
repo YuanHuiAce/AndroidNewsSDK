@@ -70,7 +70,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     boolean isMove = false;
     private ChannelItemDao mDao;
 
-    private View mDetailLeftBack;
+    private ImageView mDetailLeftBack;
     private LinearLayout bgLayout;
     private LinearLayout bgMyChannel, bgMoreChannel;
     private TextView tvCategory, tvMoreCategory, tvTitle;
@@ -105,7 +105,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         mLine2 = findViewById(R.id.line2);
         tvCategory = (TextView) findViewById(R.id.my_category_text);
         tvMoreCategory = (TextView) findViewById(R.id.more_category_text);
-        mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +134,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
     public void setTheme() {
         TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mDividingLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);

@@ -13,7 +13,7 @@ android {
         //ly  com.falconnect.information
         //yyh com.yira.information
         //sdk com.news.yazhidao
-        applicationId "com.yira.information"
+        applicationId "com.news.yazhidao"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1

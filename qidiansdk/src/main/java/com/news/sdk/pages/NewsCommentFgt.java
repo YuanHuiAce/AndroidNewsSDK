@@ -248,6 +248,7 @@ public class NewsCommentFgt extends Fragment {
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 holder.mSelectCommentDivider = (ImageView) convertView.findViewById(R.id.mSelectCommentDivider);
                 ImageUtil.setAlphaImage(holder.ivHeadIcon);
+                ImageUtil.setAlphaImage(holder.ivPraise);
                 TextUtil.setTextColor(mContext, holder.tvName, R.color.color1);
                 TextUtil.setTextColor(mContext, holder.tvTime, R.color.color3);
                 TextUtil.setTextColor(mContext, holder.tvPraiseCount, R.color.color3);

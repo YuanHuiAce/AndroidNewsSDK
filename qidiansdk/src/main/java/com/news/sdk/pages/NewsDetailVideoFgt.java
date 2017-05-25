@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -161,7 +160,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private TextView mDetailVideoTitle;
     private User mUser;
     //广告
-    private TextViewExtend adtvTitle;
+    private TextViewExtend adtvTitle, adtvType;
     private ImageView adImageView;
     private int viewpointPage = 1;
     private LinearLayout mVideoDetailFootView;
@@ -502,6 +501,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         //广告
         adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         adtvTitle = (TextViewExtend) adLayout.findViewById(R.id.title_textView);
+        adtvType = (TextViewExtend) adLayout.findViewById(R.id.type_textView);
         adImageView = (ImageView) adLayout.findViewById(R.id.adImage);
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -552,6 +552,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
         TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, adtvType, R.color.color11);
+        TextUtil.setLayoutBgResource(mContext, adtvType, R.drawable.tag_detail_ad_shape);
         TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
         TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_line1, R.color.color1);
@@ -561,7 +563,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setTextColor(mContext, detailViewPoint, R.color.color2);
         TextUtil.setTextColor(mContext, mDetailVideoTitle, R.color.color2);
         TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
-
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
         TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
         TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.color.color10);
@@ -1093,7 +1094,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mNativeAD.loadAD(2);
             Aid = CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID;
             source = CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE;
-            adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_VIDEO_POS);
+            adPosition = SharedPreManager.mInstance(mContext).getAdDetailVideoPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_VIDEO_POS);
         } else {
             if (SharedPreManager.mInstance(mContext).getUser(mContext) != null) {
                 String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;

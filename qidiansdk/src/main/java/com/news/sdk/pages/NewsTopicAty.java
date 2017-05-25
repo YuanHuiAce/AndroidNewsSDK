@@ -67,6 +67,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     private Context mContext;
     private ProgressBar imageAni;
+    private TextView textAni;
     private ImageView mTopicLeftBack, mNewsLoadingImg;
     private TextView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper, mHeaderDivider;
@@ -126,6 +127,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        textAni = (TextView) findViewById(R.id.textAni);
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
         mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
@@ -190,12 +192,14 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
 
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, mTopicLeftBack, R.drawable.bg_left_back_selector);
-        TextUtil.setLayoutBgResource(this, mTopicRightMore, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mTopicLeftBack, R.drawable.btn_left_back);
+        TextUtil.setLayoutBgResource(this, mTopicRightMore, R.drawable.bg_more_selector);
         TextUtil.setLayoutBgResource(mContext, mDetailView, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
         TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.color6);
         TextUtil.setLayoutBgColor(mContext, mHeaderDivider, R.color.color5);
         TextUtil.setTextColor(mContext, mTopicTitle, R.color.color2);
+        TextUtil.setTextColor(mContext, textAni, R.color.color3);
         ImageUtil.setAlphaProgressBar(imageAni);
     }
 

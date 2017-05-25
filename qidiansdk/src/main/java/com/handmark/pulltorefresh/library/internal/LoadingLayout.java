@@ -40,6 +40,7 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
 import com.news.sdk.R;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 
 import static com.news.sdk.R.id.pull_to_refresh_sub_text;
@@ -241,6 +242,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (null != mHeaderText) {
             mHeaderText.setText(mPullLabel);
         }
+        ImageUtil.setAlphaImage(mHeaderImage);
+        ImageUtil.setAlphaImage(mHeaderProgress);
+        TextUtil.setTextColor(mContext, mHeaderText, R.color.color3);
+        TextUtil.setTextColor(mContext, mSubHeaderText, R.color.color3);
         TextUtil.setLayoutBgResource(mContext, mLoadMoreLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, mInnerLayout, R.color.color6);
         // Now call the callback
@@ -251,7 +256,6 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (null != mHeaderText) {
             mHeaderText.setText(mRefreshingLabel);
         }
-
         if (mUseIntrinsicAnimation) {
             ((AnimationDrawable) mHeaderImage.getDrawable()).start();
         } else {
@@ -409,6 +413,8 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 
     public void setDayNightMode() {
         reset();
+        ImageUtil.setAlphaImage(mHeaderImage);
+        ImageUtil.setAlphaImage(mHeaderProgress);
         TextUtil.setTextColor(mContext, mHeaderText, R.color.color3);
         TextUtil.setTextColor(mContext, mSubHeaderText, R.color.color3);
     }

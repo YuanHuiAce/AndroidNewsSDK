@@ -239,8 +239,16 @@ public final class SharedPreManager {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 5);
     }
 
+    public int getAdVideoFeedPosition(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 3);
+    }
+
     public int getAdDetailPosition(String spName, String key) {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 3);
+    }
+
+    public int getAdDetailVideoPosition(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 0);
     }
 
     public boolean getBoolean(String spName, String key) {

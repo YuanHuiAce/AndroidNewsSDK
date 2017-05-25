@@ -124,8 +124,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:contentDescription="分享"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_share" />
+                android:scaleType="centerInside" />
 
             <FrameLayout
                 android:id="@+id/mDetailComment"
@@ -140,8 +139,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:contentDescription="评论"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_detail_no_comment" />
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:id="@+id/mDetailCommentNum"
@@ -153,7 +151,6 @@
                     android:gravity="center"
                     android:textColor="@color/new_color2"
                     android:textSize="10sp" />
-                <!--android:background="@drawable/bg_news_detail_commit_num"-->
             </FrameLayout>
 
             <TextView

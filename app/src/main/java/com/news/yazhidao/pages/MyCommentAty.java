@@ -113,6 +113,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         TextUtil.setLayoutBgResource(this, mCommentListView, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mCommentLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mCommentLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mCommentTopLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setTextColor(this, mCommentUserName, R.color.color2);

@@ -33,9 +33,7 @@
         android:layout_alignBottom="@+id/adImage"
         android:layout_marginRight="5dp"
         android:layout_margin="5dp"
-        android:background="@drawable/tag_detail_ad_shape"
         android:gravity="center"
         android:text="广告"
-        android:textColor="@color/color4"
-        android:textSize="10sp"/>
+        android:textSize="@dimen/font9"/>
 </RelativeLayout>
