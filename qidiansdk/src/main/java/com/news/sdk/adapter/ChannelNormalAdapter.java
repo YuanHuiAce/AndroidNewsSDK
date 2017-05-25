@@ -23,8 +23,6 @@ import java.util.List;
 public class ChannelNormalAdapter extends BaseAdapter {
     private Context context;
     public List<ChannelItem> channelList;
-    private TextView item_text;
-    private ImageView icon;
     private boolean isItemShow = false;
     /**
      * 控制的postion
@@ -68,40 +66,46 @@ public class ChannelNormalAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
-        item_text = (TextView) view.findViewById(R.id.text_item);
-        icon = (ImageView) view.findViewById(R.id.icon_new);
-        ImageUtil.setAlphaImage(icon);
-        TextUtil.setLayoutBgResource(context, icon, R.drawable.bg_channel_add);
-        int height = context.getResources().getDrawable(R.drawable.bg_channel_add).getMinimumHeight();
-        RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
-        rlItemText.topMargin = height / 2;
-        item_text.setLayoutParams(rlItemText);
-        TextUtil.setLayoutBgResource(context, item_text, R.drawable.subscribe_item_bg);
-        TextUtil.setTextColor(context, item_text, R.color.color2);
-        icon.setVisibility(View.VISIBLE);
+        Holder holder;
+        if (convertView == null) {
+            holder = new Holder();
+            convertView = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
+            holder.tvItem = (TextView) convertView.findViewById(R.id.text_item);
+            holder.ivIcon = (ImageView) convertView.findViewById(R.id.icon_new);
+            ImageUtil.setAlphaImage(holder.ivIcon);
+            TextUtil.setLayoutBgResource(context, holder.ivIcon, R.drawable.bg_channel_add);
+            int height = context.getResources().getDrawable(R.drawable.bg_channel_add).getMinimumHeight();
+            RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) holder.tvItem.getLayoutParams();
+            rlItemText.topMargin = height / 2;
+            holder.tvItem.setLayoutParams(rlItemText);
+            TextUtil.setLayoutBgResource(context, holder.tvItem, R.drawable.subscribe_item_bg);
+            TextUtil.setTextColor(context, holder.tvItem, R.color.color2);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
         ChannelItem channel = getItem(position);
-        item_text.setText(channel.getCname());
+        holder.tvItem.setText(channel.getCname());
         if (isChanged && (position == holdPosition) && !isItemShow) {
-            item_text.setText("");
-            item_text.setSelected(true);
-            item_text.setEnabled(true);
+            holder.tvItem.setText("");
+            holder.tvItem.setSelected(true);
+            holder.tvItem.setEnabled(true);
             isChanged = false;
-            icon.setVisibility(View.GONE);
+            holder.ivIcon.setVisibility(View.GONE);
         }
         if (!isVisible && (position == -1 + channelList.size())) {
-            item_text.setText("");
-            item_text.setSelected(true);
-            item_text.setEnabled(true);
-            icon.setVisibility(View.GONE);
+            holder.tvItem.setText("");
+            holder.tvItem.setSelected(true);
+            holder.tvItem.setEnabled(true);
+            holder.ivIcon.setVisibility(View.GONE);
         }
         if (remove_position == position) {
-            item_text.setText("");
-            item_text.setSelected(true);
-            item_text.setEnabled(true);
-            icon.setVisibility(View.GONE);
+            holder.tvItem.setText("");
+            holder.tvItem.setSelected(true);
+            holder.tvItem.setEnabled(true);
+            holder.ivIcon.setVisibility(View.GONE);
         }
-        return view;
+        return convertView;
     }
 
     /**
@@ -161,5 +165,10 @@ public class ChannelNormalAdapter extends BaseAdapter {
 
     public void setShowDropItem(boolean show) {
         isItemShow = show;
+    }
+
+    class Holder {
+        TextView tvItem;
+        ImageView ivIcon;
     }
 }

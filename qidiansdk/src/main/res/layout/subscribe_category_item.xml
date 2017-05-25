@@ -16,7 +16,6 @@
         android:minWidth="90.0dip"
         android:textColor="@color/black"
         android:textSize="@dimen/font4" />
-    <!-- android:layout_margin="5dip" -->
 
     <ImageView
         android:id="@+id/icon_new"

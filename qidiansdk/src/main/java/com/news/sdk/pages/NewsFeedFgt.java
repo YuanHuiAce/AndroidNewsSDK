@@ -379,9 +379,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayerContainer.setBackgroundColor(Color.BLACK);
             vPlayerContainer.setVisibility(View.GONE);
             mAndroidContent.addView(vPlayerContainer, lpParent);
-            adPosition = SharedPreManager.mInstance(mContext).getAdVideoFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
-        } else {
-            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS);
         }
         //==============================视频==========================
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
@@ -552,6 +549,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
+        }
+        if (mChannelId != 0 && mChannelId == 44) {
+            adPosition = SharedPreManager.mInstance(mContext).getAdVideoFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_VIDEO_POS);
+        } else {
+            adPosition = SharedPreManager.mInstance(mContext).getAdFeedPosition(CommonConstant.FILE_AD, CommonConstant.AD_FEED_POS);
         }
         String requestUrl;
         String tstart = "";
