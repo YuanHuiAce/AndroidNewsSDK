@@ -35,6 +35,8 @@ import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.CustomDialog;
 import com.news.yazhidao.R;
 import com.news.yazhidao.service.UpdateService;
+import com.umeng.message.IUmengCallback;
+import com.umeng.message.PushAgent;
 
 
 public class SettingAty extends BaseActivity implements View.OnClickListener {
@@ -57,6 +59,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
     private SharedPreferences mSharedPreferences;
+    private boolean isPushOnOff=true;
 
     @Override
     protected void setContentView() {
@@ -212,14 +215,35 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.mSettingPushSwitch:
-//                PushAgent pushAgent = PushAgent.getInstance(this);
-//                if (pushAgent.isEnabled()) {
-//                    pushAgent.disable();
-//                    mSettingPushImg.setImageResource(R.drawable.ic_setting_push_off);
-//                } else {
-//                    pushAgent.enable();
-//                    mSettingPushImg.setImageResource(R.drawable.ic_setting_push_on);
-//                }
+                PushAgent pushAgent = PushAgent.getInstance(this);
+                if (isPushOnOff) {
+                    pushAgent.enable(new IUmengCallback() {
+                        @Override
+                        public void onSuccess() {
+                            ToastUtil.toastShort("enable");
+                        }
+
+                        @Override
+                        public void onFailure(String s, String s1) {
+                            ToastUtil.toastShort("enable onFailure");
+                        }
+                    });
+                    mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_on);
+                } else {
+                    pushAgent.disable(new IUmengCallback() {
+                        @Override
+                        public void onSuccess() {
+                            ToastUtil.toastShort("disable");
+                        }
+
+                        @Override
+                        public void onFailure(String s, String s1) {
+                            ToastUtil.toastShort("disable onFailure");
+                        }
+                    });
+
+                    mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_off);
+                }
                 break;
             case R.id.mSettingDayNight:
                 if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
@@ -313,8 +337,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     public void onResponse(Version response) {
                         if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) < response.getVersion_code()) {
                             showUpdateDialog(response);
-                        }else
-                        {
+                        } else {
                             Toast.makeText(getApplicationContext(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
                         }
                     }

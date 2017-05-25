@@ -1497,8 +1497,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     scid = 0;
                                     mChannelList.clearCheck();
                                     mlvNewsFeed.setRefreshing();
-//                                    ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-//                                            ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
                                 }
                             } else {
                                 scid = checkedId;

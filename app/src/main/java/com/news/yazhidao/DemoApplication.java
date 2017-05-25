@@ -27,7 +27,7 @@ import com.umeng.message.entity.UMessage;
  */
 public class DemoApplication extends Application {
 
-    private PushAgent mPushAgent;
+    private static  PushAgent mPushAgent;
 
     @Override
     public void onCreate() {
@@ -107,5 +107,10 @@ public class DemoApplication extends Application {
             }
         }
     };
+
+    public static PushAgent getPushAgent()
+    {
+        return mPushAgent;
+    }
 
 }
