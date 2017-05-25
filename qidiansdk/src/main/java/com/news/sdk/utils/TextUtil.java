@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -367,6 +368,14 @@ public class TextUtil {
 
     public static void setTextColor(Context context, TextView textView, int textColor) {
         textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+    public static void setTextColor(Context context, EditText textView, int textColor) {
+        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+    }
+
+    public static void setHintTextColor(Context context, EditText textView, int textColor) {
+        textView.setHintTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
     }
 
     public static void setTextColor(Context context, RadioButton textView, int textColor) {

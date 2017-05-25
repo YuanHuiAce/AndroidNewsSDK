@@ -75,7 +75,8 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
 
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, mAboutContainer, R.color.color6);
-        TextUtil.setLayoutBgResource(this, mTitleContainer, R.color.color9);
+        TextUtil.setLayoutBgResource(this, mTitleContainer, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mAboutLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setTextColor(this, mTitle, R.color.color2);
         TextUtil.setTextColor(this, mAppName, R.color.color2);
         TextUtil.setTextColor(this, mAboutVersion, R.color.color3);

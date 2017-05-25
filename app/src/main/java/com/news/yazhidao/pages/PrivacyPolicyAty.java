@@ -82,7 +82,8 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
 
     private void setTheme() {
         TextUtil.setLayoutBgResource(this, mPrivacyContainer, R.color.color6);
-        TextUtil.setLayoutBgResource(this, mPrivacyHeader, R.color.color9);
+        TextUtil.setLayoutBgResource(this, mPrivacyHeader, R.color.color6);
+        TextUtil.setLayoutBgResource(this, mPrivacyLeftBack, R.drawable.bg_left_back_selector);
 //        TextUtil.setLayoutBgResource(this, mPrivacyWebView, R.color.color6);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setTextColor(this, mPrivacyTitle, R.color.color2);

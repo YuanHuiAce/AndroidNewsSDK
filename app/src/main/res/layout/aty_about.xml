@@ -15,6 +15,7 @@
             android:layout_height="48dp"
             android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
+            android:layout_centerVertical="true"
             android:drawableLeft="@drawable/btn_left_back"
             android:paddingLeft="15dp" />
 
