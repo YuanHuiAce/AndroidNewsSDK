@@ -222,6 +222,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
         } else if (layoutId == R.layout.qd_ll_news_item_one_pic) {
@@ -269,6 +272,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ll_news_big_pic2) {
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
@@ -295,6 +301,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.qd_ll_news_card) {
             ArrayList<String> strArrImgUrl = feed.getImgs();
             setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
@@ -314,6 +323,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_news_search_item) {
@@ -443,6 +455,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
             TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
             TextUtil.setTextColor(mContext, (TextView) holder.getView(R.id.title_textView), R.color.color1);
@@ -479,6 +494,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
         } else if (layoutId == R.layout.ad_ll_news_big_pic2) {
             NativeADDataRef dataRef = feed.getDataRef();
             if (dataRef != null) {
@@ -505,6 +523,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.ll_video_item_player) {
@@ -540,18 +561,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
             }
+            if (isFavorite) {
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
             if (PlayerManager.videoPlayView != null && feed.getNid() != PlayerManager.videoPlayView.cPostion) {
                 FrameLayout view = holder.getView(R.id.layout_item_video);
                 view.removeAllViews();
                 holder.getView(R.id.rl_video_show).setVisibility(View.VISIBLE);
             }
         } else if (layoutId == R.layout.ll_video_item_big) {
-            int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            int width = mScreenWidth - DensityUtil.dip2px(mContext, 30);
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
             ImageView ivVideoSmall = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
-            lpVideoSmall.width = widthv;
-            lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
+            lpVideoSmall.width = width;
+            lpVideoSmall.height = (int) (width * 185 / 330.0f);
             ivVideoSmall.setLayoutParams(lpVideoSmall);
             ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.image_play), R.drawable.video_play);
             holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, feed.getThumbnail(), 0, 0, feed.getRtype());
@@ -573,6 +597,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
+                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
+            }
+            if (isFavorite) {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         }
@@ -713,8 +740,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (!TextUtil.isEmptyString(strTitle)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
-                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+                    strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                    strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                } else {
+                    strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#1168a7\">" + mstrKeyWord.toLowerCase() + "</font>");
+                    strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#1168a7\">" + mstrKeyWord.toUpperCase() + "</font>");
+                    strTitle = strTitle.replace("#0091fa", "#1168a7");
+                }
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
@@ -731,8 +764,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setTitleTextByBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (!TextUtil.isEmptyString(strTitle)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
-                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+                    strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                    strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                } else {
+                    strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#1168a7\">" + mstrKeyWord.toLowerCase() + "</font>");
+                    strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#1168a7\">" + mstrKeyWord.toUpperCase() + "</font>");
+                    strTitle = strTitle.replace("#0091fa", "#1168a7");
+                }
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);

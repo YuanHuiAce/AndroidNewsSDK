@@ -71,7 +71,8 @@ public class ChannelNormalAdapter extends BaseAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
         item_text = (TextView) view.findViewById(R.id.text_item);
         icon = (ImageView) view.findViewById(R.id.icon_new);
-        ImageUtil.setAlphaImage(icon, R.drawable.bg_channel_add);
+        ImageUtil.setAlphaImage(icon);
+        TextUtil.setLayoutBgResource(context, icon, R.drawable.bg_channel_add);
         int height = context.getResources().getDrawable(R.drawable.bg_channel_add).getMinimumHeight();
         RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
         rlItemText.topMargin = height / 2;

@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.news.sdk.R;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.Logger;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.tag.TagBaseAdapter;
 import com.news.sdk.widget.tag.TagCloudLayout;
 
@@ -81,9 +83,8 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mPopWindowLayout = new LinearLayout(context);
         mPopWindowLayout.setOrientation(LinearLayout.VERTICAL);
-        mPopWindowLayout.setPadding(DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15), DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15));
+        mPopWindowLayout.setPadding(DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15));
 
-        mPopWindowLayout.setBackgroundResource(R.drawable.popwindow_linear_bg);
         mPopWindowLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,10 +106,9 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mTriangle.setImageResource(R.drawable.qd_triangle_downward);
 
         mTitle = new TextView(context);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,16f);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
         mTitle.setIncludeFontPadding(false);
         mTitle.setText("请选择不感兴趣原因:");
-        mTitle.setTextColor(getResources().getColor(R.color.new_color1));
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         mTitle.measure(w, h);
@@ -117,9 +117,8 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mLine = new TextView(context);
         LinearLayout.LayoutParams params0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext,0.55f));
-        params1.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
-        mLine.setBackgroundColor(getResources().getColor(R.color.new_color5));
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 0.56f));
+        params1.setMargins(0, DensityUtil.dip2px(mContext, 15), 0, 0);
 
         mContainer = new TagCloudLayout(context);
         mList = new ArrayList<>();
@@ -132,7 +131,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(DeviceInfoUtil.getScreenWidth(context) - mInPopMargin * 2 - mMarginLorR * 2
                 , mLayoutHeight);//这里给他一个固定的大小
-        params2.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
+        params2.setMargins(0, DensityUtil.dip2px(mContext, 15), 0, 0);
 
         mPopWindowLayout.addView(mTitle, params0);
         mPopWindowLayout.addView(mLine, params1);
@@ -140,26 +139,31 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         addView(mAllLayout);
         addView(mPopWindowLayout);
         addView(mTriangle);
+    }
 
-
+    public void setTheme() {
+        ImageUtil.setAlphaImage(mTriangle);
+        TextUtil.setLayoutBgResource(mContext, mPopWindowLayout, R.drawable.popwindow_linear_bg);
+        TextUtil.setLayoutBgResource(mContext, mLine, R.color.color5);
+        TextUtil.setTextColor(mContext, mTitle, R.color.color2);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 //        super.onLayout();
 //        super.onLayout(changed, l, t, r, b);
-        if(isVisity){//每次打开应用会闪。防止闪
+        if (isVisity) {//每次打开应用会闪。防止闪
             return;
         }
 
-        if(getVisibility() == VISIBLE){
+        if (getVisibility() == VISIBLE) {
             isVisity = true;
         }
 
         mLayoutWidth = r - mMarginLorR * 2;
         mScreeHeight = b;
         mScreeWidth = r;
-        mLayoutHeight = mContainer.getLayoutHeight() + DensityUtil.dip2px(mContext,15) * 4 + mTitleHeight + 10;
+        mLayoutHeight = mContainer.getLayoutHeight() + DensityUtil.dip2px(mContext, 15) * 4 + mTitleHeight + 10;
 
 
         mAllLayout.layout(l, t, mScreeWidth, mScreeHeight);
@@ -208,7 +212,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        if(visibility ==GONE){
+        if (visibility == GONE) {
             isVisity = false;
         }
     }
@@ -219,11 +223,13 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mClickY = clickY;
         invalidate();
     }
-    public void setSourceList(String tagName){
+
+    public void setSourceList(String tagName) {
         mList.set(3, tagName);
         mAdapter.notifyDataSetChanged();
     }
-    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer){
+
+    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer) {
         mContainer.setItemClickListener(listerer);
     }
 

@@ -45,6 +45,7 @@ public class RelatedItemEntity implements Serializable, Comparable {
      */
     private boolean yearFrist;
     private boolean isRead;
+    private boolean isVisble;
     /**
      * 0普通新闻(不用显示标识)、1热点、2推送、3广告
      */
@@ -257,5 +258,13 @@ public class RelatedItemEntity implements Serializable, Comparable {
 
     public void setPurl(String purl) {
         this.purl = purl;
+    }
+
+    public boolean isVisble() {
+        return isVisble;
+    }
+
+    public void setVisble(boolean visble) {
+        isVisble = visble;
     }
 }

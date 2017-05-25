@@ -39,24 +39,20 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.56dp"
         android:layout_above="@+id/other_layout"
         android:background="#f6f6f6" />
 
     <ImageView
         android:id="@+id/line_layout"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/other_layout"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@color/new_color4" />
+        android:layout_height="0.56dp"
+        android:layout_above="@+id/other_layout"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/line_layout"
-        android:background="#f6f6f6"
         android:overScrollMode="never"
         android:scrollbars="none">
 

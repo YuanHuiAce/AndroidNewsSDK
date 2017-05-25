@@ -1,45 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/new_color9">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/mFavoriteTopLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/common_header_bg"
-        android:visibility="visible">
+        android:layout_height="48dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/mFavoriteLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:paddingLeft="15dp" />
+            android:padding="14dp"
+            android:scaleType="centerInside" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/mFavoriteTitle"
+            android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
             android:text="收藏"
-            android:textColor="@color/new_color7"
-            android:textSize="@dimen/font1" />
+            android:textSize="@dimen/font3" />
 
         <TextView
             android:id="@+id/mFavoriteRightManage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:paddingRight="14dp"
             android:text="管理"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/new_font2" />
+            android:textSize="@dimen/font5" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mFavoriteTopLayout" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/aty_myFavorite_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mHeaderDivider"
+        android:animationCache="false"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/listview_scrollbar"
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/nor_comment"
@@ -49,22 +68,7 @@
         android:drawableTop="@mipmap/ic_comment_building"
         android:gravity="center"
         android:text="暂无收藏内容"
-        android:textColor="#ffbcbcbc"
         android:textSize="@dimen/font3" />
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/aty_myFavorite_PullToRefreshListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mFavoriteTopLayout"
-        android:animationCache="false"
-        android:background="@color/color7"
-        android:cacheColorHint="@color/new_encounter_cell_bg"
-        android:clipToPadding="false"
-        android:drawingCacheQuality="auto"
-        android:listSelector="@android:color/transparent"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
 
     <LinearLayout
         android:id="@+id/aty_myFavorite_Deletelayout"

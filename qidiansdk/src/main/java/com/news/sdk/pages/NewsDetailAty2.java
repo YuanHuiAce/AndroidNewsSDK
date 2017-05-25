@@ -54,8 +54,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
-
 
 /**
  * 新闻展示详情页
@@ -79,11 +77,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mHeaderDivider, mDetailComment, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
     private ImageView mDetailLeftBack;
-    //            ,mDetailRightMore;
+    private ImageView mDetailRightMore;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDetailHeader, bgLayout;
     private ProgressBar imageAni;
+    private TextView textAni;
     public boolean isCommentPage;//是否是评论页
     private View mBottomLine;
     public TextView mDetailAddComment, mDetailCommentNum;
@@ -121,7 +120,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
-            mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+            TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
         }
     }
 
@@ -162,13 +161,14 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailLoaddingWrapper.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        textAni = (TextView) findViewById(R.id.textAni);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-//        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
-//        mDetailRightMore.setOnClickListener(this);
+        mDetailRightMore = (ImageView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
@@ -176,6 +176,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
+        mDetailFavorite.setVisibility(View.GONE);
         careful_Text = (TextView) findViewById(R.id.careful_Text);
         careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment.setOnClickListener(this);
@@ -196,6 +197,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
+        TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_more_selector);
+        TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
@@ -205,7 +210,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setLayoutBgResource(this, mDetailAddComment, R.drawable.user_add_comment);
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
         TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
+        TextUtil.setTextColor(this, textAni, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
+        TextUtil.setImageResource(this, mDetailCommentPic, R.drawable.btn_detail_no_comment);
+        TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         ImageUtil.setAlphaProgressBar(imageAni);
     }
 
@@ -247,10 +255,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
 //            Intent main = new Intent(this, MainAty.class);
             Intent main = new Intent();
-            main.setClassName("com.news.yazhidao","com.news.yazhidao.pages.MainActivity");
+            main.setClassName("com.news.yazhidao", "com.news.yazhidao.pages.MainActivity");
             main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(main);
         }
@@ -300,12 +308,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             public void onPageSelected(int position) {
                 if (position == 1) {
                     isCommentPage = true;
-                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
+                    TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
-                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 }
             }
@@ -382,7 +389,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                             mDetailCommentNum.setVisibility(View.VISIBLE);
                             mCommentNum = result.getComment();
                             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
-                            mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                            TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                         }
                         LogUtil.userClickLog(mNewsFeed, NewsDetailAty2.this, mSource);
                     } else {
@@ -432,7 +439,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 return true;
             }
@@ -454,7 +461,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
-                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();
@@ -468,19 +475,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } else {
                 onBackPressed();
             }
-        }
-//            case R.id.mDetailRightMore://更多的点击
-//                if (mNewsFeed != null) {
-//                    mivShareBg.startAnimation(mAlphaAnimationIn);
-//                    mivShareBg.setVisibility(View.VISIBLE);
-//                    mSharePopupWindow = new SharePopupWindow(this, this);
-//                    String remark = "1";
-//                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-//                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
-//                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//
-//                }
-        else if (getId == R.id.mDetailAddComment) {
+        } else if (getId == R.id.mDetailRightMore) {
+            if (mNewsFeed != null) {
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                mSharePopupWindow = new SharePopupWindow(this, this);
+                mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), mNewsFeed.getDescr());
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            }
+        } else if (getId == R.id.mDetailAddComment) {
             User user = SharedPreManager.mInstance(NewsDetailAty2.this).getUser(NewsDetailAty2.this);
             if (user != null && user.isVisitor()) {
                 AuthorizedUserUtil.sendUserLoginBroadcast(NewsDetailAty2.this);
@@ -495,7 +498,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (!isCommentPage) {
                 isCommentPage = true;
                 mNewsDetailViewPager.setCurrentItem(1);
-                mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
                 mDetailCommentNum.setVisibility(View.GONE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();

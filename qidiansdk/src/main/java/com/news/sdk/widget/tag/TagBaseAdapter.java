@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.news.sdk.R;
+import com.news.sdk.utils.TextUtil;
 
 import java.util.List;
 
@@ -47,9 +48,11 @@ public class TagBaseAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.tagview, null);
             holder = new ViewHolder();
             holder.tagBtn = (TextView) convertView.findViewById(R.id.tag_btn);
+            TextUtil.setTextColor(mContext, holder.tagBtn, R.drawable.tag_text);
+            TextUtil.setLayoutBgResource(mContext, holder.tagBtn, R.drawable.tag_view);
             convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder)convertView.getTag();
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
         final String text = getItem(position);
         holder.tagBtn.setText(text);

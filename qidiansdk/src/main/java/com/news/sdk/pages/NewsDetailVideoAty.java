@@ -149,9 +149,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
+        TextUtil.setImageResource(this, mDetailCommentPic, R.drawable.btn_detail_no_comment);
+        TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
-
     }
 
     /**
@@ -164,7 +165,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
-            mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+            TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
         }
     }
 
@@ -225,6 +226,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
+        mDetailFavorite.setVisibility(View.GONE);
         careful_Text = (TextView) findViewById(R.id.careful_Text);
         careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment = findViewById(R.id.mDetailComment);
@@ -339,7 +341,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mHandler.sendMessage(msg);
                 if (position == 1) {
                     isCommentPage = true;
-                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
+                    TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                     Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -351,8 +353,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //                    mDetailRightMore.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
-                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                     Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
@@ -437,7 +438,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                             mDetailCommentNum.setVisibility(View.VISIBLE);
                             mCommentNum = result.getComment();
                             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
-                            mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                            TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                         }
                         LogUtil.userClickLog(mNewsFeed, NewsDetailVideoAty.this, mSource);
                     } else {
@@ -493,7 +494,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 return true;
             }
@@ -551,7 +552,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             if (!isCommentPage) {
                 isCommentPage = true;
                 mNewsDetailViewPager.setCurrentItem(1);
-                mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
+                TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
                 mDetailCommentNum.setVisibility(View.GONE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();
@@ -565,7 +566,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
-                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();

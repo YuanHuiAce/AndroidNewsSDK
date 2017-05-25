@@ -1,52 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#fff0efef"
-    android:orientation="vertical"
-    android:paddingBottom="15dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/pub_time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:text="1小时前"
+        android:textSize="@dimen/font5" />
 
-        <TextView
-            android:id="@+id/pub_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="9dp"
-            android:gravity="center"
-            android:text="1小时前"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/font5" />
-
-        <ImageView
-            android:id="@+id/del_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="9dp"
-            android:clickable="true"
-            android:padding="6dp"
-            android:src="@drawable/user_detail_record_del_icon_selector" />
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/del_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="9dp"
+        android:clickable="true"
+        android:src="@drawable/user_detail_record_del_icon_selector" />
 
     <LinearLayout
         android:id="@+id/marks_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/del_icon"
+        android:layout_margin="15dp"
         android:background="@drawable/center_bg_notation"
         android:orientation="horizontal"
-        android:paddingBottom="8.0dip"
-        android:paddingLeft="15.0dip">
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp">
 
         <TextView
             android:id="@+id/comment_item_comment_content"
@@ -55,10 +40,7 @@
             android:layout_marginBottom="13dp"
             android:layout_weight="8"
             android:paddingTop="13dp"
-            android:text="is"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/font2"
-            android:visibility="visible" />
+            android:textSize="@dimen/font3" />
 
         <RelativeLayout
             android:id="@+id/love_layout"
@@ -93,14 +75,14 @@
         android:id="@+id/original"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10.0dip"
+        android:layout_below="@+id/marks_bg"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:drawableRight="@mipmap/notationdetails_icn_more"
-        android:gravity="center_vertical"
-        android:paddingBottom="2dp"
-        android:paddingRight="3dp"
-        android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/new_color7"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingBottom="2dp"
         android:textSize="@dimen/font3" />
 
-</LinearLayout>
+</RelativeLayout>

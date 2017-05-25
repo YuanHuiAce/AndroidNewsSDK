@@ -28,6 +28,7 @@ import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.AdDetailEntity;
+import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.net.volley.SplashADRequestPost;
 import com.news.sdk.pages.NewsDetailWebviewAty;
 import com.news.sdk.utils.AdUtil;
@@ -44,9 +45,12 @@ import com.qq.e.ads.nativ.NativeADDataRef;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.sharesdk.framework.ShareSDK;
+
+import static com.news.sdk.common.CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
 
 public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener, Handler.Callback {
 
@@ -171,11 +175,12 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     protected void setContentView() {
         mHandler = new Handler(this);
         ShareSDK.initSDK(this);
+        AdUtil.setAdChannel(this);
         UserManager.registerVisitor(this, null);
         //展示广点通sdk
         SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
@@ -206,7 +211,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                             @Override
                             public void onResponse(final AdDetailEntity result) {
                                 if (result != null) {
-                                    LogUtil.adGetLog(SplashAty.this, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                    LogUtil.adGetLog(SplashAty.this, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                                     AdDetailEntity.Creative creative = result.getData().getAdspace().get(0).getCreative().get(0);
                                     String logo = creative.getAdmark();
                                     mRequestManager.load(logo).into(ivAdLogo);
@@ -246,7 +251,7 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                                             Intent mainAty = new Intent(SplashAty.this, MainActivity.class);
                                             startActivity(mainAty);
                                             AdUtil.upLoadContentClick(result, SplashAty.this, down_x[0], down_y[0], up_x[0], up_y[0]);
-                                            LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, "");
+                                            LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID), SplashAty.this, LOG_SHOW_FEED_AD_GDT_API_SOURCE, "");
                                             Intent AdIntent = new Intent(SplashAty.this, NewsDetailWebviewAty.class);
                                             AdIntent.putExtra("key_url", result.getData().getAdspace().get(0).getCreative().get(0).getEvent().get(0).getEventValue());
                                             AdIntent.putExtra("isSplash", true);
@@ -254,6 +259,15 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                                             SplashAty.this.finish();
                                         }
                                     });
+                                    NewsFeed newsFeed = new NewsFeed();
+                                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_SPLASHPOSID));
+                                    newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                                    newsFeed.setExtend(null);
+                                    newsFeed.setCtime(System.currentTimeMillis());
+                                    newsFeed.setTitle("");
+                                    ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                                    newsFeeds.add(newsFeed);
+                                    LogUtil.userShowLog(newsFeeds, SplashAty.this);
                                     AdUtil.upLoadAd(result, SplashAty.this);
                                 }
                             }
@@ -375,7 +389,9 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
                     });
                 }
                 dataRef.onExposured(ivAD);
-                AdUtil.upLogAdShowGDTSDK(list, SplashAty.this,CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID);
+                ArrayList<NativeADDataRef> logNativeADDataRef = new ArrayList<>();
+                logNativeADDataRef.add(dataRef);
+                AdUtil.upLogAdShowGDTSDK(logNativeADDataRef, SplashAty.this, CommonConstant.NEWS_FEED_GDT_SDK_SPLASHPOSID);
                 ivAD.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

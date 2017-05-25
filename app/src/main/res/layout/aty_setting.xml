@@ -1,66 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bgLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/new_color9">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/mSettingHeader"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/common_header_bg">
+        android:layout_height="48dp">
 
-        <TextView
+        <ImageView
             android:id="@+id/mSettingLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:paddingLeft="15dp" />
+            android:padding="14dp"
+            android:scaleType="centerInside" />
 
         <TextView
+            android:id="@+id/mSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:text="设置"
-            android:textColor="@color/new_color7"
-            android:textSize="@dimen/font1" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.56dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/new_color5" />
+            android:textSize="@dimen/font3" />
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mSettingHeader" />
 
     <LinearLayout
         android:id="@+id/mSettingSection1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mSettingHeader"
+        android:layout_below="@+id/mHeaderDivider"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_setting_selector"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/mSettingPushSwitch"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_setting_item_top_selector"
-            android:clickable="true">
+            android:layout_height="48dp">
 
-            <TextView
+            <ImageView
+                android:id="@+id/mPushIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
-                android:drawableLeft="@mipmap/ic_setting_push_switch"
-                android:drawablePadding="12dp"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mPushText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
                 android:text="推送设置"
-                android:textColor="@color/new_color1"
                 android:textSize="@dimen/font2" />
 
             <ImageView
@@ -75,27 +76,70 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/mSettingFont"
+            android:id="@+id/mSettingDayNight"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_setting_item_top_selector">
+            android:layout_height="48dp">
 
             <ImageView
+                android:id="@+id/mLine0"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.56dp"
                 android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:background="@color/new_color5" />
+                android:layout_marginRight="18dp" />
 
-            <TextView
+            <ImageView
+                android:id="@+id/mDayNightIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mDayNightText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
+                android:text="夜间模式"
+                android:textSize="@dimen/font2" />
+
+            <ImageView
+                android:id="@+id/mDayNightImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:src="@mipmap/ic_setting_push_on" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mSettingFont"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <ImageView
+                android:id="@+id/mLine1"
+                android:layout_width="match_parent"
+                android:layout_height="0.56dp"
                 android:layout_marginLeft="18dp"
-                android:drawableLeft="@mipmap/ic_setting_font"
-                android:drawablePadding="12dp"
+                android:layout_marginRight="18dp" />
+
+            <ImageView
+                android:id="@+id/mFontSizeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mFontSizeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
                 android:text="字体大小"
-                android:textColor="@color/new_color1"
                 android:textSize="@dimen/font2" />
 
             <RadioGroup
@@ -148,59 +192,61 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/mSettingClearCacheParent"
+        android:id="@+id/mSettingSection2"
         android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:layout_below="@id/mSettingSection1"
+        android:layout_height="48dp"
+        android:layout_below="@+id/mSettingSection1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_setting_selector">
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/mSettingClearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
 
         <TextView
             android:id="@+id/mSettingClearCache"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_setting_item_all_selector"
-            android:clickable="true"
-            android:drawableLeft="@mipmap/ic_setting_clear_cache"
-            android:drawablePadding="12dp"
+            android:layout_marginLeft="45dp"
             android:gravity="center_vertical"
-            android:paddingLeft="18dp"
             android:text="清除缓存"
-            android:textColor="@color/new_color1"
             android:textSize="@dimen/font2" />
-
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mSettingSection3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mSettingClearCacheParent"
+        android:layout_below="@+id/mSettingSection2"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_setting_selector"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/mSettingAbout"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_setting_item_top_selector"
-            android:clickable="true">
+            android:layout_height="48dp">
 
-            <TextView
+            <ImageView
+                android:id="@+id/mAboutIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
-                android:drawableLeft="@mipmap/ic_setting_about"
-                android:drawablePadding="12dp"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mAboutText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
                 android:text="关于"
-                android:textColor="@color/new_color1"
                 android:textSize="@dimen/font2" />
 
             <ImageView
@@ -216,26 +262,29 @@
         <RelativeLayout
             android:id="@+id/mSettingPrivacyPolicy"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_setting_item_middle_selector"
-            android:clickable="true">
+            android:layout_height="48dp">
 
             <ImageView
+                android:id="@+id/mLine2"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.56dp"
                 android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:background="@color/new_color5" />
+                android:layout_marginRight="18dp" />
 
-            <TextView
+            <ImageView
+                android:id="@+id/mPrivacyPolicyIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
-                android:drawableLeft="@mipmap/ic_setting_privacy_policy"
-                android:drawablePadding="12dp"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mPrivacyPolicyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
                 android:text="隐私政策"
-                android:textColor="@color/new_color1"
                 android:textSize="@dimen/font2" />
 
             <ImageView
@@ -251,26 +300,29 @@
         <RelativeLayout
             android:id="@+id/mSettingUpdate"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/bg_setting_item_bottom_selector"
-            android:clickable="true">
+            android:layout_height="48dp">
 
             <ImageView
+                android:id="@+id/mLine3"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.56dp"
                 android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
-                android:background="@color/new_color5" />
+                android:layout_marginRight="18dp" />
 
-            <TextView
+            <ImageView
+                android:id="@+id/mUpdateIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
-                android:drawableLeft="@mipmap/ic_setting_update"
-                android:drawablePadding="12dp"
+                android:layout_marginLeft="15dp" />
+
+            <TextView
+                android:id="@+id/mUpdateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
                 android:text="检查更新"
-                android:textColor="@color/new_color1"
                 android:textSize="@dimen/font2" />
 
             <ImageView
@@ -290,11 +342,9 @@
         android:layout_height="48dp"
         android:layout_below="@id/mSettingSection3"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_setting_login_selector"
         android:clickable="true"
         android:gravity="center"
         android:text="退出登录"
-        android:textColor="@color/new_color2"
-        android:textSize="@dimen/new_font2" />
+        android:textSize="@dimen/font2" />
 
 </RelativeLayout>

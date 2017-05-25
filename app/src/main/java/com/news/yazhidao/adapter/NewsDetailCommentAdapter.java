@@ -18,6 +18,7 @@ import com.news.sdk.pages.NewsDetailAty2;
 import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.DensityUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.R;
 
@@ -41,6 +42,8 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
 
     @Override
     public void convert(CommonViewHolder holder, final NewsDetailComment newsDetailCommentItem, final int position) {
+        View marks_bg = holder.getView(R.id.marks_bg);
+        ImageUtil.setAlphaImage(marks_bg);
         TextView pub_time = holder.getView(R.id.pub_time);
         pub_time.setText(convertTime(newsDetailCommentItem.getCtime()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
@@ -98,6 +101,11 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
             }
         });
         deleteCommentItem((ImageView) holder.getView(R.id.del_icon), position);
+        TextUtil.setTextColor(mContext, pub_time, R.color.color3);
+        TextUtil.setTextColor(mContext, comment_content, R.color.color3);
+        TextUtil.setTextColor(mContext, original, R.color.color3);
+        ImageUtil.setAlphaImage(original);
+        ImageUtil.setAlphaImage(holder.getView(R.id.del_icon));
     }
 
     public void deleteCommentItem(ImageView deleteImage, final int position) {

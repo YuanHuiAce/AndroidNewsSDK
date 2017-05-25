@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -103,6 +102,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
     @Override
     public void convert(CommonViewHolder holder, RelatedItemEntity relatedItemEntity, int position) {
         AdUtil.upLoadFeedAd(relatedItemEntity, mContext);
+        relatedItemEntity.setVisble(true);
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.ll_news_item_empty) {
             holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
@@ -167,9 +167,11 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             lpCard.width = cardWidth;
             lpCard.height = cardHeight;
             ivCard.setLayoutParams(lpCard);
+            ImageUtil.setAlphaImage(holder.getView(R.id.title_img_View));
             if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
-                ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.title_img_View));
-                mRequestManager.load(Uri.parse(relatedItemEntity.getImgUrl())).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
+                mRequestManager.load(Uri.parse(relatedItemEntity.getImgUrl())).placeholder(R.drawable.bg_ad_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
+            }else {
+                mRequestManager.load("").placeholder(R.drawable.bg_ad_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
             }
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), relatedItemEntity.getPname());
@@ -218,7 +220,6 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
                     ivBottomLine.setLayoutParams(lpBottomLine);
                 }
             });
-            Log.i("tag", "Count" + getCount());
             int count = getCount();
 //            if (count != 0 && position == count - 1) {
 //                holder.getView(R.id.line_bottom_imageView).setVisibility(View.GONE);

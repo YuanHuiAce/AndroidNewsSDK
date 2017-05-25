@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         registerReceiver(mReceiver, filter);
         newsLayout.addView(mainView.getNewsView());
         ThemeManager.registerThemeChangeListener(this);
-//        changeDayNightMode();
+        changeDayNightMode();
     }
 
     //设置字体大小不随手机设置而改变
@@ -173,25 +173,25 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 //调用微信朋友圈分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<====>" + shareUrl);
+                Log.i("tag", shareTitle + "<1====>" + shareUrl);
                 ShareToPlatformByNewsDetail(WechatMoments.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_WECHAT_ACTION.equals(action)) {
                 //调用微信分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<====>" + shareUrl);
+                Log.i("tag", shareTitle + "<2====>" + shareUrl);
                 ShareToPlatformByNewsDetail(Wechat.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_SINA_WEIBO_ACTION.equals(action)) {
                 //调用新浪微博分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<====>" + shareUrl);
+                Log.i("tag", shareTitle + "<3====>" + shareUrl);
                 ShareToPlatformByNewsDetail(SinaWeibo.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_QQ_ACTION.equals(action)) {
                 //调用QQ分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<====>" + shareUrl);
+                Log.i("tag", shareTitle + "<4====>" + shareUrl);
                 ShareToPlatformByNewsDetail(QQ.NAME, shareTitle, shareUrl, "");
             }
         }
@@ -322,6 +322,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             platform.share(pShareParams);
         } else if (argPlatform.equals(SinaWeibo.NAME)) {
             Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
+            if(!platform.isClientValid()){
+                ToastUtil.toastShort("未安装新浪微博");
+                return;
+            }
             platform.setPlatformActionListener(pShareListner);
             platform.share(pShareParams);
         } else if (argPlatform.equals(QQ.NAME)) {

@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
     <RelativeLayout
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
@@ -56,8 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/transparent"
-            >
+            android:background="@color/transparent">
 
             <RelativeLayout
                 android:id="@+id/mDetailHeader"
@@ -71,8 +70,7 @@
                     android:layout_height="48dp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/detial_video_back"
-                    android:padding="14dp"
-                    />
+                    android:padding="14dp" />
 
                 <TextView
                     android:id="@+id/mDetailRightMore"
@@ -92,8 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_gravity="bottom"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </FrameLayout>
 
 
@@ -101,8 +98,8 @@
             android:id="@+id/mDetailBottomBanner"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
-            >
+            android:layout_alignParentBottom="true">
+
             <View
                 android:id="@+id/mBottomLine"
                 android:layout_width="match_parent"
@@ -117,7 +114,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/mDetailShare"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_favorite_normal"/>
+                android:src="@drawable/btn_detail_favorite_normal" />
 
             <ImageView
                 android:id="@+id/mDetailShare"
@@ -127,8 +124,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:contentDescription="分享"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_share" />
+                android:scaleType="centerInside" />
 
             <FrameLayout
                 android:id="@+id/mDetailComment"
@@ -143,8 +139,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:contentDescription="评论"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_detail_no_comment" />
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:id="@+id/mDetailCommentNum"
@@ -156,7 +151,6 @@
                     android:gravity="center"
                     android:textColor="@color/new_color2"
                     android:textSize="10sp" />
-                <!--android:background="@drawable/bg_news_detail_commit_num"-->
             </FrameLayout>
 
             <TextView
@@ -224,8 +218,8 @@
         android:id="@+id/nonet_show"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="#101010"
         android:layout_alignParentTop="true"
+        android:background="#101010"
         android:visibility="gone">
 
         <ImageView

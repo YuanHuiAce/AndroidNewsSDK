@@ -124,7 +124,7 @@ public final class CommonConstant {
     public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
     public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
-    public static final int NEWS_CTYPE = 5;
+    public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 

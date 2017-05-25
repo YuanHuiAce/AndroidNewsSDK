@@ -31,6 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ThemeMan
 //              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             }
         }
+        ThemeManager.registerThemeChangeListener(this);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
         setContentView();
@@ -77,5 +78,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ThemeMan
         if (isNeedAnimation()) {
             overridePendingTransition(0, R.anim.qd_aty_left_exit);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ThemeManager.unregisterThemeChangeListener(this);
     }
 }

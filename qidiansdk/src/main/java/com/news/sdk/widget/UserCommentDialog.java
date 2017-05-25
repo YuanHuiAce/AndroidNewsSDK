@@ -35,6 +35,7 @@ import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.pages.NewsDetailAty2;
 import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.DensityUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
@@ -93,6 +94,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 }
             }
         });
+        TextUtil.setLayoutBgResource(mContext,rootView,R.color.color5);
+        TextUtil.setLayoutBgResource(mContext,mCommentContent,R.color.color9);
+        TextUtil.setTextColor(mContext,mCommentContent,R.color.color2);
+        ImageUtil.setAlphaImage(mCommentCommit);
         return rootView;
     }
 
