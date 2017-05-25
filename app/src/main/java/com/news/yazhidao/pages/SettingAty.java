@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -312,6 +313,9 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     public void onResponse(Version response) {
                         if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) < response.getVersion_code()) {
                             showUpdateDialog(response);
+                        }else
+                        {
+                            Toast.makeText(getApplicationContext(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
