@@ -208,14 +208,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
         mNoNetShow.setOnClickListener(this);
         mNewsLoadingImg.setOnClickListener(this);
-
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
         mSmallScreen = (FrameLayout) findViewById(R.id.detail_small_screen);
-
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
-//        TextUtil.setLayoutBgColor(this, mDetailHeader, R.color.white);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
@@ -226,7 +223,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
-        mDetailFavorite.setVisibility(View.GONE);
         careful_Text = (TextView) findViewById(R.id.careful_Text);
         careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment = findViewById(R.id.mDetailComment);
@@ -324,12 +320,12 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 SharedPreManager.mInstance(this).myFavoriteSaveList(mNewsFeed);
             }
             isFavorite = true;
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
         } else {
             if (isFavorite) {
                 SharedPreManager.mInstance(this).myFavoritRemoveItem(mNid);
             }
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
             isFavorite = false;
         }
         mNewsDetailViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

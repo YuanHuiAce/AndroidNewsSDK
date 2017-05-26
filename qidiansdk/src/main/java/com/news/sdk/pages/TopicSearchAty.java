@@ -58,6 +58,7 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -108,6 +109,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private TextView mSearchHistory;
     private View mHistoryLineLast;
     private ProgressBar imageAni;
+    private TextView textAni;
     private TextView footView_text;
 
     @Override
@@ -148,6 +150,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mSearchTip = (TextView) findViewById(R.id.mSearchTip);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        textAni = (TextView) findViewById(R.id.textAni);
         mNewsFeedAdapter = new NewsFeedAdapter(this, null, null);
         mNewsFeedAdapter.isFavoriteList();
         mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
@@ -184,7 +187,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         TextUtil.setLayoutBgResource(this, mTopicContainer, R.drawable.bg_search_topic);
         TextUtil.setTextColor(this, mSearchContent, R.color.color2);
         TextUtil.setTextColor(this, mSearchTip, R.color.color3);
-
+        TextUtil.setTextColor(this, textAni, R.color.color3);
         TextUtil.setHintTextColor(this, mSearchContent, R.color.color3);
         TextUtil.setTextColor(this, mDoSearch, R.color.color2);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
@@ -206,12 +209,11 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         ImageUtil.setAlphaImage(mSearchClear);
         ImageUtil.setAlphaImage(mSearchTipImg);
 
-        if (mHotLabelsLayout!=null)
-        {
-            for (int i=0;i<mHotLabelsLayout.getChildCount();i++) {
+        if (mHotLabelsLayout != null) {
+            for (int i = 0; i < mHotLabelsLayout.getChildCount(); i++) {
                 TextView mHotLabels = (TextView) mHotLabelsLayout.getChildAt(i);
-                TextUtil.setTextColor(this,mHotLabels,R.color.color2);
-                TextUtil.setLayoutBgResource(this,mHotLabels,R.drawable.bg_search_hotlabel);
+                TextUtil.setTextColor(this, mHotLabels, R.color.color2);
+                TextUtil.setLayoutBgResource(this, mHotLabels, R.drawable.bg_search_hotlabel);
             }
 
         }
@@ -331,14 +333,14 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
                     //去掉新闻号
-//                    Iterator<NewsFeed> iterator = response.iterator();
-//                    while (iterator.hasNext()) {
-//                        NewsFeed newsFeed = iterator.next();
-//                        int nid = newsFeed.getNid();
-//                        if (nid == 0) {
-//                            iterator.remove();
-//                        }
-//                    }
+                    Iterator<NewsFeed> iterator = response.iterator();
+                    while (iterator.hasNext()) {
+                        NewsFeed newsFeed = iterator.next();
+                        int nid = newsFeed.getNid();
+                        if (nid == 0) {
+                            iterator.remove();
+                        }
+                    }
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if (pPageIndex.equals("1")) {
                         mNewsFeedLists.removeAll(mNewsFeedLists);
@@ -527,8 +529,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
                 textView.setGravity(Gravity.CENTER);
 //                textView.setBackgroundResource(R.drawable.bg_search_hotlabel);
-                TextUtil.setTextColor(this,textView,R.color.color2);
-                TextUtil.setLayoutBgResource(this,textView,R.drawable.bg_search_hotlabel);
+                TextUtil.setTextColor(this, textView, R.color.color2);
+                TextUtil.setLayoutBgResource(this, textView, R.drawable.bg_search_hotlabel);
                 textView.setText(element.getTitle());
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -176,7 +176,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         if (!SharedPreManager.mInstance(this).getUserCenterIsShow()) {
             mDetailFavorite.setVisibility(View.GONE);
         }
-        mDetailFavorite.setVisibility(View.GONE);
         careful_Text = (TextView) findViewById(R.id.careful_Text);
         careful_Image = (ImageView) findViewById(R.id.careful_Image);
         mDetailComment.setOnClickListener(this);
@@ -295,12 +294,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 SharedPreManager.mInstance(this).myFavoriteSaveList(mNewsFeed);
             }
             isFavorite = true;
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
         } else {
             if (isFavorite) {
                 SharedPreManager.mInstance(this).myFavoritRemoveItem(mNid);
             }
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
             isFavorite = false;
         }
         mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -512,7 +511,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
-                mDetailCommentPic.setImageResource(mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic,mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();
