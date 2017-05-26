@@ -29,7 +29,7 @@ import com.umeng.message.entity.UMessage;
  */
 public class DemoApplication extends Application {
 
-    private static  PushAgent mPushAgent;
+    private static PushAgent mPushAgent;
     private SharedPreferences mSharedPreferences;
 
     @Override
@@ -47,7 +47,7 @@ public class DemoApplication extends Application {
             @Override
             public void onSuccess(String deviceToken) {
                 //注册成功会返回device token
-                Log.v("deviceToken",deviceToken);
+                Log.v("deviceToken", deviceToken);
             }
 
             @Override
@@ -56,8 +56,7 @@ public class DemoApplication extends Application {
             }
         });
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
-        if (!mSharedPreferences.getBoolean("isEnabled",true))
-        {
+        if (!mSharedPreferences.getBoolean("isEnabled", true)) {
             mPushAgent.disable(new IUmengCallback() {
                 @Override
                 public void onSuccess() {
@@ -65,20 +64,20 @@ public class DemoApplication extends Application {
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    mSharedPreferences.edit().putBoolean("isEnabled",true).commit();
+                    mSharedPreferences.edit().putBoolean("isEnabled", true).commit();
                 }
             });
-        }else
-        {
+        } else {
 
             mPushAgent.enable(new IUmengCallback() {
                 @Override
                 public void onSuccess() {
+                    mSharedPreferences.edit().putBoolean("isEnabled", true).commit();
                 }
 
                 @Override
                 public void onFailure(String s, String s1) {
-                    mSharedPreferences.edit().putBoolean("isEnabled",false).commit();
+
                 }
             });
         }
@@ -113,10 +112,9 @@ public class DemoApplication extends Application {
                     Intent detailIntent = null;
                     if (!TextUtil.isEmptyString(newsid) && rtype.equals("video")) {
                         detailIntent = new Intent(context, NewsDetailVideoAty.class);
-                    } else if (!TextUtil.isEmptyString(newsid) && rtype.equals("topic")){
+                    } else if (!TextUtil.isEmptyString(newsid) && rtype.equals("topic")) {
                         detailIntent = new Intent(context, NewsTopicAty.class);
-                    }else
-                    {
+                    } else {
                         detailIntent = new Intent(context, NewsDetailAty2.class);
                     }
                     detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsid);
@@ -138,8 +136,7 @@ public class DemoApplication extends Application {
         }
     };
 
-    public static PushAgent getPushAgent()
-    {
+    public static PushAgent getPushAgent() {
         return mPushAgent;
     }
 
