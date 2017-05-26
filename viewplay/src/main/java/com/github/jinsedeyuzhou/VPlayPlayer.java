@@ -1462,7 +1462,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             sound.setImageResource(R.mipmap.sound_open_icon);
         status = PlayStateParams.STATE_PREPARE;
 
-       if (playerSupport) {
+        if (playerSupport) {
             start();
             progressBar.setVisibility(View.VISIBLE);
             releaseBitmap();
@@ -1471,11 +1471,12 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mVideoView.start();
             play.setSelected(true);
             statusChange(PlayStateParams.STATE_PLAYING);
-           if (NetworkUtils.isMobileAvailable(mContext) && !isAllowModible) {
-               mDurationContainer.setVisibility(View.GONE);
-               mVideoNetTie.setVisibility(View.VISIBLE);
-               onPause();
-           }
+            if (NetworkUtils.isMobileAvailable(mContext) && !isAllowModible) {
+                mDurationContainer.setVisibility(View.GONE);
+                mVideoDuration.setVisibility(View.GONE);
+                mVideoNetTie.setVisibility(View.VISIBLE);
+                onPause();
+            }
         }
 
     }
@@ -1616,6 +1617,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 hide(false);
                 isShowContoller = false;
                 mVideoDuration.setText(generateTime(duration));
+                mVideoDuration.setVisibility(View.VISIBLE);
                 mDurationContainer.setVisibility(View.VISIBLE);
                 mVideoNetTie.setVisibility(View.VISIBLE);
             } else {
