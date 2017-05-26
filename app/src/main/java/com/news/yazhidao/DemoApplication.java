@@ -3,6 +3,7 @@ package com.news.yazhidao;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.pages.MainActivity;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
@@ -28,7 +30,7 @@ import com.umeng.message.entity.UMessage;
 public class DemoApplication extends Application {
 
     private static  PushAgent mPushAgent;
-    public static boolean isPushOnOff=true;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     public void onCreate() {
@@ -36,6 +38,7 @@ public class DemoApplication extends Application {
         QiDianApplication.initQDApp(this);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         displayMetrics.scaledDensity = displayMetrics.density;
+        mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setDisplayNotificationNumber(0);
         //注册推送服务，每次调用register方法都会回调该接口
@@ -53,6 +56,32 @@ public class DemoApplication extends Application {
             }
         });
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
+        if (!mSharedPreferences.getBoolean("isEnabled",true))
+        {
+            mPushAgent.disable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onFailure(String s, String s1) {
+                    mSharedPreferences.edit().putBoolean("isEnabled",true).commit();
+                }
+            });
+        }else
+        {
+
+            mPushAgent.enable(new IUmengCallback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onFailure(String s, String s1) {
+                    mSharedPreferences.edit().putBoolean("isEnabled",false).commit();
+                }
+            });
+        }
     }
 
     /**

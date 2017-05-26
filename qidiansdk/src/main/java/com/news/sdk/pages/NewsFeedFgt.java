@@ -218,23 +218,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     TextUtil.setTextColor(mContext, rb, R.color.text_video_channel_selector);
                 }
             }
-//            if (mTabLayout != null) {
-//                TextUtil.setLayoutBgResource(mContext, mTabLayout, R.color.color9);
-//                for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-//                    View customView = mTabLayout.getTabAt(i).getCustomView();
-//                    TextView tabTitle = (TextView) customView.findViewById(R.id.tv_tabtitle);
-//                    TextUtil.setLayoutBgResource(mContext, tabTitle, R.drawable.bg_video_channel_selector);
-//                }
-//            }
-//
-//            if (mTabLayout1 != null) {
-//                TextUtil.setLayoutBgResource(mContext, mTabLayout1, R.color.color9);
-//                for (int i = 0; i < mTabLayout1.getTabCount(); i++) {
-//                    View customView = mTabLayout1.getTabAt(i).getCustomView();
-//                    TextView tabTitle = (TextView) customView.findViewById(R.id.tv_tabtitle);
-//                    TextUtil.setLayoutBgResource(mContext, tabTitle, R.drawable.bg_video_channel_selector);
-//                }
-//            }
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -1197,10 +1180,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 if (mChannelId == 44 && portrait) {
                     VideoShowControl();
-                    if (!isSelected) {
-                        mChannelList.clearCheck();
-                        mChannelList1.clearCheck();
-                    }
                     if (firstVisibleItem > 1) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
                     } else {
@@ -1415,54 +1394,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
     //========================================视频部分======================================//
 
-    private boolean isSelected;
 
-    private void suspension() {
-        tabView1 = LayoutInflater.from(mContext).inflate(R.layout.second_channel_layout, null);
-        mTabLayout1 = (TabLayout) tabView1.findViewById(R.id.tab_container);
-        for (VideoChannel videoChannel : localChannelItems) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
-            tv.setText(videoChannel.getCname());
-            mTabLayout1.addTab(mTabLayout1.newTab().setCustomView(view));
-        }
-
-//        mContainerTabLayout.addView(tabView1);
-
-        mTabLayout1.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                scid = localChannelItems.get(tab.getPosition()).getId();
-//                mlvNewsFeed.setRefreshing();
-                loadData(PULL_DOWN_REFRESH);
-                isSelected = false;
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-                if (!isSelected) {
-                    tab.getCustomView().setPressed(false);
-                    tab.getCustomView().setSelected(false);
-                    scid = 0;
-                } else {
-                    tab.getCustomView().setPressed(true);
-                    tab.getCustomView().setSelected(true);
-
-                }
-//                isSelected = !isSelected;
-                mlvNewsFeed.setRefreshing();
-                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
-            }
-        });
-
-    }
 
     public void addTabNavigation(LayoutInflater LayoutInflater) {
         videoChannelDao = new VideoChannelDao(mContext);
@@ -1496,6 +1428,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (rb.isChecked()) {
                                     scid = 0;
                                     mChannelList.clearCheck();
+                                    mChannelList1.clearCheck();
                                     mlvNewsFeed.setRefreshing();
                                 }
                             } else {
@@ -1518,8 +1451,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     public void addTabNav() {
-//        videoChannelDao = new VideoChannelDao(mContext);
-//        localChannelItems = videoChannelDao.queryForAll();
         nav1 = LayoutInflater.from(mContext).inflate(R.layout.two_channel_layout, null);
         navContainer1 = (HorizontalScrollView) nav1.findViewById(R.id.hsv_container);
         mChannelList1 = (RadioGroup) nav1.findViewById(R.id.rg_container_channel);
@@ -1551,13 +1482,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                 if (rb.isChecked()) {
                                     scid = 0;
                                     mChannelList1.clearCheck();
-                                    loadData(PULL_DOWN_REFRESH);
-//                                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-//                                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                                    mChannelList.clearCheck();
+                                    mlvNewsFeed.setRefreshing();
                                 }
                             } else {
                                 scid = checkedId;
-                                loadData(PULL_DOWN_REFRESH);
+                                mlvNewsFeed.setRefreshing();
                             }
                         }
                     });
@@ -1579,43 +1509,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     }
 
 
-    public void addTabView(LayoutInflater LayoutInflater) {
 
-        videoChannelDao = new VideoChannelDao(mContext);
-        localChannelItems = videoChannelDao.queryForAll();
-        tabView = LayoutInflater.inflate(R.layout.second_channel_layout, null);
-        mTabLayout = (TabLayout) tabView.findViewById(R.id.tab_container);
-        for (VideoChannel videoChannel : localChannelItems) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
-            TextView tv = (TextView) view.findViewById(R.id.tv_tabtitle);
-            tv.setText(videoChannel.getCname());
-            mTabLayout.addTab(mTabLayout.newTab().setCustomView(view));
-        }
-
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                scid = localChannelItems.get(tab.getPosition()).getId();
-                mlvNewsFeed.setRefreshing();
-                isSelected = false;
-                ;
-//                loadData(PULL_DOWN_REFRESH);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                isSelected = !isSelected;
-                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
-                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
-            }
-        });
-        suspension();
-    }
 
 
     @Override
@@ -1669,11 +1563,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             vPlayer = PlayerManager.videoPlayView;
     }
 
-    //    public int vPlayer.cPostion = -1;
     public int lastPostion = -1;
     private VPlayPlayer vPlayer;
     private boolean portrait = true;
-    //    private NewsFeed newsFeed;
     private ArrayList<PlayerFeed> playerFeeds = new ArrayList<>();
 
     /**

@@ -33,7 +33,6 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.CustomDialog;
-import com.news.yazhidao.DemoApplication;
 import com.news.yazhidao.R;
 import com.news.yazhidao.service.UpdateService;
 import com.umeng.message.IUmengCallback;
@@ -60,7 +59,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
     private SharedPreferences mSharedPreferences;
-    private boolean isPushOnOff=true;
+    private boolean isEnabled;
 
     @Override
     protected void setContentView() {
@@ -115,6 +114,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mRadioGroup = (RadioGroup) findViewById(R.id.mRadioGroup);
         mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         int saveFont = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+        isEnabled=mSharedPreferences.getBoolean("isEnabled",false);
         switch (saveFont) {
             case CommonConstant.TEXT_SIZE_NORMAL:
                 mRadioGroup.check(R.id.mRadioNormal);
@@ -150,6 +150,13 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingUpdate = findViewById(R.id.mSettingUpdate);
         mSettingUpdate.setOnClickListener(this);
         setTheme();
+        if (isEnabled)
+        {
+            mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_on);
+        }else
+        {
+            mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_off);
+        }
     }
 
     private void setTheme() {
@@ -217,36 +224,39 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.mSettingPushSwitch:
                 PushAgent pushAgent = PushAgent.getInstance(this);
-                if (!DemoApplication.isPushOnOff) {
+                if (!isEnabled) {
                     pushAgent.enable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-//                            ToastUtil.toastShort("enable");
+                            mSharedPreferences.edit().putBoolean("isEnabled",true).commit();
+                            isEnabled=true;
+
                         }
 
                         @Override
                         public void onFailure(String s, String s1) {
-//                            ToastUtil.toastShort("enable onFailure");
+
                         }
                     });
-
                     mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_on);
+
                 } else {
                     pushAgent.disable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-//                            ToastUtil.toastShort("disable");
+                            mSharedPreferences.edit().putBoolean("isEnabled",false).commit();
+                            isEnabled=false;
+
                         }
 
                         @Override
                         public void onFailure(String s, String s1) {
-//                            ToastUtil.toastShort("disable onFailure");
+
                         }
                     });
-
                     mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_off);
+
                 }
-                DemoApplication.isPushOnOff=!DemoApplication.isPushOnOff;
                 break;
             case R.id.mSettingDayNight:
                 if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
@@ -348,6 +358,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
                     }
                 });
         QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
