@@ -4,8 +4,8 @@
     <corners android:radius="2dp" />
     <stroke
         android:width="1px"
-        android:color="@color/color1" />
-    <solid android:color="@color/color1" />
+        android:color="@color/color1_night" />
+    <solid android:color="@color/color1_night" />
 
     <padding
         android:left="4dp"

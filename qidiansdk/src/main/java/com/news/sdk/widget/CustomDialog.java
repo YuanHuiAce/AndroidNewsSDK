@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.sdk.R;
+import com.news.sdk.utils.TextUtil;
 
 /**
  * 重写dialog
@@ -18,6 +19,13 @@ import com.news.sdk.R;
  *
  */
 public class CustomDialog extends Dialog {
+
+	private static TextViewExtend mTitle;
+	private static TextView message;
+	private static TextView messageContent;
+	private static TextView negativeButton;
+	private static TextView positiveButton;
+	private static View mDialogBottomLine;
 
 	public CustomDialog(Context context) {
 		super(context);
@@ -53,7 +61,7 @@ public class CustomDialog extends Dialog {
 		/**
 		 * Set the Dialog message from resource
 		 * 
-		 * @param title
+		 * @param
 		 * @return
 		 */
 		public Builder setMessage(int message) {
@@ -157,11 +165,25 @@ public class CustomDialog extends Dialog {
 			final CustomDialog dialog = new CustomDialog(context,
 					R.style.Dialog);
 			View layout = inflater.inflate(R.layout.custom_dialog, null);
+			TextUtil.setLayoutBgResource(context,layout,R.drawable.bg_update_shape);
 
 			dialog.addContentView(layout, new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			// set the dialog title
-			((TextViewExtend) layout.findViewById(R.id.title)).setText(title);
+			mTitle = (TextViewExtend) layout.findViewById(R.id.title);
+			mDialogBottomLine = layout.findViewById(R.id.mDialogBottomLine);
+			messageContent = (TextView)layout.findViewById(R.id.message);
+			negativeButton = (TextView)layout.findViewById(R.id.negativeButton);
+			positiveButton = (TextView)layout.findViewById(R.id.positiveButton);
+			mTitle.setText(title);
+			TextUtil.setTextColor(context,mTitle,R.color.color2);
+			TextUtil.setTextColor(context,messageContent,R.color.color2);
+			TextUtil.setTextColor(context,negativeButton,R.color.color11);
+			TextUtil.setTextColor(context,positiveButton,R.color.color11);
+			TextUtil.setLayoutBgResource(context,negativeButton,R.drawable.bg_update_cancel_shape);
+			TextUtil.setLayoutBgResource(context,positiveButton,R.drawable.bg_update_confim_shape);
+			TextUtil.setLayoutBgResource(context,mDialogBottomLine,R.color.color5);
+
 			// set the confirm button
 			if (positiveButtonText != null) {
 				((TextView) layout.findViewById(R.id.positiveButton))
