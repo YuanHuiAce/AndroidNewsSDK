@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 61;
+    private static int DATABASE_VERSION = 201;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -41,21 +41,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     private static ArrayList<ChannelItem> mChannels = new ArrayList<>();
-    private static ArrayList<VideoChannel> mVideoChannels=new ArrayList<>();
+    private static ArrayList<VideoChannel> mVideoChannels = new ArrayList<>();
 
     static {
-        mVideoChannels.add(new VideoChannel(4401,"新闻",0,1));
-        mVideoChannels.add(new VideoChannel(4402,"搞笑",0,2));
-        mVideoChannels.add(new VideoChannel(4403,"萌宠萌娃",0,3));
-        mVideoChannels.add(new VideoChannel(4404,"娱乐",0,4));
-        mVideoChannels.add(new VideoChannel(4405,"生活",0,5));
-        mVideoChannels.add(new VideoChannel(4406,"体育",0,6));
-        mVideoChannels.add(new VideoChannel(4407,"科技",0,7));
-        mVideoChannels.add(new VideoChannel(4408,"游戏",0,8));
-        mVideoChannels.add(new VideoChannel(4409,"影视",0,9));
-        mVideoChannels.add(new VideoChannel(4410,"时尚",0,10));
-        mVideoChannels.add(new VideoChannel(4411,"自媒体",0,11));
-        mVideoChannels.add(new VideoChannel(4412,"汽车",0,12));
+        mVideoChannels.add(new VideoChannel(4401, "新闻", 0, 1));
+        mVideoChannels.add(new VideoChannel(4402, "搞笑", 0, 2));
+        mVideoChannels.add(new VideoChannel(4403, "萌宠萌娃", 0, 3));
+        mVideoChannels.add(new VideoChannel(4404, "娱乐", 0, 4));
+        mVideoChannels.add(new VideoChannel(4405, "生活", 0, 5));
+        mVideoChannels.add(new VideoChannel(4406, "体育", 0, 6));
+        mVideoChannels.add(new VideoChannel(4407, "科技", 0, 7));
+        mVideoChannels.add(new VideoChannel(4408, "游戏", 0, 8));
+        mVideoChannels.add(new VideoChannel(4409, "影视", 0, 9));
+        mVideoChannels.add(new VideoChannel(4410, "时尚", 0, 10));
+        mVideoChannels.add(new VideoChannel(4411, "自媒体", 0, 11));
+        mVideoChannels.add(new VideoChannel(4412, "汽车", 0, 12));
         /**默认用户选择的频道*/
 //        mChannels.add(new ChannelItem("1", "推荐", 1, true));
 //        mChannels.add(new ChannelItem("44", "视频", 2, true));
@@ -165,27 +165,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             /***查询数据库升级前的频道列表*/
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
-            VideoChannelDao videoChannelDao=new VideoChannelDao(mContext);
+            VideoChannelDao videoChannelDao = new VideoChannelDao(mContext);
             oldChannelItems = channelDao.queryForAll();
-            oldVideoChannel=videoChannelDao.queryForAll();
+            oldVideoChannel = videoChannelDao.queryForAll();
             //删除所有老版本上的频道
             if (oldVersion <= DATABASE_VERSION) {
                 oldChannelItems.clear();
                 oldVideoChannel.clear();
             }
-            /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
-            NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
-            if (oldVersion <= 25) {
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
-            }
-
-            if (oldVersion <= 41) {
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN icon TEXT;");
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN clicktimes INTEGER;");
-            }
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
-            TableUtils.dropTable(connectionSource, VideoChannel.class,true);
+            TableUtils.dropTable(connectionSource, VideoChannel.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);
             onCreate(database, connectionSource);

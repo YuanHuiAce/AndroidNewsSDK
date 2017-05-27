@@ -1297,7 +1297,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else {
                     if (mArrNewsFeed.size() >= 14) {
-                        mArrNewsFeed.add(mArrNewsFeed.size() - 8, newsFeed);
+                        if (mChannelId != 0 && mChannelId == 44) {
+                            mArrNewsFeed.add(mArrNewsFeed.size() - 11, newsFeed);
+                        } else {
+                            mArrNewsFeed.add(mArrNewsFeed.size() - 8, newsFeed);
+                        }
                     } else {
                         if (mArrNewsFeed.size() > adPosition) {
                             mArrNewsFeed.add(adPosition, newsFeed);
@@ -1393,7 +1397,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
 
     //========================================视频部分======================================//
-
 
 
     public void addTabNavigation(LayoutInflater LayoutInflater) {
@@ -1507,9 +1510,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         mChannelList1.check(localChannelItems.get(0).getId());
         mChannelList.check(localChannelItems.get(0).getId());
     }
-
-
-
 
 
     @Override

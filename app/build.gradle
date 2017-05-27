@@ -16,8 +16,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
         //多个dex支持
         multiDexEnabled true
