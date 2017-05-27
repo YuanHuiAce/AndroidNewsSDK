@@ -241,7 +241,7 @@
         android:layout_height="106dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginBottom="48dp"
         android:background="@color/color2"
         android:visibility="gone">
 

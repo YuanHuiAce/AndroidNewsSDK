@@ -1474,6 +1474,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             if (NetworkUtils.isMobileAvailable(mContext) && !isAllowModible) {
                 mDurationContainer.setVisibility(View.GONE);
                 mVideoDuration.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 mVideoNetTie.setVisibility(View.VISIBLE);
                 onPause();
             }
