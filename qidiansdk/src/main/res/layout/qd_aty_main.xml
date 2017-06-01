@@ -14,9 +14,9 @@
             android:layout_width="31dp"
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="7dp"
+            android:paddingLeft="7dp"
+            android:paddingTop="7dp"
             android:scaleType="centerInside" />
 
         <com.news.sdk.widget.channel.ChannelTabStrip

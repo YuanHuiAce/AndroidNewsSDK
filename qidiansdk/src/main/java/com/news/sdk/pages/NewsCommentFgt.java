@@ -127,7 +127,7 @@ public class NewsCommentFgt extends Fragment {
         mNewsCommentList.setAdapter(mCommentsAdapter);
         mNewsCommentHeaderView = new NewsCommentHeaderView(mContext);
         ListView lv = mNewsCommentList.getRefreshableView();
-        mNewsCommentHeaderView.setData(mNewsFeed);
+//        mNewsCommentHeaderView.setData(mNewsFeed);
         lv.addHeaderView(mNewsCommentHeaderView);
         mNewsCommentList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -145,7 +145,13 @@ public class NewsCommentFgt extends Fragment {
         return rootView;
     }
 
-    public void setTheme(){
+    public void setTheme() {
+        if (mCommentsAdapter != null) {
+            mCommentsAdapter.notifyDataSetChanged();
+        }
+        if (mNewsCommentHeaderView != null) {
+            mNewsCommentHeaderView.setData(mNewsFeed);
+        }
         TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
     }
@@ -247,17 +253,17 @@ public class NewsCommentFgt extends Fragment {
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 holder.mSelectCommentDivider = (ImageView) convertView.findViewById(R.id.mSelectCommentDivider);
-                ImageUtil.setAlphaImage(holder.ivHeadIcon);
-                ImageUtil.setAlphaImage(holder.ivPraise);
-                TextUtil.setTextColor(mContext, holder.tvName, R.color.color1);
-                TextUtil.setTextColor(mContext, holder.tvTime, R.color.color3);
-                TextUtil.setTextColor(mContext, holder.tvPraiseCount, R.color.color3);
-                TextUtil.setTextColor(mContext, holder.tvContent, R.color.color2);
-                TextUtil.setLayoutBgResource(mContext, holder.mSelectCommentDivider, R.color.color5);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            ImageUtil.setAlphaImage(holder.ivHeadIcon);
+            ImageUtil.setAlphaImage(holder.ivPraise);
+            TextUtil.setTextColor(mContext, holder.tvName, R.color.color1);
+            TextUtil.setTextColor(mContext, holder.tvTime, R.color.color3);
+            TextUtil.setTextColor(mContext, holder.tvPraiseCount, R.color.color3);
+            TextUtil.setTextColor(mContext, holder.tvContent, R.color.color2);
+            TextUtil.setLayoutBgResource(mContext, holder.mSelectCommentDivider, R.color.color5);
             holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
             final User user = SharedPreManager.mInstance(mContext).getUser(mContext);

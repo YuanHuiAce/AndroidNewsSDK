@@ -10,7 +10,6 @@
         android:layout_height="32dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/subscribe_item_bg"
         android:gravity="center"
         android:minHeight="32.0dip"
         android:minWidth="90.0dip"

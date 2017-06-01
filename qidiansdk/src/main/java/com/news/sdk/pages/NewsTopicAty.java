@@ -191,6 +191,12 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setTheme() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        if (mSpecialNewsHeaderView != null && mTopicBaseInfo != null) {
+            mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth);
+        }
         TextUtil.setLayoutBgResource(this, mTopicLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setImageResource(this, mTopicLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mTopicRightMore, R.drawable.bg_more_selector);
@@ -209,7 +215,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
         }
-        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid + "&c=10&p=" + mPager;
+        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid + "&c=60&p=" + mPager;
         if (NetUtil.checkNetWork(mContext)) {
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsTopicRequestGet<NewsTopic> topicRequestGet = new NewsTopicRequestGet<>(Request.Method.GET, new TypeToken<NewsTopic>() {
@@ -492,6 +498,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     childNoPicHolderHolder.ivDelete = (ImageView) vNoPic.findViewById(R.id.delete_imageView);
                     childNoPicHolderHolder.ivBottomLine = (ImageView) vNoPic.findViewById(R.id.line_bottom_imageView);
                     childNoPicHolderHolder.ivIcon = (ImageView) vNoPic.findViewById(R.id.icon_source);
+                    childNoPicHolderHolder.ivIcon.setVisibility(View.GONE);
                     vNoPic.setTag(childNoPicHolderHolder);
                     convertView = vNoPic;
                 } else {
@@ -520,6 +527,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     childOnePicHolder.llSourceOnePic = (LinearLayout) vOnePic.findViewById(R.id.source_content_linearLayout);
                     childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
                     childOnePicHolder.ivIcon = (ImageView) vOnePic.findViewById(R.id.icon_source);
+                    childOnePicHolder.ivIcon.setVisibility(View.GONE);
                     vOnePic.setTag(childOnePicHolder);
                     convertView = vOnePic;
                 } else {
@@ -554,6 +562,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     childThreePicHolder.ivDelete = (ImageView) vThreePic.findViewById(R.id.delete_imageView);
                     childThreePicHolder.ivBottomLine = (ImageView) vThreePic.findViewById(R.id.line_bottom_imageView);
                     childThreePicHolder.ivIcon = (ImageView) vThreePic.findViewById(R.id.icon_source);
+                    childThreePicHolder.ivIcon.setVisibility(View.GONE);
                     vThreePic.setTag(childThreePicHolder);
                     convertView = vThreePic;
                 } else {
@@ -587,6 +596,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     childBigPicHolder.tvType = (TextViewExtend) vBigPic.findViewById(R.id.type_textView);
                     childBigPicHolder.ivDelete = (ImageView) vBigPic.findViewById(R.id.delete_imageView);
                     childBigPicHolder.ivIcon = (ImageView) vBigPic.findViewById(R.id.icon_source);
+                    childBigPicHolder.ivIcon.setVisibility(View.GONE);
                     vBigPic.setTag(childBigPicHolder);
                     convertView = vBigPic;
                 } else {
@@ -621,6 +631,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     childSmallVideoHolder.ivIcon = (ImageView) vSmallVideo.findViewById(R.id.icon_source);
                     childSmallVideoHolder.ivPicture = (ImageView) vSmallVideo.findViewById(R.id.title_img_View);
                     childSmallVideoHolder.tvDuration = (TextView) vSmallVideo.findViewById(R.id.tv_video_duration);
+                    childSmallVideoHolder.ivIcon.setVisibility(View.GONE);
                     vSmallVideo.setTag(childSmallVideoHolder);
                     convertView = vSmallVideo;
                 } else {

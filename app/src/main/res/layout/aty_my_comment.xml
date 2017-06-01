@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/mHeaderDivider"
-        android:dividerHeight="8dp" />
+        android:dividerHeight="0dp" />
 
     <TextView
         android:id="@+id/nor_comment"

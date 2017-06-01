@@ -59,6 +59,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     private User user;
     private Context mContext;
     private ProgressBar imageAni;
+    private TextView textAni;
     private int pager = 1;
     private int mDeleteNum;
 
@@ -75,6 +76,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         mFavoriteLeftBack.setOnClickListener(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        textAni = (TextView) findViewById(R.id.textAni);
         mFavoriteTopLayout = (RelativeLayout) findViewById(R.id.mFavoriteTopLayout);
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
@@ -138,6 +140,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         TextUtil.setTextColor(this, comment_nor, R.color.color4);
         ImageUtil.setAlphaImage(comment_nor);
         ImageUtil.setAlphaProgressBar(imageAni);
+        TextUtil.setTextColor(this, textAni, R.color.color3);
     }
 
     @Override

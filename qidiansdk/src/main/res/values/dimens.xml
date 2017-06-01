@@ -85,6 +85,7 @@
     <dimen name="font11">20sp</dimen>
     <dimen name="font12">23sp</dimen>
     <dimen name="font13">25sp</dimen>
+    <dimen name="font14">9sp</dimen>
     <dimen name="new_font1">18sp</dimen>
     <dimen name="new_font2">17sp</dimen>
     <dimen name="new_font3">14sp</dimen>

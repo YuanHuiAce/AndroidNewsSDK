@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -108,6 +110,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private boolean isUserComment;
     private String mSource;
     private boolean isForeground;
+    private View translucent;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -137,6 +140,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            translucent = findViewById(R.id.translucent);
+//              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        } else {
+            translucent.setVisibility(View.GONE);
+        }
 //        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
 //            /** 梁帅：保持让屏幕常亮*/
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -196,10 +206,32 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     private void setTheme() {
+        if (mDetailFgt != null) {
+            mDetailFgt.setTheme();
+        }
+        if (mCommentFgt != null) {
+            mCommentFgt.setTheme();
+        }
+        if (mNewsDetailViewPager != null) {
+            int position = mNewsDetailViewPager.getCurrentItem();
+            if (position == 0) {
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+            } else {
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
+                mDetailCommentNum.setVisibility(View.GONE);
+            }
+        }
+        if (isFavorite) {
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
+        } else {
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
+        }
         TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_more_selector);
         TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
+        TextUtil.setLayoutBgResource(this, translucent, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
@@ -211,7 +243,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
         TextUtil.setTextColor(this, textAni, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
-        TextUtil.setImageResource(this, mDetailCommentPic, R.drawable.btn_detail_no_comment);
         TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         ImageUtil.setAlphaProgressBar(imageAni);
     }
@@ -294,12 +325,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 SharedPreManager.mInstance(this).myFavoriteSaveList(mNewsFeed);
             }
             isFavorite = true;
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
         } else {
             if (isFavorite) {
                 SharedPreManager.mInstance(this).myFavoritRemoveItem(mNid);
             }
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
             isFavorite = false;
         }
         mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -363,12 +394,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (user != null) {
                 mUserId = user.getMuid() + "";
             }
-//        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mNid);
-//        if (isFavorite) {
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-//        } else {
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-//        }
+            isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mNid);
+            if (isFavorite) {
+                TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
+            } else {
+                TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
+            }
 //            mNid = "14369644";
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
@@ -511,7 +542,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } else {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0);
-                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic,mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 if (!TextUtil.isEmptyString(mNid)) {
                     JSONObject jsonObject = new JSONObject();
@@ -619,13 +650,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     isFavorite = false;
                     careful_Text.setText("收藏已取消");
                     SharedPreManager.mInstance(NewsDetailAty2.this).myFavoritRemoveItem(mNid);
-                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+                    TextUtil.setImageResource(NewsDetailAty2.this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;
                     careful_Text.setText("收藏成功");
                     Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
                     SharedPreManager.mInstance(NewsDetailAty2.this).myFavoriteSaveList(mNewsFeed);
-                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+                    TextUtil.setImageResource(NewsDetailAty2.this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
                 }
                 carefulAnimation();
             }

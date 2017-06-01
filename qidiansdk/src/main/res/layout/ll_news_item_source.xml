@@ -19,17 +19,21 @@
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
         android:lines="1"
-        android:maxEms="8"
+        android:maxEms="15"
         android:textSize="@dimen/font8" />
 
     <com.news.sdk.widget.TextViewExtend
         android:id="@+id/type_textView"
-        android:layout_width="24dp"
-        android:layout_height="13dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
         android:gravity="center"
-        android:textSize="@dimen/font9"
+        android:includeFontPadding="false"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="0.56dp"
+        android:textSize="@dimen/font14"
         android:visibility="gone" />
 
     <com.news.sdk.widget.TextViewExtend

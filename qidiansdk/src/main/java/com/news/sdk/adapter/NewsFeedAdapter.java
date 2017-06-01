@@ -205,6 +205,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                    if (getCount() == position + 1) {//去掉最后一条的线
 //                        holder.getView(R.id.line_bottom_imageView).setVisibility(View.INVISIBLE);
 //                    }
+                if (holder.getView(R.id.icon_source) != null) {
+                    holder.getView(R.id.icon_source).setVisibility(View.GONE);
+                }
                 ClickDeleteFavorite((ImageView) holder.getView(R.id.checkFavoriteDelete_image), feed);
             }
         }
@@ -459,7 +462,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
         } else if (layoutId == R.layout.qd_ll_news_item_time_line) {
-            TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.news_content_relativeLayout), R.drawable.bg_feed_list_select);
+            TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.news_content_relativeLayout), R.color.color6);
             TextUtil.setTextColor(mContext, (TextView) holder.getView(R.id.title_textView), R.color.color1);
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
@@ -560,9 +563,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
                 holder.getView(R.id.tv_video_comments).setVisibility(View.GONE);
-            }
-            if (isFavorite) {
-                holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);
             }
             if (PlayerManager.videoPlayView != null && feed.getNid() != PlayerManager.videoPlayView.cPostion) {
                 FrameLayout view = holder.getView(R.id.layout_item_video);

@@ -52,6 +52,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     private View mHeaderDivider,footer;
     private int pager = 1;
     private ProgressBar imageAni;
+    private TextView textAni;
 
     @Override
     protected void setContentView() {
@@ -69,6 +70,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         mCommentTopLayout = (RelativeLayout) findViewById(R.id.mCommentTopLayout);
         mHeaderDivider = findViewById(R.id.mHeaderDivider);
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        textAni = (TextView) findViewById(R.id.textAni);
         mCommentUserName = (TextView) findViewById(R.id.mCommentUserName);
         mCommentListView = (PullToRefreshListView) this.findViewById(R.id.myCommentListView);
         mCommentListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -120,6 +122,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         TextUtil.setTextColor(this, comment_nor, R.color.color4);
         ImageUtil.setAlphaImage(comment_nor);
         ImageUtil.setAlphaProgressBar(imageAni);
+        TextUtil.setTextColor(this, textAni, R.color.color3);
     }
 
     @Override

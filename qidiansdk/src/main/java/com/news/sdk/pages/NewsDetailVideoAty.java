@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,11 +15,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +46,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.utils.AuthorizedUserUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -77,6 +81,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private ArrayList<View> mImageViews;
     private ArrayList<HashMap<String, String>> mImages;
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
+    private ProgressBar imageAni;
+    private TextView textAni;
     /**
      * 返回上一级,全文评论,分享
      */
@@ -108,7 +114,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private String mImageUrl;
     private String mNid;
     private NewsDetailCommentDao newsDetailCommentDao;
-
+    private NewsDetailVideoFgt mDetailVideoFgt;
+    private NewsCommentFgt mCommentFgt;
     private LinearLayout carefulLayout;
     private boolean isFavorite;
     private RelativeLayout mSmallLayout;
@@ -125,6 +132,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private RelativeLayout mNoNetShow;
     private View mBottomLine;
     private View mTitleBottomLine;
+    private View translucent;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -141,7 +149,29 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     private void setTheme() {
+        if (mDetailVideoFgt != null) {
+            mDetailVideoFgt.setTheme();
+        }
+        if (mCommentFgt != null) {
+            mCommentFgt.setTheme();
+        }
+        if (mNewsDetailViewPager != null) {
+            int position = mNewsDetailViewPager.getCurrentItem();
+            if(position==0){
+                TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
+            }else {
+                TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
+                mDetailCommentNum.setVisibility(View.GONE);
+            }
+        }
+        if (isFavorite) {
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
+        } else {
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
+        }
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
+        TextUtil.setLayoutBgResource(this, translucent, R.color.color6);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);
@@ -153,6 +183,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
+        ImageUtil.setAlphaProgressBar(imageAni);
+        TextUtil.setTextColor(this, textAni, R.color.color3);
     }
 
     /**
@@ -183,6 +215,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //            /** 梁帅：保持让屏幕常亮*/
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            translucent = findViewById(R.id.translucent);
+//              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }else {
+            translucent.setVisibility(View.GONE);
+        }
         mNewsContentDataList = new ArrayList<>();
         mImageViews = new ArrayList<>();
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
@@ -211,6 +250,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
         mSmallScreen = (FrameLayout) findViewById(R.id.detail_small_screen);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        imageAni = (ProgressBar) findViewById(R.id.imageAni);
+        textAni = (TextView) findViewById(R.id.textAni);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
@@ -320,12 +361,12 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 SharedPreManager.mInstance(this).myFavoriteSaveList(mNewsFeed);
             }
             isFavorite = true;
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
         } else {
             if (isFavorite) {
                 SharedPreManager.mInstance(this).myFavoritRemoveItem(mNid);
             }
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+            TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
             isFavorite = false;
         }
         mNewsDetailViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -366,22 +407,22 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
-                    NewsDetailVideoFgt detailFgt = new NewsDetailVideoFgt();
+                    mDetailVideoFgt = new NewsDetailVideoFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsDetailFgt.KEY_DETAIL_RESULT, result);
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mNid);
                     args.putString(NewsDetailFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
                     args.putInt("position", cPosition);
-                    detailFgt.setArguments(args);
-                    return detailFgt;
+                    mDetailVideoFgt.setArguments(args);
+                    return mDetailVideoFgt;
                 } else {
-                    NewsCommentFgt commentFgt = new NewsCommentFgt();
+                    mCommentFgt = new NewsCommentFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
                     args.putBoolean(NewsCommentFgt.KEY_TOP_MARGIN, true);
-                    commentFgt.setArguments(args);
-                    return commentFgt;
+                    mCommentFgt.setArguments(args);
+                    return mCommentFgt;
                 }
             }
 
@@ -685,13 +726,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     isFavorite = false;
                     careful_Text.setText("收藏已取消");
                     SharedPreManager.mInstance(NewsDetailVideoAty.this).myFavoritRemoveItem(mNid);
-                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+                    TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;
                     careful_Text.setText("收藏成功");
                     Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
                     SharedPreManager.mInstance(NewsDetailVideoAty.this).myFavoriteSaveList(mNewsFeed);
-                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+                    TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailFavorite, R.drawable.btn_detail_favorite_select);
                 }
                 carefulAnimation();
             }

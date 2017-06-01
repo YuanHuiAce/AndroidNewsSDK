@@ -547,7 +547,19 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     }
 
 
-    private void setTheme() {
+    public void setTheme() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        if (!TextUtil.isListEmpty(mComments)) {
+            //同步服务器上的评论数据到本地数据库
+            //  addCommentInfoToSql(mComments);
+            mCommentLayout.removeAllViews();
+            addCommentContent(mComments);
+        } else {
+            detail_shared_MoreComment.setVisibility(View.GONE);
+            detail_Hot_Layout.setVisibility(View.GONE);
+        }
         TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
@@ -585,10 +597,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void onResponse(ArrayList<NewsDetailComment> result) {
                 isWebSuccess = true;
                 isBgLayoutSuccess();
-                if (!TextUtil.isListEmpty(result)) {
+                mComments = result;
+                if (!TextUtil.isListEmpty(mComments)) {
                     //同步服务器上的评论数据到本地数据库
                     //  addCommentInfoToSql(mComments);
-                    addCommentContent(result);
+                    addCommentContent(mComments);
                 } else {
                     detail_shared_MoreComment.setVisibility(View.GONE);
                     detail_Hot_Layout.setVisibility(View.GONE);

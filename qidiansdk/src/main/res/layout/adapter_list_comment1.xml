@@ -70,7 +70,7 @@
     <ImageView
         android:id="@+id/mSelectCommentDivider"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="0.56dp"
         android:layout_below="@+id/tv_comment_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"

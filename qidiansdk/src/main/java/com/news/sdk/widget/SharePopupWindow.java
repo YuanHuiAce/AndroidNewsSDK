@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
+import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.User;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
@@ -58,11 +58,11 @@ public class SharePopupWindow extends PopupWindow {
     private String mstrTitle, mstrUrl, mstrRemark;
     private ShareDismiss mShareDismiss;
     private TextViewExtend mtvFavorite, mtvTextSize, mtvAccusation;
-    private LinearLayout mShareLayout;
+    private LinearLayout mShareLayout, mOtherLayout;
     boolean isFavorite;
     boolean isVideo, isTopic;
     private int mNid;
-    private View line_layout;
+    private View line_layout, line1_layout;
 
 
     public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
@@ -81,7 +81,9 @@ public class SharePopupWindow extends PopupWindow {
     private void findHeadPortraitImageViews() {
         mtvClose = (TextViewExtend) mMenuView.findViewById(R.id.close_imageView);
         mShareLayout = (LinearLayout) mMenuView.findViewById(R.id.share_layout);
+        mOtherLayout = (LinearLayout) mMenuView.findViewById(R.id.other_layout);
         line_layout = mMenuView.findViewById(R.id.line_layout);
+        line1_layout = mMenuView.findViewById(R.id.line1_layout);
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -110,7 +112,9 @@ public class SharePopupWindow extends PopupWindow {
         TextUtil.setTextColor(mContext, mtvClose, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, mtvClose, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, mShareLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mOtherLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, line_layout, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, line1_layout, R.color.color5);
     }
 
     public void setTitleAndNid(String title, int nid, String remark) {
@@ -185,7 +189,6 @@ public class SharePopupWindow extends PopupWindow {
                     } else {
                         mstrUrl = "http://deeporiginalx.com/news.html?type=0&url=" + mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                     }
-                    Log.i("tag", mstrUrl);
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -207,6 +210,9 @@ public class SharePopupWindow extends PopupWindow {
                         cmb.setPrimaryClip(ClipData.newPlainText(null, mstrUrl));
                         ToastUtil.toastShort("复制成功");
                         replay(7);
+                    } else if ("夜间模式".equals(strShareName)) {
+                        ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                                ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
                     } else {
                         Intent intent = new Intent();
                         int whereabout = 0;
@@ -238,7 +244,11 @@ public class SharePopupWindow extends PopupWindow {
                     SharePopupWindow.this.dismiss();
                 }
             });
-            mShareLayout.addView(viewExtend);
+            if (i < 4) {
+                mShareLayout.addView(viewExtend);
+            } else {
+                mOtherLayout.addView(viewExtend);
+            }
         }
     }
 
