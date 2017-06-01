@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,6 +42,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.utils.AuthorizedUserUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
@@ -82,7 +82,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
      */
     private View mDetailComment, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
-    private TextView mDetailLeftBack;
+    private ImageView mDetailLeftBack;
     //            ,mDetailRightMore
     private ImageView mNewsLoadingImg;
     private View mDetailView;
@@ -124,7 +124,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public int cPosition;
     private RelativeLayout mNoNetShow;
     private View mBottomLine;
+    private ImageView mNoNetworkImage;
+    private Context mContext;
     private View mTitleBottomLine;
+    private ImageView mDetailPlayShow;
+    private TextView mNoet;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -141,6 +145,14 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     private void setTheme() {
+        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
+        if (isCommentPage)
+        {
+            TextUtil.setImageResource(this,mDetailLeftBack,R.drawable.btn_left_back);
+        }else {
+            ImageUtil.setAlphaImage(mDetailLeftBack, R.drawable.detial_video_back);
+        }
+        TextUtil.setLayoutBgResource(this,mTitleBottomLine,R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
@@ -148,11 +160,12 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         TextUtil.setLayoutBgResource(this, mDetailAddComment, R.drawable.user_add_comment);
         TextUtil.setTextColor(this, mDetailCommentNum, R.color.color1);
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
+        TextUtil.setTextColor(this, mNoet, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
         TextUtil.setImageResource(this, mDetailCommentPic, R.drawable.btn_detail_no_comment);
         TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
-        TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
+        ImageUtil.setAlphaImage(mDetailPlayShow);
     }
 
     /**
@@ -195,6 +208,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initializeViews() {
+        mContext=this;
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
         mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
         isShowComment = getIntent().getBooleanExtra(NewsCommentFgt.KEY_SHOW_COMMENT, false);
@@ -203,8 +217,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mDetailView = findViewById(R.id.mDetailWrapper);
         mBottomLine = findViewById(R.id.mBottomLine);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mTitleBottomLine = findViewById(R.id.title_bottom_line);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mDetailPlayShow = (ImageView) findViewById(R.id.iv_detail_image_play);
+        mTitleBottomLine = findViewById(R.id.title_bottom_line);
+        mNoNetworkImage = (ImageView) findViewById(R.id.detail_image_bg);
+        mNoet = (TextView) findViewById(R.id.tv_detail_video_noet);
         mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
         mNoNetShow.setOnClickListener(this);
         mNewsLoadingImg.setOnClickListener(this);
@@ -213,7 +230,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
-        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
         mDetailRightMore.setOnClickListener(this);
@@ -339,26 +356,14 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     isCommentPage = true;
                     TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
-                    Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(drawable, null, null, null);
                     mTitleBottomLine.setVisibility(View.VISIBLE);
-//                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
-//                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
-//                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-//                    mDetailRightMore.setVisibility(View.GONE);
+                    TextUtil.setImageResource(mContext,mDetailLeftBack,R.drawable.btn_left_back);
                 } else {
                     isCommentPage = false;
+                    mTitleBottomLine.setVisibility(View.GONE);
                     TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
-                    Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
-                    drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(drawable1, null, null, null);
-                    mTitleBottomLine.setVisibility(View.GONE);
-//                    Drawable share = getResources().getDrawable(R.drawable.detai_video_share);
-//                    share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
-//                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
-//                    mDetailRightMore.setVisibility(View.GONE);
+                    ImageUtil.setAlphaImage(mDetailLeftBack,R.drawable.detial_video_back);
                 }
             }
         });

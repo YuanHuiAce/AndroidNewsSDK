@@ -947,6 +947,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
         long position = mVideoView.getCurrentPosition();
         long duration = mVideoView.getDuration();
         this.duration = duration;
+
         if (!generateTime(duration).equals(allTime.getText().toString()))
             allTime.setText(generateTime(duration));
         if (seekBar != null) {
@@ -1617,9 +1618,13 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 pause();
                 hide(false);
                 isShowContoller = false;
-                mVideoDuration.setText(generateTime(duration));
-                mVideoDuration.setVisibility(View.VISIBLE);
-                mDurationContainer.setVisibility(View.VISIBLE);
+                if (currentPosition!=0) {
+                    mVideoDuration.setText(generateTime(currentPosition));
+                    mDurationContainer.setVisibility(View.VISIBLE);
+                }else
+                {
+                    mDurationContainer.setVisibility(View.GONE);
+                }
                 mVideoNetTie.setVisibility(View.VISIBLE);
             } else {
 //                Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();

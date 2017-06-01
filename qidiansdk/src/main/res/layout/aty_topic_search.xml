@@ -10,15 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/color6">
-
-        <TextView
+        <ImageView
             android:id="@+id/mSearchLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:clickable="true"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:paddingLeft="15dp" />
+            android:padding="14dp"
+            android:scaleType="centerInside" />
 
         <RelativeLayout
             android:id="@+id/rl_topic_container"
@@ -154,7 +152,7 @@
             android:layout_marginTop="16dp"
             android:text="暂无搜索结果"
             android:textColor="@color/color3"
-            android:textSize="14sp"
+            android:textSize="@dimen/font5"
             android:visibility="gone" />
 
     </RelativeLayout>

@@ -145,7 +145,8 @@ public class NewsCommentFgt extends Fragment {
         return rootView;
     }
 
-    public void setTheme(){
+    public void setTheme() {
+
         TextUtil.setLayoutBgResource(mContext, mNewsCommentList, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
     }

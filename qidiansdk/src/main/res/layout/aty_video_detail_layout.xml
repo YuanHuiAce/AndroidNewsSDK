@@ -57,6 +57,28 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@color/transparent">
+            <RelativeLayout
+                android:id="@+id/nonet_show"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"
+                android:background="#101010"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/detail_image_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_detail_image_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/video_play" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mDetailHeader"
@@ -64,13 +86,13 @@
                 android:layout_height="48dp"
                 android:background="@color/transparent">
 
-                <TextView
+                <ImageView
                     android:id="@+id/mDetailLeftBack"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/detial_video_back"
-                    android:padding="14dp" />
+                    android:padding="14dp"
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:id="@+id/mDetailRightMore"
@@ -90,7 +112,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_gravity="bottom"
-                android:visibility="gone" />
+                android:visibility="gone"
+                />
+
+
         </FrameLayout>
 
 
@@ -188,13 +213,13 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/tv_detail_video_noet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/mNewsLoadingImg"
                 android:layout_centerHorizontal="true"
                 android:text="点击屏幕，重新加载"
-                android:textColor="@color/no_net"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font5" />
 
             <include layout="@layout/qd_loading_view_anim" />
 
@@ -211,28 +236,28 @@
         <include layout="@layout/detail_careful_layout" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/nonet_show"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:background="#101010"
-        android:visibility="gone">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/nonet_show"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:background="#101010"-->
+        <!--android:visibility="gone">-->
 
-        <ImageView
-            android:id="@+id/detail_image_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
+        <!--<ImageView-->
+            <!--android:id="@+id/detail_image_bg"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:visibility="gone" />-->
 
-        <ImageView
-            android:id="@+id/_detail_image_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/video_play" />
-    </RelativeLayout>
+        <!--<ImageView-->
+            <!--android:id="@+id/_detail_image_play"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:src="@drawable/video_play" />-->
+    <!--</RelativeLayout>-->
 
 
     <RelativeLayout
