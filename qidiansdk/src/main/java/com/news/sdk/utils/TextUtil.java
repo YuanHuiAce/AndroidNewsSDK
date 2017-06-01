@@ -360,43 +360,63 @@ public class TextUtil {
     }
 
     public static void setTextColor(Context context, EllipsizeEndTextView textView, int textColor) {
-        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setTextColor(Context context, TextViewExtend textView, int textColor) {
-        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setTextColor(Context context, TextView textView, int textColor) {
-        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setTextColor(Context context, EditText textView, int textColor) {
-        textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setHintTextColor(Context context, EditText textView, int textColor) {
-        textView.setHintTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setHintTextColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setTextColor(Context context, RadioButton textView, int textColor) {
-        textView.setTextColor(context.getResources().getColorStateList(ThemeManager.getCurrentThemeRes(context, textColor)));
+        if (textView != null) {
+            textView.setTextColor(context.getResources().getColorStateList(ThemeManager.getCurrentThemeRes(context, textColor)));
+        }
     }
 
     public static void setLayoutBgColor(Context context, View view, int color) {
-        view.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, color)));
+        if (view != null) {
+            view.setBackgroundColor(context.getResources().getColor(ThemeManager.getCurrentThemeRes(context, color)));
+        }
     }
 
     public static void setLayoutBgResource(Context context, View layout, int bgColor) {
-        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+        if (layout != null) {
+            layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+        }
     }
 
     public static void setImageResource(Context context, ImageView imageView, int bgResource) {
-        imageView.setImageResource(ThemeManager.getCurrentThemeRes(context, bgResource));
+        if (imageView != null) {
+            imageView.setImageResource(ThemeManager.getCurrentThemeRes(context, bgResource));
+        }
     }
 
     public static void setLayoutBg(Context context, RadioButton layout, int bgColor) {
-        layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+        if (layout != null) {
+            layout.setBackgroundResource(ThemeManager.getCurrentThemeRes(context, bgColor));
+        }
     }
 
     public static boolean isValidate(String text) {

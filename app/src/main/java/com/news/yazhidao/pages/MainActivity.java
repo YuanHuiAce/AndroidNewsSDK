@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             platform.share(pShareParams);
         } else if (argPlatform.equals(SinaWeibo.NAME)) {
             Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
-            if(!platform.isClientValid()){
+            if (!platform.isClientValid()) {
                 ToastUtil.toastShort("未安装新浪微博");
                 return;
             }

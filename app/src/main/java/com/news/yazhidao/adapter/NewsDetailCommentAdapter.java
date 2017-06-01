@@ -8,7 +8,6 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.sdk.adapter.abslistview.CommonAdapter;
@@ -17,7 +16,6 @@ import com.news.sdk.entity.NewsDetailComment;
 import com.news.sdk.pages.NewsDetailAty2;
 import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.pages.NewsFeedFgt;
-import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.R;
@@ -42,37 +40,32 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
 
     @Override
     public void convert(CommonViewHolder holder, final NewsDetailComment newsDetailCommentItem, final int position) {
-        View marks_bg = holder.getView(R.id.marks_bg);
-        ImageUtil.setAlphaImage(marks_bg);
         TextView pub_time = holder.getView(R.id.pub_time);
         pub_time.setText(convertTime(newsDetailCommentItem.getCtime()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
+        ImageUtil.setAlphaImage(comment_content);
         TextView original = holder.getView(R.id.original);
         final String strTitle = newsDetailCommentItem.getNtitle();
         CharSequence titleStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
         original.setText(titleStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
         if (newsDetailCommentItem.getUpflag() == 0) {
-            love_imagebt.setImageResource(R.mipmap.list_icon_gif_nor_icon_heart_nor);
+            TextUtil.setImageResource(mContext, love_imagebt, R.mipmap.list_icon_gif_nor_icon_heart_nor);
         } else {
-            love_imagebt.setImageResource(R.mipmap.list_icon_gif_nor_icon_heart_selected);
+            TextUtil.setImageResource(mContext, love_imagebt, R.mipmap.list_icon_gif_nor_icon_heart_selected);
         }
         int love_num = newsDetailCommentItem.getCommend();
         final TextView love_count = holder.getView(R.id.love_count);
         if (love_num > 0) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
-            params.rightMargin = DensityUtil.dip2px(mContext, 25);
-            love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.VISIBLE);
             love_count.setText(love_num + "");
         } else {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
-            params.rightMargin = DensityUtil.dip2px(mContext, 19);
-            love_imagebt.setLayoutParams(params);
-            love_count.setVisibility(View.GONE);
+            love_count.setVisibility(View.INVISIBLE);
         }
+        TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.line1_layout), R.color.color5);
+        TextUtil.setTextColor(mContext, love_count, R.color.color3);
         original.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

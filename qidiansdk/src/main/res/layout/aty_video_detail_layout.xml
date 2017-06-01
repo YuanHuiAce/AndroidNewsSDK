@@ -4,7 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/translucent"
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
     <RelativeLayout
+        android:layout_below="@+id/translucent"
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -137,8 +143,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/mDetailShare"
-                android:scaleType="centerInside"
-                android:visibility="gone" />
+                android:scaleType="centerInside"/>
 
             <ImageView
                 android:id="@+id/mDetailShare"
@@ -226,39 +231,8 @@
         </RelativeLayout>
 
         <!--需要占位不显示-->
-        <ImageView
-            android:id="@+id/share_bg_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#88000000"
-            android:visibility="gone" />
-
         <include layout="@layout/detail_careful_layout" />
     </RelativeLayout>
-
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/nonet_show"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:background="#101010"-->
-        <!--android:visibility="gone">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/detail_image_bg"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:visibility="gone" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/_detail_image_play"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:src="@drawable/video_play" />-->
-    <!--</RelativeLayout>-->
-
 
     <RelativeLayout
         android:id="@+id/detai_small_layout"

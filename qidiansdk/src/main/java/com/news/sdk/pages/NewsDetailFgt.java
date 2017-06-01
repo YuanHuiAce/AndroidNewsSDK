@@ -443,9 +443,9 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 handler.proceed();
             }
         });
-        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
-                "text/html", "utf-8", null);
+//        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+//                SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+//                "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
@@ -644,14 +644,31 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
     }
 
 
-    private void setTheme() {
+    public void setTheme() {
+        if (mDetailWebView != null) {
+            mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+                    SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+                    "text/html", "utf-8", null);
+        }
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        if (!TextUtil.isListEmpty(mComments)) {
+            //同步服务器上的评论数据到本地数据库
+            //  addCommentInfoToSql(mComments);
+            mCommentLayout.removeAllViews();
+            addCommentContent(mComments);
+        } else {
+            detail_shared_MoreComment.setVisibility(View.GONE);
+            detail_Hot_Layout.setVisibility(View.GONE);
+        }
         TextUtil.setLayoutBgColor(mContext, mNewsDetailList, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, mViewPointLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, detail_shared_ViewPointTitleLayout, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, adtvTitle, R.color.color9);
         TextUtil.setTextColor(mContext, adtvTitle, R.color.color2);
-        TextUtil.setTextColor(mContext, adtvType, R.color.color11);
         TextUtil.setLayoutBgResource(mContext, adtvType, R.drawable.tag_detail_ad_shape);
+        TextUtil.setTextColor(mContext, adtvType, R.color.color11);
         TextUtil.setTextColor(mContext, footView_tv, R.color.color2);
         TextUtil.setTextColor(mContext, detail_hotComment, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, detail_shared_hotComment_Line1, R.color.color1);
@@ -676,10 +693,11 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
 
             @Override
             public void onResponse(ArrayList<NewsDetailComment> result) {
-                if (!TextUtil.isListEmpty(result)) {
+                mComments = result;
+                if (!TextUtil.isListEmpty(mComments)) {
                     //同步服务器上的评论数据到本地数据库
                     //  addCommentInfoToSql(mComments);
-                    addCommentContent(result);
+                    addCommentContent(mComments);
                 } else {
                     detail_shared_MoreComment.setVisibility(View.GONE);
                     detail_Hot_Layout.setVisibility(View.GONE);

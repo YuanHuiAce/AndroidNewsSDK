@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="1小时前"
         android:textSize="@dimen/font5" />
 
     <ImageView
@@ -22,67 +21,58 @@
         android:clickable="true"
         android:src="@drawable/user_detail_record_del_icon_selector" />
 
-    <LinearLayout
-        android:id="@+id/marks_bg"
+    <TextView
+        android:id="@+id/comment_item_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/del_icon"
+        android:layout_below="@+id/pub_time"
         android:layout_margin="15dp"
         android:background="@drawable/center_bg_notation"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingLeft="15dp">
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="45dp"
+        android:paddingTop="6dp"
+        android:textSize="@dimen/font3" />
 
-        <TextView
-            android:id="@+id/comment_item_comment_content"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
-            android:layout_weight="8"
-            android:paddingTop="13dp"
-            android:textSize="@dimen/font3" />
+    <ImageButton
+        android:id="@+id/love_imagebt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comment_item_comment_content"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="9dp"
+        android:background="#00000000"
+        android:src="@mipmap/list_icon_gif_nor_icon_heart_nor" />
 
-        <RelativeLayout
-            android:id="@+id/love_layout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center_vertical">
-
-            <ImageButton
-                android:id="@+id/love_imagebt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="19dp"
-                android:background="#00000000"
-                android:src="@mipmap/list_icon_gif_nor_icon_heart_nor" />
-
-            <TextView
-                android:id="@+id/love_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="13dp"
-                android:paddingTop="3dp"
-                android:text="1"
-                android:textColor="@color/new_color7"
-                android:textSize="12sp" />
-        </RelativeLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/love_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comment_item_comment_content"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="9dp"
+        android:text="1"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/original"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/marks_bg"
-        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/comment_item_comment_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="15dp"
         android:drawableRight="@mipmap/notationdetails_icn_more"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:paddingBottom="2dp"
+        android:paddingBottom="10dp"
         android:textSize="@dimen/font3" />
 
+    <View
+        android:id="@+id/line1_layout"
+        android:layout_below="@+id/original"
+        android:layout_width="match_parent"
+        android:layout_height="0.56dp" />
 </RelativeLayout>
