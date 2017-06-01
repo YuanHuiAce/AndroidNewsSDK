@@ -150,7 +150,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private SmallVideoContainer mSmallScreen;
     private RelativeLayout mSmallLayout;
     private RelativeLayout mDetailWrapper;
-    private TextView mDetailLeftBack;
+    private ImageView mDetailLeftBack;
     private VideoContainer mDetailVideo;
     private RelativeLayout mVideoShowBg;
     private ImageView mClose;
@@ -1261,7 +1261,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.detail_small_screen);
         mSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.detai_small_layout);
         mDetailWrapper = (RelativeLayout) getActivity().findViewById(R.id.mDetailWrapper);
-        mDetailLeftBack = (TextView) getActivity().findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (ImageView) getActivity().findViewById(R.id.mDetailLeftBack);
         mClose = (ImageView) getActivity().findViewById(R.id.detial_video_close);
         //视频
         mDetailVideo = (VideoContainer) rootView.findViewById(R.id.fgt_new_detail_video);
@@ -1271,9 +1271,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void onClick(View v) {
                 if (!NetworkUtils.isConnectionAvailable(mContext)) {
                     ToastUtil.toastShort("无网络，请稍后重试！");
-                    return;
-                } else if (NetworkUtils.isMobileAvailable(mContext)) {
-                    showNetworkDialog();
                     return;
                 }
                 mVideoShowBg.setVisibility(View.GONE);

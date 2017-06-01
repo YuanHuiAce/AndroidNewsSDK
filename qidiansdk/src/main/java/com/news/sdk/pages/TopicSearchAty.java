@@ -72,7 +72,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
      */
     private final static int PAGE_CAPACITY = 10;
 
-    private TextView mSearchLeftBack;
+    private ImageView mSearchLeftBack;
     private EditText mSearchContent;
     private View mSearchClear;
     private TextView mDoSearch;
@@ -124,7 +124,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
-        mSearchLeftBack = (TextView) findViewById(R.id.mSearchLeftBack);
+        mSearchLeftBack = (ImageView) findViewById(R.id.mSearchLeftBack);
         mSearchContainer = (RelativeLayout) findViewById(R.id.rl_topic_search_container);
         mSearchHeader = (RelativeLayout) findViewById(R.id.mSearchHeader);
         mTopicContainer = (RelativeLayout) findViewById(R.id.rl_topic_container);
@@ -182,6 +182,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             TextUtil.setTextColor(this, footView_text, R.color.color3);
         }
         TextUtil.setLayoutBgResource(this, mSearchLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mSearchLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mSearchHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mSearchLoaddingWrapper, R.color.color9);
         TextUtil.setLayoutBgResource(this, mTopicContainer, R.drawable.bg_search_topic);

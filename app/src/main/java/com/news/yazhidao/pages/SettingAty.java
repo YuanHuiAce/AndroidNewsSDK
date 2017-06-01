@@ -348,7 +348,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 new Response.Listener<Version>() {
                     @Override
                     public void onResponse(Version response) {
-                        if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) < response.getVersion_code()) {
+                        if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) <response.getVersion_code()) {
                             showUpdateDialog(response);
                         } else {
                             Toast.makeText(getApplicationContext(), "当前已是最新版本", Toast.LENGTH_SHORT).show();

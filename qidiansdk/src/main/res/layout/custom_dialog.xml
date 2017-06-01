@@ -22,14 +22,15 @@
             android:gravity="center"
             android:text="发现新版本"
             android:textStyle="bold"
-            android:textColor="#333333"
+            android:textColor="@color/color2"
             android:textSize="15sp"
             />
 
         <View
+            android:id="@+id/mDialogBottomLine"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#ebebeb" />
+            android:background="@color/color5" />
 
         <LinearLayout
             android:id="@+id/content"
@@ -48,7 +49,7 @@
                 android:gravity="center"
                 android:text="发现新版本，更新内容，发现新版本，请更新内容，发现新版本，更新内容，发现新版本，请更新内容"
                 android:textSize="14sp"
-                android:textColor="#333333"
+                android:textColor="@color/color2"
                 />
 
 
@@ -74,7 +75,7 @@
                 android:gravity="center"
                 android:background="@drawable/bg_update_cancel_shape"
                 android:textSize="14sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/color11" />
 
             <TextView
                 android:id="@+id/positiveButton"
@@ -86,7 +87,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_update_confim_shape"
                 android:textSize="14sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/color11" />
         </LinearLayout>
     </LinearLayout>
 

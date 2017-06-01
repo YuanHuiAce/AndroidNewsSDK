@@ -12,7 +12,6 @@ import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.TextUtil;
 
 import static com.news.sdk.R.id.content_layout;
-import static com.news.sdk.R.id.detail_hotComment;
 
 public class NewsCommentHeaderView extends LinearLayout {
 
