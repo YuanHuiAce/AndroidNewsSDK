@@ -1,6 +1,5 @@
 package com.news.sdk.pages;
 
-import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -456,7 +455,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                 } else {
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("http://www.baidu.com");
+                    Uri content_url = Uri.parse("https://m.baidu.com/s?from=1019278a");
                     intent.setData(content_url);
                     intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
                     startActivity(intent);
@@ -1201,26 +1200,27 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             }
         }
         Intent intent;
+        String keyword = "";
+        try {
+            keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String contentUrl="https://m.baidu.com/s?from=1019278a&word="+keyword;
         if (existLY) {
 //            intent = packageManager.getLaunchIntentForPackage(packageName);
             intent = new Intent(Intent.ACTION_WEB_SEARCH);
-            String keyword = "";
-            try {
-                keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            intent.putExtra(SearchManager.QUERY, keyword);
+//            intent.putExtra(SearchManager.QUERY, keyword);
             intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
             intent.putExtra("back_to_navigation", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent.setData(Uri.parse(url));
+            intent.setData(Uri.parse(contentUrl));
             startActivity(intent);
         } else {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            intent.putExtra("url",url);
-            intent.setData(Uri.parse(url));
+            intent.setData(Uri.parse(contentUrl));
             startActivity(intent);
         }
     }

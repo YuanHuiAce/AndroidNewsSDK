@@ -3,7 +3,6 @@ package com.news.sdk.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -16,6 +15,7 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +76,6 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
-import com.news.sdk.widget.CustomDialog;
 import com.news.sdk.widget.SharePopupWindow;
 import com.news.sdk.widget.SmallVideoContainer;
 import com.qq.e.ads.nativ.NativeAD;
@@ -1179,6 +1178,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
                 if (mChannelId == 44 && portrait) {
+                    Log.v(TAG,"footview:"+mlvNewsFeed.getRefreshableView().getFooterViewsCount()+"total count:"+totalItemCount);
                     VideoShowControl();
                     if (firstVisibleItem > 1) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
@@ -1609,9 +1609,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                             public void run() {
                                                 FrameLayout videoContainer = getPlayItemView(getPlayItemPosition());
                                                 if (videoContainer != null) {
-//                                                    ViewGroup vp = (ViewGroup) vPlayer.getParent();
-//                                                    if (vp != null)
-//                                                        vp.removeAllViews();
                                                     removeVPlayer();
                                                     videoContainer.addView(vPlayer);
                                                 }
@@ -1678,62 +1675,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private boolean isFirstPlay;
 
     /**
-     * 无网络提示
-     */
-    protected void showNetworkDialog(final RelativeLayout relativeLayout, final NewsFeed feed) {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("流量使用提示");
-        builder.setMessage("继续播放，运营商收取流量费用");
-        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                relativeLayout.setVisibility(View.GONE);
-
-                newsFeed = feed;
-                isAd = false;
-                vPlayer.cPostion = feed.getNid();
-                if (vPlayer.cPostion != lastPostion) {
-                    vPlayer.stop();
-                    vPlayer.release();
-                }
-                if (lastPostion != -1) {
-                    removeViews();
-                }
-                View view = (View) relativeLayout.getParent();
-                ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
-                mItemVideo.removeAllViews();
-                removeVPlayer();
-                vPlayer.setTitle(feed.getTitle());
-                vPlayer.setDuration(feed.getDuration());
-                vPlayer.setAllowModible(true);
-                vPlayer.setShowContoller(false);
-                mItemVideo.addView(vPlayer);
-                vPlayer.play(feed.getVideourl());
-                if (!isFirstPlay)
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            vPlayer.play(feed.getVideourl());
-                        }
-                    }, 100);
-                lastPostion = vPlayer.cPostion;
-                isFirstPlay = true;
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-
-    }
-
-    /**
      * 视频播放控制
      */
 
@@ -1746,13 +1687,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext)) {
-//                    ToastUtil.showNetorkPrompt(getActivity());
                     return;
                 }
-//                else if (NetworkUtils.isMobileAvailable(mContext)) {
-//                    showNetworkDialog(relativeLayout, feed);
-//                    return;
-//                }
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 newsFeed = feed;
@@ -2080,6 +2016,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 return -1;
             if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 return (i - lv.getFirstVisiblePosition());
+
             }
         }
         return -1;
@@ -2194,6 +2131,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 continue;
             if (i > mArrNewsFeed.size())
                 break;
+
             if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
@@ -2201,7 +2139,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
 
-//        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition() + "ChannelId::" + mstrChannelId);
+        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition()+"total:"+mlvNewsFeed.getRefreshableView().getChildCount()+"mArrNewsFeed:"+mArrNewsFeed.size());
 
         if (isExist) {
             View item = lv.getChildAt(position);
