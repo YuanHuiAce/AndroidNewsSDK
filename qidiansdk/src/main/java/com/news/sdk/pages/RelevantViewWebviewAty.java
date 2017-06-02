@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.news.sdk.R;
 import com.news.sdk.common.BaseActivity;
@@ -29,6 +30,7 @@ public class RelevantViewWebviewAty extends BaseActivity {
     private String mNewsUrl;
     private ImageView mLeftBack;
     private ProgressBar mNewsSourcesiteProgress;
+    private TextView mSearchTitle;
 
     @Override
     protected boolean translucentStatus() {
@@ -39,6 +41,7 @@ public class RelevantViewWebviewAty extends BaseActivity {
     protected void setContentView() {
         setContentView(R.layout.aty_relevant_view_webview);
         mNewsSourcesiteProgress = (ProgressBar) findViewById(R.id.mNewsSourcesiteProgress);
+        mSearchTitle = (TextView) findViewById(R.id.tv_search_title);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_layout);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.BELOW, R.id.mDetailWebHeader);

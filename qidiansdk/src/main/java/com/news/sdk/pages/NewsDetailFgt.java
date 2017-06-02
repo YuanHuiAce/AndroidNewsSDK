@@ -423,44 +423,58 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((NewsDetailAty2) mContext), "VideoJavaScriptBridge");
         /** 梁帅：判断图片是不是  不显示 */
 //        mDetailWebView.loadUrl("http://deeporiginalx.com/content.html?type=0&nid="+mNewID);
-        mDetailWebView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // TODO Auto-generated method stub
-                view.loadUrl(url);
-                return true;
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                //view.loadData("ERROR: " + description,"text/plain","utf8");
-            }
-
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                //handler.cancel(); 默认的处理方式，WebView变成空白页
-                //接受证书
-                handler.proceed();
-            }
-        });
+//        mDetailWebView.setWebViewClient(new WebViewClient() {
+//
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                // TODO Auto-generated method stub
+//                view.loadUrl(url);
+//                return true;
+//            }
+//
+//            @Override
+//            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+//                //view.loadData("ERROR: " + description,"text/plain","utf8");
+//            }
+//
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                //handler.cancel(); 默认的处理方式，WebView变成空白页
+//                //接受证书
+//                handler.proceed();
+//            }
+//        });
 //        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
 //                SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
 //                "text/html", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                // view.loadUrl(url);
-                if (openWithWebView(url)) {//如果是超链接，执行此方法
-                    startIntentBrowser("com.lieying.browser", url);
-                } else {
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    Uri content_url = Uri.parse("https://m.baidu.com/s?from=1019278a");
-                    intent.setData(content_url);
-                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
-                    startActivity(intent);
+//                 view.loadUrl(url);
+//                if (openWithWebView(url)) {//如果是超链接，执行此方法
+//                    startIntentBrowser("com.lieying.browser", url);
+//                } else {
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.intent.action.VIEW");
+//                    Uri content_url = Uri.parse("https://m.baidu.com/s?from=1019278a");
+//                    intent.setData(content_url);
+//                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+//                    startActivity(intent);
+//                }
+
+                String keyword = "";
+                try {
+                    keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
+                String contentUrl="https://m.baidu.com/s?from=1019278a&word="+keyword;
+                view.loadUrl(contentUrl);
                 return true;
+            }
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                //handler.cancel(); 默认的处理方式，WebView变成空白页
+                //接受证书
+                handler.proceed();
             }
         });
         //梁帅：判断图片是不是  不显示
@@ -1206,6 +1220,50 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
      * @param url
      */
     public void startIntentBrowser(String packageName, String url) {
+        boolean existLY = false;
+        PackageManager packageManager = mContext.getPackageManager();
+        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+        for (PackageInfo packageinfo : packageInfos) {
+            String stemp = packageinfo.packageName;
+            Logger.v("PACKAGENAME:", stemp);
+            if (stemp.equals(packageName)) {
+                existLY = true;
+                break;
+            }
+        }
+        Intent intent;
+        String keyword = "";
+        try {
+            keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String contentUrl="https://m.baidu.com/s?from=1019278a&word="+keyword;
+        if (existLY) {
+//            intent = packageManager.getLaunchIntentForPackage(packageName);
+            intent = new Intent(Intent.ACTION_WEB_SEARCH);
+//            intent.putExtra(SearchManager.QUERY, keyword);
+            intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+            intent.putExtra("back_to_navigation", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse(contentUrl));
+            startActivity(intent);
+        } else {
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("url",url);
+            intent.setData(Uri.parse(contentUrl));
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * 判断跳转猎鹰浏览器
+     *
+     * @param packageName
+     * @param url
+     */
+    public void startIntent(View packageName, String url) {
         boolean existLY = false;
         PackageManager packageManager = mContext.getPackageManager();
         List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);

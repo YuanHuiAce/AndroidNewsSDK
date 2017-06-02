@@ -239,7 +239,7 @@ public class NewsDetailFgtAdapter extends MultiItemCommonAdapter<RelatedItemEnti
             durationView.setText("");
         }
 //        TextUtil.setTextColor(mContext, durationView, R.color.color10);
-        ImageUtil.setAlphaView(durationView);
+//        ImageUtil.setAlphaView(durationView);
     }
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {

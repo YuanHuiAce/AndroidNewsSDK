@@ -19,6 +19,17 @@
             android:alpha="0.3"
             android:background="@color/black" />
 
+        <TextView
+            android:id="@+id/tv_search_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="网页游览"
+            android:textColor="@color/new_color7"
+            android:textSize="@dimen/font3"
+            android:visibility="gone"
+            />
+
         <ImageView
             android:id="@+id/mLeftBack"
             android:layout_width="48dp"
