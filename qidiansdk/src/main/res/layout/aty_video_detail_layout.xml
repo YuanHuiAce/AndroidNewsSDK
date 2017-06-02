@@ -4,16 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/translucent"
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
-
     <RelativeLayout
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/translucent">
+        android:layout_height="match_parent">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/mNewsDetailViewPager"
