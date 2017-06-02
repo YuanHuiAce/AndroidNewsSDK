@@ -442,7 +442,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, imgs.get(0), 0, 0, feed.getRtype());
             }
             setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
-            holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
+//            holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
+            holder.getView(R.id.icon_source).setVisibility(View.GONE);
+            holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
