@@ -170,7 +170,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         } else {
             TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
         }
-        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
+//        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
         if (isCommentPage) {
             TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         } else {
