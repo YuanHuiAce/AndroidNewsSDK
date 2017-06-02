@@ -21,7 +21,6 @@
         <!--<item>短信</item>-->
         <!--<item>邮件</item>-->
         <item>转发链接</item>
-        <item>夜间模式</item>
     </string-array>
 
     <array name="share_list_image">
@@ -32,7 +31,6 @@
         <!--<item>@drawable/ic_share_message</item>-->
         <!--<item>@drawable/ic_share_email</item>-->
         <item>@drawable/ic_share_link</item>
-        <item>@drawable/ic_share_mode</item>
     </array>
 
     <string-array name="vchannels">

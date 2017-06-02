@@ -98,7 +98,6 @@ import static com.news.sdk.utils.manager.PlayerManager.newsFeed;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
-    private static final String TAG = NewsFeedFgt.class.getSimpleName();
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
 
@@ -2200,8 +2199,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 break;
             }
         }
-
-//        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition() + "ChannelId::" + mstrChannelId);
 
         if (isExist) {
             View item = lv.getChildAt(position);

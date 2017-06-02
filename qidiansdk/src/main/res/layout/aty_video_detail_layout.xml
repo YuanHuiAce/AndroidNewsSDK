@@ -10,10 +10,10 @@
         android:layout_height="25dp" />
 
     <RelativeLayout
-        android:layout_below="@+id/translucent"
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/translucent">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/mNewsDetailViewPager"
@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@color/transparent">
+
             <RelativeLayout
                 android:id="@+id/nonet_show"
                 android:layout_width="match_parent"
@@ -118,8 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_gravity="bottom"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
 
         </FrameLayout>
@@ -143,7 +143,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/mDetailShare"
-                android:scaleType="centerInside"/>
+                android:scaleType="centerInside" />
 
             <ImageView
                 android:id="@+id/mDetailShare"
@@ -260,6 +260,13 @@
             android:src="@drawable/video_close" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone" />
 
     <com.news.sdk.widget.VideoContainer
         android:id="@+id/detail_full_screen"
