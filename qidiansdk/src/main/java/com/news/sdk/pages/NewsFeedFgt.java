@@ -97,7 +97,6 @@ import static com.news.sdk.utils.manager.PlayerManager.newsFeed;
 
 public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
-    private static final String TAG = NewsFeedFgt.class.getSimpleName();
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
 
@@ -1178,7 +1177,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
                 if (mChannelId == 44 && portrait) {
-                    Log.v(TAG,"footview:"+mlvNewsFeed.getRefreshableView().getFooterViewsCount()+"total count:"+totalItemCount);
+//                    Log.v(TAG,"footview:"+mlvNewsFeed.getRefreshableView().getFooterViewsCount()+"total count:"+totalItemCount);
                     VideoShowControl();
                     if (firstVisibleItem > 1) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
@@ -2139,7 +2138,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
         }
 
-        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition()+"total:"+mlvNewsFeed.getRefreshableView().getChildCount()+"mArrNewsFeed:"+mArrNewsFeed.size());
+//        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition()+"total:"+mlvNewsFeed.getRefreshableView().getChildCount()+"mArrNewsFeed:"+mArrNewsFeed.size());
 
         if (isExist) {
             View item = lv.getChildAt(position);

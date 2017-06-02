@@ -401,7 +401,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mNewsDetailHeaderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Logger.e("aaa", "webView的点击");
             }
         });
         mDetailWebView = new LoadWebView(mContext.getApplicationContext());

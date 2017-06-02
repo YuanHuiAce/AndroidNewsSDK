@@ -173,11 +173,11 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setCompoundDrawablePadding(DensityUtil.dip2px(mContext, 8));
             ImageUtil.setAlphaImage(viewExtend);
             int margin = DensityUtil.dip2px(mContext, 25);
-            if (i == mTypedArray.length() - 1) {
-                viewExtend.setPadding(margin, margin, margin, margin);
-            } else {
+//            if (i == mTypedArray.length() - 1) {
+//                viewExtend.setPadding(margin, margin, margin, margin);
+//            } else {
                 viewExtend.setPadding(margin, margin, 0, margin);
-            }
+//            }
             final String strShareName = mShareName[i];
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,6 +250,34 @@ public class SharePopupWindow extends PopupWindow {
                 mOtherLayout.addView(viewExtend);
             }
         }
+        TextViewExtend viewExtend = new TextViewExtend(mContext);
+        Drawable topDrawable;
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
+            topDrawable = mContext.getResources().getDrawable(R.drawable.ic_share_moon);
+            viewExtend.setText("夜间模式");
+        } else {
+            topDrawable = mContext.getResources().getDrawable(R.drawable.ic_share_day);
+            viewExtend.setText("日间模式");
+        }
+        topDrawable.setBounds(0, 0, topDrawable.getMinimumWidth(), topDrawable.getMinimumHeight());
+        viewExtend.setCompoundDrawables(null, topDrawable, null, null);
+        TextUtil.setTextColor(mContext, viewExtend, R.color.color2);
+        viewExtend.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContext.getResources().getDimensionPixelSize(R.dimen.new_font6));
+        viewExtend.setGravity(Gravity.CENTER_HORIZONTAL);
+        viewExtend.setCompoundDrawablePadding(DensityUtil.dip2px(mContext, 8));
+        ImageUtil.setAlphaImage(viewExtend);
+        int margin = DensityUtil.dip2px(mContext, 25);
+        viewExtend.setPadding(margin, margin, margin, margin);
+        viewExtend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
+                        ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                SharePopupWindow.this.dismiss();
+            }
+        });
+        ImageUtil.setAlphaImage(viewExtend);
+        mOtherLayout.addView(viewExtend);
     }
 
     public interface ShareDismiss {

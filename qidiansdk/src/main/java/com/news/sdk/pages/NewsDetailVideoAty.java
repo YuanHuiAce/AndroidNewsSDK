@@ -181,7 +181,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         }
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
-        TextUtil.setLayoutBgResource(this, translucent, R.color.color6);
+        TextUtil.setLayoutBgResource(this, translucent, R.color.half_black);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);

@@ -231,7 +231,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_more_selector);
         TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
-        TextUtil.setLayoutBgResource(this, translucent, R.color.color6);
+        TextUtil.setLayoutBgResource(this, translucent, R.color.half_black);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
