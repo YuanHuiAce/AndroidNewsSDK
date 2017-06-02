@@ -45,6 +45,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
+        TextUtil.setTextColor(mContext, comment_content, R.color.color2);
         ImageUtil.setAlphaImage(comment_content);
         TextView original = holder.getView(R.id.original);
         final String strTitle = newsDetailCommentItem.getNtitle();

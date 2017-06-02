@@ -27,7 +27,6 @@
             android:text="网页游览"
             android:textColor="@color/new_color7"
             android:textSize="@dimen/font3"
-            android:visibility="gone"
             />
 
         <ImageView

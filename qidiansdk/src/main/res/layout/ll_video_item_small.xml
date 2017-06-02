@@ -19,7 +19,7 @@
         android:layout_alignBottom="@+id/title_img_View"
         android:layout_alignLeft="@+id/title_img_View"
         android:layout_alignRight="@+id/title_img_View"
-        android:background="@drawable/bg_relate_video_shap"
+        android:background="@drawable/bg_relate_black"
        >
 
         <TextView

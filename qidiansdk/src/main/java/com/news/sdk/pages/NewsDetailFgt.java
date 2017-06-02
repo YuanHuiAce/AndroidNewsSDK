@@ -421,46 +421,12 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((NewsDetailAty2) mContext), "VideoJavaScriptBridge");
-        /** 梁帅：判断图片是不是  不显示 */
-//        mDetailWebView.loadUrl("http://deeporiginalx.com/content.html?type=0&nid="+mNewID);
-//        mDetailWebView.setWebViewClient(new WebViewClient() {
-//
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                // TODO Auto-generated method stub
-//                view.loadUrl(url);
-//                return true;
-//            }
-//
-//            @Override
-//            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-//                //view.loadData("ERROR: " + description,"text/plain","utf8");
-//            }
-//
-//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-//                //handler.cancel(); 默认的处理方式，WebView变成空白页
-//                //接受证书
-//                handler.proceed();
-//            }
-//        });
-//        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-//                SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
-//                "text/html", "utf-8", null);
+        //梁帅：判断图片是不是  不显示
         mDetailWebView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-//                 view.loadUrl(url);
-//                if (openWithWebView(url)) {//如果是超链接，执行此方法
-//                    startIntentBrowser("com.lieying.browser", url);
-//                } else {
-//                    Intent intent = new Intent();
-//                    intent.setAction("android.intent.action.VIEW");
-//                    Uri content_url = Uri.parse("https://m.baidu.com/s?from=1019278a");
-//                    intent.setData(content_url);
-//                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
-//                    startActivity(intent);
-//                }
 
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // TODO Auto-generated method stub
                 String keyword = "";
                 try {
                     keyword = URLDecoder.decode(Uri.parse(url).toString().substring(40), "UTF-8");
@@ -468,16 +434,39 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                     e.printStackTrace();
                 }
                 String contentUrl="https://m.baidu.com/s?from=1019278a&word="+keyword;
-                view.loadUrl(contentUrl);
+                Intent intent=new Intent(mContext,RelevantViewWebviewAty.class);
+                intent.putExtra(RelevantViewWebviewAty.KEY_URL,contentUrl);
+                startActivity(intent);
+
+//                view.loadUrl(url);
+//                if (openWithWebView(url)) {//如果是超链接，执行此方法
+//                    startIntentBrowser("com.lieying.browser", url);
+//                } else {
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.intent.action.VIEW");
+//                    Uri content_url = Uri.parse("http://www.baidu.com");
+//                    intent.setData(content_url);
+//                    intent.setClassName("com.lieying.browser", "com.lieying.browser.BrowserActivity");
+//                    startActivity(intent);
+//                }
                 return true;
             }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                //view.loadData("ERROR: " + description,"text/plain","utf8");
+            }
+
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 //handler.cancel(); 默认的处理方式，WebView变成空白页
                 //接受证书
                 handler.proceed();
             }
         });
-        //梁帅：判断图片是不是  不显示
+//        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+//                SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
+//                "text/html", "utf-8", null);
+        //梁帅：判断图片是不是不显示
 //        if(SharedPreManager.mInstance(getActivity()).getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
 //            mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
 //        }else{
@@ -1299,6 +1288,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             intent.setData(Uri.parse(contentUrl));
             startActivity(intent);
         }
+
     }
 
     private void loadADData() {

@@ -400,7 +400,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } else {
                 TextUtil.setImageResource(this, mDetailFavorite, R.drawable.btn_detail_favorite_normal);
             }
-//            mNid = "14369644";
+//            mNid = "19560218";
             RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
             NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
             }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mNid + "&uid=" + mUserId, new Response.Listener<NewsDetail>() {

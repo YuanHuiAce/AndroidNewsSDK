@@ -89,12 +89,12 @@ public class RelevantViewWebviewAty extends BaseActivity {
                 resend.sendToTarget();
             }
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                Logger.e(TAG, "xxxx shouldOverrideUrlLoading" + url);
-                return true;
-            }
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                view.loadUrl(url);
+//                Logger.e(TAG, "xxxx shouldOverrideUrlLoading" + url);
+//                return shouldOverrideUrlLoading(view,url);
+//            }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
