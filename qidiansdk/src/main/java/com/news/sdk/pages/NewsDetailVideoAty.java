@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
@@ -133,7 +131,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private ImageView mNoNetworkImage;
     private Context mContext;
     private View mTitleBottomLine;
-    private View translucent;
     private ImageView mDetailPlayShow;
     private TextView mNoet;
 
@@ -181,7 +178,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         }
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
-        TextUtil.setLayoutBgResource(this, translucent, R.color.half_black);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         TextUtil.setLayoutBgResource(this, mDetailBottomBanner, R.color.color6);
@@ -227,13 +223,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //            /** 梁帅：保持让屏幕常亮*/
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 //        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            translucent = findViewById(R.id.translucent);
-//              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        } else {
-            translucent.setVisibility(View.GONE);
-        }
         mNewsContentDataList = new ArrayList<>();
         mImageViews = new ArrayList<>();
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);

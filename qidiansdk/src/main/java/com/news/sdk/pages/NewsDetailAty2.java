@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -110,7 +108,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private boolean isUserComment;
     private String mSource;
     private boolean isForeground;
-    private View translucent;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -140,13 +137,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_detail_layout);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            translucent = findViewById(R.id.translucent);
-//              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        } else {
-            translucent.setVisibility(View.GONE);
-        }
 //        if (SharedPreManager.mInstance(this).getBoolean("showflag", "isKeepScreenOn")) {
 //            /** 梁帅：保持让屏幕常亮*/
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -231,7 +221,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
         TextUtil.setLayoutBgResource(this, mDetailRightMore, R.drawable.bg_more_selector);
         TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
-        TextUtil.setLayoutBgResource(this, translucent, R.color.half_black);
         TextUtil.setLayoutBgResource(this, mDetailHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mHeaderDivider, R.color.color5);
         TextUtil.setLayoutBgResource(this, mNewsDetailLoaddingWrapper, R.color.color6);
