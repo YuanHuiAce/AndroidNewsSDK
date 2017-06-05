@@ -44,7 +44,6 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.NewsCommentHeaderView;
 import com.news.sdk.widget.TextViewExtend;
-import com.news.sdk.widget.UserCommentDialog;
 
 import org.json.JSONObject;
 
@@ -87,7 +86,7 @@ public class NewsCommentFgt extends Fragment {
                 mCommentsAdapter.notifyDataSetChanged();
                 mNewsCommentHeaderView.setNewsCommentTitleTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
             } else {
-                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(CommonConstant.KEY_ADD_COMMENT);
                 mComments.add(0, comment);
                 mNewsCommentHeaderView.setNoCommentsLayoutGone();
                 mCommentsAdapter.setData(mComments);

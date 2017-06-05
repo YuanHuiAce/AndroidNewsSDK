@@ -103,7 +103,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
 
         mTriangle = new ImageView(context);
-        mTriangle.setImageResource(R.drawable.qd_triangle_downward);
+        TextUtil.setImageResource(mContext, mTriangle, R.drawable.qd_triangle_downward);
 
         mTitle = new TextView(context);
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
@@ -173,13 +173,13 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         } else {
             if (mScreeHeight - mClickY >= mLayoutHeight) {
                 isDirection = true;
-                mTriangle.setImageResource(R.drawable.qd_triangle_downward);
+                TextUtil.setImageResource(mContext, mTriangle, R.drawable.qd_triangle_downward);
                 mPopWindowLayout.layout(mMarginLorR, mClickY + mTriangleHeight, mScreeWidth - mMarginLorR, mClickY + mLayoutHeight + mTriangleHeight);
                 mTriangle.layout(mClickX - mTriangleWidth, mClickY, mClickX, mClickY + mTriangleHeight);
 
             } else {
                 isDirection = false;
-                mTriangle.setImageResource(R.drawable.qd_triangle_upward);
+                TextUtil.setImageResource(mContext, mTriangle, R.drawable.qd_triangle_upward);
                 mPopWindowLayout.layout(mMarginLorR, mClickY - mLayoutHeight - mTriangleHeight, mScreeWidth - mMarginLorR, mClickY - mTriangleHeight);
                 mTriangle.layout(mClickX - mTriangleWidth, mClickY - mTriangleHeight, mClickX, mClickY);
 

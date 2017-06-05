@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
+import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.NewsDetailComment;
 import com.news.sdk.entity.User;
@@ -56,7 +57,6 @@ import java.util.UUID;
 public class UserCommentDialog extends DialogFragment implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1005;
-    public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
     private Context mContext;
     private CommentEditText mCommentContent;
@@ -94,9 +94,9 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 }
             }
         });
-        TextUtil.setLayoutBgResource(mContext,rootView,R.color.color5);
-        TextUtil.setLayoutBgResource(mContext,mCommentContent,R.color.color9);
-        TextUtil.setTextColor(mContext,mCommentContent,R.color.color2);
+        TextUtil.setLayoutBgResource(mContext, rootView, R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, mCommentContent, R.color.color9);
+        TextUtil.setTextColor(mContext, mCommentContent, R.color.color2);
         ImageUtil.setAlphaImage(mCommentCommit);
         return rootView;
     }
@@ -210,11 +210,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     String code = response.getString("code");
                     if ("2000".equals(code)) {
                         String data = response.optString("data");
-                        ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
                         NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid + "");
                         comment.setUser(user);
-                        intent.putExtra(KEY_ADD_COMMENT, comment);
+                        intent.putExtra(CommonConstant.KEY_ADD_COMMENT, comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
                     }
@@ -226,7 +225,6 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ToastUtil.toastShort("评论失败!");
                 isComment = false;
             }
         });

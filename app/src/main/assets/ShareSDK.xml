@@ -69,7 +69,7 @@
 		AppKey="104745354"
 		AppSecret="e0c793deeb71942132d76b985e3b45c4"
         RedirectUrl="http://sns.whalecloud.com/sina2/callback"
-        ShareByAppClient="false"
+        ShareByAppClient="true"
         Enable="true" />
 
     <TencentWeibo
