@@ -204,7 +204,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         TextUtil.setLayoutBgResource(this, mHistoryLineLast, R.color.color5);
         TextUtil.setTextColor(this, mSearchHotLabel, R.color.color3);
         TextUtil.setTextColor(this, mSearchHistory, R.color.color3);
-
         TextUtil.setLayoutBgResource(this, bgLayout, R.color.color6);
         ImageUtil.setAlphaProgressBar(imageAni);
         ImageUtil.setAlphaImage(mSearchClear);
