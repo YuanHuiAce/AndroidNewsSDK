@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/qidiansdk/qidiansdk.iml" filepath="$PROJECT_DIR$/qidiansdk/qidiansdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/shareSDK/shareSDK.iml" filepath="$PROJECT_DIR$/shareSDK/shareSDK.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shareSDK/shareSDK.iml" filepath="$PROJECT_DIR$/shareSDK/shareSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/viewplay/viewplay.iml" filepath="$PROJECT_DIR$/viewplay/viewplay.iml" />
     </modules>
   </component>

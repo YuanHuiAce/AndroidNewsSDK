@@ -207,18 +207,14 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         ImageUtil.setAlphaProgressBar(imageAni);
         ImageUtil.setAlphaImage(mSearchClear);
         ImageUtil.setAlphaImage(mSearchTipImg);
-
         if (mHotLabelsLayout != null) {
             for (int i = 0; i < mHotLabelsLayout.getChildCount(); i++) {
                 TextView mHotLabels = (TextView) mHotLabelsLayout.getChildAt(i);
                 TextUtil.setTextColor(this, mHotLabels, R.color.color2);
                 TextUtil.setLayoutBgResource(this, mHotLabels, R.drawable.bg_search_hotlabel);
             }
-
         }
-
         mSearchListViewOpenAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -397,6 +393,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                             }
                             mHotLabels = GsonUtil.deSerializedByType(result, new TypeToken<ArrayList<Element>>() {
                             }.getType());
+                            if (!TextUtil.isListEmpty(historyEntities)) {
+                                mHotLabels = new ArrayList<>(mHotLabels.subList(0, mHotLabels.size() / 5));
+                            }
                         }
                         if (!TextUtil.isListEmpty(mHotLabels)) {
                             int temp = mHotLabels.size() % PAGE_CAPACITY;
