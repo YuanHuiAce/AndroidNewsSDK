@@ -1,6 +1,8 @@
 package com.news.yazhidao.pages;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -46,11 +48,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     private TextView mFirstAndTop;
     private UserReceiver mReceiver;
     public static VPlayPlayer vPlayPlayer;
+    private ClipboardManager cmb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
+        cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         setContentView(R.layout.activity_main);
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
@@ -291,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
 
         Platform.ShareParams pShareParams = new Platform.ShareParams();
         pShareParams.setImageData(BitmapFactory.decodeResource(QiDianApplication.getAppContext().getResources(), R.mipmap.ic_launcher));
-//        pShareParams.setImageUrl("http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg");
         if (argPlatform.equals(Wechat.NAME) || argPlatform.equals(WechatMoments.NAME)) {
             pShareParams.setShareType(Platform.SHARE_WEBPAGE);
             pShareParams.setTitle(title);
@@ -305,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ToastUtil.toastShort("未安装微信");
                 return;
             }
-            platform.SSOSetting(false);
+            cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
             platform.setPlatformActionListener(pShareListner);
             if (TextUtil.isEmptyString(remark))
                 pShareParams.setText("资讯分享社区");
@@ -318,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ToastUtil.toastShort("未安装微信");
                 return;
             }
-            platform.SSOSetting(false);
+            cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
             platform.setPlatformActionListener(pShareListner);
             platform.share(pShareParams);
         } else if (argPlatform.equals(SinaWeibo.NAME)) {
