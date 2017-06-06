@@ -33,7 +33,6 @@ import com.google.gson.reflect.TypeToken;
 import com.news.sdk.R;
 import com.news.sdk.adapter.NewsFeedAdapter;
 import com.news.sdk.application.QiDianApplication;
-import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.database.NewsDetailCommentDao;
@@ -51,7 +50,10 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.SharePopupWindow;
+import com.news.sdk.widget.SwipeBackViewpager;
 import com.news.sdk.widget.UserCommentDialog;
+import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
+import com.news.sdk.widget.swipebackactivity.SwipeBackLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,13 +67,13 @@ import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
  * Created by fengjigang on 15/9/6.
  * 视频详情页
  */
-public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
     //    public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
     //    private int mScreenWidth, mScreenHeight;
-//    //滑动关闭当前activity布局
-////    private SwipeBackLayout mSwipeBackLayout;
+    //滑动关闭当前activity布局
+    private SwipeBackLayout mSwipeBackLayout;
     private String mUserId = "";
     private ImageView mivShareBg;
     private ArrayList<ArrayList> mNewsContentDataList;
@@ -105,7 +107,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private TextView mImageWallDesc, careful_Text;
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic, mDetailFavorite, careful_Image;
-    public ViewPager mNewsDetailViewPager;
+    public SwipeBackViewpager mNewsDetailViewPager;
     private RefreshPageBroReceiver mRefreshReceiver;
     private NewsFeed mNewsFeed;
     private String mImageUrl;
@@ -285,7 +287,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mImageWallWrapper = findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager) findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
-        mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
+        mNewsDetailViewPager = (SwipeBackViewpager) findViewById(R.id.mNewsDetailViewPager);
 
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);

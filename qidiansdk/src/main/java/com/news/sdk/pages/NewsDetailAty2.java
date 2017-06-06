@@ -28,7 +28,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
 import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
-import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.database.NewsDetailCommentDao;
@@ -46,7 +45,10 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.SharePopupWindow;
+import com.news.sdk.widget.SwipeBackViewpager;
 import com.news.sdk.widget.UserCommentDialog;
+import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
+import com.news.sdk.widget.swipebackactivity.SwipeBackLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,13 +60,13 @@ import java.util.HashMap;
 /**
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
     //滑动关闭当前activity布局
-//    private SwipeBackLayout mSwipeBackLayout;
+    private SwipeBackLayout mSwipeBackLayout;
     private String mUserId = "";
     private ImageView mivShareBg;
     private ArrayList<ArrayList> mNewsContentDataList;
@@ -91,7 +93,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private TextView mImageWallDesc, careful_Text;
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic, mDetailFavorite, careful_Image;
-    public ViewPager mNewsDetailViewPager;
+    public SwipeBackViewpager mNewsDetailViewPager;
     private RefreshPageBroReceiver mRefreshReceiver;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
@@ -156,8 +158,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     protected void initializeViews() {
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
         mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
-//        mSwipeBackLayout = getSwipeBackLayout();
-//        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         carefulLayout = (LinearLayout) findViewById(R.id.carefulLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -192,7 +194,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallWrapper = findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager) findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
-        mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
+        mNewsDetailViewPager = (SwipeBackViewpager) findViewById(R.id.mNewsDetailViewPager);
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);
         setTheme();
