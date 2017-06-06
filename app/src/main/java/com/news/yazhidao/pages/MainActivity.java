@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             pShareParams.setTitle(title);
             pShareParams.setUrl(url);
         } else {
-            pShareParams.setText(title + url);
+            pShareParams.setText(title + "" + url);
         }
         if (argPlatform.equals(Wechat.NAME)) {
             Platform platform = ShareSDK.getPlatform(Wechat.NAME);
@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ToastUtil.toastShort("未安装微信");
                 return;
             }
+            platform.SSOSetting(false);
             platform.setPlatformActionListener(pShareListner);
             if (TextUtil.isEmptyString(remark))
                 pShareParams.setText("资讯分享社区");
@@ -317,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ToastUtil.toastShort("未安装微信");
                 return;
             }
+            platform.SSOSetting(false);
             platform.setPlatformActionListener(pShareListner);
             platform.share(pShareParams);
         } else if (argPlatform.equals(SinaWeibo.NAME)) {
@@ -325,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ToastUtil.toastShort("未安装新浪微博");
                 return;
             }
+            platform.SSOSetting(false);
             platform.setPlatformActionListener(pShareListner);
             platform.share(pShareParams);
         } else if (argPlatform.equals(QQ.NAME)) {
@@ -333,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             pShareParams.setTitle(title);
             pShareParams.setTitleUrl(url);
             pShareParams.setText("奇点资讯分享社区");
+            platform.SSOSetting(false);
             platform.share(pShareParams);
         }
     }
