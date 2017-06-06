@@ -3,12 +3,14 @@ package com.news.sdk.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.sdk.R;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.utils.DateUtil;
+import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 
 import static com.news.sdk.R.id.content_layout;
@@ -22,6 +24,8 @@ public class NewsCommentHeaderView extends LinearLayout {
     private LinearLayout mllContentLayout;
     private NewsFeed mNewsFeed;
     private Context mContext;
+    private ImageView mivSofa;
+    private TextView mtvSofa;
 
     //新闻标题,新闻时间,新闻描述
     public NewsCommentHeaderView(Context context) {
@@ -43,6 +47,8 @@ public class NewsCommentHeaderView extends LinearLayout {
         news_comment_hotComment = (TextView) rootView.findViewById(R.id.news_comment_hotComment);
         news_comment_hotComment_Line1 = rootView.findViewById(R.id.news_comment_hotComment_Line1);
         news_comment_hotComment_Line2 = rootView.findViewById(R.id.news_comment_hotComment_Line2);
+        mtvSofa = (TextView) rootView.findViewById(R.id.text_sofa);
+        mivSofa = (ImageView) rootView.findViewById(R.id.image_sofa);
     }
 
     public void setData(NewsFeed newsFeed) {
@@ -58,6 +64,8 @@ public class NewsCommentHeaderView extends LinearLayout {
         TextUtil.setLayoutBgResource(mContext, mllNewsCommentNoCommentsLayout, R.color.color6);
         TextUtil.setTextColor(mContext, mtvNewsCommentTitle, R.color.color2);
         TextUtil.setTextColor(mContext, mtvNewsCommentContent, R.color.color3);
+        TextUtil.setTextColor(mContext, mtvSofa, R.color.color3);
+        ImageUtil.setAlphaImage(mivSofa);
         if (mNewsFeed != null) {
             String title = mNewsFeed.getTitle();
             if (!TextUtil.isEmptyString(title)) {

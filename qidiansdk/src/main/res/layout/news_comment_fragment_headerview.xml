@@ -66,11 +66,13 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/image_sofa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sofa_image" />
 
         <TextView
+            android:id="@+id/text_sofa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
