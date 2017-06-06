@@ -121,6 +121,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mDetailCommentNum.setVisibility(View.VISIBLE);
             mDetailCommentNum.setText(TextUtil.getCommentNum(mCommentNum + ""));
             TextUtil.setImageResource(NewsDetailAty2.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+            careful_Image.setImageResource(R.drawable.hook_image);
+            careful_Text.setText("评论成功");
+            carefulAnimation();
         }
     }
 

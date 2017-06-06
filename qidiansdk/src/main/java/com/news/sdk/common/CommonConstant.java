@@ -66,6 +66,8 @@ public final class CommonConstant {
     public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
     public static final String KEY_ATTENTION_CONPUBFLAG = "key_detail_conpubflag";
     public static final String KEY_ATTENTION_INDEX = "key_attention_index";
+    public static final String KEY_ADD_COMMENT = "key_add_comment";
+    public static final String KEY_NOR_COMMENT = "key_nor_comment";
     public static final String NEWS_COMMENT_NUM = "news_comment_num";
     public static final String NEWS_ID = "news_id";
     public static final String FILE_DATA_ATTENTION = "file_data_attention";

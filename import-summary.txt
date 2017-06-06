@@ -1,6 +1,13 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
+ * Project
+   ShareSDK:/Users/fiocca/Downloads/ShareSDK-Android-2.8.3-a1cc201b1a39082db9194
+   abcb08dbc62/ShareSDK for Android/Libs/MainLibs/.classpath:
+   Could not resolve source path src in project ShareSDK: ignored. The project
+   may not compile if the given source path provided source code.
+
+
 Ignored Files:
 --------------
 The following files were *not* copied into the new Gradle project; you
@@ -15,11 +22,17 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => qAMasterSDK/src/main/AndroidManifest.xml
-* assets/ => qAMasterSDK/src/main/assets
-* libs/testinagent_crash_release.jar => qAMasterSDK/libs/testinagent_crash_release.jar
-* res/ => qAMasterSDK/src/main/res/
-* src/ => qAMasterSDK/src/main/java/
+* AndroidManifest.xml => shareSDK/src/main/AndroidManifest.xml
+* libs/MobCommons-2017.0412.1554.jar => shareSDK/libs/MobCommons-2017.0412.1554.jar
+* libs/MobTools-2017.0412.1554.jar => shareSDK/libs/MobTools-2017.0412.1554.jar
+* libs/ShareSDK-Core-2.8.3.jar => shareSDK/libs/ShareSDK-Core-2.8.3.jar
+* libs/ShareSDK-QQ-2.8.3.jar => shareSDK/libs/ShareSDK-QQ-2.8.3.jar
+* libs/ShareSDK-SinaWeibo-2.8.3.jar => shareSDK/libs/ShareSDK-SinaWeibo-2.8.3.jar
+* libs/ShareSDK-Wechat-2.8.3.jar => shareSDK/libs/ShareSDK-Wechat-2.8.3.jar
+* libs/ShareSDK-Wechat-Core-2.8.3.jar => shareSDK/libs/ShareSDK-Wechat-Core-2.8.3.jar
+* libs/ShareSDK-Wechat-Favorite-2.8.3.jar => shareSDK/libs/ShareSDK-Wechat-Favorite-2.8.3.jar
+* libs/ShareSDK-Wechat-Moments-2.8.3.jar => shareSDK/libs/ShareSDK-Wechat-Moments-2.8.3.jar
+* res/ => shareSDK/src/main/res/
 
 Next Steps:
 -----------

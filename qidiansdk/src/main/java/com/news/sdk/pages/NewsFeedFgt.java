@@ -186,6 +186,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mlvNewsFeed != null) {
             mlvNewsFeed.setHeaderLoadingView();
             TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
+            mRefreshTitleBar.setAlpha(0.6f);
             TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
             TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
             TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
@@ -811,7 +812,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (vPlayer != null && mChannelId == 44) {
             vPlayer.setPlayerFeed(playerFeeds);
         }
-        mIsFirst = false;
+        if (mIsFirst) {
+            mIsFirst = false;
+            mlvNewsFeed.getRefreshableView().setSelection(2);
+            mlvNewsFeed.getRefreshableView().smoothScrollToPosition(2);
+        }
         mlvNewsFeed.onRefreshComplete();
     }
 

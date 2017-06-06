@@ -45,8 +45,6 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
-        TextUtil.setTextColor(mContext, comment_content, R.color.color2);
-        ImageUtil.setAlphaImage(comment_content);
         TextView original = holder.getView(R.id.original);
         final String strTitle = newsDetailCommentItem.getNtitle();
         CharSequence titleStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
@@ -65,8 +63,6 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         } else {
             love_count.setVisibility(View.INVISIBLE);
         }
-        TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.line1_layout), R.color.color5);
-        TextUtil.setTextColor(mContext, love_count, R.color.color3);
         original.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,8 +91,11 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
             }
         });
         deleteCommentItem((ImageView) holder.getView(R.id.del_icon), position);
+        ImageUtil.setAlphaImage(comment_content);
+        TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.line1_layout), R.color.color5);
+        TextUtil.setTextColor(mContext, love_count, R.color.color3);
         TextUtil.setTextColor(mContext, pub_time, R.color.color3);
-        TextUtil.setTextColor(mContext, comment_content, R.color.color3);
+        TextUtil.setTextColor(mContext, comment_content, R.color.color2);
         TextUtil.setTextColor(mContext, original, R.color.color3);
         ImageUtil.setAlphaImage(original);
         ImageUtil.setAlphaImage(holder.getView(R.id.del_icon));

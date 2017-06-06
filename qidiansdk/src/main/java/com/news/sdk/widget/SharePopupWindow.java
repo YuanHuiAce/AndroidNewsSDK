@@ -31,7 +31,6 @@ import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.User;
-import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
@@ -218,9 +217,9 @@ public class SharePopupWindow extends PopupWindow {
                         int whereabout = 0;
                         User user = SharedPreManager.mInstance(mContext).getUser(mContext);
                         if (user != null) {
-                            if (user.isVisitor()) {
-                                AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
-                            } else {
+//                            if (user.isVisitor()) {
+//                                AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+//                            } else {
                                 if ("微信朋友圈".equals(strShareName)) {
                                     whereabout = 1;
                                     intent.setAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
@@ -233,7 +232,7 @@ public class SharePopupWindow extends PopupWindow {
                                 } else if ("QQ好友".equals(strShareName)) {
                                     whereabout = 3;
                                     intent.setAction(CommonConstant.SHARE_QQ_ACTION);
-                                }
+//                                }
                             }
                         }
                         intent.putExtra(CommonConstant.SHARE_TITLE, mstrTitle);

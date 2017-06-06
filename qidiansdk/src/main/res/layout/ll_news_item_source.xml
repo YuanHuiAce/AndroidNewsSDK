@@ -27,12 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="5dp"
-        android:gravity="center"
+        android:layout_marginTop="0.56dp"
         android:includeFontPadding="false"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:paddingTop="0.56dp"
         android:textSize="@dimen/font14"
         android:visibility="gone" />
 
@@ -49,14 +47,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="-10dp"
         android:textSize="@dimen/font8" />
 
     <ImageView
         android:id="@+id/delete_imageView"
-        android:layout_width="35dp"
+        android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:src="@drawable/btn_news_feed_delete_selector" />
+        android:paddingLeft="7dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/news_feed_delete" />
 </LinearLayout>
