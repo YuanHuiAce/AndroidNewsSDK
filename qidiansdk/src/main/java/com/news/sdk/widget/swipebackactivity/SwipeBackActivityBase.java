@@ -1,13 +1,15 @@
 package com.news.sdk.widget.swipebackactivity;
 
+
 /**
- * @author Yrom
+ *interface for {@link SwipeBackActivity} and {@link SwipeBackPreferenceActivity}
  */
 public interface SwipeBackActivityBase {
     /**
-     * @return the SwipeBackLayout associated with this activity.
+     *the SwipeBackLayout associated with this activity.
      */
     public abstract SwipeBackLayout getSwipeBackLayout();
+
 
     public abstract void setSwipeBackEnable(boolean enable);
 

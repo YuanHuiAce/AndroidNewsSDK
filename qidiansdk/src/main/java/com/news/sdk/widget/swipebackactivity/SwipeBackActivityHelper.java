@@ -10,7 +10,7 @@ import com.news.sdk.R;
 
 
 /**
- * @author Yrom
+ *
  */
 public class SwipeBackActivityHelper {
     private Activity mActivity;
@@ -24,7 +24,7 @@ public class SwipeBackActivityHelper {
     @SuppressWarnings("deprecation")
     public void onActivityCreate() {
         mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            mActivity.getWindow().getDecorView().setBackgroundDrawable(null);
+        mActivity.getWindow().getDecorView().setBackgroundDrawable(null);
         mSwipeBackLayout = (SwipeBackLayout) LayoutInflater.from(mActivity).inflate(
                 R.layout.swipeback_layout, null);
         mSwipeBackLayout.addSwipeListener(new SwipeBackLayout.SwipeListener() {

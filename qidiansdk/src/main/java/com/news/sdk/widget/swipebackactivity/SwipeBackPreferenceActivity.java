@@ -33,6 +33,7 @@ public class SwipeBackPreferenceActivity extends PreferenceActivity implements S
     public SwipeBackLayout getSwipeBackLayout() {
         return mHelper.getSwipeBackLayout();
     }
+
     @Override
     public void setSwipeBackEnable(boolean enable) {
         getSwipeBackLayout().setEnableGesture(enable);

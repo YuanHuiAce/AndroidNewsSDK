@@ -81,8 +81,9 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <!--android:src="@drawable/favorite_delete"-->
+            android:layout_height="wrap_content"
+            android:src="@mipmap/favorite_delete" />
+
         <TextView
             android:id="@+id/aty_myFavorite_number"
             android:layout_width="wrap_content"

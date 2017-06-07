@@ -4,17 +4,18 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.news.sdk.R;
+import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
 import com.news.sdk.widget.swipebackactivity.SwipeBackActivityHelper;
+
 
 
 /**
  * Created by feng on 3/23/15.
  */
-public abstract class BaseActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener{
+public abstract class BaseActivity extends SwipeBackActivity implements ThemeManager.OnThemeChangeListener{
 
     protected SwipeBackActivityHelper mHelper;
 

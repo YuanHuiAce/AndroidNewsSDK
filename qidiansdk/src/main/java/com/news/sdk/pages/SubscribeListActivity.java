@@ -19,6 +19,7 @@ import com.news.sdk.R;
 import com.news.sdk.adapter.abslistview.CommonAdapter;
 import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
+import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.entity.AttentionListEntity;
@@ -28,7 +29,6 @@ import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
-import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONObject;
 
@@ -37,7 +37,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SubscribeListActivity extends SwipeBackActivity {
+public class SubscribeListActivity extends BaseActivity {
 
     private TextView mSubscribeListLeftBack;
     private PullToRefreshListView mAttentionListView;
@@ -128,6 +128,11 @@ public class SubscribeListActivity extends SwipeBackActivity {
 //                changeAttentionStatus(mAdapter, mAttentionListEntities.get(position));
 //            }
 //        }
+    }
+
+    @Override
+    public void onThemeChanged() {
+
     }
 
     /**

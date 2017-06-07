@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -176,25 +175,21 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 //调用微信朋友圈分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<1====>" + shareUrl);
                 ShareToPlatformByNewsDetail(WechatMoments.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_WECHAT_ACTION.equals(action)) {
                 //调用微信分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<2====>" + shareUrl);
                 ShareToPlatformByNewsDetail(Wechat.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_SINA_WEIBO_ACTION.equals(action)) {
                 //调用新浪微博分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<3====>" + shareUrl);
                 ShareToPlatformByNewsDetail(SinaWeibo.NAME, shareTitle, shareUrl, "");
             } else if (CommonConstant.SHARE_QQ_ACTION.equals(action)) {
                 //调用QQ分享
                 String shareTitle = intent.getStringExtra(CommonConstant.SHARE_TITLE);
                 String shareUrl = intent.getStringExtra(CommonConstant.SHARE_URL);
-                Log.i("tag", shareTitle + "<4====>" + shareUrl);
                 ShareToPlatformByNewsDetail(QQ.NAME, shareTitle, shareUrl, "");
             }
         }
@@ -275,7 +270,13 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
     }
 
-    public void ShareToPlatformByNewsDetail(final String argPlatform, final String title, final String url, final String remark) {
+    public void ShareToPlatformByNewsDetail(final String argPlatform, String title, String url, final String remark) {
+        if (TextUtil.isEmptyString(title)) {
+            title = "";
+        }
+        if (TextUtil.isEmptyString(url)) {
+            url = "";
+        }
         PlatformActionListener pShareListner = new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {

@@ -3,12 +3,14 @@ package com.news.yazhidao.pages;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.entity.AuthorizedUser;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.DateUtil;
+import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.yazhidao.R;
 
@@ -22,12 +24,14 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 
+
 public class GuideLoginAty extends BaseActivity implements View.OnClickListener {
     private View mGuideWeiboLogin;
     private View mGuideWinxinLogin;
     private View mGuideSkip;
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
+    private ImageView mLeftBack;
 
     @Override
     protected void setContentView() {
@@ -42,6 +46,9 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
         mGuideWinxinLogin.setOnClickListener(this);
         mGuideSkip = findViewById(R.id.mGuideSkip);
         mGuideSkip.setOnClickListener(this);
+        mLeftBack = (ImageView) findViewById(R.id.mLeftBack);
+        mLeftBack.setOnClickListener(this);
+        TextUtil.setImageResource(this, mLeftBack, R.drawable.btn_left_back);
     }
 
     @Override
@@ -56,8 +63,10 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.mLeftBack:
+                finish();
+                break;
             case R.id.mGuideWeiboLogin:
-                showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
                     return;
                 }
@@ -137,7 +146,6 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 weibo.authorize();//单独授权,OnComplete返回的hashmap是空的
                 break;
             case R.id.mGuideWinxinLogin:
-                showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
                     return;
                 }
