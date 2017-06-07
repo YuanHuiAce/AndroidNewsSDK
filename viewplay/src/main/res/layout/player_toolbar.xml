@@ -7,10 +7,11 @@
 
     <ImageView
         android:id="@+id/iv_video_finish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_chevron_left_white_36dp" />
 
     <!--可以自定义实现跑马灯效果，这里不能获取到焦点-->
