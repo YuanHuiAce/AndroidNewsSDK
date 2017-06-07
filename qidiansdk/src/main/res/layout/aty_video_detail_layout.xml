@@ -96,15 +96,24 @@
                     android:padding="14dp"
                     android:scaleType="centerInside" />
 
-                <TextView
+                <!--<TextView-->
+                    <!--android:id="@+id/mDetailRightMore"-->
+                    <!--android:layout_width="48dp"-->
+                    <!--android:layout_height="48dp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:clickable="true"-->
+                    <!--android:drawableRight="@drawable/detai_video_share"-->
+                    <!--android:paddingRight="15dp"-->
+                    <!--/>-->
+
+                <ImageView
                     android:id="@+id/mDetailRightMore"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
                     android:clickable="true"
-                    android:drawableRight="@drawable/detai_video_share"
-                    android:paddingRight="15dp"
-                    android:visibility="gone" />
+                    android:gravity="center"
+                    android:scaleType="centerInside" />
 
 
             </RelativeLayout>

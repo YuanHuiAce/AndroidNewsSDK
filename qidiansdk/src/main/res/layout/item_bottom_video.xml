@@ -2,26 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="34dp"
+    android:touchscreenBlocksFocus="true"
     android:layout_below="@+id/layout_video">
 
     <ImageView
         android:id="@+id/iv_video_share"
-        android:layout_width="15dp"
-        android:layout_height="3dp"
+        android:layout_width="30dp"
+        android:layout_height="34dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="15dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:visibility="gone"
+        android:layout_marginLeft="6dp"
         android:src="@drawable/video_share_black" />
 
     <com.news.sdk.widget.TextViewExtend
         android:id="@+id/tv_video_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/iv_video_share"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
         android:textColor="@color/color3"
         android:textSize="@dimen/font7" />
 

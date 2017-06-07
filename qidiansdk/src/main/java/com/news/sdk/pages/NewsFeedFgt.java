@@ -16,6 +16,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -372,7 +373,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         imageAni = (ProgressBar) rootView.findViewById(R.id.imageAni);
         textAni = (TextView) rootView.findViewById(R.id.textAni);
-        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
+        mivShareBg = (ImageView) getActivity().findViewById(R.id.share_bg_imageView);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRelative = (RelativeLayout) rootView.findViewById(R.id.mHomeRelative);
@@ -1672,8 +1673,8 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private SharePopupWindow.ShareDismiss shareDismiss = new SharePopupWindow.ShareDismiss() {
         @Override
         public void shareDismiss() {
-//            mivShareBg.startAnimation(mAlphaAnimationOut);
-//            mivShareBg.setVisibility(View.INVISIBLE);
+            mivShareBg.startAnimation(mAlphaAnimationOut);
+            mivShareBg.setVisibility(View.INVISIBLE);
         }
     };
     private boolean isFirstPlay;
@@ -1748,12 +1749,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        mivShareBg.startAnimation(mAlphaAnimationIn);
-//                        mivShareBg.setVisibility(View.VISIBLE);
-//                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
-//                        mSharePopupWindow.setVideo(true);
-//                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
-//                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                        mivShareBg.startAnimation(mAlphaAnimationIn);
+                        mivShareBg.setVisibility(View.VISIBLE);
+                        SharePopupWindow mSharePopupWindow = new SharePopupWindow((Activity) mContext, shareDismiss);
+                        mSharePopupWindow.setVideo(true);
+                        mSharePopupWindow.setTitleAndNid(feed.getTitle(), feed.getNid(), feed.getDescr());
+                        mSharePopupWindow.showAtLocation(rootView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                     }
                 });
 

@@ -121,7 +121,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     private FrameLayout mSmallScreen;
     public VPlayPlayer vPlayPlayer;
     private Handler mHandler;
-    private TextView mDetailRightMore;
+    private ImageView mDetailRightMore;
     private UserCommentDialog mCommentDialog;
     private int mCommentNum;
     private boolean isUserComment;
@@ -175,8 +175,10 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
 //        TextUtil.setLayoutBgResource(this, mDetailLeftBack, R.drawable.bg_left_back_selector);
         if (isCommentPage) {
             TextUtil.setImageResource(this, mDetailLeftBack, R.drawable.btn_left_back);
+            TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
         } else {
             ImageUtil.setAlphaImage(mDetailLeftBack, R.drawable.detial_video_back);
+            ImageUtil.setAlphaImage( mDetailRightMore, R.drawable.detai_video_share);
         }
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
@@ -188,7 +190,6 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         TextUtil.setTextColor(this, mDetailAddComment, R.color.color3);
         TextUtil.setTextColor(this, mNoet, R.color.color3);
         TextUtil.setLayoutBgResource(this, mDetailCommentNum, R.color.color6);
-        TextUtil.setImageResource(this, mDetailCommentPic, R.drawable.btn_detail_no_comment);
         TextUtil.setImageResource(this, mDetailShare, R.drawable.btn_detail_share);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
@@ -266,7 +267,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore = (ImageView) findViewById(R.id.mDetailRightMore);
         mDetailRightMore.setOnClickListener(this);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
@@ -392,12 +393,14 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     mDetailCommentNum.setVisibility(View.GONE);
                     mTitleBottomLine.setVisibility(View.VISIBLE);
                     TextUtil.setImageResource(mContext, mDetailLeftBack, R.drawable.btn_left_back);
+                    TextUtil.setImageResource(mContext, mDetailRightMore, R.drawable.btn_detail_right_more);
                 } else {
                     isCommentPage = false;
                     mTitleBottomLine.setVisibility(View.GONE);
                     TextUtil.setImageResource(NewsDetailVideoAty.this, mDetailCommentPic, mCommentNum == 0 ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                     ImageUtil.setAlphaImage(mDetailLeftBack, R.drawable.detial_video_back);
+                    ImageUtil.setAlphaImage(mDetailRightMore, R.drawable.detai_video_share);
                 }
             }
         });
@@ -640,6 +643,15 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                 }
             } else {
                 ToastUtil.toastShort("当前网络不可用，请检查网络设置");
+            }
+        }else if (getId==R.id.mDetailRightMore)
+        {
+            if (mNewsFeed != null) {
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                mSharePopupWindow = new SharePopupWindow(this, this);
+                mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), mNewsFeed.getDescr());
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         }
     }
