@@ -71,7 +71,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
      * 标签页的容量
      */
     private final static int PAGE_CAPACITY = 10;
-
     private ImageView mSearchLeftBack;
     private EditText mSearchContent;
     private View mSearchClear;

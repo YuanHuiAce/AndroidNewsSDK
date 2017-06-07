@@ -554,6 +554,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             });
             ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.image_play), R.drawable.video_play);
+            ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.iv_video_share), R.drawable.video_share_black);
 
             setSourceViewText((TextViewExtend) holder.getView(R.id.tve_video_source_username), feed.getPname());
             holder.setGlideDrawViewURI(mRequestManager, R.id.iv_video_source_avatarHd, feed.getIcon());
@@ -563,7 +564,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
-//            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
+            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
