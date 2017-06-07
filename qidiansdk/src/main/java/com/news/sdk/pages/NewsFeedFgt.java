@@ -1633,6 +1633,17 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                         vPlayer.stop();
                                         vPlayer.release();
                                         isAuto = false;
+                                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                                        if (frameLayout != null) {
+                                            frameLayout.removeView(vPlayer);
+                                            View itemView = (View) frameLayout.getParent();
+                                            if (itemView != null) {
+                                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+                                                if (videoSHow != null) {
+                                                    videoSHow.setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
