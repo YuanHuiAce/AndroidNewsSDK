@@ -12,7 +12,7 @@ import com.news.yazhidao.R;
 
 public class AboutAty extends BaseActivity implements View.OnClickListener {
 
-    private View mAboutLeftBack;
+    private ImageView mAboutLeftBack;
     private TextView mAboutVersion;
     private RelativeLayout mAboutContainer;
     private RelativeLayout mTitleContainer;
@@ -37,7 +37,7 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
         mAppIcon = (ImageView) findViewById(R.id.iv_lanuch_icon);
         mCompanyLogo = (ImageView) findViewById(R.id.iv_about_company_logo);
         mBottomLine = findViewById(R.id.iv_bottom_line);
-        mAboutLeftBack = findViewById(R.id.mAboutLeftBack);
+        mAboutLeftBack = (ImageView) findViewById(R.id.mAboutLeftBack);
         mAppName = (TextView) findViewById(R.id.tv_about_appname);
         mAboutAttestation = (TextView) findViewById(R.id.tv_about_attestation);
         mAboutLeftBack.setOnClickListener(this);
@@ -77,6 +77,7 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
         TextUtil.setLayoutBgResource(this, mAboutContainer, R.color.color6);
         TextUtil.setLayoutBgResource(this, mTitleContainer, R.color.color6);
         TextUtil.setLayoutBgResource(this, mAboutLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mAboutLeftBack, R.drawable.btn_left_back);
         TextUtil.setTextColor(this, mTitle, R.color.color2);
         TextUtil.setTextColor(this, mAppName, R.color.color2);
         TextUtil.setTextColor(this, mAboutVersion, R.color.color3);

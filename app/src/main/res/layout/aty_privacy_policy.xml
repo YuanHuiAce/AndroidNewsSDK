@@ -10,16 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
        >
-
-        <TextView
+        <ImageView
             android:id="@+id/mPrivacyLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/btn_left_back"
-            android:paddingLeft="15dp" />
+            android:padding="14dp"
+            android:scaleType="centerInside" />
+
 
         <TextView
             android:id="@+id/tv_privacy_title"

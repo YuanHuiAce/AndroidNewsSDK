@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.R;
 
 public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListener {
-    private View mPrivacyLeftBack;
+    private ImageView mPrivacyLeftBack;
     private WebView mPrivacyWebView;
     private RelativeLayout mPrivacyContainer;
     private TextView mPrivacyTitle;
@@ -27,7 +28,7 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initializeViews() {
-        mPrivacyLeftBack = findViewById(R.id.mPrivacyLeftBack);
+        mPrivacyLeftBack = (ImageView) findViewById(R.id.mPrivacyLeftBack);
         mPrivacyContainer = (RelativeLayout) findViewById(R.id.rl_privacy_container);
         mPrivacyTitle = (TextView) findViewById(R.id.tv_privacy_title);
         mBottomLine = findViewById(R.id.privacy_bottom_line);
@@ -84,6 +85,7 @@ public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListen
         TextUtil.setLayoutBgResource(this, mPrivacyContainer, R.color.color6);
         TextUtil.setLayoutBgResource(this, mPrivacyHeader, R.color.color6);
         TextUtil.setLayoutBgResource(this, mPrivacyLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(this, mPrivacyLeftBack, R.drawable.btn_left_back);
 //        TextUtil.setLayoutBgResource(this, mPrivacyWebView, R.color.color6);
         TextUtil.setLayoutBgResource(this, mBottomLine, R.color.color5);
         TextUtil.setTextColor(this, mPrivacyTitle, R.color.color2);
