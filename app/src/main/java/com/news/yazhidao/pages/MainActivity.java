@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         super.onCreate(savedInstanceState);
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         setContentView(R.layout.activity_main);
+        ShareSDK.initSDK(this);
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
@@ -295,53 +296,55 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         };
 
         Platform.ShareParams pShareParams = new Platform.ShareParams();
-        pShareParams.setImageData(BitmapFactory.decodeResource(QiDianApplication.getAppContext().getResources(), R.mipmap.ic_launcher));
-        if (argPlatform.equals(Wechat.NAME) || argPlatform.equals(WechatMoments.NAME)) {
-            pShareParams.setShareType(Platform.SHARE_WEBPAGE);
-            pShareParams.setTitle(title);
-            pShareParams.setUrl(url);
-        } else {
-            pShareParams.setText(title + "" + url);
-        }
-        if (argPlatform.equals(Wechat.NAME)) {
-            Platform platform = ShareSDK.getPlatform(Wechat.NAME);
-            if (!platform.isClientValid()) {
-                ToastUtil.toastShort("未安装微信");
-                return;
+        if (null != pShareParams) {
+            pShareParams.setImageData(BitmapFactory.decodeResource(QiDianApplication.getAppContext().getResources(), R.mipmap.ic_launcher));
+            if (argPlatform.equals(Wechat.NAME) || argPlatform.equals(WechatMoments.NAME)) {
+                pShareParams.setShareType(Platform.SHARE_WEBPAGE);
+                pShareParams.setTitle(title);
+                pShareParams.setUrl(url);
+            } else {
+                pShareParams.setText(title + "" + url);
             }
-            cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
-            platform.setPlatformActionListener(pShareListner);
-            if (TextUtil.isEmptyString(remark))
-                pShareParams.setText("资讯分享社区");
-            else
-                pShareParams.setText(remark);
-            platform.share(pShareParams);
-        } else if (argPlatform.equals(WechatMoments.NAME)) {
-            Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);
-            if (!platform.isClientValid()) {
-                ToastUtil.toastShort("未安装微信");
-                return;
+            if (argPlatform.equals(Wechat.NAME)) {
+                Platform platform = ShareSDK.getPlatform(Wechat.NAME);
+                if (!platform.isClientValid()) {
+                    ToastUtil.toastShort("未安装微信");
+                    return;
+                }
+                cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
+                platform.setPlatformActionListener(pShareListner);
+                if (TextUtil.isEmptyString(remark))
+                    pShareParams.setText("资讯分享社区");
+                else
+                    pShareParams.setText(remark);
+                platform.share(pShareParams);
+            } else if (argPlatform.equals(WechatMoments.NAME)) {
+                Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);
+                if (!platform.isClientValid()) {
+                    ToastUtil.toastShort("未安装微信");
+                    return;
+                }
+                cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
+                platform.setPlatformActionListener(pShareListner);
+                platform.share(pShareParams);
+            } else if (argPlatform.equals(SinaWeibo.NAME)) {
+                Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
+                if (!platform.isClientValid()) {
+                    ToastUtil.toastShort("未安装新浪微博");
+                    return;
+                }
+                platform.SSOSetting(false);
+                platform.setPlatformActionListener(pShareListner);
+                platform.share(pShareParams);
+            } else if (argPlatform.equals(QQ.NAME)) {
+                Platform platform = ShareSDK.getPlatform(QQ.NAME);
+                platform.setPlatformActionListener(pShareListner);
+                pShareParams.setTitle(title);
+                pShareParams.setTitleUrl(url);
+                pShareParams.setText("奇点资讯分享社区");
+                platform.SSOSetting(false);
+                platform.share(pShareParams);
             }
-            cmb.setPrimaryClip(ClipData.newPlainText(null, title + "" + url));
-            platform.setPlatformActionListener(pShareListner);
-            platform.share(pShareParams);
-        } else if (argPlatform.equals(SinaWeibo.NAME)) {
-            Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
-            if (!platform.isClientValid()) {
-                ToastUtil.toastShort("未安装新浪微博");
-                return;
-            }
-            platform.SSOSetting(false);
-            platform.setPlatformActionListener(pShareListner);
-            platform.share(pShareParams);
-        } else if (argPlatform.equals(QQ.NAME)) {
-            Platform platform = ShareSDK.getPlatform(QQ.NAME);
-            platform.setPlatformActionListener(pShareListner);
-            pShareParams.setTitle(title);
-            pShareParams.setTitleUrl(url);
-            pShareParams.setText("奇点资讯分享社区");
-            platform.SSOSetting(false);
-            platform.share(pShareParams);
         }
     }
 }
