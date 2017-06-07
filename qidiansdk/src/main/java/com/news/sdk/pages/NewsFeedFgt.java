@@ -187,7 +187,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mlvNewsFeed != null) {
             mlvNewsFeed.setHeaderLoadingView();
             TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
-            mRefreshTitleBar.setAlpha(0.6f);
+            mRefreshTitleBar.setAlpha(0.8f);
             TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
             TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
             TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);
@@ -1183,7 +1183,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 }
                 if (mChannelId == 44 && portrait) {
-                    Log.v("NewsFeedFgt","footview:"+mlvNewsFeed.getRefreshableView().getFooterViewsCount()+"  total count:"+totalItemCount);
+                    Log.v("NewsFeedFgt", "footview:" + mlvNewsFeed.getRefreshableView().getFooterViewsCount() + "  total count:" + totalItemCount);
                     VideoShowControl();
                     if (firstVisibleItem > 1) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
@@ -1293,6 +1293,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //                    newsFeed.setStyle(51);
 //                }
                 newsFeed.setStyle(51);
+                if (44 == mChannelId) {
+                    newsFeed.setChannel(44);
+                }
                 newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
@@ -2017,7 +2020,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             if (i == 0 || i == 1)
 //            if (i == 0)
                 continue;
-            if (i > mArrNewsFeed.size()+tagPosition-1)
+            if (i > mArrNewsFeed.size() + tagPosition - 1)
                 return -1;
             if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 return (i - lv.getFirstVisiblePosition());
@@ -2134,18 +2137,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 //            if (i == 0)
             if (i == 0 || i == 1)
                 continue;
-            if (i > mArrNewsFeed.size()+tagPosition-1)
+            if (i > mArrNewsFeed.size() + tagPosition - 1)
                 break;
 
             if (mArrNewsFeed.get(i - tagPosition).getNid() == vPlayer.cPostion) {
                 isExist = true;
                 position = i - lv.getFirstVisiblePosition();
-                Log.v("NewsFeedFgt",position+"::::total:"+lv.getChildCount());
+                Log.v("NewsFeedFgt", position + "::::total:" + lv.getChildCount());
                 break;
             }
         }
 
-        Log.e("NewsFeedFgt", "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition()+"total:"+mlvNewsFeed.getRefreshableView().getChildCount()+"mArrNewsFeed:"+mArrNewsFeed.size());
+        Log.e("NewsFeedFgt", "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition() + "total:" + mlvNewsFeed.getRefreshableView().getChildCount() + "mArrNewsFeed:" + mArrNewsFeed.size());
 
         if (isExist) {
             View item = lv.getChildAt(position);

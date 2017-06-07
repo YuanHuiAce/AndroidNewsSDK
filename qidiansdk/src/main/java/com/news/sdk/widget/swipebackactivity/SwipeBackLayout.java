@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Vibrator;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -77,7 +76,6 @@ public class SwipeBackLayout extends FrameLayout {
     private static final int[] EDGE_FLAGS = {
             EDGE_LEFT, EDGE_RIGHT, EDGE_BOTTOM, EDGE_ALL
     };
-    private final Context mContext;
 
     private int mEdgeFlag;
 
@@ -124,7 +122,7 @@ public class SwipeBackLayout extends FrameLayout {
      * Edge being dragged
      */
     private int mTrackingEdge;
-    private SwipeListener mListener;
+
     public SwipeBackLayout(Context context) {
         this(context, null);
     }
@@ -135,11 +133,10 @@ public class SwipeBackLayout extends FrameLayout {
 
     public SwipeBackLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
-        mContext=context;
         mDragHelper = ViewDragHelper.create(this, new ViewDragCallback());
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeBackLayout, defStyle,
-                0);
+                R.style.SwipeBackLayout);
 
         int edgeSize = a.getDimensionPixelSize(R.styleable.SwipeBackLayout_edge_size, -1);
         if (edgeSize > 0)
@@ -148,11 +145,11 @@ public class SwipeBackLayout extends FrameLayout {
         setEdgeTrackingEnabled(mode);
 
         int shadowLeft = a.getResourceId(R.styleable.SwipeBackLayout_shadow_left,
-                R.drawable.swipe_back_layout_shadow_left);
+                R.drawable.shadow_left);
         int shadowRight = a.getResourceId(R.styleable.SwipeBackLayout_shadow_right,
-                R.drawable.swipe_back_layout_shadow_right);
+                R.drawable.shadow_right);
         int shadowBottom = a.getResourceId(R.styleable.SwipeBackLayout_shadow_bottom,
-                R.drawable.swipe_back_layout_shadow_bottom);
+                R.drawable.shadow_bottom);
         setShadow(shadowLeft, EDGE_LEFT);
         setShadow(shadowRight, EDGE_RIGHT);
         setShadow(shadowBottom, EDGE_BOTTOM);
@@ -190,6 +187,9 @@ public class SwipeBackLayout extends FrameLayout {
     /**
      * Enable edge tracking for the selected edges of the parent view. The
      * callback's
+     * {@link ViewDragHelper.Callback#onEdgeTouched(int, int)}
+     * and
+     * {@link ViewDragHelper.Callback#onEdgeDragStarted(int, int)}
      * methods will only be invoked for edges for which edge tracking has been
      * enabled.
      *
@@ -326,6 +326,7 @@ public class SwipeBackLayout extends FrameLayout {
      * Set a drawable used for edge shadow.
      *
      * @param resId     Resource of drawable to use
+     * @param edgeFlag Combination of edge flags describing the edge to set
      * @see #EDGE_LEFT
      * @see #EDGE_RIGHT
      * @see #EDGE_BOTTOM
@@ -356,30 +357,9 @@ public class SwipeBackLayout extends FrameLayout {
         mDragHelper.smoothSlideViewTo(mContentView, left, top);
         invalidate();
     }
-    float xDelta=0;
-    float yDelta=0;
-    float xLast=0;
-    float yLast=0;
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        //处理左右滑动和上下滑动冲突事件
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                xDelta=yDelta=0;
-                xLast=event.getX();
-                yLast=event.getY();
-            case MotionEvent.ACTION_MOVE:
-                float curX = event.getX();
-                float curY = event.getY();
-                xDelta+=Math.abs(curX-xLast);
-                yDelta+=Math.abs(curY-yLast);
-                if(xDelta<yDelta){
-                    return false;
-                }
-            case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                break;
-        }
         if (!mEnable) {
             return false;
         }
@@ -518,7 +498,16 @@ public class SwipeBackLayout extends FrameLayout {
                 }
                 mIsScrollOverValid = true;
             }
-            return ret;
+            boolean directionCheck = false;
+            if (mEdgeFlag == EDGE_LEFT || mEdgeFlag == EDGE_RIGHT) {
+                directionCheck = !mDragHelper.checkTouchSlop(ViewDragHelper.DIRECTION_VERTICAL, i);
+            } else if (mEdgeFlag == EDGE_BOTTOM) {
+                directionCheck = !mDragHelper
+                        .checkTouchSlop(ViewDragHelper.DIRECTION_HORIZONTAL, i);
+            } else if (mEdgeFlag == EDGE_ALL) {
+                directionCheck = true;
+            }
+            return ret & directionCheck;
         }
 
         @Override
@@ -560,8 +549,10 @@ public class SwipeBackLayout extends FrameLayout {
             }
 
             if (mScrollPercent >= 1) {
-                if (!mActivity.isFinishing())
+                if (!mActivity.isFinishing()) {
                     mActivity.finish();
+                    mActivity.overridePendingTransition(0, 0);        
+                }
             }
         }
 
@@ -615,12 +606,5 @@ public class SwipeBackLayout extends FrameLayout {
                 }
             }
         }
-    }
-    private void vibrate(long duration) {
-        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-        long[] pattern = {
-                0, duration
-        };
-        vibrator.vibrate(pattern, -1);
     }
 }

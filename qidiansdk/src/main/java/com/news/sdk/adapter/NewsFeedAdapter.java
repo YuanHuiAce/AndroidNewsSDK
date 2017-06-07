@@ -509,6 +509,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             ArrayList<String> strArrBigImgUrl = feed.getImgs();
             int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+            if (feed.getChannel() == 44) {
+                with = mScreenWidth;
+            }
             int height = (int) (with * 10 / 19.0f);
             ImageView ivBigPic = holder.getView(R.id.title_img_View);
             RelativeLayout.LayoutParams lpBigPic = (RelativeLayout.LayoutParams) ivBigPic.getLayoutParams();

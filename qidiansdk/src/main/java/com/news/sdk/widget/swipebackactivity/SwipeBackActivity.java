@@ -2,30 +2,22 @@
 package com.news.sdk.widget.swipebackactivity;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.news.sdk.common.BaseActivity;
 
-public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivityBase {
-
-    //滑动关闭当前activity布局
-    private SwipeBackLayout mSwipeBackLayout;
-
-    @Override
-    protected void setContentView() {
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
+/**
+ * all the subClass extends from this class to use swipe-back function
+ */
+public class SwipeBackActivity extends AppCompatActivity implements SwipeBackActivityBase {
+    private SwipeBackActivityHelper mHelper;
 
     @Override
-    protected void initializeViews() {
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHelper = new SwipeBackActivityHelper(this);
+        mHelper.onActivityCreate();
     }
-
-    @Override
-    protected void loadData() {
-    }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -55,10 +47,5 @@ public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivit
     public void scrollToFinishActivity() {
         Utils.convertActivityToTranslucent(this);
         getSwipeBackLayout().scrollToFinishActivity();
-    }
-
-    @Override
-    public void onThemeChanged() {
-
     }
 }

@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
 import com.news.sdk.R;
 import com.news.sdk.application.QiDianApplication;
+import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.database.NewsDetailCommentDao;
@@ -47,7 +48,6 @@ import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.SharePopupWindow;
 import com.news.sdk.widget.SwipeBackViewpager;
 import com.news.sdk.widget.UserCommentDialog;
-import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
 import com.news.sdk.widget.swipebackactivity.SwipeBackLayout;
 
 import org.json.JSONException;
@@ -60,7 +60,7 @@ import java.util.HashMap;
 /**
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";

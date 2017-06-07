@@ -50,6 +50,7 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.NewsTopicHeaderView;
 import com.news.sdk.widget.SharePopupWindow;
 import com.news.sdk.widget.TextViewExtend;
+import com.news.sdk.widget.swipebackactivity.SwipeBackLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,8 @@ import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
 
 public class NewsTopicAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
+    //滑动关闭当前activity布局
+    private SwipeBackLayout mSwipeBackLayout;
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
     private RelativeLayout bgLayout;
@@ -118,6 +121,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mAdapter = new ExpandableSpecialListViewAdapter(this);
 //        mHandler = new Handler();
         mDetailView = (RelativeLayout) findViewById(R.id.mDetailWrapper);

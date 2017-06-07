@@ -489,7 +489,9 @@ public class ViewDragHelper {
     /**
      * Enable edge tracking for the selected edges of the parent view. The
      * callback's
+     * {@link Callback#onEdgeTouched(int, int)}
      * and
+     * {@link Callback#onEdgeDragStarted(int, int)}
      * methods will only be invoked for edges for which edge tracking has been
      * enabled.
      *
@@ -529,7 +531,7 @@ public class ViewDragHelper {
     /**
      * Capture a specific child view for dragging within the parent. The
      * callback will be notified but
-     * {@link me.imid.swipebacklayout.lib.ViewDragHelper.Callback#tryCaptureView(View, int)}
+     * {@link Callback#tryCaptureView(View, int)}
      * will not be asked permission to capture this view.
      *
      * @param childView       Child view to capture
@@ -1030,6 +1032,7 @@ public class ViewDragHelper {
                 && (ViewCompat.canScrollHorizontally(v, -dx) || ViewCompat.canScrollVertically(v,
                 -dy));
     }
+
     /**
      * Check if this event as provided to the parent view's
      * onInterceptTouchEvent should cause the parent to intercept the touch
@@ -1088,7 +1091,6 @@ public class ViewDragHelper {
                     if ((edgesTouched & mTrackingEdges) != 0) {
                         mCallback.onEdgeTouched(edgesTouched & mTrackingEdges, pointerId);
                     }
-                        mCallback.onEdgeTouched(edgesTouched & mTrackingEdges, pointerId);
                 } else if (mDragState == STATE_SETTLING) {
                     // Catch a settling view if possible.
                     final View toCapture = findTopChildUnder((int) x, (int) y);
@@ -1542,7 +1544,7 @@ public class ViewDragHelper {
     /**
      * Find the topmost child under the given point within the parent view's
      * coordinate system. The child order is determined using
-     * {@link me.imid.swipebacklayout.lib.ViewDragHelper.Callback#getOrderedChildIndex(int)}
+     * {@link Callback#getOrderedChildIndex(int)}
      * .
      *
      * @param x X position to test in the parent's coordinate system
@@ -1564,19 +1566,15 @@ public class ViewDragHelper {
     private int getEdgeTouched(int x, int y) {
         int result = 0;
 
-//        if (x < mParentView.getLeft() + mEdgeSize) {
-//            result = EDGE_LEFT;
-//        }
-//        if (y < mParentView.getTop() + mEdgeSize) {
-//            result = EDGE_TOP;
-//        }
-//        if (x > mParentView.getRight() - mEdgeSize) {
-//            result = EDGE_RIGHT;
-//        }
-//        if (y > mParentView.getBottom() - mEdgeSize) {
-//            result = EDGE_BOTTOM;
-//        }
-            //此处修改，为了能让全屏滑动
-        return EDGE_LEFT;
+        if (x < mParentView.getLeft() + mEdgeSize)
+            result = EDGE_LEFT;
+        if (y < mParentView.getTop() + mEdgeSize)
+            result = EDGE_TOP;
+        if (x > mParentView.getRight() - mEdgeSize)
+            result = EDGE_RIGHT;
+        if (y > mParentView.getBottom() - mEdgeSize)
+            result = EDGE_BOTTOM;
+
+        return result;
     }
 }
