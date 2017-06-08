@@ -24,6 +24,8 @@ import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.entity.UMessage;
 
+import cn.sharesdk.framework.ShareSDK;
+
 /**
  * Created by wudi on 16/6/21.
  */
@@ -35,6 +37,7 @@ public class DemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ShareSDK.initSDK(this);
         QiDianApplication.initQDApp(this);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         displayMetrics.scaledDensity = displayMetrics.density;

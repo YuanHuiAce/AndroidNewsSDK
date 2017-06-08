@@ -40,7 +40,11 @@ public final class SharedPreManager {
 
     public static SharedPreManager mInstance(Context mContext) {
         if (mInstance == null) {
-            mInstance = new SharedPreManager(mContext.getApplicationContext());
+            synchronized (SharedPreManager.class) {
+                if (mInstance == null) {
+                    mInstance = new SharedPreManager(mContext.getApplicationContext());
+                }
+            }
         }
         return mInstance;
     }

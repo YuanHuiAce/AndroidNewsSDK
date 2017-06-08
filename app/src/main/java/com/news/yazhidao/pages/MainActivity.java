@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         super.onCreate(savedInstanceState);
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         setContentView(R.layout.activity_main);
-        ShareSDK.initSDK(this);
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
@@ -127,8 +126,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         mainView.setTextSize(MainView.FONTSIZE.TEXT_SIZE_NORMAL);
         /**梁帅：修改屏幕是否常亮的方法*/
         mainView.setKeepScreenOn(true);
-        User user = SharedPreManager.mInstance(this).getUser(this);
-        mainView.setUserCenterImg(user.getUserIcon());
         //注册登录监听广播
         mReceiver = new UserReceiver();
         IntentFilter filter = new IntentFilter();
@@ -200,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     protected void onResume() {
         MobclickAgent.onResume(this);
         super.onResume();
+        User user = SharedPreManager.mInstance(this).getUser(this);
+        mainView.setUserCenterImg(user.getUserIcon());
     }
 
     @Override
@@ -278,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         if (TextUtil.isEmptyString(url)) {
             url = "";
         }
+        ShareSDK.initSDK(this);
         PlatformActionListener pShareListner = new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {

@@ -187,7 +187,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         if (mlvNewsFeed != null) {
             mlvNewsFeed.setHeaderLoadingView();
             TextUtil.setLayoutBgResource(mContext, mRefreshTitleBar, R.color.color1);
-            mRefreshTitleBar.setAlpha(0.8f);
+            mRefreshTitleBar.setAlpha(0.9f);
             TextUtil.setTextColor(mContext, mRefreshTitleBar, R.color.color10);
             TextUtil.setLayoutBgResource(mContext, mlvNewsFeed, R.color.color6);
             TextUtil.setLayoutBgResource(mContext, footerView, R.color.color6);

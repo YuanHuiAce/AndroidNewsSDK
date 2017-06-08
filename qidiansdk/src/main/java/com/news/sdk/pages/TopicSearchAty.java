@@ -344,6 +344,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
                     mNewsFeedAdapter.notifyDataSetChanged();
+                    if (pPageIndex.equals("1")) {
+                        mSearchListView.getRefreshableView().setSelection(0);
+                    }
                 } else {
                     if (mPageIndex > 1) {
                         ToastUtil.toastShort("没有更多数据");
