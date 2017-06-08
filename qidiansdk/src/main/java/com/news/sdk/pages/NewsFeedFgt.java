@@ -1705,6 +1705,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     };
     private boolean isFirstPlay;
+    private long firstClick;
 
     /**
      * 视频播放控制
@@ -1721,6 +1722,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext)) {
                     return;
                 }
+
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 newsFeed = feed;
@@ -1746,10 +1748,17 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
 
             @Override
-            public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
+            public boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
                 isAuto = false;
                 if (feed == null && !NetworkUtils.isConnectionAvailable(mContext))
-                    return;
+                    return false;
+                Log.v("firstClick 1",System.currentTimeMillis()-firstClick+"");
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return false;
+                }
+                firstClick = System.currentTimeMillis();
+                Log.v("firstClick 2",System.currentTimeMillis()-firstClick+"");
                 vPlayer.cPostion = feed.getNid();
                 if (vPlayer.cPostion != lastPostion && lastPostion != -1) {
                     vPlayer.stop();
@@ -1769,6 +1778,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = vPlayer.cPostion;
+                return true;
             }
 
             @Override
@@ -1808,8 +1818,16 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void onClick(View v) {
                     isAuto = false;
+                    Log.v("firstClick before",System.currentTimeMillis()-firstClick+"");
                     if (newsFeed == null)
                         return;
+                    firstClick=0;
+                    if (System.currentTimeMillis() - firstClick <= 1500L) {
+                        firstClick = System.currentTimeMillis();
+                        return;
+                    }
+                    firstClick = System.currentTimeMillis();
+                    Log.v("firstClick after",System.currentTimeMillis()-firstClick+"");
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
                     intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
