@@ -129,7 +129,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        >
 
         <!--<ImageView-->
         <!--android:id="@+id/detail_point"-->
@@ -144,7 +146,8 @@
             android:layout_height="wrap_content"
             android:text="相关视频"
             android:textColor="@color/detail_share_TopTitleColor"
-            android:textSize="@dimen/new_font4" />
+            android:textSize="@dimen/new_font4"
+            />
 
         <View
             android:id="@+id/detail_ViewPoint_Line1"
