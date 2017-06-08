@@ -182,6 +182,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private int prcent;
     private String Aid, source, title;
     private boolean isUploadBigAd;
+    private TextView mRelateView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -386,6 +387,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
+        mRelateView = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
         //关心
