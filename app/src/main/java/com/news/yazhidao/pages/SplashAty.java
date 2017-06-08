@@ -48,8 +48,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sharesdk.framework.ShareSDK;
-
 import static com.news.sdk.common.CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
 
 public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener, Handler.Callback {
@@ -174,7 +172,6 @@ public class SplashAty extends BaseActivity implements NativeAD.NativeAdListener
     @Override
     protected void setContentView() {
         mHandler = new Handler(this);
-        ShareSDK.initSDK(this);
         AdUtil.setAdChannel(this);
         UserManager.registerVisitor(this, null);
         //展示广点通sdk
