@@ -181,6 +181,7 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_MYCOLLECTIONS = "myCollections";
     public static final String LOG_ATYPE_MYMESSAGES = "myMessages";
     public static final String LOG_ATYPE_MYSETTING = "mySetting";
+    public static final String LOG_ATYPE_PROFILECLICK = "profileClick";
 
     /**
      * page取值	对应页面
@@ -211,7 +212,7 @@ public final class CommonConstant {
     public static final String LOG_PAGE_MYCOMMENTPAGE = "myCommentPage";
     public static final String LOG_PAGE_MYCOLLECTIONPAGE = "myCollectionPage";
     public static final String LOG_PAGE_MYMESSAGEPAGE = "myMessagePage";
-    public static final String LOG_PAGE_SETTINGPAGE = "settingPage";
+    public static final String LOG_PAGE_SETTINGPAGE = "mySettingPage";
     public static final String LOG_PAGE_USERCENTERPAGE = "userCenterPage";
 
 }

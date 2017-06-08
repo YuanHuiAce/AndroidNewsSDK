@@ -29,6 +29,7 @@ import com.news.sdk.entity.Version;
 import com.news.sdk.net.volley.VersionRequest;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
+import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -37,6 +38,9 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.service.UpdateService;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.PushAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class SettingAty extends BaseActivity implements View.OnClickListener {
@@ -114,7 +118,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mRadioGroup = (RadioGroup) findViewById(R.id.mRadioGroup);
         mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         int saveFont = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-        isEnabled=mSharedPreferences.getBoolean("isEnabled",false);
+        isEnabled = mSharedPreferences.getBoolean("isEnabled", false);
         switch (saveFont) {
             case CommonConstant.TEXT_SIZE_NORMAL:
                 mRadioGroup.check(R.id.mRadioNormal);
@@ -150,11 +154,9 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingUpdate = findViewById(R.id.mSettingUpdate);
         mSettingUpdate.setOnClickListener(this);
         setTheme();
-        if (isEnabled)
-        {
+        if (isEnabled) {
             mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_on);
-        }else
-        {
+        } else {
             mSettingPushImg.setImageResource(R.mipmap.ic_setting_push_off);
         }
     }
@@ -228,8 +230,8 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     pushAgent.enable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-                            mSharedPreferences.edit().putBoolean("isEnabled",true).commit();
-                            isEnabled=true;
+                            mSharedPreferences.edit().putBoolean("isEnabled", true).commit();
+                            isEnabled = true;
 
                         }
 
@@ -244,8 +246,8 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     pushAgent.disable(new IUmengCallback() {
                         @Override
                         public void onSuccess() {
-                            mSharedPreferences.edit().putBoolean("isEnabled",false).commit();
-                            isEnabled=false;
+                            mSharedPreferences.edit().putBoolean("isEnabled", false).commit();
+                            isEnabled = false;
 
                         }
 
@@ -297,10 +299,24 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 clearBuilder.create().show();
                 break;
             case R.id.mSettingAbout:
+                JSONObject jsonAbout = new JSONObject();
+                try {
+                    jsonAbout.put("type", "about");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LogUtil.userActionLog(SettingAty.this, CommonConstant.LOG_ATYPE_MYSETTING, CommonConstant.LOG_PAGE_SETTINGPAGE, CommonConstant.LOG_PAGE_SETTINGPAGE, jsonAbout, false);
                 Intent aboutAty = new Intent(this, AboutAty.class);
                 startActivity(aboutAty);
                 break;
             case R.id.mSettingPrivacyPolicy:
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("type", "privacyPolicy");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LogUtil.userActionLog(SettingAty.this, CommonConstant.LOG_ATYPE_MYSETTING, CommonConstant.LOG_PAGE_SETTINGPAGE, CommonConstant.LOG_PAGE_SETTINGPAGE, jsonObject, false);
                 Intent privacyAty = new Intent(this, PrivacyPolicyAty.class);
                 startActivity(privacyAty);
                 break;
@@ -348,7 +364,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 new Response.Listener<Version>() {
                     @Override
                     public void onResponse(Version response) {
-                        if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) <response.getVersion_code()) {
+                        if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) < response.getVersion_code()) {
                             showUpdateDialog(response);
                         } else {
                             Toast.makeText(getApplicationContext(), "当前已是最新版本", Toast.LENGTH_SHORT).show();

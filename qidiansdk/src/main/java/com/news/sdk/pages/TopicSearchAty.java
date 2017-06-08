@@ -54,6 +54,7 @@ import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.widget.HotLabelsLayout;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -499,6 +500,13 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             mSearchListViewOpenAdapter.notifyDataSetChanged();
             mPageIndex = 1;
             loadNewsData(mKeyWord, mPageIndex + "");
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("word", mKeyWord);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            LogUtil.userActionLog(TopicSearchAty.this, CommonConstant.LOG_ATYPE_SEARCH, CommonConstant.LOG_PAGE_SEARCHPAGE, CommonConstant.LOG_PAGE_SEARCHPAGE, jsonObject, false);
         }
     };
 

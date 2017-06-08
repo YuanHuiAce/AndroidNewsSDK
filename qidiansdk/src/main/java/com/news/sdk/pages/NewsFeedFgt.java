@@ -824,6 +824,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private void loadNewFeedError(VolleyError error, final int flag) {
         if (error.toString().contains("2002")) {
             removePrompt();
+
             mRefreshTitleBar.setText("已是最新数据");
             mRefreshTitleBar.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
@@ -911,7 +912,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             playerFeed.setImg(newsFeed.getThumbnail());
                             playerFeed.setStreamUrl(newsFeed.getVideourl());
                             playerFeeds.add(playerFeed);
-                            playerFeed = null;
                         }
                         if (vPlayer != null)
                             vPlayer.setPlayerFeed(playerFeeds);
@@ -1185,10 +1185,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (mChannelId == 44 && portrait) {
                     Log.v("NewsFeedFgt", "footview:" + mlvNewsFeed.getRefreshableView().getFooterViewsCount() + "  total count:" + totalItemCount);
                     VideoShowControl();
-                    if (firstVisibleItem > 1) {
+                    if (firstVisibleItem > 0) {
                         mContainerTabLayout.setVisibility(View.VISIBLE);
                     } else {
-                        mContainerTabLayout.setVisibility(View.GONE);
+                        mContainerTabLayout.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -1440,10 +1440,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     scid = 0;
                                     mChannelList.clearCheck();
                                     mChannelList1.clearCheck();
+                                    mArrNewsFeed.clear();
+                                    mIsFirst=true;
                                     mlvNewsFeed.setRefreshing();
                                 }
                             } else {
                                 scid = checkedId;
+                                mArrNewsFeed.clear();
+                                mIsFirst=true;
                                 mlvNewsFeed.setRefreshing();
                             }
                         }
@@ -1489,15 +1493,24 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         @Override
                         public void onClick(View v) {
                             mChannelList.check(checkedId);
+
                             if (scid == checkedId) {
                                 if (rb.isChecked()) {
                                     scid = 0;
                                     mChannelList1.clearCheck();
                                     mChannelList.clearCheck();
+                                    mlvNewsFeed.getRefreshableView().setSelectionFromTop(0,0);
+                                    footView_tv.setVisibility(View.GONE);
+                                    mArrNewsFeed.clear();
+                                    mIsFirst=true;
                                     mlvNewsFeed.setRefreshing();
                                 }
                             } else {
                                 scid = checkedId;
+                                mlvNewsFeed.getRefreshableView().setSelectionFromTop(0,0);
+                                footView_tv.setVisibility(View.GONE);
+                                mArrNewsFeed.clear();
+                                mIsFirst=true;
                                 mlvNewsFeed.setRefreshing();
                             }
                         }
