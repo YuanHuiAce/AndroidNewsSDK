@@ -840,7 +840,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
-
             public void onClick(View paramAnonymousView) {
                 if (System.currentTimeMillis() - firstClick <= 1500L) {
                     firstClick = System.currentTimeMillis();

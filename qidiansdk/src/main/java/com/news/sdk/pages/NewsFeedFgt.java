@@ -1705,6 +1705,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     };
     private boolean isFirstPlay;
+    public static long firstClick;
 
     /**
      * 视频播放控制
@@ -1721,6 +1722,11 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext)) {
                     return;
                 }
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return;
+                }
+                firstClick = System.currentTimeMillis();
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 newsFeed = feed;
@@ -1810,6 +1816,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     isAuto = false;
                     if (newsFeed == null)
                         return;
+                    firstClick = 0;
+                    if (System.currentTimeMillis() - firstClick <= 1500L) {
+                        firstClick = System.currentTimeMillis();
+                        return;
+                    }
+                    firstClick = System.currentTimeMillis();
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
                     intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());

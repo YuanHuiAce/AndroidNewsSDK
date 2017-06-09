@@ -1277,11 +1277,12 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer.getParent() != null)
+                if (vplayer!=null&&vplayer.getParent() != null) {
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
-                vplayer.setTitle(mResult.getTitle());
-                vplayer.play(mResult.getVideourl(), position);
-                mDetailVideo.addView(vplayer);
+                    vplayer.setTitle(mResult.getTitle());
+                    vplayer.play(mResult.getVideourl(), position);
+                    mDetailVideo.addView(vplayer);
+                }
 
 
             }
@@ -1318,13 +1319,13 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         lpVideo.height = (int) (widths * 185 / 330.0f);
         mDetailBg.setLayoutParams(lpVideo);
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
-        if (vplayer.getParent() != null)
+        if (vplayer != null && vplayer.getParent() != null)
             ((ViewGroup) vplayer.getParent()).removeAllViews();
 //        vp.setTitle(mResult.getTitle());
 //        vp.start(mResult.getVideourl());
 
 
-        if (NetworkUtils.isWifiAvailable(mContext)) {
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null) {
             mVideoShowBg.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl(), position);
@@ -1332,50 +1333,51 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
-        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
-            @Override
-            public void onShare() {
+        if (vplayer != null)
+            vplayer.setOnShareListener(new IPlayer.OnShareListener() {
+                @Override
+                public void onShare() {
 
-            }
-
-            @Override
-            public void onPlayCancel() {
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
                 }
-                mVideoShowBg.setVisibility(View.VISIBLE);
-                mDetailVideo.setVisibility(View.GONE);
-                if (vplayer.getParent() != null)
-                    ((ViewGroup) vplayer.getParent()).removeAllViews();
-            }
-        });
 
-
-        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
-            @Override
-            public void completion(IMediaPlayer mp) {
-                if (mSmallLayout.getVisibility() == View.VISIBLE) {
-                    mSmallScreen.removeAllViews();
-                    mSmallLayout.setVisibility(View.GONE);
-                } else if (mFullScreen.getVisibility() == View.VISIBLE) {
-                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    mFullScreen.removeAllViews();
-                    mFullScreen.setVisibility(View.GONE);
-                } else if (mDetailVideo.getVisibility() == View.VISIBLE) {
-                    mDetailVideo.removeAllViews();
-                    mDetailVideo.setVisibility(View.GONE);
+                @Override
+                public void onPlayCancel() {
+                    if (vplayer != null) {
+                        vplayer.stop();
+                        vplayer.release();
+                        mVideoShowBg.setVisibility(View.VISIBLE);
+                        mDetailVideo.setVisibility(View.GONE);
+                        if (vplayer.getParent() != null)
+                            ((ViewGroup) vplayer.getParent()).removeAllViews();
+                    }
                 }
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
+            });
+
+        if (vplayer != null)
+            vplayer.setCompletionListener(new IPlayer.CompletionListener() {
+                @Override
+                public void completion(IMediaPlayer mp) {
+                    if (mSmallLayout.getVisibility() == View.VISIBLE) {
+                        mSmallScreen.removeAllViews();
+                        mSmallLayout.setVisibility(View.GONE);
+                    } else if (mFullScreen.getVisibility() == View.VISIBLE) {
+                        ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        mFullScreen.removeAllViews();
+                        mFullScreen.setVisibility(View.GONE);
+                    } else if (mDetailVideo.getVisibility() == View.VISIBLE) {
+                        mDetailVideo.removeAllViews();
+                        mDetailVideo.setVisibility(View.GONE);
+                    }
+                    if (vplayer != null) {
+                        vplayer.stop();
+                        vplayer.release();
+                    }
+                    position = 0;
+
+                    mVideoShowBg.setVisibility(View.VISIBLE);
+
                 }
-                position = 0;
-
-                mVideoShowBg.setVisibility(View.VISIBLE);
-
-            }
-        });
+            });
     }
 
 
@@ -1398,7 +1400,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void onClick(DialogInterface dialog, int which) {
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer.getParent() != null) {
+                if (vplayer != null && vplayer.getParent() != null) {
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
                 }
                 vplayer.setTitle(mResult.getTitle());
@@ -1448,7 +1450,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //                        }
 
                         else {
-                            if (vplayer.getParent() != null)
+                            if (vplayer != null && vplayer.getParent() != null)
                                 ((ViewGroup) vplayer.getParent()).removeAllViews();
                             vplayer.stop();
                             vplayer.release();
