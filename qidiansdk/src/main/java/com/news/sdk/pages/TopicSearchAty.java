@@ -502,7 +502,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             loadNewsData(mKeyWord, mPageIndex + "");
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put("word", mKeyWord);
+                jsonObject.put("keywords", mKeyWord);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

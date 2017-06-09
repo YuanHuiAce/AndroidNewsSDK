@@ -1705,7 +1705,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         }
     };
     private boolean isFirstPlay;
-    public static long firstClick;
+    private long firstClick;
 
     /**
      * 视频播放控制
@@ -1722,11 +1722,6 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 if (isAuto || !NetworkUtils.isConnectionAvailable(mContext)) {
                     return;
                 }
-                if (System.currentTimeMillis() - firstClick <= 1500L) {
-                    firstClick = System.currentTimeMillis();
-                    return;
-                }
-                firstClick = System.currentTimeMillis();
                 isAuto = false;
                 relativeLayout.setVisibility(View.GONE);
                 newsFeed = feed;
@@ -1752,10 +1747,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             }
 
             @Override
-            public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
+            public boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
                 isAuto = false;
                 if (feed == null && !NetworkUtils.isConnectionAvailable(mContext))
-                    return;
+                    return false;
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return false;
+                }
+                firstClick = System.currentTimeMillis();
                 vPlayer.cPostion = feed.getNid();
                 if (vPlayer.cPostion != lastPostion && lastPostion != -1) {
                     vPlayer.stop();
@@ -1775,6 +1775,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
 
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = vPlayer.cPostion;
+                return true;
             }
 
             @Override
@@ -1814,6 +1815,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void onClick(View v) {
                     isAuto = false;
+                    Log.v("firstClick before",System.currentTimeMillis()-firstClick+"");
                     if (newsFeed == null)
                         return;
                     firstClick = 0;

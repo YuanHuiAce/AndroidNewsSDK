@@ -1082,7 +1082,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (vplayer != null) {
             vplayer.onPause();
         }
-        if (mSmallLayout.getVisibility() == View.VISIBLE) {
+        if (mSmallLayout.getVisibility() == View.VISIBLE&&vplayer != null) {
             vplayer.stop();
             vplayer.release();
             mSmallLayout.setVisibility(View.GONE);

@@ -864,9 +864,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
-                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+
                     if (onPlayClickListener != null) {
-                        onPlayClickListener.onItemClick(rlNewsContent, feed);
+                        if (onPlayClickListener.onItemClick(rlNewsContent, feed))
+                        {
+                            setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+                        }
                     }
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
@@ -1062,7 +1065,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     public interface OnPlayClickListener {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
 
-        void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
+        boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
 
         void onShareClick(ImageView imageView, NewsFeed feed);
     }
