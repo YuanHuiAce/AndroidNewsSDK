@@ -93,19 +93,18 @@ public final class CommonConstant {
     public static final String SHARE_WECHAT_ACTION = "share_wechat_action";
     public static final String SHARE_SINA_WEIBO_ACTION = "share_sina_weibo_action";
     public static final String SHARE_QQ_ACTION = "share_qq_action";
+    //通知登录action
+    public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
+    public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
+    public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
 
     public static final String AD_CHANNEL = "ad_channel";
     public static final String AD_FEED_POS = "ad_feed_pos";
     public static final String AD_FEED_VIDEO_POS = "ad_feed_video_pos";
     public static final String AD_RELATED_POS = "ad_related_pos";
     public static final String AD_RELATED_VIDEO_POS = "ad_related_video_pos";
-    //广点通SDK id 广告位id
-//    public static final String APPID = "1105847205";
-//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
-//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "1040627242105512";
-//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "1090626242209528";
-//    public static final String NEWS_RELATE_GDT_SDK_SMALLID = "7050727232406589";
     //纹字锁屏
+    //广点通SDK id 广告位id
     public static final String APPID = "1105877613";
     public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
     public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "7050724232050966";
@@ -117,14 +116,15 @@ public final class CommonConstant {
     public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
-    public static final String NEWS_FEED_GDT_API_BIGPOSID = "718";
-    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "717";
-    public static final String NEWS_RELATE_GDT_API_SMALLID = "716";
+    public static final String NEWS_FEED_GDT_API_BIGPOSID = "541";
+    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "589";
+    public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
 
-    //通知登录action
-    public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
-    public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
-    public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
+
+
+
+
+
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
     public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
