@@ -288,7 +288,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                     NewsFeed feed = new NewsFeed();
                                     feed.setAid(Long.valueOf(Aid));
                                     feed.setSource(source);
-                                    feed.setPname(relatedItemEntity.getTitle());
+                                    feed.setPname(relatedItemEntity.getPname());
                                     feed.setCtime(System.currentTimeMillis());
                                     newsFeeds.add(feed);
                                     LogUtil.userShowLog(newsFeeds, mContext);
