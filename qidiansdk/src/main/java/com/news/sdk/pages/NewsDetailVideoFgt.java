@@ -1082,14 +1082,17 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (vplayer != null) {
             vplayer.onPause();
         }
-        if (mSmallLayout.getVisibility() == View.VISIBLE&&vplayer != null) {
-            vplayer.stop();
-            vplayer.release();
-            mSmallLayout.setVisibility(View.GONE);
-            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-            if (frameLayout != null) {
-                frameLayout.removeAllViews();
+        if (mSmallLayout.getVisibility() == View.VISIBLE) {
+            if (vplayer!=null) {
+                vplayer.stop();
+                vplayer.release();
+                FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                }
             }
+            mSmallLayout.setVisibility(View.GONE);
+
         }
     }
 
@@ -1277,8 +1280,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer!=null&&vplayer.getParent() != null) {
+                if (vplayer != null && vplayer.getParent() != null) {
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
+                }
+                if (vplayer!=null) {
                     vplayer.setTitle(mResult.getTitle());
                     vplayer.play(mResult.getVideourl(), position);
                     mDetailVideo.addView(vplayer);
@@ -1306,10 +1311,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (vplayer != null && vplayer.isPlay()) {
                     vplayer.stop();
                     vplayer.release();
-                    mSmallScreen.removeAllViews();
-                    mSmallLayout.setVisibility(View.GONE);
-                    mVideoShowBg.setVisibility(View.VISIBLE);
                 }
+                mSmallScreen.removeAllViews();
+                mSmallLayout.setVisibility(View.GONE);
+                mVideoShowBg.setVisibility(View.VISIBLE);
             }
         });
         //视频新增
@@ -1345,11 +1350,11 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                     if (vplayer != null) {
                         vplayer.stop();
                         vplayer.release();
-                        mVideoShowBg.setVisibility(View.VISIBLE);
-                        mDetailVideo.setVisibility(View.GONE);
                         if (vplayer.getParent() != null)
                             ((ViewGroup) vplayer.getParent()).removeAllViews();
                     }
+                    mVideoShowBg.setVisibility(View.VISIBLE);
+                    mDetailVideo.setVisibility(View.GONE);
                 }
             });
 
