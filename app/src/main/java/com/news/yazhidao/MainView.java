@@ -601,8 +601,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     public void setTheme() {
         dislikePopupWindow.setTheme();
         User user = SharedPreManager.mInstance(activity).getUser(activity);
-        if (user != null)
+        if (user != null) {
             ImageUtil.setRoundImage(activity, mRequestManager, mivUserCenter, user.getUserIcon(), R.drawable.btn_user_center);
+        }
         TextUtil.setLayoutBgResource(activity, mivUserCenter, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mMainView, R.color.color6);
         TextUtil.setLayoutBgResource(activity, mChannelExpand, R.color.color6);
