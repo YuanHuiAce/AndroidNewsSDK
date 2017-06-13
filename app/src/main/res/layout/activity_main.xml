@@ -48,8 +48,7 @@
         android:id="@+id/newsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv"
-        android:background="@color/color6"/>
+        android:layout_below="@+id/tv"/>
 
     <ImageView
         android:id="@+id/share_bg_imageView"
