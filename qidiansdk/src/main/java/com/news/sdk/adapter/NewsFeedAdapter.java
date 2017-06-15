@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -74,6 +75,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private boolean isNeedShowDisLikeIcon = true;
     private boolean isAttention;
     private RequestManager mRequestManager;
+    private LinkedList<NewsFeed> mArrNewsFeed;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -176,6 +178,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isNeedShowDisLikeIcon = false;
     }
 
+    public void setUpLoadNewsFeed(LinkedList<NewsFeed> arrNewsFeed) {
+        mArrNewsFeed = arrNewsFeed;
+    }
+
     @Override
     public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
         //广告
@@ -183,8 +189,24 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         boolean isVisble = feed.isVisble();
         if (!isVisble) {
             feed.setVisble(true);
-            feed.setCtime(System.currentTimeMillis());
+            holder.getView(R.id.news_content_relativeLayout).post(new Runnable() {
+                @Override
+                public void run() {
+                    View view = holder.getView(R.id.news_content_relativeLayout);
+                    int height = view.getHeight();
+                    int viewHeight = (int) (view.getY() + height);
+                    int screenHeight = DeviceInfoUtil.getScreenHeight(mContext) + height / 2;
+                    if (viewHeight <= screenHeight) {
+                        if (null != mArrNewsFeed) {
+                            feed.setUpload(true);
+                            feed.setCtime(System.currentTimeMillis());
+                            mArrNewsFeed.add(feed);
+                        }
+                    }
+                }
+            });
         }
+
         int layoutId = holder.getLayoutId();
         if (layoutId == R.layout.qd_ll_news_item_no_pic || layoutId == R.layout.qd_ll_news_item_one_pic || layoutId == R.layout.ll_news_big_pic2 || layoutId == R.layout.qd_ll_news_card || layoutId == R.layout.ll_video_item_player || layoutId == R.layout.ll_video_item_big) {
             if (isCkeckVisity) {
@@ -840,6 +862,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         });
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
+
             public void onClick(View paramAnonymousView) {
                 if (System.currentTimeMillis() - firstClick <= 1500L) {
                     firstClick = System.currentTimeMillis();
@@ -866,8 +889,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else if (feed.getRtype() == 6) {
 
                     if (onPlayClickListener != null) {
-                        if (onPlayClickListener.onItemClick(rlNewsContent, feed))
-                        {
+                        if (onPlayClickListener.onItemClick(rlNewsContent, feed)) {
                             setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                         }
                     }

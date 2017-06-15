@@ -394,23 +394,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 adFlag = PULL_DOWN_REFRESH;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
-                if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-                    for (NewsFeed newsFeed : mArrNewsFeed) {
-                        if (!newsFeed.isUpload() && newsFeed.isVisble()) {
-                            newsFeed.setUpload(true);
-                            mUploadArrNewsFeed.add(newsFeed);
-                        }
-                    }
-                }
-                if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
-                    while (mUploadArrNewsFeed.size() > 4) {
-                        ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
-                        for (int i = 0; i < 4; i++) {
-                            newsFeeds.add(mUploadArrNewsFeed.poll());
-                        }
-                        LogUtil.userShowLog(newsFeeds, mContext);
-                    }
-                }
+//                if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
+//                    while (mUploadArrNewsFeed.size() > 4) {
+//                        ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+//                        for (int i = 0; i < 4; i++) {
+//                            newsFeeds.add(mUploadArrNewsFeed.poll());
+//                        }
+//                        LogUtil.userShowLog(newsFeeds, mContext);
+//                    }
+//                }
             }
 
             @Override
@@ -424,6 +416,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         addHFView(LayoutInflater);
         mAdapter = new NewsFeedAdapter(getActivity(), this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
+        mAdapter.setUpLoadNewsFeed(mUploadArrNewsFeed);
         mlvNewsFeed.setAdapter(mAdapter);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
@@ -961,6 +954,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     @Override
     public void onPause() {
         super.onPause();
+        if (!TextUtil.isListEmpty(mUploadArrNewsFeed) && mUploadArrNewsFeed.size() > 4) {
+            while (mUploadArrNewsFeed.size() > 4) {
+                ArrayList<NewsFeed> newsFeeds = new ArrayList<>();
+                for (int i = 0; i < 4; i++) {
+                    newsFeeds.add(mUploadArrNewsFeed.poll());
+                }
+                LogUtil.userShowLog(newsFeeds, mContext);
+            }
+        }
         LogUtil.onPageEnd(CommonConstant.LOG_SHOW_FEED_SOURCE);
         if (vPlayer != null) {
             invisible();
@@ -1174,12 +1176,14 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
                 if (!TextUtil.isListEmpty(mArrNewsFeed) && mArrNewsFeed.size() > num && num >= 0) {
                     NewsFeed feed = mArrNewsFeed.get(num);
-                    View v = view.getChildAt(visibleItemCount - 1);
-                    int percents = getVisibilityPercents(v);
-                    if (!feed.isUpload() && feed.isVisble() && percents < 50) {
-                        feed.setVisble(false);
-                    } else {
-                        feed.setVisble(true);
+                    if (!feed.isUpload() && feed.isVisble()) {
+                        View v = view.getChildAt(visibleItemCount - 1);
+                        int percents = getVisibilityPercents(v);
+                        if (!feed.isUpload() && feed.isVisble() && percents >= 50) {
+                            feed.setVisble(true);
+                            feed.setUpload(true);
+                            mUploadArrNewsFeed.add(feed);
+                        }
                     }
                 }
                 if (mChannelId == 44 && portrait) {
@@ -1441,13 +1445,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     mChannelList.clearCheck();
                                     mChannelList1.clearCheck();
                                     mArrNewsFeed.clear();
-                                    mIsFirst=true;
+                                    mIsFirst = true;
                                     mlvNewsFeed.setRefreshing();
                                 }
                             } else {
                                 scid = checkedId;
                                 mArrNewsFeed.clear();
-                                mIsFirst=true;
+                                mIsFirst = true;
                                 mlvNewsFeed.setRefreshing();
                             }
                         }
@@ -1499,18 +1503,18 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     scid = 0;
                                     mChannelList1.clearCheck();
                                     mChannelList.clearCheck();
-                                    mlvNewsFeed.getRefreshableView().setSelectionFromTop(0,0);
+                                    mlvNewsFeed.getRefreshableView().setSelectionFromTop(0, 0);
                                     footView_tv.setVisibility(View.GONE);
                                     mArrNewsFeed.clear();
-                                    mIsFirst=true;
+                                    mIsFirst = true;
                                     mlvNewsFeed.setRefreshing();
                                 }
                             } else {
                                 scid = checkedId;
-                                mlvNewsFeed.getRefreshableView().setSelectionFromTop(0,0);
+                                mlvNewsFeed.getRefreshableView().setSelectionFromTop(0, 0);
                                 footView_tv.setVisibility(View.GONE);
                                 mArrNewsFeed.clear();
-                                mIsFirst=true;
+                                mIsFirst = true;
                                 mlvNewsFeed.setRefreshing();
                             }
                         }
@@ -1815,7 +1819,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 @Override
                 public void onClick(View v) {
                     isAuto = false;
-                    Log.v("firstClick before",System.currentTimeMillis()-firstClick+"");
+                    Log.v("firstClick before", System.currentTimeMillis() - firstClick + "");
                     if (newsFeed == null)
                         return;
                     firstClick = 0;

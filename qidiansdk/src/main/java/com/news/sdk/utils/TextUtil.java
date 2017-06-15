@@ -203,7 +203,7 @@ public class TextUtil {
                 "body {word-wrap:break-word;font-family:Arial; margin: 14px 18px 18px 18px; background-color: #" + bgColor + ";} " +
                 "h3 { margin: 0px; } h1, h2, h3, h4, h5, h6 { line-height: 150%; font-size: 18px;}" +
                 ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#" + lineColor + ";width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
-                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
+                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; h1, h2, h3, h4, h5, h6 { line-height: 150%; font-size: 18px;}}" +
                 ".content img { width: 100%; }" +
                 ".p_img { text-align: center; }" +
                 ".p_video { text-align: center;position: relative; }"
