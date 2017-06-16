@@ -3,7 +3,6 @@ package com.news.sdk.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -77,7 +76,6 @@ import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
-import com.news.sdk.widget.CustomDialog;
 import com.news.sdk.widget.SmallVideoContainer;
 import com.news.sdk.widget.TextViewExtend;
 import com.news.sdk.widget.VideoContainer;
@@ -1386,45 +1384,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     }
 
 
-    /**
-     * 自定义升级弹窗
-     */
-    protected void showNetworkDialog() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("流量使用提示");
-        builder.setMessage("继续播放，运营商收取流量费用");
-        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mVideoShowBg.setVisibility(View.GONE);
-                mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer != null && vplayer.getParent() != null) {
-                    ((ViewGroup) vplayer.getParent()).removeAllViews();
-                }
-                vplayer.setTitle(mResult.getTitle());
-                vplayer.setAllowModible(true);
-                mDetailVideo.addView(vplayer);
-                vplayer.play(mResult.getVideourl(), position);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        vplayer.play(mResult.getVideourl(), position);
-                    }
-                }, 100);
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-
-    }
 
     private Handler mHandler = new Handler() {
         @Override

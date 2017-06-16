@@ -224,10 +224,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
             }
-            if (vPlayPlayer != null) {
-                if (vPlayPlayer.onKeyDown(keyCode, event))
-                    return true;
-            }
+//            if (vPlayPlayer != null) {
+//                if (vPlayPlayer.onKeyDown(keyCode, event))
+//                    return true;
+//            }
         }
 
         return super.onKeyDown(keyCode, event);
@@ -247,10 +247,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             PlayerManager.videoPlayView = null;
         }
 
-        if (vPlayPlayer != null) {
-            vPlayPlayer.onDestory();
-            vPlayPlayer = null;
-        }
+//        if (vPlayPlayer != null) {
+//            vPlayPlayer.onDestory();
+//            vPlayPlayer = null;
+//        }
         super.onDestroy();
     }
 

@@ -61,7 +61,7 @@ import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
-import com.news.sdk.widget.CustomDialog;
+import com.news.sdk.widget.CustomDialogUpdate;
 import com.news.sdk.widget.FeedDislikePopupWindow;
 import com.news.sdk.widget.channel.ChannelTabStrip;
 import com.news.sdk.widget.tag.TagCloudLayout;
@@ -102,11 +102,13 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
     private ConnectivityManager mConnectivityManager;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<Integer, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
+    private HashMap<Integer, ArrayList<NewsFeed>> mSaveVideoData = new HashMap<>();
     private RelativeLayout mMainView;
     private RequestManager mRequestManager;
     private long lastTime, nowTime;
     private final Context mContext;
     private VideoChannelDao videoChannelDao;
+
 
     public enum FONTSIZE {
         TEXT_SIZE_NORMAL(16), TEXT_SIZE_BIG(18), TEXT_SIZE_BIGGER(20);
@@ -268,7 +270,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         setChannelList();
-//        checkVersion();
     }
 
     /**
@@ -282,8 +283,9 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     @Override
                     public void onResponse(Version response) {
                         Logger.e(TAG, response.toString());
-                        if (DeviceInfoUtil.getApkVersionCode(mContext) < response.getVersion_code()) {
-                            showUpdateDialog(response);
+                        if (DeviceInfoUtil.getApkVersionCode(mContext)<response.getVersion_code()) {
+//                            showUpdateDialog(response);
+                            showUpdateDialogNew(response);
                         }
 
                     }
@@ -292,20 +294,55 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Logger.e(TAG, "onErrorResponse");
+
+                        showUpdateDialogNew(new Version());
                     }
                 });
         QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
     }
 
 
+//    /**
+//     * 自定义升级弹窗
+//     */
+//    protected void showUpdateDialog(final Version version) {
+//        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+//        builder.setTitle("发现新版本");
+//        builder.setMessage(version.getUpdateLog());
+//        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (version.isForceUpdate()) {
+//                    ((Activity) mContext).finish();
+//                }
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Bundle bundle = new Bundle();
+//                Intent intent = new Intent(mContext, UpdateService.class);
+//                intent.putExtra("downloadLink", version.getDownloadLink());
+//                intent.putExtra("md5", version.getMd5());
+//                bundle.putSerializable("version", version);
+//
+//                mContext.startService(intent);
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.setCancelable(false);
+//        builder.create().show();
+//    }
+
     /**
      * 自定义升级弹窗
      */
-    protected void showUpdateDialog(final Version version) {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("发现新版本");
+    protected void showUpdateDialogNew(final Version version) {
+        CustomDialogUpdate.Builder builder = new CustomDialogUpdate.Builder(mContext);
         builder.setMessage(version.getUpdateLog());
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (version.isForceUpdate()) {
@@ -315,7 +352,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
 
-        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("立即升级", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle bundle = new Bundle();
@@ -323,7 +360,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                 intent.putExtra("downloadLink", version.getDownloadLink());
                 intent.putExtra("md5", version.getMd5());
                 bundle.putSerializable("version", version);
-
                 mContext.startService(intent);
                 dialog.dismiss();
             }
