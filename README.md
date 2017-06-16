@@ -57,5 +57,3 @@ IMEI获取方法：在mainview中的initializeViews()方法中申请获取权限
 ├── res  # 资源文件，如图片、音频等
 └── AndroidMainfest.xml  
 ```
-##Request API
-[API](https://github.com/YuanHuiAce/AndroidNewsSDK/wiki/request-Api "悬停显示")  

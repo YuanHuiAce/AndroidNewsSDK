@@ -259,7 +259,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
                                     NewsFeed feed = new NewsFeed();
                                     feed.setAid(Long.valueOf(Aid));
                                     feed.setSource(source);
-                                    feed.setPname(relatedItemEntity.getTitle());
+                                    feed.setPname(relatedItemEntity.getPname());
                                     feed.setCtime(System.currentTimeMillis());
                                     newsFeeds.add(feed);
                                     LogUtil.userShowLog(newsFeeds, mContext);

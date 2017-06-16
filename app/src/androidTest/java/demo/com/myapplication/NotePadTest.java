@@ -6,9 +6,9 @@ import android.util.DisplayMetrics;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.news.yazhidao.pages.MainActivity;
 import com.robotium.solo.Solo;
 
-import demo.com.yazhidao.pages.MainActivity;
 
 /**
  * Created by fiocca on 16/9/26.

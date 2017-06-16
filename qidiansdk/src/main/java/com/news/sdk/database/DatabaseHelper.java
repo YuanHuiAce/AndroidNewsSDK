@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 206;
+    private static int DATABASE_VERSION = 220;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
