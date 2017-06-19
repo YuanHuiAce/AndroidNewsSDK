@@ -181,6 +181,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private String Aid, source, title;
     private boolean isUploadBigAd;
     private TextView mRelateView;
+    private TextView mDetailOnlines;
+    private TextView mDetailAgree;
+    private TextView mDetailAgainst;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -388,6 +391,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mRelateView = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
+
+        mDetailOnlines = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_onlines);
+        mDetailAgree = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_agree);
+        mDetailAgainst = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_against);
         //关心
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
@@ -431,7 +438,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
-        relativeLayout_attention.setVisibility(View.GONE);
+//        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         detail_viewPoint_line1 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line1);
@@ -577,7 +584,21 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
         TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
-        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.color.color10);
+        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.attention_detail_video_shape);
+        TextUtil.setTextColor(mContext, tv_attention_title, R.color.color2);
+        TextUtil.setTextColor(mContext, mDetailOnlines, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgree, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgainst, R.color.color3);
+        ImageUtil.setAlphaView(mDetailAgree);
+        ImageUtil.setAlphaView(mDetailAgainst);
+        if (isAttention) {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
+        } else {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
+        }
+        ImageUtil.setAlphaView(attention_btn);
+//        TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
+        ImageUtil.setAlphaImage(iv_attention_icon);
         ImageUtil.setAlphaImage(adImageView);
         ImageUtil.setAlphaImage(mClose);
         ImageUtil.setAlphaImage(mDetailBg);
@@ -693,7 +714,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
         } else {
             attention_btn.setText("关注");
@@ -701,7 +722,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 13), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+//            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
         }
     }

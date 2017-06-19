@@ -270,7 +270,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         setChannelList();
-        checkVersion();
+//        checkVersion();
     }
 
     /**
@@ -296,7 +296,6 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
                     public void onErrorResponse(VolleyError error) {
                         Logger.e(TAG, "onErrorResponse");
 
-                        showUpdateDialogNew(new Version());
                     }
                 });
         QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
