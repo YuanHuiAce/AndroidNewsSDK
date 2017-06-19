@@ -1,5 +1,7 @@
 package com.news.sdk.pages;
 
+import android.widget.LinearLayout;
+
 import com.news.sdk.R;
 import com.news.sdk.common.BaseActivity;
 
@@ -9,6 +11,10 @@ import com.news.sdk.common.BaseActivity;
 
 public class DeveloperAty extends BaseActivity
 {
+
+    private LinearLayout mDeveloperUser;
+    private LinearLayout mDeveloperDevice;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_developer);
@@ -17,6 +23,8 @@ public class DeveloperAty extends BaseActivity
 
     @Override
     protected void initializeViews() {
+        mDeveloperUser = (LinearLayout) findViewById(R.id.ll_developer_user);
+        mDeveloperDevice = (LinearLayout) findViewById(R.id.ll_developer_device);
 
     }
 

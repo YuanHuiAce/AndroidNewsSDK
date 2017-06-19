@@ -29,6 +29,8 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NOTIFICATION_RECEIVED = "notification_receive";
     //用户收到推送消息并打开通知
     public static final String US_BAINEWS_NOTIFICATION_OPENED = "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_TOPIC= "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_VIDEO= "notification_open";
 
     public static final String FILE_USER = "user";
     public static final String FILE_AD = "ad";

@@ -270,6 +270,7 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
             }
         });
         setChannelList();
+        checkVersion();
     }
 
     /**

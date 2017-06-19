@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.sdk.R;
+import com.news.sdk.utils.ImageUtil;
 
 /**
  * 重写dialog
@@ -170,6 +171,7 @@ public class CustomDialogUpdate extends Dialog {
             final CustomDialogUpdate dialog = new CustomDialogUpdate(context,
                     R.style.DialogUpdate);
             View layout = inflater.inflate(R.layout.item_update, null);
+            ImageUtil.setAlphaView(layout);
             dialog.addContentView(layout, new LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title
