@@ -31,6 +31,7 @@ public class NewsFeed implements Serializable {
     public static final int VIDEO_SMALL = 10;
 
     public static final String COLUMN_CHANNEL_ID = "channel_id";
+    public static final String COLUMN_SCID_ID = "scid";
     public static final String COLUMN_NEWS_ID = "nid";
     public static final String COLUMN_UPDATE_TIME = "ptime";
     /**
@@ -44,7 +45,8 @@ public class NewsFeed implements Serializable {
     @DatabaseField(id = true)
     private int nid;
     private long aid;
-
+    @DatabaseField
+    private long scid;
     @DatabaseField
     private String url;
 
@@ -559,4 +561,16 @@ public class NewsFeed implements Serializable {
         this.aid = aid;
     }
 
+    public long getScid() {
+        return scid;
+    }
+
+    public void setScid(long scid) {
+        this.scid = scid;
+    }
 }
+
+
+
+
+

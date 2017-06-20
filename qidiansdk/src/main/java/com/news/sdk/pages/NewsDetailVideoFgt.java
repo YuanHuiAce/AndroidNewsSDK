@@ -3,7 +3,6 @@ package com.news.sdk.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -77,7 +76,6 @@ import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
-import com.news.sdk.widget.CustomDialog;
 import com.news.sdk.widget.SmallVideoContainer;
 import com.news.sdk.widget.TextViewExtend;
 import com.news.sdk.widget.VideoContainer;
@@ -183,6 +181,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private String Aid, source, title;
     private boolean isUploadBigAd;
     private TextView mRelateView;
+    private TextView mDetailOnlines;
+    private TextView mDetailAgree;
+    private TextView mDetailAgainst;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -390,6 +391,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mRelateView = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
+
+        mDetailOnlines = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_onlines);
+        mDetailAgree = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_agree);
+        mDetailAgainst = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_against);
         //关心
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
@@ -433,7 +438,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
-        relativeLayout_attention.setVisibility(View.GONE);
+//        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         detail_viewPoint_line1 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line1);
@@ -579,7 +584,21 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
         TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
-        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.color.color10);
+        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.attention_detail_video_shape);
+        TextUtil.setTextColor(mContext, tv_attention_title, R.color.color2);
+        TextUtil.setTextColor(mContext, mDetailOnlines, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgree, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgainst, R.color.color3);
+        ImageUtil.setAlphaView(mDetailAgree);
+        ImageUtil.setAlphaView(mDetailAgainst);
+        if (isAttention) {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
+        } else {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
+        }
+        ImageUtil.setAlphaView(attention_btn);
+//        TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
+        ImageUtil.setAlphaImage(iv_attention_icon);
         ImageUtil.setAlphaImage(adImageView);
         ImageUtil.setAlphaImage(mClose);
         ImageUtil.setAlphaImage(mDetailBg);
@@ -695,7 +714,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
         } else {
             attention_btn.setText("关注");
@@ -703,7 +722,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 13), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+//            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
         }
     }
@@ -1386,45 +1405,6 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     }
 
 
-    /**
-     * 自定义升级弹窗
-     */
-    protected void showNetworkDialog() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("流量使用提示");
-        builder.setMessage("继续播放，运营商收取流量费用");
-        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mVideoShowBg.setVisibility(View.GONE);
-                mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer != null && vplayer.getParent() != null) {
-                    ((ViewGroup) vplayer.getParent()).removeAllViews();
-                }
-                vplayer.setTitle(mResult.getTitle());
-                vplayer.setAllowModible(true);
-                mDetailVideo.addView(vplayer);
-                vplayer.play(mResult.getVideourl(), position);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        vplayer.play(mResult.getVideourl(), position);
-                    }
-                }, 100);
-                dialog.dismiss();
-            }
-        });
-
-        builder.create().show();
-
-    }
 
     private Handler mHandler = new Handler() {
         @Override

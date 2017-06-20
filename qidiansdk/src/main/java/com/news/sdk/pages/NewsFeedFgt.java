@@ -118,6 +118,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     public static final int REQUEST_CODE = 1060;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
+    private HashMap<Integer, ArrayList<NewsFeed>> mSaveVideoData = new HashMap<>();
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
@@ -163,7 +164,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     private ImageView mFeedClose;
     private int adPosition, adFlag;
     private VideoChannelDao videoChannelDao;
-    private long scid = 0;
+    private int scid = 0;
     private ArrayList<VideoChannel> localChannelItems;
     private View tabView;
     private TabLayout mTabLayout;
@@ -226,6 +227,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         void result(int channelId, ArrayList<NewsFeed> results);
     }
 
+
     public static NewsFeedFgt newInstance(int pChannelId) {
         NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
         Bundle bundle = new Bundle();
@@ -233,6 +235,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         newsFeedFgt.setArguments(bundle);
         return newsFeedFgt;
     }
+
 
     public void setNewsSaveDataCallBack(NewsSaveDataCallBack listener) {
         this.mNewsSaveCallBack = listener;
@@ -688,6 +691,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     }
                 } else if (44 == mChannelId) {
                     newsFeed.setChannel_id(44);
+                    newsFeed.setScid(scid);
                     PlayerFeed playerFeed = new PlayerFeed();
                     playerFeed.setNid(newsFeed.getNid());
                     playerFeed.setTitle(newsFeed.getTitle());
@@ -725,6 +729,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 case PULL_DOWN_REFRESH:
                     if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
+
                     } else {
                         //type==4 专题
                         if (result.get(0).getRtype() == 4) {
@@ -738,20 +743,25 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                             }
                         }
                         mArrNewsFeed.addAll(0, result);
+
                     }
+
                     mlvNewsFeed.getRefreshableView().setSelection(0);
                     break;
                 case PULL_UP_REFRESH:
                     if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
+
                     } else {
                         mArrNewsFeed.addAll(result);
                     }
+
                     break;
             }
             if (mNewsSaveCallBack != null) {
                 mNewsSaveCallBack.result(mChannelId, mArrNewsFeed);
             }
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -774,7 +784,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         } else {
             //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
             if (TextUtil.isListEmpty(mArrNewsFeed)) {
-                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+                ArrayList<NewsFeed> newsFeeds;
+                if (mChannelId == 44) {
+                    newsFeeds = mNewsFeedDao.queryByChannelId(scid);
+                } else {
+                    newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+                }
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
@@ -846,7 +861,12 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             });
         }
         if (TextUtil.isListEmpty(mArrNewsFeed)) {
-            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+            ArrayList<NewsFeed> newsFeeds;
+            if (44 == mChannelId) {
+                newsFeeds = mNewsFeedDao.queryByChannelScid(scid);
+            } else {
+                newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+            }
             if (TextUtil.isListEmpty(newsFeeds)) {
                 mHomeRetry.setVisibility(View.VISIBLE);
             } else {
@@ -892,7 +912,13 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 }
             } else {
                 setRefreshComplete();
-                ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+                ArrayList<NewsFeed> newsFeeds;
+                if (mChannelId==44) {
+                    newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
+                }else
+                {
+                    newsFeeds = mNewsFeedDao.queryByChannelId(scid);
+                }
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
                 } else {
@@ -1439,26 +1465,30 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         @Override
                         public void onClick(View v) {
                             mChannelList1.check(checkedId);
-                            if (scid == checkedId) {
-                                if (rb.isChecked()) {
-                                    scid = 0;
-                                    mChannelList.clearCheck();
-                                    mChannelList1.clearCheck();
-                                    mArrNewsFeed.clear();
-                                    mIsFirst = true;
-                                    mlvNewsFeed.setRefreshing();
-                                }
-                            } else {
+                            if (scid != checkedId) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<NewsFeed>();
+                                newsFeeds.addAll(mArrNewsFeed);
+                                int channelId = scid;
+                                mSaveVideoData.put(channelId, newsFeeds);
                                 scid = checkedId;
                                 mArrNewsFeed.clear();
                                 mIsFirst = true;
-                                mlvNewsFeed.setRefreshing();
+                                if (44 == mChannelId) {
+                                    ArrayList<NewsFeed> feeds = mSaveVideoData.get(scid);
+
+                                    if (TextUtil.isListEmpty(feeds)) {
+                                        mlvNewsFeed.setRefreshing();
+                                    } else {
+                                        mArrNewsFeed = feeds;
+                                        mAdapter.setNewsFeed(mArrNewsFeed);
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                }
                             }
                         }
                     });
                 if (rb != null) {
                     int scrollX = navContainer.getScrollX();
-                    System.out.println("scrollX----->" + scrollX);
                     int left = rb.getLeft();
                     int leftScreen = left - scrollX;
                     navContainer.smoothScrollBy((leftScreen - mScreenWidth), 0);
@@ -1497,29 +1527,28 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         @Override
                         public void onClick(View v) {
                             mChannelList.check(checkedId);
-
-                            if (scid == checkedId) {
-                                if (rb.isChecked()) {
-                                    scid = 0;
-                                    mChannelList1.clearCheck();
-                                    mChannelList.clearCheck();
-                                    mlvNewsFeed.getRefreshableView().setSelectionFromTop(0, 0);
-                                    footView_tv.setVisibility(View.GONE);
-                                    mArrNewsFeed.clear();
-                                    mIsFirst = true;
-                                    mlvNewsFeed.setRefreshing();
-                                }
-                            } else {
-                                scid = checkedId;
+                            if (scid != checkedId) {
+                                ArrayList<NewsFeed> newsFeeds = new ArrayList<NewsFeed>();
+                                newsFeeds.addAll(mArrNewsFeed);
+                                int channelId = scid;
+                                mSaveVideoData.put(channelId, newsFeeds);
                                 mlvNewsFeed.getRefreshableView().setSelectionFromTop(0, 0);
-                                footView_tv.setVisibility(View.GONE);
+                                scid = checkedId;
                                 mArrNewsFeed.clear();
                                 mIsFirst = true;
-                                mlvNewsFeed.setRefreshing();
+                                if (44 == mChannelId) {
+                                    ArrayList<NewsFeed> feeds = mSaveVideoData.get(scid);
+                                    if (TextUtil.isListEmpty(feeds)) {
+                                        mlvNewsFeed.setRefreshing();
+                                    } else {
+                                        mArrNewsFeed = feeds;
+                                        mAdapter.setNewsFeed(mArrNewsFeed);
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                }
                             }
                         }
                     });
-
 
                 if (rb != null) {
                     int scrollX = navContainer1.getScrollX();

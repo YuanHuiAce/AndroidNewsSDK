@@ -121,6 +121,29 @@ public class NewsFeedDao {
         }
         return new ArrayList<NewsFeed>(subItems);
     }
+  /**
+     *
+     *  根据二级子scid获取二级子频道数据
+     * @param channelId
+     * @return
+     */
+    public ArrayList<NewsFeed> queryByChannelScid(int channelId) {
+        List subItems = new ArrayList();
+        try {
+            QueryBuilder<NewsFeed, String> builder = mNewsFeedDao.queryBuilder();
+            builder.where().eq(NewsFeed.COLUMN_SCID_ID, channelId);
+            builder.orderBy(NewsFeed.COLUMN_UPDATE_TIME, false);
+            builder.limit(20l);
+            subItems = builder.query();
+            if (TextUtil.isListEmpty(subItems)) {
+                return new ArrayList<>();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e(TAG, "queryByAlbumId " + NewsFeed.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+        return new ArrayList<NewsFeed>(subItems);
+    }
 
     public int executeRaw(String sql) {
         try {
