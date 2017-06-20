@@ -139,12 +139,20 @@ public final class CommonConstant {
 //    public static final String NEWS_FEED_GDT_API_BIGPOSID = "480";
 //    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "533";
 //    public static final String NEWS_RELATE_GDT_API_SMALLID = "484";
-
-
+    // 白牌
+//    public static final String APPID = "1106172490";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "4060024238715397";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "6050429278110358";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9030521238313470";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "838";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "837";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "835";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "834";
 
 
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
-    public static final int NEWS_CTYPE = 7;
+    public static final int NEWS_CTYPE = 5;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
@@ -155,7 +163,7 @@ public final class CommonConstant {
     //lybrowser	猎鹰浏览器
     //baipai 白牌
     //yingyonghui 应用汇
-    public static final String LOG_CTYPE = "yingyonghui";
+    public static final String LOG_CTYPE = "baipai";
 
     public static final String LOG_SHOW_FEED_SOURCE = "feed";
     public static final String LOG_CLICK_FEED_SOURCE = "feed";

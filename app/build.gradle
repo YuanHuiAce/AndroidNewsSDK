@@ -10,9 +10,9 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        //ly  com.falconnect.information
-        //yyh com.yira.information
+        //掌上资讯 com.yira.information
         //sdk com.news.yazhidao
+        //白牌 com.falconnect.information
         applicationId "com.yira.information"
         minSdkVersion 17
         targetSdkVersion 25
@@ -72,6 +72,12 @@ android {
             signingConfig signingConfigs.myConfig
         }
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 def buildTime() {
@@ -82,10 +88,26 @@ def buildTime() {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':qidiansdk')
+    //    compile project(':qidiansdk')
     testCompile 'junit:junit:4.12'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.google.code.gson:gson:2.8.1'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.4.0'
     compile 'com.android.support:appcompat-v7:25.0.0'
-    compile project(':PushSDK')
-    compile project(':shareSDK')
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.6.2'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.2'
+    compile 'com.andkulikov:transitionseverywhere:1.7.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
+    compile 'com.j256.ormlite:ormlite-core:5.0'
+    compile 'com.andkulikov:transitionseverywhere:1.7.0'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    //    compile project(':PushSDK')
+    //    compile project(':shareSDK')
+    compile(name: 'PushSDK-release', ext: 'aar')
+    compile(name: 'qidiansdk-release', ext: 'aar')
+    compile(name: 'shareSDK-release', ext: 'aar')
+    compile(name: 'viewplay-release', ext: 'aar')
 }

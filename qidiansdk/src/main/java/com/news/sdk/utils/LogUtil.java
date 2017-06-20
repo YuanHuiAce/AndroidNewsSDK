@@ -2,7 +2,6 @@ package com.news.sdk.utils;
 
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -151,7 +150,6 @@ public class LogUtil {
                     object.put("logchid", newsFeed.getLogchid());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
-                    Log.i("tag",newsFeed.getTitle()+"===");
                 } else {
                     MobclickAgent.onEvent(context, "showAd");
                     object.put("aid", Long.valueOf(newsFeed.getAid()));
@@ -159,7 +157,6 @@ public class LogUtil {
                     object.put("title", newsFeed.getPname());
                     object.put("extend", newsFeed.getExtend());
                     object.put("ctime", newsFeed.getCtime());
-                    Log.i("tag",newsFeed.getPname()+"===");
                 }
                 jsonArray.put(object);
             }
