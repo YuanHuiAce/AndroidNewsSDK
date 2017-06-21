@@ -146,8 +146,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
         mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mlvSpecialNewsFeed.setMainFooterView(true);
         mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
-        mExpandableListView.setAdapter(mAdapter);
         mExpandableListView.addHeaderView(mSpecialNewsHeaderView);
+        mExpandableListView.setAdapter(mAdapter);
         mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
@@ -200,7 +200,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
             mAdapter.notifyDataSetChanged();
         }
         if (mSpecialNewsHeaderView != null && mTopicBaseInfo != null) {
-            mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth);
+            mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth, mRequestManager);
         }
         TextUtil.setLayoutBgResource(this, mTopicLeftBack, R.drawable.bg_left_back_selector);
         TextUtil.setImageResource(this, mTopicLeftBack, R.drawable.btn_left_back);
@@ -253,7 +253,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
                     for (int i = 0; i < marrTopicClass.size(); i++) {
                         mExpandableListView.expandGroup(i);
                     }
-                    mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth);
+                    mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth, mRequestManager);
                     mAdapter.setTopicData(marrTopicClass);
                     mAdapter.notifyDataSetChanged();
                     bgLayout.setVisibility(View.GONE);
