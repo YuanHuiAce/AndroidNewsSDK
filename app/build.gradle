@@ -99,7 +99,7 @@ dependencies {
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support:design:25.0.0'
-
+//
 //    compile project(':qidiansdk')
 //    compile project(':PushSDK')
 //    compile project(':shareSDK')

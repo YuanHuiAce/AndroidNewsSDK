@@ -391,7 +391,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mRelateView = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
-
+//
         mDetailOnlines = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_onlines);
         mDetailAgree = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_agree);
         mDetailAgainst = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_against);
