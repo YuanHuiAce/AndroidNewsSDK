@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     buildToolsVersion '25.0.2'
     lintOptions {
         checkReleaseBuilds false
@@ -15,7 +15,7 @@ android {
         //白牌 com.falconnect.information
         applicationId "com.news.yazhidao"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 20
         versionCode 220
         versionName "2.2.0"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
