@@ -438,7 +438,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mCommentTitleView.findViewById(R.id.relativeLayout_attention);
-//        relativeLayout_attention.setVisibility(View.GONE);
+        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mCommentTitleView.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mCommentTitleView.findViewById(R.id.tv_attention_title);
         detail_viewPoint_line1 = mCommentTitleView.findViewById(R.id.detail_ViewPoint_Line1);
