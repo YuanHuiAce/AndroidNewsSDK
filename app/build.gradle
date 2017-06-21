@@ -14,7 +14,7 @@ android {
         //sdk com.news.yazhidao
         //白牌 com.falconnect.information
         applicationId "com.news.yazhidao"
-        minSdkVersion 14
+        minSdkVersion 11
         targetSdkVersion 25
         versionCode 220
         versionName "2.2.0"
@@ -99,12 +99,11 @@ dependencies {
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support:design:25.0.0'
-//
-//    compile project(':qidiansdk')
-//    compile project(':PushSDK')
-//    compile project(':shareSDK')
-    compile(name: 'PushSDK-debug', ext: 'aar')
-    compile(name: 'qidiansdk-debug', ext: 'aar')
-    compile(name: 'shareSDK-debug', ext: 'aar')
-    compile(name: 'viewplay-debug', ext: 'aar')
+    compile project(':qidiansdk')
+    compile project(':PushSDK')
+    compile project(':shareSDK')
+//    compile(name: 'PushSDK-debug', ext: 'aar')
+//    compile(name: 'qidiansdk-debug', ext: 'aar')
+//    compile(name: 'shareSDK-debug', ext: 'aar')
+//    compile(name: 'viewplay-debug', ext: 'aar')
 }
