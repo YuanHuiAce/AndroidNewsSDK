@@ -14,8 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_below="@+id/ad_image">
+        android:layout_below="@+id/ad_image"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -38,6 +38,23 @@
         android:paddingTop="2dp"
         android:text="跳过"
         android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/ad_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ad_image"
+        android:layout_alignRight="@+id/ad_image"
+        android:text="广告"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/ad_logo"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignBottom="@+id/ad_text"
+        android:layout_toLeftOf="@+id/ad_text" />
 
     <!--<TextView-->
     <!--android:layout_width="wrap_content"-->

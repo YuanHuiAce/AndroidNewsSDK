@@ -3,16 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.news.yazhidao.widget.VideoContainer
+    <com.news.sdk.widget.VideoContainer
         android:id="@+id/fgt_new_detail_video"
         android:layout_width="match_parent"
-        android:layout_height="210dp" />
+        android:layout_height="200dp" />
 
     <RelativeLayout
         android:id="@+id/detial_video_show"
         android:layout_width="match_parent"
-        android:background="#010101"
-        android:layout_height="210dp">
+        android:layout_height="200dp">
 
         <ImageView
             android:id="@+id/detail_image_bg"
@@ -22,8 +21,8 @@
 
         <ImageView
             android:id="@+id/_detail_image_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_centerInParent="true"
             android:src="@drawable/video_play" />
     </RelativeLayout>
@@ -36,7 +35,7 @@
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:clipToPadding="false"
         android:divider="@null"
-        android:layout_marginTop="210dp"
+        android:layout_marginTop="200dp"
         android:dividerHeight="0dp"
         android:drawingCacheQuality="auto"
         android:listSelector="@android:color/transparent"

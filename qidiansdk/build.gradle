@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 22
+        minSdkVersion 11
+        targetSdkVersion 25
     }
 
     buildTypes {
@@ -17,24 +17,28 @@ android {
 
     productFlavors {
     }
-}
 
+    useLibrary 'org.apache.http.legacy'
+
+}
 dependencies {
     //noinspection GradleCompatible
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile project(':viewplay')
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.6.2'
     compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.6.2'
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile files('libs/GDTUnionSDK.TBS.4.9.542.min.jar')
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile files('libs/umeng-analytics-v6.1.0.jar')
-    compile files('libs/utdid4all-1.0.4.jar')
+//    compile files('libs/utdid4all-1.0.4.jar')
+    compile 'com.android.support:design:25.0.0'
+
 }

@@ -4,49 +4,58 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/type_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/icon_source"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:textSize="@dimen/new_font7"
-        android:visibility="gone" />
+        android:scaleType="centerCrop" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/news_source_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:lines="1"
-        android:maxEms="8"
         android:layout_marginRight="5dp"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6" />
+        android:lines="1"
+        android:maxEms="15"
+        android:textSize="@dimen/font8" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
+        android:id="@+id/type_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="0.56dp"
+        android:includeFontPadding="false"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:textSize="@dimen/font14"
+        android:visibility="gone" />
+
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/comment_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6"/>
+        android:textSize="@dimen/font8" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/comment_num_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="-10dp"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6" />
+        android:layout_marginRight="-7dp"
+        android:textSize="@dimen/font8" />
 
     <ImageView
         android:id="@+id/delete_imageView"
-        android:layout_width="35dp"
+        android:layout_width="22dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:src="@drawable/btn_news_feed_delete_selector" />
+        android:paddingLeft="11dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/news_feed_delete" />
 </LinearLayout>

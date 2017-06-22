@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.news.yazhidao.pages.SubscribeListActivity">
+    tools:context="com.news.sdk.pages.SubscribeListActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

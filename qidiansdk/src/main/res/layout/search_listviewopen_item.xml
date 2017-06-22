@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/search_listviewopen_itemLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="36dp">
+
         <View
+            android:id="@+id/mSearchLine"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/search_lineBlack"
+            android:layout_alignParentBottom="true"
             android:layout_below="@id/mSearchHotLabel"
-            android:layout_alignParentBottom="true"/>
-        <com.news.yazhidao.widget.TextViewExtend
+            android:background="@color/search_lineBlack" />
+
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/search_listviewopen_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/bg_share_text"
-            android:textSize="@dimen/new_font3"
-            android:includeFontPadding="false"
             android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="13dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/color2"
+            android:textSize="@dimen/font6"
             />
-        <com.news.yazhidao.widget.TextViewExtend
+
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/focus_item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
+            android:layout_marginRight="13dp"
+            android:includeFontPadding="false"
             android:textColor="@color/bg_share_text"
             android:textSize="@dimen/new_font3"
-            android:includeFontPadding="false"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="13dp"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>

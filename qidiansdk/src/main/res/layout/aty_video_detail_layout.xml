@@ -2,38 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_detail">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/video_show"
-        android:layout_width="match_parent"
-        android:background="#101010"
-        android:layout_height="210dp"
-        android:visibility="gone"
-        >
-
-        <ImageView
-            android:id="@+id/detail_image_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            />
-
-        <ImageView
-            android:id="@+id/_detail_image_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/video_play" />
-    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rl_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.ViewPager
+        <!--<android.support.v4.view.ViewPager-->
+        <com.news.sdk.widget.SwipeBackViewpager
             android:id="@+id/mNewsDetailViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -45,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/mDetailBottomBanner"
-            android:background="@color/black"
             android:visibility="gone">
 
             <android.support.v4.view.ViewPager
@@ -80,7 +56,31 @@
             android:id="@+id/fl_title_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:background="@color/transparent">
+
+            <RelativeLayout
+                android:id="@+id/nonet_show"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"
+                android:background="#101010"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/detail_image_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_detail_image_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/video_play" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mDetailHeader"
@@ -88,52 +88,66 @@
                 android:layout_height="48dp"
                 android:background="@color/transparent">
 
-                <TextView
+                <ImageView
                     android:id="@+id/mDetailLeftBack"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/detial_video_back"
                     android:padding="14dp"
                     android:scaleType="centerInside" />
 
-                <TextView
+                <!--<TextView-->
+                <!--android:id="@+id/mDetailRightMore"-->
+                <!--android:layout_width="48dp"-->
+                <!--android:layout_height="48dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:clickable="true"-->
+                <!--android:drawableRight="@drawable/detai_video_share"-->
+                <!--android:paddingRight="15dp"-->
+                <!--/>-->
+
+                <ImageView
                     android:id="@+id/mDetailRightMore"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
                     android:clickable="true"
-                    android:drawableRight="@drawable/detai_video_share"
-                    android:paddingRight="15dp"
-                    android:visibility="gone" />
+                    android:gravity="center"
+                    android:scaleType="centerInside" />
+
 
             </RelativeLayout>
+
+            <View
+                android:id="@+id/title_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_gravity="bottom"
+                android:visibility="gone" />
+
+
         </FrameLayout>
+
 
         <RelativeLayout
             android:id="@+id/mDetailBottomBanner"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/bg_home_login_header"
-            android:visibility="gone">
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true">
 
             <View
+                android:id="@+id/mBottomLine"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="#e4e4e4" />
+                android:layout_height="1px" />
 
             <ImageView
                 android:id="@+id/mDetailFavorite"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@+id/mDetailShare"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_favorite_normal"
-                android:visibility="gone" />
+                android:scaleType="centerInside" />
 
             <ImageView
                 android:id="@+id/mDetailShare"
@@ -143,24 +157,22 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="12dp"
                 android:contentDescription="分享"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_share" />
+                android:scaleType="centerInside" />
 
             <FrameLayout
                 android:id="@+id/mDetailComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/mDetailShare">
+                android:layout_marginRight="8dp"
+                android:layout_toLeftOf="@+id/mDetailFavorite">
 
                 <ImageView
                     android:id="@+id/mDetailCommentPic"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:contentDescription="评论"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_detail_no_comment" />
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:id="@+id/mDetailCommentNum"
@@ -168,11 +180,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|right"
                     android:layout_marginTop="2dp"
-                    android:background="@color/bg_detail"
                     android:gravity="center"
-                    android:textColor="@color/new_color2"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
+                    android:textSize="@dimen/font6" />
             </FrameLayout>
 
             <TextView
@@ -183,14 +192,11 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@+id/mDetailComment"
-                android:background="@drawable/user_add_comment"
                 android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="4dp"
-                android:text="我来说俩句..."
-                android:textColor="@color/user_add_comment_color"
-                android:textSize="14sp" />
-
+                android:text="说一下..."
+                android:textSize="@dimen/font6" />
         </RelativeLayout>
 
 
@@ -200,8 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/mHeaderDivider"
-            android:layout_marginTop="210dp"
-            android:background="@color/white"
+            android:layout_marginTop="200dp"
             android:visibility="visible">
 
             <ImageView
@@ -217,38 +222,33 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/tv_detail_video_noet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/mNewsLoadingImg"
                 android:layout_centerHorizontal="true"
                 android:text="点击屏幕，重新加载"
-                android:textColor="@color/no_net"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font5" />
 
             <include layout="@layout/qd_loading_view_anim" />
 
         </RelativeLayout>
 
         <!--需要占位不显示-->
-        <ImageView
-            android:id="@+id/share_bg_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#88000000"
-            android:visibility="gone" />
-
-        <include layout="@layout/detail_carefor_layout" />
+        <include layout="@layout/detail_careful_layout" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/detai_small_layout"
-        android:layout_width="200dp"
-        android:layout_height="120dp"
+        android:layout_width="188dp"
+        android:layout_height="106dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="48dp"
+        android:background="@color/color2"
         android:visibility="gone">
 
-        <com.news.yazhidao.widget.SmallVideoContainer
+        <com.news.sdk.widget.SmallVideoContainer
             android:id="@+id/detail_small_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -265,7 +265,14 @@
 
     </RelativeLayout>
 
-    <com.news.yazhidao.widget.VideoContainer
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone" />
+
+    <com.news.sdk.widget.VideoContainer
         android:id="@+id/detail_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

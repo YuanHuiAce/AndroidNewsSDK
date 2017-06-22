@@ -2,51 +2,68 @@
     android:id="@+id/app_video_top_box"
     android:layout_width="match_parent"
     android:layout_height="44dp"
-    android:gravity="center_vertical"
     android:background="#66000000"
-    >
+    android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/iv_video_finish"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_chevron_left_white_36dp" />
 
     <!--可以自定义实现跑马灯效果，这里不能获取到焦点-->
     <com.github.jinsedeyuzhou.view.MarqueeTextView
         android:id="@+id/tv_video_title"
         android:layout_width="wrap_content"
-        android:layout_toRightOf="@+id/iv_video_finish"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:layout_centerVertical="true"
-        android:maxEms="20"
+        android:layout_toRightOf="@+id/iv_video_finish"
         android:ellipsize="end"
+        android:maxEms="20"
+        android:maxLines="1"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
-        />
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/app_video_lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="6dp"
         android:layout_alignParentRight="true"
-        android:layout_toLeftOf="@+id/app_video_share"
+        android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/app_video_share"
+        android:padding="6dp"
         android:src="@mipmap/video_unlock" />
+
+    <Button
+        android:id="@+id/tv_media_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/app_video_lock"
+        android:gravity="center"
+        android:text="视频列表"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:paddingLeft="10dp"
+        android:textColor="@drawable/play_feed_select"
+        android:textSize="14sp"
+        android:visibility="gone"
+        />
 
 
     <ImageView
         android:id="@+id/app_video_share"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:src="@drawable/player_share_select" />
+        android:padding="5dp"
+        android:src="@drawable/player_share_select"
+        android:visibility="gone" />
 </RelativeLayout>

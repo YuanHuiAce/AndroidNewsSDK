@@ -72,12 +72,20 @@
     <!--新闻feed流-->
     <dimen name="news_feed_title">18sp</dimen>
 
-    <dimen name="font1">20sp</dimen>
-    <dimen name="font2">18sp</dimen>
+    <dimen name="font1">21sp</dimen>
+    <dimen name="font2">17sp</dimen>
     <dimen name="font3">16sp</dimen>
-    <dimen name="font4">14sp</dimen>
-    <dimen name="font5">12sp</dimen>
-    <dimen name="font6">10sp</dimen>
+    <dimen name="font4">15sp</dimen>
+    <dimen name="font5">14sp</dimen>
+    <dimen name="font6">13sp</dimen>
+    <dimen name="font7">12sp</dimen>
+    <dimen name="font8">11sp</dimen>
+    <dimen name="font9">10sp</dimen>
+    <dimen name="font10">19sp</dimen>
+    <dimen name="font11">20sp</dimen>
+    <dimen name="font12">23sp</dimen>
+    <dimen name="font13">25sp</dimen>
+    <dimen name="font14">9sp</dimen>
     <dimen name="new_font1">18sp</dimen>
     <dimen name="new_font2">17sp</dimen>
     <dimen name="new_font3">14sp</dimen>
@@ -127,5 +135,5 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="usual_margin">16dp</dimen>
+    <dimen name="usual_margin">15dp</dimen>
 </resources>

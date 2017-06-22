@@ -12,7 +12,7 @@
         android:layout_marginRight="5dp"
         android:scaleType="centerCrop" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/news_source_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:textColor="@color/new_color3"
         android:textSize="@dimen/new_font6" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/type_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:textSize="@dimen/new_font7"
         android:visibility="gone" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/comment_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,20 +41,19 @@
         android:textColor="@color/new_color3"
         android:textSize="@dimen/new_font6" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/comment_num_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="-10dp"
-        android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6" />
+        android:textSize="@dimen/font8" />
 
     <ImageView
         android:id="@+id/delete_imageView"
-        android:layout_width="35dp"
+        android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:src="@drawable/btn_news_feed_delete_selector" />
+        android:paddingLeft="7dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/news_feed_delete" />
 </LinearLayout>

@@ -39,11 +39,11 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.news.yazhidao.R;
-import com.news.yazhidao.common.ThemeManager;
-import com.news.yazhidao.utils.TextUtil;
+import com.news.sdk.R;
+import com.news.sdk.utils.ImageUtil;
+import com.news.sdk.utils.TextUtil;
 
-import static com.news.yazhidao.R.id.pull_to_refresh_sub_text;
+import static com.news.sdk.R.id.pull_to_refresh_sub_text;
 
 @SuppressLint("ViewConstructor")
 public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {
@@ -90,7 +90,6 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
         mLoadMoreLayout = (RelativeLayout) mInnerLayout.findViewById(R.id.pull_to_loadMoreLayout);
         mHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_text);
-        TextUtil.setTextColor(mContext, mHeaderText, R.color.new_color3);
         mHeaderProgress = (ProgressBar) mInnerLayout.findViewById(R.id.pull_to_refresh_progress);
         mSubHeaderText = (TextView) mInnerLayout.findViewById(pull_to_refresh_sub_text);
         mHeaderImage = (ImageView) mInnerLayout.findViewById(R.id.pull_to_refresh_image);
@@ -228,7 +227,6 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (View.VISIBLE == mHeaderImage.getVisibility()) {
             mHeaderImage.setVisibility(View.INVISIBLE);
         }
-
         if (View.VISIBLE == mSubHeaderText.getVisibility()) {
             mSubHeaderText.setVisibility(View.INVISIBLE);
         }
@@ -244,13 +242,12 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (null != mHeaderText) {
             mHeaderText.setText(mPullLabel);
         }
-        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
-            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list);
-            mInnerLayout.setBackgroundResource(R.color.news_feed_list);
-        } else {
-            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list_night);
-            mInnerLayout.setBackgroundResource(R.color.news_feed_list_night);
-        }
+        ImageUtil.setAlphaImage(mHeaderImage);
+        ImageUtil.setAlphaImage(mHeaderProgress);
+        TextUtil.setTextColor(mContext, mHeaderText, R.color.color3);
+        TextUtil.setTextColor(mContext, mSubHeaderText, R.color.color3);
+        TextUtil.setLayoutBgResource(mContext, mLoadMoreLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mInnerLayout, R.color.color6);
         // Now call the callback
         pullToRefreshImpl();
     }
@@ -259,14 +256,12 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (null != mHeaderText) {
             mHeaderText.setText(mRefreshingLabel);
         }
-
         if (mUseIntrinsicAnimation) {
             ((AnimationDrawable) mHeaderImage.getDrawable()).start();
         } else {
             // Now call the callback
             refreshingImpl();
         }
-
         if (null != mSubHeaderText) {
             mSubHeaderText.setVisibility(View.GONE);
         }
@@ -301,13 +296,8 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
                 mSubHeaderText.setVisibility(View.VISIBLE);
             }
         }
-        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY) {
-            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list);
-            mInnerLayout.setBackgroundResource(R.color.news_feed_list);
-        } else {
-            mLoadMoreLayout.setBackgroundResource(R.color.news_feed_list_night);
-            mInnerLayout.setBackgroundResource(R.color.news_feed_list_night);
-        }
+        TextUtil.setLayoutBgResource(mContext, mLoadMoreLayout, R.color.color6);
+        TextUtil.setLayoutBgResource(mContext, mInnerLayout, R.color.color6);
     }
 
     @Override
@@ -423,8 +413,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 
     public void setDayNightMode() {
         reset();
-        TextUtil.setTextColor(mContext, mHeaderText, R.color.new_color3);
-        TextUtil.setTextColor(mContext, mSubHeaderText, R.color.new_color3);
+        ImageUtil.setAlphaImage(mHeaderImage);
+        ImageUtil.setAlphaImage(mHeaderProgress);
+        TextUtil.setTextColor(mContext, mHeaderText, R.color.color3);
+        TextUtil.setTextColor(mContext, mSubHeaderText, R.color.color3);
     }
 
 }

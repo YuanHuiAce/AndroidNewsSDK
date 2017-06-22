@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.news.yazhidao"
-    android:versionCode="200"
+    package="com.news.sdk"
+    android:versionCode="220"
     android:versionName="@string/version_name">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -16,9 +17,6 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".pages.MainAty"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.ChannelOperateAty"
             android:screenOrientation="portrait" />
@@ -49,23 +47,27 @@
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
         <activity
-            android:theme="@style/ThemeAnimation"
             android:name=".pages.NewsDetailVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
         <activity
             android:name=".pages.TopicSearchAty"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
+            android:name=".pages.DeveloperAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
+        <activity
             android:name=".pages.AttentionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
         <activity
             android:name=".pages.SubscribeListActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
         <!--广点通-->
         <!-- 声明SDK所需要的组件 -->

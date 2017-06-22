@@ -89,7 +89,7 @@ java.lang.Object readResolve();
 -keepclassmembers class * {
    public <init>(org.json.JSONObject);
 }
--keep public class com.news.yazhidao.R$*{
+-keep public class com.news.sdk.R$*{
     public static final int *;
 }
 -keep public class com.umeng.fb.ui.ThreadView {
@@ -154,7 +154,7 @@ java.lang.Object readResolve();
 
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
--keep class com.news.yazhidao.entity.** { *; }
+-keep class com.news.sdk.entity.** { *; }
 -keep class org.json.** {*;}
 -keep class com.google.gson.** {*;}
 -keep class com.nostra13.**{*;}
@@ -185,7 +185,7 @@ java.lang.Object readResolve();
 # # -------------------------------------------
 
 
--keep class com.news.yazhidao.adapter.NewsFeedAdapter$ViewWrapper{
+-keep class com.news.sdk.adapter.NewsFeedAdapter$ViewWrapper{
     public <fields>;
     public <methods>;
 
@@ -197,7 +197,7 @@ java.lang.Object readResolve();
 
 
 ##js 和java互调
--keep class com.news.yazhidao.javascript.VideoJavaScriptBridge{
+-keep class com.news.sdk.javascript.VideoJavaScriptBridge{
     public <fields>;
     public <methods>;
 }
@@ -222,3 +222,38 @@ java.lang.Object readResolve();
 ###bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+###Umeng push
+-dontwarn com.taobao.**
+-dontwarn anet.channel.**
+-dontwarn anetwork.channel.**
+-dontwarn org.android.**
+-dontwarn org.apache.thrift.**
+-dontwarn com.xiaomi.**
+-dontwarn com.huawei.**
+
+-keepattributes *Annotation*
+
+-keep class com.taobao.** {*;}
+-keep class org.android.** {*;}
+-keep class anet.channel.** {*;}
+-keep class com.umeng.** {*;}
+-keep class com.xiaomi.** {*;}
+-keep class com.huawei.** {*;}
+-keep class org.apache.thrift.** {*;}
+
+-keep class com.alibaba.sdk.android.**{*;}
+-keep class com.ut.**{*;}
+-keep class com.ta.**{*;}
+
+-keep public class **.R$*{
+   public static final int *;
+}
+
+#（可选）避免Log打印输出
+-assumenosideeffects class android.util.Log {
+   public static *** v(...);
+   public static *** d(...);
+   public static *** i(...);
+   public static *** w(...);
+ }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="2dp" />
-    <stroke
-        android:color="@color/newsfeed_red"
-        android:width="1px" />
+    <corners
+        android:radius="2dp" />
+    <solid android:color="@color/news_type_color2" />
 </shape>

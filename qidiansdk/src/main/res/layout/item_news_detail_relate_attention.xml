@@ -20,7 +20,7 @@
             android:scaleType="centerCrop" />
 
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/attention_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font10" />
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.sdk.widget.TextViewExtend
             android:id="@+id/attention_Source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

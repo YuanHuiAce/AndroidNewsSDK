@@ -12,8 +12,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
-        android:text="小红的一天天的生活"
-        android:textSize="18sp"
+        android:textSize="@dimen/font1"
         android:textStyle="bold" />
 
     <TextView
@@ -24,8 +23,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:text="渠道"
-        android:textColor="@color/color5"
-        android:textSize="@dimen/font4" />
+        android:textSize="@dimen/font8" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="热门评论"
-            android:textColor="#4b515e"
             android:textSize="@dimen/new_font4" />
 
         <View
@@ -48,8 +45,7 @@
             android:layout_height="1dp"
             android:layout_alignRight="@id/news_comment_hotComment"
             android:layout_below="@id/news_comment_hotComment"
-            android:layout_marginTop="8dp"
-            android:background="@color/new_color2" />
+            android:layout_marginTop="8dp" />
 
         <View
             android:id="@+id/news_comment_hotComment_Line2"
@@ -57,8 +53,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/news_comment_hotComment"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/news_comment_hotComment_Line1"
-            android:background="@color/color6" />
+            android:layout_toRightOf="@id/news_comment_hotComment_Line1" />
     </RelativeLayout>
 
     <LinearLayout
@@ -71,11 +66,13 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/image_sofa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sofa_image" />
 
         <TextView
+            android:id="@+id/text_sofa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

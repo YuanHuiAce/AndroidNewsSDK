@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:touchscreenBlocksFocus="true">
+
+    <com.github.jinsedeyuzhou.media.IjkVideoView
+        android:id="@+id/main_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- status-->
+    <LinearLayout
+        android:id="@+id/app_video_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_dark"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/app_video_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/small_problem"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/app_video_replay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/pause_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/video_play_btn"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+    <include
+        android:id="@+id/media_contoller"
+        layout="@layout/player_controlbar" />
+
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progressbar"
+        android:visibility="gone" />
+
+    <include layout="@layout/player_gesture_touch" />
+
+    <TextView
+        android:id="@+id/seekTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:textColor="#fff"
+        android:textSize="16dp" />
+
+
+    <include layout="@layout/player_toolbar"
+        />
+    <include layout="@layout/player_media_quality"/>
+    <include
+        android:id="@+id/app_video_netTie"
+        layout="@layout/player_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/bottom_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:max="1000"
+        android:progressDrawable="@drawable/bg_seek" />
+
+</FrameLayout>
+

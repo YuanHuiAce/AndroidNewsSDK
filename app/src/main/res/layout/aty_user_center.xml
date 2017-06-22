@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bgLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/mCenterHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/mSettingLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:padding="14dp"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/mTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="我"
+            android:textSize="@dimen/font3" />
+
+        <TextView
+            android:id="@+id/mSetting"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="设置"
+            android:textSize="@dimen/font5" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mCenterHeader" />
+
+    <LinearLayout
+        android:id="@+id/mCenterUserInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mHeaderDivider"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/mCenterUserIcon"
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
+
+        <TextView
+            android:id="@+id/mCenterUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="@dimen/font3" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/mCenterComment"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@+id/mHeaderDivider"
+        android:layout_marginTop="242dp">
+
+        <View
+            android:id="@+id/mLine1"
+            android:layout_width="match_parent"
+            android:layout_height="0.56dp" />
+
+        <ImageView
+            android:id="@+id/mCenterCommentIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/mTitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="45dp"
+            android:text="我的评论"
+            android:textSize="@dimen/font2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/ic_user_center_right_arrow" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mCenterFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@+id/mCenterComment">
+
+        <View
+            android:id="@+id/mLine2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <ImageView
+            android:id="@+id/mCenterFavoriteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/mTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="45dp"
+            android:text="我的收藏"
+            android:textSize="@dimen/font2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/ic_user_center_right_arrow" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mCenterMessage"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@+id/mCenterFavorite"
+        android:background="@color/new_color12">
+
+        <View
+            android:id="@+id/mLine3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <ImageView
+            android:id="@+id/mCenterMessageIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/mTitle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="45dp"
+            android:text="我的消息"
+            android:textSize="@dimen/font2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/ic_user_center_right_arrow" />
+
+        <View
+            android:id="@+id/mLine4"
+            android:layout_width="match_parent"
+            android:layout_height="0.56dp"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

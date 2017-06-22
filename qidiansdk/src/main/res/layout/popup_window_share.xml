@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/close_imageView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -15,55 +15,53 @@
         android:textColor="@color/bg_share_text"
         android:textSize="@dimen/new_font3" />
 
+    <ImageView
+        android:id="@+id/line1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0.56dp"
+        android:layout_above="@+id/close_imageView" />
+
     <LinearLayout
         android:id="@+id/other_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/close_imageView"
-        android:background="#f6f6f6"
+        android:layout_above="@+id/line1_layout"
         android:orientation="horizontal">
 
         <!--<com.news.yazhidao.widget.TextViewExtend-->
-            <!--android:id="@+id/accusation_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="25dp"-->
-            <!--android:layout_marginTop="15dp"-->
-            <!--android:drawablePadding="8dp"-->
-            <!--android:drawableTop="@drawable/ic_share_accusation"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:text="举报"-->
-            <!--android:textColor="@color/bg_share_text"-->
-            <!--android:textSize="@dimen/new_font6" />-->
+        <!--android:id="@+id/accusation_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="25dp"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:drawablePadding="8dp"-->
+        <!--android:drawableTop="@drawable/ic_share_accusation"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="举报"-->
+        <!--android:textColor="@color/bg_share_text"-->
+        <!--android:textSize="@dimen/new_font6" />-->
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/other_layout"
-        android:background="#f6f6f6" />
 
     <ImageView
         android:id="@+id/line_layout"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/other_layout"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@color/new_color4" />
+        android:layout_height="0.56dp"
+        android:layout_above="@+id/other_layout" />
 
-    <HorizontalScrollView
+    <LinearLayout
+        android:id="@+id/share_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/line_layout"
-        android:background="#f6f6f6"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:orientation="horizontal"
+        android:weightSum="4" />
+    <!--<HorizontalScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@+id/line_layout"-->
+    <!--android:overScrollMode="never"-->
+    <!--android:scrollbars="none">-->
 
-        <LinearLayout
-            android:id="@+id/share_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
+    <!---->
+    <!--</HorizontalScrollView>-->
 </RelativeLayout>

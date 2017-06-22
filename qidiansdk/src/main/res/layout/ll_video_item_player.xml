@@ -2,28 +2,28 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_feed_list_select">
+    android:touchscreenBlocksFocus="true"
+
+    >
 
     <TextView
         android:id="@+id/tv_video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
         android:maxLines="2"
-        android:textColor="#333333"
-        android:textSize="15sp" />
+        android:textSize="@dimen/font3" />
 
-    <com.news.yazhidao.widget.TextViewExtend
+    <com.news.sdk.widget.TextViewExtend
         android:id="@+id/type_textView"
         android:layout_width="28dp"
         android:layout_height="14dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="3dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/newstag_newhotspot_shape"
         android:gravity="center"
         android:textColor="#ffffff"
         android:textSize="10sp"
@@ -34,11 +34,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_video_title">
-        <com.news.yazhidao.widget.VideoItemContainer
+
+        <com.news.sdk.widget.VideoItemContainer
             android:id="@+id/layout_item_video"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
 
         <RelativeLayout
@@ -54,8 +54,8 @@
 
             <ImageView
                 android:id="@+id/image_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/video_play" />
 
@@ -65,14 +65,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="#30000000"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="4dp"
+                android:background="#30101010"
                 android:paddingBottom="4dp"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:paddingTop="4dp"
                 android:text="15:00"
-                android:textColor="@color/white"
-                android:textSize="11sp" />
+                android:textSize="@dimen/font8" />
         </RelativeLayout>
 
     </RelativeLayout>
@@ -82,17 +81,30 @@
         layout="@layout/item_bottom_video" />
 
     <ImageView
+        android:id="@+id/checkFavoriteDelete_image"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/line_bottom_imageView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/favorite_surface"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:scaleType="center"
+        android:src="@drawable/favorite_uncheck"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="2dp"
         android:layout_below="@+id/item_bottom_video"
-        android:layout_marginTop="2dp"
-        android:background="#e0e0e0" />
+        android:layout_marginTop="2dp" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_below="@+id/item_bottom_video"
         android:background="#f8f8f8"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 </RelativeLayout>

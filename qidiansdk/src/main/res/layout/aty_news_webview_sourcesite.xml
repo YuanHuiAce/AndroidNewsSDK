@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_news_sourcesite_praise" />
 
-            <com.news.yazhidao.widget.TextViewExtend
+            <com.news.sdk.widget.TextViewExtend
                 android:id="@+id/mNewsSourcesitePraiseNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_news_sourcesite_blame" />
 
-            <com.news.yazhidao.widget.TextViewExtend
+            <com.news.sdk.widget.TextViewExtend
                 android:id="@+id/mNewsSourcesiteBlameNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

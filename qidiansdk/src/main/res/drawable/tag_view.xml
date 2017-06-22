@@ -3,15 +3,14 @@
     <item android:state_pressed="true">
         <shape>
             <corners android:radius="3dp"></corners>
-            <solid android:color="@color/category_tab_highlight_bg" />
+            <solid android:color="@color/color7" />
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="3dp"></corners>
-            <stroke android:width="2px"
-                android:color="@color/new_color5" />
-            <solid android:color="@color/white" />
+            <stroke android:width="2px" android:color="@color/color5" />
+            <solid android:color="@color/color9" />
         </shape>
     </item>
 </selector>

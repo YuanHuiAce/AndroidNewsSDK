@@ -51,18 +51,29 @@
 			Line           http://media.line.me/zh-hant/
 			Pocket         http://getpocket.com/developer/apps/new
     -->
-
+	<!-- 735df600fe10 奇点-->
+	<!-- 1ec8d3907dcc4 掌上资讯-->
+	<!-- 1ecc193878802 白牌-->
     <ShareSDK
-        AppKey = "735df600fe10"/> <!-- 修改成你在sharesdk后台注册的应用的appkey" -->
+        AppKey = "1ec8d3907dcc4"/> <!-- 修改成你在sharesdk后台注册的应用的appkey" -->
 
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
+	<!--奇点-->
+	<!--AppKey="104745354"-->
+	<!--AppSecret="e0c793deeb71942132d76b985e3b45c4"-->
+	<!--掌上资讯-->
+	<!--AppKey="2572659240"-->
+	<!--AppSecret="e7a6eb636b56f13ee3e0ea1bfb692bb9"-->
+	<!--白牌-->
+	<!--AppKey="3571116806"-->
+	<!--AppSecret="09e6592af494f85120cfaae05a3a9a5e"-->
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="104745354"
-        AppSecret="e0c793deeb71942132d76b985e3b45c4"
+		AppKey="2572659240"
+		AppSecret="e7a6eb636b56f13ee3e0ea1bfb692bb9"
         RedirectUrl="http://sns.whalecloud.com/sina2/callback"
-        ShareByAppClient="false"
+        ShareByAppClient="true"
         Enable="true" />
 
     <TencentWeibo
@@ -94,19 +105,29 @@
 		审核的应用也可以执行分享，但是仅限于分享文字和图片，不能分享其他类型，
 		默认值为false。此外，微信收藏不支持此字段。
 	-->
+
+	<!--奇点-->
+	<!--AppKey="wxeb404ce38ee2e285"-->
+	<!--AppSecret="3d40a768ceef7d55e2d0e20fe1a76bb9"-->
+	<!--掌上资讯-->
+	<!--AppKey="wx77ad62037d49fd4f"-->
+	<!--AppSecret="42e836e9c81f04c07c6f77d912221daa"-->
+	<!--白牌-->
+	<!--AppKey="wx68b2c2a661af862d"-->
+	<!--AppSecret="50d52668eef15096d90f812501226a30"-->
     <Wechat
         Id="4"
         SortId="4"
-        AppId="wxeb404ce38ee2e285"
-        AppSecret="3d40a768ceef7d55e2d0e20fe1a76bb9"
+        AppId="wx77ad62037d49fd4f"
+        AppSecret="42e836e9c81f04c07c6f77d912221daa"
         BypassApproval="false"
         Enable="true" />
 
     <WechatMoments
         Id="5"
         SortId="5"
-        AppId="wxeb404ce38ee2e285"
-        AppSecret="3d40a768ceef7d55e2d0e20fe1a76bb9"
+        AppId="wx77ad62037d49fd4f"
+        AppSecret="42e836e9c81f04c07c6f77d912221daa"
         BypassApproval="false"
         Enable="true" />
 
@@ -118,11 +139,20 @@
         Enable="false" />
 
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
+	<!--奇点-->
+	<!--AppId="1104792526"-->
+	<!--AppKey="A1TL4S0GEl5QGdIP"-->
+	<!--掌上资讯-->
+	<!--AppId="1106222672"-->
+	<!--AppKey="KEYrGxAsvMRwkuhtPNs"-->
+	<!--白牌-->
+	<!--AppId="1106147705"-->
+	<!--AppKey="KSmm28nnSqn4eiPV"-->
 	<QQ
         Id="7"
         SortId="7"
-        AppId="100371282"
-        AppKey="aed9b0303e3ed1e27bae87c33761161d"
+		AppId="1106222672"
+		AppKey="KEYrGxAsvMRwkuhtPNs"
         ShareByAppClient="true"
         Enable="true" />
 

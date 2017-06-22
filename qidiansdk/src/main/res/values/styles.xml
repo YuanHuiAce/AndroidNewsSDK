@@ -1,13 +1,18 @@
 <resources>
     <!--</style>-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowAnimationStyle">@android:style/Animation.Toast</item>
     </style>
     <style name="home_style">
         <item name="android:windowNoTitle">true</item>
     </style>
-
+    <style name="SwipeBackLayout">
+        <item name="edge_size">50dip</item>
+        <item name="shadow_left">@drawable/shadow_left</item>
+        <item name="shadow_right">@drawable/shadow_right</item>
+        <item name="shadow_bottom">@drawable/shadow_bottom</item>
+    </style>
     <style name="popupWindowAnimation" mce_bogus="1" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/enter</item>
         <item name="android:windowExitAnimation">@anim/exit</item>

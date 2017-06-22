@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.news.yazhidao.R;
+import com.news.sdk.R;
 
 public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 

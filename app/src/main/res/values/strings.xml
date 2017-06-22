@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">资讯</string>
-    <string name="app_version">3.7.0</string>
+    <string name="app_version">2.2.0</string>
+
+
+    <string-array name="vchannels">
+        <item>新闻</item>
+        <item>搞笑</item>
+        <item>萌宠萌娃</item>
+        <item>娱乐</item>
+        <item>生活</item>
+        <item>体育</item>
+        <item>科技</item>
+        <item>游戏</item>
+        <item>影视</item>
+        <item>时尚</item>
+        <item>自媒体</item>
+        <item>汽车</item>
+    </string-array>
+    <string name="aty_about_copy_right">Copyring@2016 lieying.All Rights Reserved</string>
 </resources>

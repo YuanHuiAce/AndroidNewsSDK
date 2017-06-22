@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color1">#0091fa</color>
-    <color name="color2">#323232</color>
-    <color name="color3">#9b9b9b</color>
-    <color name="color4">#aaaaaa</color>
-    <color name="color5">#b2b2b2</color>
-    <color name="color6">#e6e6e6</color>
-    <color name="color7">#f5f5f5</color>
-    <color name="color7_night">#333333</color>
-    <color name="color8">#8cc3fa</color>
-    <color name="color9">#505050</color>
+    <color name="color2">#333333</color>
+    <color name="color3">#999999</color>
+    <color name="color4">#d1d1d1</color>
+    <color name="color5">#e8e8e8</color>
+    <color name="color6">#f8f8f8</color>
+    <color name="color7">#ff4c4c</color>
+    <color name="color8">#fda062</color>
+    <color name="color9">#ffffff</color>
+    <color name="color10">#ffffff</color>
+    <color name="color11">#ffffff</color>
+    <color name="color12">#ffffff</color>
+    <color name="color13">#101010</color>
+    <color name="color14">#262626</color>
+    <color name="color1_night">#991168a7</color>
+    <color name="color2_night">#909090</color>
+    <color name="color3_night">#545454</color>
+    <color name="color4_night">#444444</color>
+    <color name="color5_night">#2a2a2a</color>
+    <color name="color6_night">#202020</color>
+    <color name="color7_night">#d13b3b</color>
+    <color name="color8_night">#985f3a</color>
+    <color name="color9_night">#242424</color>
+    <color name="color10_night">#969696</color>
+    <color name="color11_night">#c8c8c8</color>
+    <color name="color12_night">#181818</color>
+    <color name="color13_night">#101010</color>
+    <color name="color14_night">#262626</color>
     <color name="new_color1">#333333</color>
     <color name="new_color1_night">#666666</color>
     <color name="new_color1_c">#444444</color>
@@ -87,6 +105,7 @@
     <color name="AboutButtonbg">#f2f6f8</color>
     <color name="titleBg">#2f2f2f</color>
     <color name="half_black">#30000000</color>
+    <color name="translucent">#00000000</color>
     <color name="pure_red">#ff4c3d</color>
     <color name="red">#FF0000</color>
     <color name="item_bg_night">#202124</color>
@@ -220,7 +239,8 @@
     <color name="category_tab_highlight_bg">#ffd43d3d</color>
     <color name="category_tab_highlight_dark_bg">#fffafafa</color>
 
-    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night</item>
+    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night
+    </item>
 
     <color name="default_text_night">#ff747474</color>
     <color name="subscribe_item_text_color_pressed_night">#ff303030</color>
@@ -251,44 +271,49 @@
     <color name="subscribe_bg">#fff5f5f5</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
 
-    <color name="theme_color" >#0091fa</color>
-    <color name="do_search_not_do" >#c3c3c3</color>
-    <color name="do_search_can_do" >@color/white</color>
-    <color name="search_hot_label" >#959595</color>
-    <color name="do_search_change_batch" >#393939</color>
-    <color name="bg_seach_hot_label" >#EDEDED</color>
-    <color name="bg_splash" >#fdfdfe</color>
+    <color name="theme_color">#0091fa</color>
+    <color name="do_search_not_do">#c3c3c3</color>
+    <color name="do_search_can_do">@color/white</color>
+    <color name="search_hot_label">#959595</color>
+    <color name="do_search_change_batch">#393939</color>
+    <color name="bg_seach_hot_label">#EDEDED</color>
+    <color name="bg_splash">#fdfdfe</color>
 
     //feed 流
-    <color name="title_user_had_read" >#aaaaaa</color>
-    <color name="title_user_not_read" >@color/color2</color>
+    <color name="title_user_had_read">#aaaaaa</color>
+    <color name="title_user_not_read">@color/color2</color>
 
-    <color name="news_comment_line1" >#FE6946</color>
-    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
-    <color name="detail_share_frame" >#ffdcdcdc</color>
-    <color name="attention_lineColor" >#ffb3b3b3</color>
-    <color name="search_lineBlue" >#ffb3b3b3</color>
-    <color name="search_lineBlack" >#e0e0e0</color>
-    <color name="search_lineDark" >#1d1e20</color>
-    <color name="search_lineHistoryLine" >#ffe9e9e9</color>
-    <color name="attention_text" >#ffdc4526</color>
-    <color name="attention_line" >#ffe8e8e7</color>
-    <color name="attention_detali_dialog_text" >#ff181919</color>
-    <color name="unattention_line_color" >#ffc0c0c0</color>
-    <color name="attention_line_color" >#ffe71f19</color>
-    <color name="newsFeed_titleColor" >#ff111111</color>
-    <color name="newsFeed_titleColor_night" >#969696</color>
-    <color name="newsFeed_titleColorBig" >@color/white</color>
-    <color name="newsFeed_titleColorBig_night" >#969696</color>
+    <color name="news_comment_line1">#FE6946</color>
+    <color name="detail_share_TopTitleColor">#ff4b515e</color>
+    <color name="detail_share_frame">#ffdcdcdc</color>
+    <color name="attention_lineColor">#ffb3b3b3</color>
+    <color name="search_lineBlue">#ffb3b3b3</color>
+    <color name="search_lineBlack">#e0e0e0</color>
+    <color name="search_lineDark">#1d1e20</color>
+    <color name="search_lineHistoryLine">#ffe9e9e9</color>
+    <color name="attention_text">#ffdc4526</color>
+    <color name="attention_line">#ffe8e8e7</color>
+    <color name="attention_detali_dialog_text">#ff181919</color>
+    <color name="unattention_line_color">#ffc0c0c0</color>
+    <color name="attention_line_color">#ffe71f19</color>
+    <color name="newsFeed_titleColor">#ff111111</color>
+    <color name="newsFeed_titleColor_night">#969696</color>
+    <color name="newsFeed_titleColorBig">@color/white</color>
+    <color name="newsFeed_titleColorBig_night">#969696</color>
     <color name="channeltabstrip_bg">#f8f8f8</color>
     <color name="channeltabstrip_bg_night">#202124</color>
     <color name="channeltabstrip_divider">#f0f0f0</color>
     <color name="news_source_bg" >#f8f8f8</color>
+    <color name="news_source_bg_night" >#f8f8f8</color>
     <color name="newsfeed_red" >#fff83b3b</color>
-    <color name="news_type_color1" >#ff7d68</color>
-    <color name="news_type_color2" >#b3e0ff</color>
-    <color name="news_type_color3" >#dddddd</color>
-    <color name="news_type_color4" >#fac535</color>
+    <color name="news_type_color1" >#300091fa</color>
+    <color name="news_type_color1_night" >#301168a7</color>
+    <color name="news_type_color2" >#30ff4c4c</color>
+    <color name="news_type_color2_night" >#30d13b3b</color>
+    <color name="news_type_color3" >#30fda062</color>
+    <color name="news_type_color3_night" >#30985f3a</color>
+    <color name="news_type_color4" >#30999999</color>
+    <color name="news_type_color4_night" >#30646464</color>
     <color name="news_type_color5" >#ff8d9b</color>
     <color name="news_type_color6" >#fab37f</color>
     <color name="news_type_color7" >#97bcf8</color>

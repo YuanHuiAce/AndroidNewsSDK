@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/carefulLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:background="@drawable/carefor_bg"
+        android:gravity="center"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp">
+
+        <ImageView
+            android:id="@+id/careful_Image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/carefor_image" />
+
+        <TextView
+            android:id="@+id/careful_Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="将推荐更多此类文章"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

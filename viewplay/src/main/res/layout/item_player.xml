@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#191919"
+    android:orientation="horizontal"
+    android:padding="8dp">
+    <RelativeLayout
+        android:layout_width="82dp"
+        android:layout_height="54dp">
+        <ImageView
+            android:id="@+id/iv_img_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            />
+        <TextView
+            android:id="@+id/tv_next_playing"
+            android:layout_width="57dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="即将播放"
+            android:textSize="12sp"
+            android:background="#60000000"
+            android:textColor="@color/Grey_50"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:text="美元跌破100关口 人民币反攻契机来了"
+        android:textColor="@color/Grey_50"
+        android:textSize="14sp" />
+
+
+</LinearLayout>

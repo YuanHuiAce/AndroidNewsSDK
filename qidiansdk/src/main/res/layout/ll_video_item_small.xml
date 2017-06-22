@@ -19,7 +19,8 @@
         android:layout_alignBottom="@+id/title_img_View"
         android:layout_alignLeft="@+id/title_img_View"
         android:layout_alignRight="@+id/title_img_View"
-        android:background="#30000000">
+        android:background="@drawable/bg_relate_black"
+       >
 
         <TextView
             android:id="@+id/tv_video_duration"
@@ -27,8 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:drawableLeft="@drawable/video_play_small"
-            android:drawablePadding="4dp"
-            android:paddingRight="6dp"
+            android:drawablePadding="3dp"
+            android:layout_marginBottom="2dp"
+            android:paddingRight="3dp"
             android:textColor="@color/white"
             android:textSize="10sp" />
     </RelativeLayout>

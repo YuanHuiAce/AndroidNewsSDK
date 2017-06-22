@@ -3,49 +3,98 @@
     android:id="@+id/detail_shared_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_detail"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/detail_video_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
         android:layout_marginLeft="15dip"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="12dp"
-        android:textColor="#333333"
-        android:textSize="17sp" />
+        android:layout_marginTop="16dp"
+        android:textSize="@dimen/font3" />
+
     <RelativeLayout
         android:id="@+id/detail_container_onlines"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="12dp"
         android:visibility="gone"
         >
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/tv_detail_tag"
+
+        <LinearLayout
+            android:id="@+id/rl_tag_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
-            android:lines="1"
-            android:gravity="center_vertical"
-            android:background="@drawable/tag_video_shape"
-            android:textColor="#837c78"
-            android:textSize="12sp"
-            />
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp">
+
+            <com.news.sdk.widget.TextViewExtend
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tag_video_shape"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="生活"
+                android:textColor="#837c78"
+                android:textSize="12sp" />
+
+            <com.news.sdk.widget.TextViewExtend
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/tag_video_shape"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="人民名义"
+                android:textColor="#837c78"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_detail_onlines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_detail_tag"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="15万次播放"
             android:textColor="#9a9a9a"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="30dp"
-            android:textSize="11sp"
-            />
+            android:textSize="11sp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_tag_container"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_detail_video_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_agree_detail_video_normal"
+                android:drawablePadding="5dp"
+                android:textSize="@dimen/font7"
+                android:textColor="@color/color3"
+                android:text="3" />
+
+            <TextView
+                android:id="@+id/tv_detail_video_against"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_detail_video_against_normal"
+                android:drawablePadding="5dp"
+                android:layout_marginLeft="18dp"
+                android:textSize="@dimen/font7"
+                android:textColor="@color/color3"
+                android:text="3" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -55,7 +104,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp">
+        android:paddingRight="18dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/detail_shared_PraiseLayout"
@@ -66,9 +116,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:visibility="gone"
-            >
+            android:paddingRight="14dp">
 
             <ImageView
                 android:id="@+id/detail_shared_AttentionImage"
@@ -95,8 +143,7 @@
             android:orientation="horizontal"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -124,7 +171,9 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
-    <include layout="@layout/detail_attention_item" />
+    <include
+        layout="@layout/detail_attention_item"
+       />
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
@@ -132,7 +181,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-       >
+        android:layout_marginTop="30dp"
+        android:visibility="gone">
 
         <!--<ImageView-->
         <!--android:id="@+id/detail_point"-->

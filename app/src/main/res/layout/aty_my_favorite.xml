@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/mFavoriteTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/mFavoriteLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:padding="14dp"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/mFavoriteTitle"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:text="收藏"
+            android:textSize="@dimen/font3" />
+
+        <TextView
+            android:id="@+id/mFavoriteRightManage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="管理"
+            android:textSize="@dimen/font5" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mFavoriteTopLayout" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/aty_myFavorite_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mHeaderDivider"
+        android:animationCache="false"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/listview_scrollbar"
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/nor_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableTop="@mipmap/ic_comment_building"
+        android:gravity="center"
+        android:text="暂无收藏内容"
+        android:textSize="@dimen/font3" />
+
+    <LinearLayout
+        android:id="@+id/aty_myFavorite_Deletelayout"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_alignParentBottom="true"
+        android:background="#eb5e41"
+        android:clickable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/favorite_delete" />
+
+        <TextView
+            android:id="@+id/aty_myFavorite_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font3" />
+    </LinearLayout>
+
+    <include layout="@layout/qd_loading_view_anim" />
+
+    <RelativeLayout
+        android:id="@+id/mHomeRetry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/mRetryIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_news_detail_reload" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="点击屏幕，重新加载"
+                android:textColor="@color/no_net"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

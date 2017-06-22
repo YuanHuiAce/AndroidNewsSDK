@@ -1,2 +1,3 @@
-include ':app', ':qidiansdk','viewplay'
-include ':app', ':sharesdk_mainlib'
+include ':app', ':qidiansdk', 'viewplay'
+include 'PushSDK'
+include ':shareSDK'

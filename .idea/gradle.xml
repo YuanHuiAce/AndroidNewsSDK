@@ -8,9 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/PushSDK" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/qidiansdk" />
-            <option value="$PROJECT_DIR$/sharesdk_mainlib" />
+            <option value="$PROJECT_DIR$/shareSDK" />
             <option value="$PROJECT_DIR$/viewplay" />
           </set>
         </option>

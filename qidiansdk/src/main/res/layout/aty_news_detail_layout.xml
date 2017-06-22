@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mDetailWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/mDetailHeader"
@@ -14,23 +13,18 @@
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
             android:padding="14dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_left_back" />
+            android:scaleType="centerInside" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/mDetailRightMore"-->
-        <!--android:layout_width="48dp"-->
-        <!--android:layout_height="48dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:drawableRight="@drawable/btn_detail_right_more"-->
-        <!--android:background="@drawable/bg_left_back_selector"-->
-        <!--android:clickable="true"-->
-        <!--android:paddingRight="15dp"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
+        <ImageView
+            android:id="@+id/mDetailRightMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:scaleType="centerInside" />
 
     </RelativeLayout>
 
@@ -38,22 +32,22 @@
         android:id="@+id/mHeaderDivider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/mDetailHeader"
-        android:background="@color/new_color5" />
+        android:layout_below="@id/mDetailHeader" />
 
-    <android.support.v4.view.ViewPager
+    <!--<android.support.v4.view.ViewPager-->
+    <com.news.sdk.widget.SwipeBackViewpager
         android:id="@+id/mNewsDetailViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mDetailBottomBanner"
-        android:layout_below="@id/mHeaderDivider" />
+        android:layout_below="@+id/mHeaderDivider" />
 
     <RelativeLayout
         android:id="@+id/mImageWallWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mDetailBottomBanner"
-        android:layout_below="@id/mDetailHeader"
+        android:layout_below="@+id/mDetailHeader"
         android:background="@color/black"
         android:visibility="gone">
 
@@ -78,23 +72,19 @@
             android:paddingRight="12dp"
             android:paddingTop="6dp"
             android:scrollbars="vertical"
-            android:text="sssss"
-            android:textColor="@color/color7"
             android:textSize="@dimen/font4" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/mDetailBottomBanner"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/bg_home_login_header"
-        android:visibility="gone">
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true">
 
         <View
+            android:id="@+id/mBottomLine"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#e4e4e4" />
+            android:layout_height="1px" />
 
         <ImageView
             android:id="@+id/mDetailFavorite"
@@ -103,9 +93,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/mDetailShare"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_favorite_normal"
-            android:visibility="gone" />
+            android:scaleType="centerInside" />
 
         <ImageView
             android:id="@+id/mDetailShare"
@@ -115,8 +103,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
             android:contentDescription="分享"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_share" />
+            android:scaleType="centerInside" />
 
         <FrameLayout
             android:id="@+id/mDetailComment"
@@ -131,8 +118,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="评论"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_no_comment" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/mDetailCommentNum"
@@ -140,12 +126,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
                 android:layout_marginTop="2dp"
-                android:background="@color/bg_detail"
                 android:gravity="center"
-                android:textColor="@color/new_color2"
-                android:textSize="10sp"
-                android:visibility="gone" />
-            <!--android:background="@drawable/bg_news_detail_commit_num"-->
+                android:textSize="@dimen/font6" />
         </FrameLayout>
 
         <TextView
@@ -156,13 +138,11 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/mDetailComment"
-            android:background="@drawable/user_add_comment"
             android:paddingBottom="4dp"
             android:paddingLeft="10dp"
             android:paddingTop="4dp"
-            android:text="我来说俩句..."
-            android:textColor="@color/user_add_comment_color"
-            android:textSize="14sp" />
+            android:text="说一下..."
+            android:textSize="@dimen/font6" />
     </RelativeLayout>
 
 
@@ -174,7 +154,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mHeaderDivider"
-        android:background="@color/white"
         android:visibility="visible">
 
         <ImageView
@@ -206,6 +185,6 @@
         android:background="#88000000"
         android:visibility="gone" />
 
-    <include layout="@layout/detail_carefor_layout" />
+    <include layout="@layout/detail_careful_layout" />
 
 </RelativeLayout>

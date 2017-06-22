@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/comment_item_comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="13dp"
+        android:textSize="@dimen/font3" />
+
+    <TextView
+        android:id="@+id/original"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_below="@+id/comment_item_comment_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableRight="@mipmap/notationdetails_icn_more"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="@dimen/font3" />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/original"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:id="@+id/pub_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="9dp"
+            android:textSize="@dimen/font5" />
+
+        <ImageButton
+            android:id="@+id/love_imagebt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="11dp"
+            android:background="#00000000"
+            android:src="@mipmap/list_icon_gif_nor_icon_heart_nor" />
+
+        <TextView
+            android:id="@+id/love_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/del_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:src="@drawable/user_detail_record_del_icon_selector" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0.56dp"
+        android:layout_below="@+id/layout" />
+</RelativeLayout>

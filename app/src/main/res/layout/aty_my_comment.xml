@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/mCommentTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/mCommentLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:padding="14dp"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:id="@+id/mCommentUserName"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="评论"
+            android:lines="1"
+            android:textSize="@dimen/font3" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/mHeaderDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/mCommentTopLayout" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/myCommentListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mHeaderDivider"
+        android:dividerHeight="0dp" />
+
+    <TextView
+        android:id="@+id/nor_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mHeaderDivider"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:drawableTop="@mipmap/comment_nor_icon"
+        android:gravity="center"
+        android:text="高冷的ta\n还没有发表过任何评论"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/font3" />
+
+    <include layout="@layout/qd_loading_view_anim" />
+
+    <RelativeLayout
+        android:id="@+id/mHomeRetry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/mRetryIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_news_detail_reload" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="点击屏幕，重新加载"
+                android:textColor="@color/no_net"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

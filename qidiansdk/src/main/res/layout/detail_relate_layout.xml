@@ -3,7 +3,6 @@
     android:id="@+id/detail_shared_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_detail"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -67,39 +66,21 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/detail_shared_Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:text="关心本文，会推荐更多类似的内容"
-        android:textColor="@color/color3"
-        android:textSize="@dimen/font5"
-        android:visibility="gone" />
+    <include layout="@layout/detail_attention_item" />
 
     <include
-        layout="@layout/detail_attention_item"
-        android:visibility="gone" />
-
-    <RelativeLayout
+        android:id="@+id/adLayout"
+        layout="@layout/ll_ad_item_big"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_detail">
-
-        <include
-            android:id="@+id/adLayout"
-            layout="@layout/ll_ad_item_big"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="22dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp" />
-    </RelativeLayout>
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
 
     <RelativeLayout
         android:id="@+id/detail_Hot_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
@@ -108,8 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="热门评论"
-            android:textColor="@color/detail_share_TopTitleColor"
-            android:textSize="@dimen/new_font4" />
+            android:textSize="@dimen/font6" />
 
         <View
             android:id="@+id/detail_shared_hotComment_Line1"
@@ -117,8 +97,7 @@
             android:layout_height="1dp"
             android:layout_alignRight="@id/detail_hotComment"
             android:layout_below="@id/detail_hotComment"
-            android:layout_marginTop="6dp"
-            android:background="@color/new_color2" />
+            android:layout_marginTop="6dp" />
 
         <View
             android:id="@+id/detail_shared_hotComment_Line2"
@@ -126,8 +105,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/detail_hotComment"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/detail_shared_hotComment_Line1"
-            android:background="@color/new_color4" />
+            android:layout_toRightOf="@id/detail_shared_hotComment_Line1" />
     </RelativeLayout>
 
     <LinearLayout
@@ -137,64 +115,36 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical" />
 
-    <RelativeLayout
+    <TextView
         android:id="@+id/detail_shared_MoreComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="17dp"
         android:background="@drawable/bg_select_comment_more"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:text="查看全部评论"
-                android:textColor="@color/new_color2"
-                android:textSize="@dimen/font4" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:paddingTop="1dp"
-                android:src="@drawable/ic_detail_view_all_comment" />
-        </LinearLayout>
-    </RelativeLayout>
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="查看全部评论>"
+        android:textSize="@dimen/font5"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="17dp"
         android:layout_marginRight="16dp"
         android:visibility="gone">
-
-        <!--<ImageView-->
-        <!--android:id="@+id/detail_point"-->
-        <!--android:layout_width="20dp"-->
-        <!--android:layout_height="20dp"-->
-        <!--android:layout_marginTop="14dp"-->
-        <!--android:background="@drawable/ic_detail_point" />-->
 
         <TextView
             android:id="@+id/detail_ViewPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="相关推荐"
-            android:textColor="@color/detail_share_TopTitleColor"
-            android:textSize="@dimen/new_font4" />
+            android:textSize="@dimen/font6" />
 
         <View
             android:id="@+id/detail_ViewPoint_Line1"
@@ -202,8 +152,7 @@
             android:layout_height="1dp"
             android:layout_alignRight="@id/detail_ViewPoint"
             android:layout_below="@id/detail_ViewPoint"
-            android:layout_marginTop="6dp"
-            android:background="@color/new_color2" />
+            android:layout_marginTop="6dp" />
 
         <View
             android:id="@+id/detail_ViewPoint_Line2"
@@ -211,8 +160,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/detail_ViewPoint"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/detail_ViewPoint_Line1"
-            android:background="@color/new_color4" />
+            android:layout_toRightOf="@id/detail_ViewPoint_Line1" />
     </RelativeLayout>
 
 </LinearLayout>
