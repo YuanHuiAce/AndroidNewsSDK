@@ -20,6 +20,8 @@ public class QiDianApplication {
     private static Context mContext;
     private static QiDianApplication mInstance;
     private RequestQueue mRequestQueue;
+    public static int upload;
+    public static int unload;
 //    public static VPlayPlayer vPlayPlayer;
 
     public static void initQDApp(Context context) {

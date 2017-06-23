@@ -167,6 +167,7 @@
     <color name="new_create_wall_radius_gray">#d0d0d0</color>
     <color name="new_tip_bg">#ceefff</color>
     <color name="new_tip_text">#8b9093</color>
+    <color name="good">#e94221</color>
 
 
     <color name="radio_button_selected_color">#d6b400</color>

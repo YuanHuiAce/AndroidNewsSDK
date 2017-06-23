@@ -3,7 +3,6 @@ package com.news.sdk.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by fengjigang on 16/3/30.
@@ -44,6 +43,7 @@ public class NewsDetail implements Serializable {
     private String title;
 
     private int channel;
+    //标签
     private ArrayList<String> tags;
     private ArrayList<HashMap<String, String>> content;
 
@@ -71,7 +71,65 @@ public class NewsDetail implements Serializable {
      * 背景图片
      */
     private String thumbnail;
+    /**
+     * 播放次数
+     */
+    private int clicktimes;
+    /**
+     * 点赞数
+     */
+    private int commendup;
+    /**
+     * 踩数
+     */
+    private int commenddown;
+    /**
+     * 该用户对于新闻的态度
+     */
+    private int commendtype;
 
+
+    public int getClicktimes() {
+        return clicktimes;
+    }
+
+    public String getClicktimesStr() {
+        if (clicktimes == 0) {
+            return "";
+        } else if (clicktimes / 10000 == 0) {
+            return  clicktimes + "次播放";
+        } else {
+            return clicktimes / 10000 + "万次播放";
+        }
+    }
+
+    public void setClicktimes(int clicktimes) {
+        this.clicktimes = clicktimes;
+    }
+
+    public int getCommendup() {
+        return commendup;
+    }
+
+    public void setCommendup(int commendup) {
+        this.commendup = commendup;
+    }
+
+    public int getCommenddown() {
+        return commenddown;
+    }
+
+    public void setCommenddown(int commenddown) {
+        this.commenddown = commenddown;
+    }
+
+    public int getCommendtype() {
+        return commendtype;
+    }
+
+    public void setCommendtype(int commendtype) {
+        this.commendtype = commendtype;
+    }
 
     public String getVideourl() {
         return videourl;
@@ -209,7 +267,7 @@ public class NewsDetail implements Serializable {
         this.channel = channel;
     }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 

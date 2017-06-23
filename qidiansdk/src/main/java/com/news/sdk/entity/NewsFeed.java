@@ -234,7 +234,7 @@ public class NewsFeed implements Serializable {
     public String getClicktimesStr() {
         if (clicktimes == 0) {
             return "";
-        } else if (clicktimes % 10000 == 0) {
+        } else if (clicktimes / 10000 == 0) {
             return "/" + clicktimes + "次播放";
         } else {
             return "/" + clicktimes / 10000 + "万次播放";

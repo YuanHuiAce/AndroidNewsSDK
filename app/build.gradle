@@ -100,11 +100,11 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support:design:25.0.0'
 //
-//    compile project(':qidiansdk')
-//    compile project(':PushSDK')
-//    compile project(':shareSDK')
-    compile(name: 'PushSDK-debug', ext: 'aar')
-    compile(name: 'qidiansdk-debug', ext: 'aar')
-    compile(name: 'shareSDK-debug', ext: 'aar')
-    compile(name: 'viewplay-debug', ext: 'aar')
+    compile project(':qidiansdk')
+    compile project(':PushSDK')
+    compile project(':shareSDK')
+//    compile(name: 'PushSDK-debug', ext: 'aar')
+//    compile(name: 'qidiansdk-debug', ext: 'aar')
+//    compile(name: 'shareSDK-debug', ext: 'aar')
+//    compile(name: 'viewplay-debug', ext: 'aar')
 }
