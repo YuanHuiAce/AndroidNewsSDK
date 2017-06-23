@@ -380,16 +380,14 @@ public class MainView extends View implements View.OnClickListener, NewsFeedFgt.
         }.getType(), HttpConstant.URL_VIDEO_CHANNEL_LIST + params, new Response.Listener<ArrayList<VideoChannel>>() {
             @Override
             public void onResponse(final ArrayList<VideoChannel> response) {
-                Logger.v(TAG, response.toString());
-                if (response != null && response.size() != 0) {
+                if (!TextUtil.isListEmpty(response)) {
                     videoChannelDao.deletaForAll();
                     for (VideoChannel channel : response) {
                         videoChannelDao.insert(channel);
                     }
                 }
             }
-        },
-                new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Logger.v(TAG, error.toString());

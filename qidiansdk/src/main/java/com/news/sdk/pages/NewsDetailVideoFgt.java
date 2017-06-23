@@ -193,6 +193,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private LinearLayout mTagContainer;
     private int commendtype;
     private GoodView goodView;
+    private ImageView mTitleOff;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -383,6 +384,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 
     private static final long MIN_CLICK_INTERVAL = 2000;
     private long mLastClickTime;
+    private boolean isShow;
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
@@ -402,7 +404,27 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
         goodView = new GoodView(getContext());
+        mTitleOff = (ImageView) mCommentTitleView.findViewById(R.id.ib_title_onff);
         //点赞处理逻辑
+        mTitleOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isShow) {
+                    mDetailVideoTitle.setMaxLines(Integer.MAX_VALUE);
+                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+                    mDetailVideoTitle.requestLayout();
+                    mTitleOff.requestLayout();
+                }else
+                {
+                    mDetailVideoTitle.setMaxLines(2);
+                    mDetailVideoTitle.requestLayout();
+                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+                    mTitleOff.requestLayout();
+                }
+                isShow=!isShow;
+
+            }
+        });
         mTagContainer = (LinearLayout) mCommentTitleView.findViewById(R.id.rl_tag_container);
         mDetailOnlines = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_onlines);
         mDetailAgree = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_agree);
