@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.webkit.WebSettings;
 
@@ -44,6 +45,7 @@ import java.util.Map;
 
 public class AdUtil {
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static String getAdMessage(Context mContext, String Aid) {
         if (mContext != null) {
             Gson gson = new Gson();
@@ -66,6 +68,7 @@ public class AdUtil {
             adDeviceEntity.setMac1(TextUtil.isEmptyString(mac) ? null : DeviceInfoUtil.generateMD5(mac));
             /** 设置AndroidID */
             String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.i("aaa", "androidId ============== "+androidId);
             adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
             adDeviceEntity.setAnidori(TextUtil.isEmptyString(androidId) ? null : androidId);
             /** 设置设备品牌 */
@@ -330,23 +333,29 @@ public class AdUtil {
                                 if (!TextUtil.isEmptyString(lat)) {
                                     url = url + "&lat=" + lat + "&lon=" + lon;
                                 }
-                                String first = url.split("s=")[0];
+
+                                String first = url.split("&s=")[0];
                                 String end = url.split("&s=")[1];
                                 end = URLDecoder.decode(end);
-                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + (int)downX).replace("\"down_y\":-999", "\"down_y\":" + (int)downY).replace("\"up_x\":-999", "\"up_x\":" + (int)upX).replace("\"up_y\":-999", "\"up_y\":" + (int)upY);
                                 end = URLEncoder.encode(end);
-                                AdIntent.putExtra("key_url", first + end);
-                                Log.i("tag", "event===1" + first + end);
+                                AdIntent.putExtra("key_url", first + "&s=" + end);
+
                                 context.startActivity(AdIntent);
                             } else {
+
+
+
                                 String url = event.getEventValue();
                                 url = url.replace("acttype=&", "acttype=1&");
-                                String first = url.split("s=")[0];
+
+                                String first = url.split("&s=")[0];
                                 String end = url.split("&s=")[1];
                                 end = URLDecoder.decode(end);
-                                end = end.replace("\"down_x\":-999", "\"down_x\":" + downX).replace("\"down_y\":-999", "\"down_y\":" + downY).replace("\"up_x\":-999", "\"up_x\":" + upX).replace("\"up_y\":-999", "\"up_y\":" + upY);
+                                end = end.replace("\"down_x\":-999", "\"down_x\":" + (int)downX).replace("\"down_y\":-999", "\"down_y\":" +(int) downY).replace("\"up_x\":-999", "\"up_x\":" + (int)upX).replace("\"up_y\":-999", "\"up_y\":" + (int)upY);
                                 end = URLEncoder.encode(end);
-                                url = first + end;
+                                url = first + "&s=" + end;
+
                                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
                                     @Override
