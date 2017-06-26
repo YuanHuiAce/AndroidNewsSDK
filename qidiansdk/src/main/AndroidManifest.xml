@@ -27,6 +27,15 @@
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
+            android:name=".pages.NegativeScreenNewsDetailAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name=".pages.NegativeScreenNewsTopicAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme" />
+        <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

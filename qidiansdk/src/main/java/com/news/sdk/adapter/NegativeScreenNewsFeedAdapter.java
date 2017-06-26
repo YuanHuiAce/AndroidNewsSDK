@@ -32,7 +32,8 @@ import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.AttentionListEntity;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.pages.AttentionActivity;
-import com.news.sdk.pages.NewsDetailAty2;
+import com.news.sdk.pages.NegativeScreenNewsDetailAty;
+import com.news.sdk.pages.NegativeScreenNewsTopicAty;
 import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.pages.NewsTopicAty;
@@ -856,7 +857,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
-                    Intent intent = new Intent(mContext, NewsTopicAty.class);
+                    Intent intent = new Intent(mContext, NegativeScreenNewsTopicAty.class);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                     intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -869,7 +870,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                    Intent intent = new Intent(mContext, NegativeScreenNewsDetailAty.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
                     ArrayList<String> imageList = feed.getImgs();
