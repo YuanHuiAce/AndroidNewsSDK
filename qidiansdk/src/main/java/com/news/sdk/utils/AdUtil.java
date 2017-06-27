@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.webkit.WebSettings;
 
@@ -45,7 +44,6 @@ import java.util.Map;
 
 public class AdUtil {
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static String getAdMessage(Context mContext, String Aid) {
         if (mContext != null) {
             Gson gson = new Gson();
@@ -54,7 +52,6 @@ public class AdUtil {
             /** 单图91  三图164 */
 //            adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
 //            adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
-
             AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
             /** 设置IMEI */
             String imei = DeviceInfoUtil.getDeviceImei(mContext);
@@ -333,29 +330,22 @@ public class AdUtil {
                                 if (!TextUtil.isEmptyString(lat)) {
                                     url = url + "&lat=" + lat + "&lon=" + lon;
                                 }
-
                                 String first = url.split("&s=")[0];
                                 String end = url.split("&s=")[1];
                                 end = URLDecoder.decode(end);
                                 end = end.replace("\"down_x\":-999", "\"down_x\":" + (int)downX).replace("\"down_y\":-999", "\"down_y\":" + (int)downY).replace("\"up_x\":-999", "\"up_x\":" + (int)upX).replace("\"up_y\":-999", "\"up_y\":" + (int)upY);
                                 end = URLEncoder.encode(end);
                                 AdIntent.putExtra("key_url", first + "&s=" + end);
-
                                 context.startActivity(AdIntent);
                             } else {
-
-
-
                                 String url = event.getEventValue();
                                 url = url.replace("acttype=&", "acttype=1&");
-
                                 String first = url.split("&s=")[0];
                                 String end = url.split("&s=")[1];
                                 end = URLDecoder.decode(end);
                                 end = end.replace("\"down_x\":-999", "\"down_x\":" + (int)downX).replace("\"down_y\":-999", "\"down_y\":" +(int) downY).replace("\"up_x\":-999", "\"up_x\":" + (int)upX).replace("\"up_y\":-999", "\"up_y\":" + (int)upY);
                                 end = URLEncoder.encode(end);
                                 url = first + "&s=" + end;
-
                                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
                                     @Override

@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -55,7 +57,6 @@ import com.news.sdk.javascript.VideoJavaScriptBridge;
 import com.news.sdk.net.volley.NewsDetailADRequestPost;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.net.volley.RelatePointRequestPost;
-import com.news.sdk.pages.NegativeScreenNewsDetailAty;
 import com.news.sdk.pages.NewsDetailFgt;
 import com.news.sdk.pages.NewsDetailWebviewAty;
 import com.news.sdk.pages.RelevantViewWebviewAty;
@@ -140,6 +141,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     private RequestManager mRequestManager;
     private int mScreenWidth, mScreenHeight;
     private TextViewExtend adtvTitle, adtvType;
@@ -167,6 +169,8 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     }
 
     protected void initializeViews() {
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
         mRequestManager = Glide.with(mContext);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
@@ -320,6 +324,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         });
         mAdapter = new NegativeScreenNewsDetailFgtAdapter(mContext, null);
         mNewsDetailList.setAdapter(mAdapter);
+        mAdapter.setRootView(mRootView);
         addHeadView();
         setTheme();
     }
@@ -391,7 +396,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mDetailWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((NegativeScreenNewsDetailAty) mContext), "VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((Activity) mContext), "VideoJavaScriptBridge");
         //梁帅：判断图片是不是  不显示
         mDetailWebView.setWebViewClient(new WebViewClient() {
 
@@ -482,18 +487,20 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         footView_tv.setVisibility(View.VISIBLE);
     }
 
-    public void setNewsFeed(NewsFeed newsFeed) {
+    public void setNewsFeed(NewsFeed newsFeed, String source) {
         mNewsFeed = newsFeed;
+        mSource = source;
         if (mNewsFeed != null) {
             mNid = mNewsFeed.getNid() + "";
             loadData();
         }
     }
 
-    public void setData(String newID, String docId, String title) {
+    public void setData(String newID, String docId, String title, String source) {
         mNid = newID;
         mDocid = docId;
         mTitle = title;
+        mSource = source;
         loadData();
     }
 
@@ -732,7 +739,29 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.mDetailLeftBack) {
-            ((Activity) mContext).finish();
+            if (mAlphaAnimationOut != null) {
+                mRootView.startAnimation(mAlphaAnimationOut);
+                mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mRootView.setVisibility(GONE);
+                        destroy();
+                        mRootView.removeAllViews();
+                        mRootView.destroyDrawingCache();
+                        mRootView = null;
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
         } else if (view.getId() == R.id.mNewsDetailLoaddingWrapper) {
             loadData();
         }

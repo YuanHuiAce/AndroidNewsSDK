@@ -48,8 +48,6 @@ import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
-import static com.news.sdk.common.CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
-
 
 public class NegativeScreenActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     NegativeScreenNewsFeedView mainView;
@@ -66,13 +64,13 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         //展示广点通sdk
         SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         setContentView(R.layout.activity_main);
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(44);
+        mainView.setChannelId(1);
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();
@@ -106,6 +104,11 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.destroyView();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mainView.removeView();
     }
 
     private void uploadInformation() {

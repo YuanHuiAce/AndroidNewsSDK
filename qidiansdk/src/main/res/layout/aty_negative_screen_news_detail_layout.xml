@@ -79,7 +79,6 @@
             android:textSize="14sp" />
 
     </RelativeLayout>
-
     <!--需要占位不显示-->
     <ImageView
         android:id="@+id/share_bg_imageView"

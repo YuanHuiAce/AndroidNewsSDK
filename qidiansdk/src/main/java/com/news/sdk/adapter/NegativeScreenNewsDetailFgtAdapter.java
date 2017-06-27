@@ -21,7 +21,6 @@ import com.news.sdk.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.sdk.adapter.abslistview.MultiItemTypeSupport;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.entity.RelatedItemEntity;
-import com.news.sdk.pages.NegativeScreenNewsDetailAty;
 import com.news.sdk.pages.NewsDetailFgt;
 import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.utils.AdUtil;
@@ -30,6 +29,7 @@ import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
+import com.news.sdk.widget.NegativeScreenNewsDetailView;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -50,6 +50,7 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
     private int mScreenWidth;
     private SharedPreferences mSharedPreferences;
     private RequestManager mRequestManager;
+    private RelativeLayout mRootView;
 
     public NegativeScreenNewsDetailFgtAdapter(Context context, ArrayList<RelatedItemEntity> datas) {
         super(context, datas, new MultiItemTypeSupport<RelatedItemEntity>() {
@@ -96,6 +97,10 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
+    }
+
+    public void setRootView(RelativeLayout rootView) {
+        mRootView = rootView;
     }
 
 
@@ -170,7 +175,7 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
             ImageUtil.setAlphaImage(holder.getView(R.id.title_img_View));
             if (!TextUtil.isEmptyString(relatedItemEntity.getImgUrl())) {
                 mRequestManager.load(Uri.parse(relatedItemEntity.getImgUrl())).placeholder(R.drawable.bg_ad_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
-            }else {
+            } else {
                 mRequestManager.load("").placeholder(R.drawable.bg_ad_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) holder.getView(R.id.title_img_View));
             }
             holder.getView(R.id.icon_source).setVisibility(View.GONE);
@@ -348,12 +353,12 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
                 } else {
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    Intent intent = new Intent(mContext, NegativeScreenNewsDetailAty.class);
-                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
-                    intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    mContext.startActivity(intent);
-                    ((Activity) mContext).finish();
+                    NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    negativeScreenNewsDetailView.setData(relatedItemEntity.getNid() + "", "", "", CommonConstant.LOG_CLICK_RELATE_SOURCE);
                 }
                 if (relatedItemEntity.isRead()) {
                     TextUtil.setTextColor(mContext, tvTitle, R.color.new_color7);

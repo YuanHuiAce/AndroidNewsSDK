@@ -1,15 +1,15 @@
-package com.news.sdk.pages;
+package com.news.sdk.widget;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -32,7 +32,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.sdk.R;
 import com.news.sdk.adapter.abslistview.CommonViewHolder;
 import com.news.sdk.application.QiDianApplication;
-import com.news.sdk.common.BaseActivity;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.HttpConstant;
 import com.news.sdk.common.ThemeManager;
@@ -41,29 +40,24 @@ import com.news.sdk.entity.NewsTopic;
 import com.news.sdk.entity.TopicBaseInfo;
 import com.news.sdk.entity.TopicClass;
 import com.news.sdk.net.volley.NewsTopicRequestGet;
+import com.news.sdk.pages.NewsDetailFgt;
+import com.news.sdk.pages.NewsDetailVideoAty;
+import com.news.sdk.pages.NewsDetailWebviewAty;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
-import com.news.sdk.widget.NewsTopicHeaderView;
-import com.news.sdk.widget.SharePopupWindow;
-import com.news.sdk.widget.TextViewExtend;
-import com.news.sdk.widget.swipebackactivity.SwipeBackLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.news.sdk.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
+public class NegativeScreenNewsTopicView extends View implements ThemeManager.OnThemeChangeListener {
 
-public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
-
-    //滑动关闭当前activity布局
-    private SwipeBackLayout mSwipeBackLayout;
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
-    private RelativeLayout bgLayout;
+    private RelativeLayout mRootView, bgLayout;
     private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
@@ -96,53 +90,42 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
     private RequestManager mRequestManager;
     private int mPager = 1;
 
-    @Override
-    protected boolean translucentStatus() {
-        return false;
+    public NegativeScreenNewsTopicView(Context context) {
+        super(context);
+        mContext = context;
+        initializeViews();
     }
 
-    @Override
-    protected void setContentView() {
-        setContentView(R.layout.aty_news_topic);
-        mContext = this;
+    protected void initializeViews() {
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
-        mRequestManager = Glide.with(this);
-    }
-
-    @Override
-    protected void initializeViews() {
-        mtid = getIntent().getIntExtra(KEY_NID, 0);
-        mSource = getIntent().getStringExtra(CommonConstant.KEY_SOURCE);
-        mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
+        mRequestManager = Glide.with(mContext);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mAdapter = new ExpandableSpecialListViewAdapter(this);
-//        mHandler = new Handler();
-        mDetailView = (RelativeLayout) findViewById(R.id.mDetailWrapper);
-        mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
-        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
-        mTopicHeader = (RelativeLayout) findViewById(R.id.mTopicHeader);
-        mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mHeaderDivider = findViewById(R.id.mHeaderDivider);
-        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
-        textAni = (TextView) findViewById(R.id.textAni);
-        imageAni = (ProgressBar) findViewById(R.id.imageAni);
-        mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
-        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.aty_news_topic, null);
+        mAdapter = new ExpandableSpecialListViewAdapter(mContext);
+        mDetailView = (RelativeLayout) mRootView.findViewById(R.id.mDetailWrapper);
+        mSpecialNewsHeaderView = new NewsTopicHeaderView(mContext);
+        mivShareBg = (ImageView) mRootView.findViewById(R.id.share_bg_imageView);
+        mTopicHeader = (RelativeLayout) mRootView.findViewById(R.id.mTopicHeader);
+        mNewsDetailLoaddingWrapper = mRootView.findViewById(R.id.mNewsDetailLoaddingWrapper);
+        mHeaderDivider = mRootView.findViewById(R.id.mHeaderDivider);
+        bgLayout = (RelativeLayout) mRootView.findViewById(R.id.bgLayout);
+        textAni = (TextView) mRootView.findViewById(R.id.textAni);
+        imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
+        mTopicTitle = (TextView) mRootView.findViewById(R.id.mTopicTitle);
+        mNewsLoadingImg = (ImageView) mRootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadData();
             }
         });
-        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
+        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) mRootView.findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mlvSpecialNewsFeed.setMainFooterView(true);
         mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
@@ -171,27 +154,36 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
             }
         });
 //        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
-        mTopicLeftBack = (ImageView) findViewById(R.id.mTopicLeftBack);
+        mTopicLeftBack = (ImageView) mRootView.findViewById(R.id.mTopicLeftBack);
         mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        mTopicRightMore = (ImageView) findViewById(R.id.mTopicRightMore);
-        mTopicRightMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mUsedNewsFeed != null) {
-                    mivShareBg.startAnimation(mAlphaAnimationIn);
-                    mivShareBg.setVisibility(View.VISIBLE);
-                    mSharePopupWindow = new SharePopupWindow(NegativeScreenNewsTopicAty.this, NegativeScreenNewsTopicAty.this);
-                    mSharePopupWindow.setTopic(true);
-                    mSharePopupWindow.setTitleAndNid(mUsedNewsFeed.getTitle(), mUsedNewsFeed.getNid(), mUsedNewsFeed.getDescr());
-                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                if (mAlphaAnimationOut != null) {
+                    mRootView.startAnimation(mAlphaAnimationOut);
+                    mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            mRootView.setVisibility(GONE);
+                            mRootView.removeAllViews();
+                            mRootView.destroyDrawingCache();
+                            mRootView = null;
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
                 }
             }
         });
+        mTopicRightMore = (ImageView) mRootView.findViewById(R.id.mTopicRightMore);
+        mTopicRightMore.setVisibility(GONE);
         setTheme();
     }
 
@@ -202,10 +194,10 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
         if (mSpecialNewsHeaderView != null && mTopicBaseInfo != null) {
             mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth, mRequestManager);
         }
-        TextUtil.setLayoutBgResource(this, mTopicLeftBack, R.drawable.bg_left_back_selector);
-        TextUtil.setImageResource(this, mTopicLeftBack, R.drawable.btn_left_back);
-        TextUtil.setLayoutBgResource(this, mTopicRightMore, R.drawable.bg_more_selector);
-        TextUtil.setImageResource(this, mTopicRightMore, R.drawable.btn_detail_right_more);
+        TextUtil.setLayoutBgResource(mContext, mTopicLeftBack, R.drawable.bg_left_back_selector);
+        TextUtil.setImageResource(mContext, mTopicLeftBack, R.drawable.btn_left_back);
+        TextUtil.setLayoutBgResource(mContext, mTopicRightMore, R.drawable.bg_more_selector);
+        TextUtil.setImageResource(mContext, mTopicRightMore, R.drawable.btn_detail_right_more);
         TextUtil.setLayoutBgResource(mContext, mDetailView, R.color.color6);
         TextUtil.setLayoutBgResource(mContext, bgLayout, R.color.color6);
         TextUtil.setLayoutBgColor(mContext, mTopicHeader, R.color.color6);
@@ -215,7 +207,17 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
         ImageUtil.setAlphaProgressBar(imageAni);
     }
 
-    @Override
+    public void setData(int tid, NewsFeed feed, String source) {
+        mtid = tid;
+        mUsedNewsFeed = feed;
+        mSource = source;
+        loadData();
+    }
+
+    public View getNewsView() {
+        return this.mRootView;
+    }
+
     protected void loadData() {
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
@@ -234,21 +236,6 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
                     mNewTopic = result;
                     mTopicBaseInfo = mNewTopic.getTopicBaseInfo();
                     mTopicTitle.setText(mTopicBaseInfo.getName());
-//                    NewsFeed feed = new NewsFeed();
-//                    feed.setPtime("2017-05-22 23:22:58");
-//                    feed.setTitle("闺女，咱家的体操冠军梦就交给你了��������#宝宝成长记#");
-//                    feed.setNid(18740404);
-//                    feed.setPname("M小弟和E妹妹的成长记");
-//                    feed.setPurl("http://miaopai.com/show/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6.html");
-//                    feed.setStyle(8);
-//                    feed.setRtype(6);
-//                    feed.setIcon("http://icon-static-images.oss-cn-shanghai.aliyuncs.com/q7_day%403x.png");
-//                    feed.setCollect(0);
-//                    feed.setConcern(0);
-//                    feed.setChannel(44);
-//                    feed.setThumbnail("http://bsyimg3.cdn.krcom.cn/stream/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6_32768.jpg");
-//                    feed.setVideourl("http://gslb.miaopai.com/stream/iOWh5qeMCh1yYh7ekF6FeoNXUJv77IF6.mp4?yx=&refer=weibo_app&Expires=1495429027&ssig=zpPEJniSJy&KID=unistore,video");
-//                    mNewTopic.getTopicClass().get(0).getNewsFeed().add(feed);
                     marrTopicClass.addAll(mNewTopic.getTopicClass());
                     for (int i = 0; i < marrTopicClass.size(); i++) {
                         mExpandableListView.expandGroup(i);
@@ -257,7 +244,7 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
                     mAdapter.setTopicData(marrTopicClass);
                     mAdapter.notifyDataSetChanged();
                     bgLayout.setVisibility(View.GONE);
-                    LogUtil.userClickLog(mUsedNewsFeed, NegativeScreenNewsTopicAty.this, mSource);
+                    LogUtil.userClickLog(mUsedNewsFeed, mContext, mSource);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -276,7 +263,7 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
         } else {
             mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
             mNewsLoadingImg.setVisibility(View.VISIBLE);
-            setRefreshComplete();
+//            setRefreshComplete();
 //            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
 //            if (TextUtil.isListEmpty(newsFeeds)) {
 //                mHomeRetry.setVisibility(View.VISIBLE);
@@ -289,75 +276,6 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
                 bgLayout.setVisibility(View.GONE);
             }
         }
-    }
-
-    private void setRefreshComplete() {
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-////                mlvSpecialNewsFeed.onRefreshComplete();
-////            }
-//        }, 500);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.mLoginWeibo:
-//                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
-//                    return;
-//                }
-//                mFirstClickTime = System.currentTimeMillis();
-//                break;
-//            case R.id.mLoginWeixin:
-//                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
-//                    return;
-//                }
-//                mFirstClickTime = System.currentTimeMillis();
-//                break;
-//            case R.id.mLoginCancel:
-//                this.finish();
-//                break;
-//            case R.id.mLoginSetting:
-//                Intent settingAty = new Intent(this, SettingAty.class);
-//                startActivity(settingAty);
-//                this.finish();
-//                break;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LogUtil.onPageStart(CommonConstant.LOG_PAGE_TOPICPAGE);
-        lastTime = System.currentTimeMillis();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
-//            Intent main = new Intent(this, MainAty.class);
-            Intent main = new Intent();
-            main.setClassName("com.news.yazhidao", "com.news.yazhidao.pages.MainActivity");
-            main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(main);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        LogUtil.onPageEnd(CommonConstant.LOG_PAGE_TOPICPAGE);
-        nowTime = System.currentTimeMillis();
-        //上报日志
-        LogUtil.userReadLog(mUsedNewsFeed, this, lastTime, nowTime, "100%");
-        super.onPause();
-    }
-
-    @Override
-    public void shareDismiss() {
-        mivShareBg.startAnimation(mAlphaAnimationOut);
-        mivShareBg.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -754,21 +672,16 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
                     if (type == 3) {
                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                         AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
-                        startActivity(AdIntent);
+//                        startActivity(AdIntent);
                     } else if (type == 6 || type == 8) {
                         Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                         intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
                         intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
-                        startActivity(intent);
+//                        startActivity(intent);
                     } else {
-                        Intent intent = new Intent(mContext, NegativeScreenNewsDetailAty.class);
-                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                        intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
-                        ArrayList<String> imageList = feed.getImgs();
-                        if (imageList != null && imageList.size() != 0) {
-                            intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
-                        }
-                        startActivity(intent);
+                        NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                        negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
                     }
                 }
             });
@@ -881,4 +794,5 @@ public class NegativeScreenNewsTopicAty extends BaseActivity implements View.OnC
             TextView tvDuration;
         }
     }
+
 }

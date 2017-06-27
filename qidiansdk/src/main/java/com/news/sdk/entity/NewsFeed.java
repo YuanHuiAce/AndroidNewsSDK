@@ -21,14 +21,14 @@ public class NewsFeed implements Serializable {
     public static final int ONE_AND_TWO_PIC = 1;
     public static final int THREE_PIC = 2;
     public static final int TIME_LINE = 3;
-    public static final int SERRCH_ITEM = 4;
-    public static final int TOPIC = 4;
-    public static final int BIG_PIC = 5;
-    public static final int EMPTY = 6;
-    public static final int AD_ONE_PIC = 7;
-    public static final int AD_BIG_PIC = 8;
-    public static final int VIDEO_PLAYER = 9;
-    public static final int VIDEO_SMALL = 10;
+    public static final int SEARCH_ITEM = 4;
+    public static final int TOPIC = 5;
+    public static final int BIG_PIC = 6;
+    public static final int EMPTY = 7;
+    public static final int AD_ONE_PIC = 8;
+    public static final int AD_BIG_PIC = 9;
+    public static final int VIDEO_PLAYER = 10;
+    public static final int VIDEO_SMALL = 11;
 
     public static final String COLUMN_CHANNEL_ID = "channel_id";
     public static final String COLUMN_SCID_ID = "scid";
