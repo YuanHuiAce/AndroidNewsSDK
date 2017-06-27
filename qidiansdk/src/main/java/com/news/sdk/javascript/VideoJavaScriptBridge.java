@@ -1,6 +1,6 @@
 package com.news.sdk.javascript;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
@@ -13,9 +13,9 @@ import com.news.sdk.utils.Logger;
 public class VideoJavaScriptBridge {
 
     public static final String KEY_VIDEO_URL = "KEY_VIDEO_URL";
-    private Activity mContext;
+    private Context mContext;
 
-    public VideoJavaScriptBridge(Activity mContext) {
+    public VideoJavaScriptBridge(Context mContext) {
         this.mContext = mContext;
     }
 

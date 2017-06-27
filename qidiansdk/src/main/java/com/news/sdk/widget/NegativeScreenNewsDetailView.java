@@ -1,6 +1,5 @@
 package com.news.sdk.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -172,6 +171,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
         mRequestManager = Glide.with(mContext);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID, this);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -396,7 +396,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mDetailWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((Activity) mContext), "VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(mContext), "VideoJavaScriptBridge");
         //梁帅：判断图片是不是  不显示
         mDetailWebView.setWebViewClient(new WebViewClient() {
 
