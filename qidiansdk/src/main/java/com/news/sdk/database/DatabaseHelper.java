@@ -130,6 +130,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem(14, "探索", 13, 0));
         mChannels.add(new ChannelItem(36, "自媒体", 14, 0));
         mChannels.add(new ChannelItem(35, "点集", 15, 0));
+        mChannels.add(new ChannelItem(1000,"关注",0,0));
     }
 
     @Override

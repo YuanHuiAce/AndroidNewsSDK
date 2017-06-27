@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -99,6 +100,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+
+import static com.news.sdk.utils.DeviceInfoUtil.getScreenHeight;
 
 
 /**
@@ -194,6 +197,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private int commendtype;
     private GoodView goodView;
     private ImageView mTitleOff;
+    private LinearLayout mTitleContainer;
+    private StringBuilder mTags=new StringBuilder();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -382,7 +387,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         }
     }
 
-    private static final long MIN_CLICK_INTERVAL = 2000;
+    private static final long MIN_CLICK_INTERVAL = 1000;
     private long mLastClickTime;
     private boolean isShow;
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
@@ -405,8 +410,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mDetailVideoTitle.setText(mResult.getTitle());
         goodView = new GoodView(getContext());
         mTitleOff = (ImageView) mCommentTitleView.findViewById(R.id.ib_title_onff);
+        mTitleContainer = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_video_title_container);
         //点赞处理逻辑
-        mTitleOff.setOnClickListener(new View.OnClickListener() {
+        mTitleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isShow) {
@@ -418,7 +424,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 {
                     mDetailVideoTitle.setMaxLines(2);
                     mDetailVideoTitle.requestLayout();
-                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+                    mTitleOff.setImageResource(R.drawable.ic_title_off);
                     mTitleOff.requestLayout();
                 }
                 isShow=!isShow;
@@ -457,11 +463,16 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         if (tags != null && tags.size() != 0) {
             mTagContainer.setVisibility(View.VISIBLE);
             for (String str : tags) {
+                mTags.append(str);
+                if (getCharacterWidth(mTags.toString(),11)> getScreenHeight()*0.6)
+                {
+                    break;
+                }
                 TextViewExtend mTag = new TextViewExtend(getContext());
                 TextUtil.setTextColor(mContext, mTag, R.color.color3);
                 TextUtil.setLayoutBgResource(mContext, mTag, R.drawable.tag_video_shape);
                 mTag.setGravity(Gravity.CENTER_VERTICAL);
-                mTag.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                mTag.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
                 mTag.setMaxLines(1);
                 mTag.setLayoutParams(params);
                 mTag.setText(str);
@@ -677,6 +688,18 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         setTheme();
     }
 
+    public int getCharacterWidth(String text, float size) {
+        if (null == text || "".equals(text)){
+            return 0;
+
+        }
+
+
+        Paint paint = new Paint();
+        paint.setTextSize(size);
+        int text_width = (int) paint.measureText(text);// 得到总体长度
+        return text_width;
+    }
 
     public void upLoadAttribute(int nid, final int atts) {
         if (!NetUtil.checkNetWork(mContext)) {

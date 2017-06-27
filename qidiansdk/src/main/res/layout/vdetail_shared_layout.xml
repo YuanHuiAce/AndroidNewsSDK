@@ -6,10 +6,12 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/detail_video_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="12dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal"
         >
 
@@ -23,13 +25,12 @@
             android:textSize="@dimen/font2"
             />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_title_onff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:background="@null"
@@ -62,7 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:textColor="#9a9a9a"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
 
 
         <LinearLayout

@@ -537,7 +537,6 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mViewPointLayout.findViewById(R.id.relativeLayout_attention);
-        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mViewPointLayout.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mViewPointLayout.findViewById(R.id.tv_attention_title);
         attention_btn = (TextView) mViewPointLayout.findViewById(R.id.attention_btn);
@@ -684,6 +683,12 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.bg_detail_attention);
         ImageUtil.setAlphaImage(iv_attention_icon);
         TextUtil.setTextColor(mContext, tv_attention_title, R.color.color2);
+        ImageUtil.setAlphaView(attention_btn);
+        if (isAttention) {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
+        } else {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
+        }
     }
 
     private void loadData() {
@@ -785,6 +790,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2));
             ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setTextColor(mContext, attention_btn, R.color.white);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
         } else {
             attention_btn.setText("关注");
@@ -793,6 +799,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 13), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 2));
             ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setTextColor(mContext, attention_btn, R.color.white);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
         }
     }
