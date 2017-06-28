@@ -348,30 +348,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         if (detail_layout != null) {
             int totalIndex = detail_layout.getChildCount();
             if (totalIndex > 0) {
-                for (int index = detail_layout.getChildCount(); index >= 0; index--) {
-                    final View view = detail_layout.getChildAt(index);
-                    if (view != null) {
-                        if (mAlphaAnimationOut != null) {
-                            view.startAnimation(mAlphaAnimationOut);
-                            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                    detail_layout.removeView(view);
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-                        }
-                    }
-                }
+                mAdapter.removeDetailView();
             } else {
                 ((Activity) mContext).finish();
             }

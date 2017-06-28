@@ -89,6 +89,8 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     private String mSource;
     private RequestManager mRequestManager;
     private int mPager = 1;
+    private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
+    private boolean isDetailVisibility;
 
     public NegativeScreenNewsTopicView(Context context) {
         super(context);
@@ -158,28 +160,7 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAlphaAnimationOut != null) {
-                    mRootView.startAnimation(mAlphaAnimationOut);
-                    mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            mRootView.setVisibility(GONE);
-                            mRootView.removeAllViews();
-                            mRootView.destroyDrawingCache();
-                            mRootView = null;
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
+                onBackPressed();
             }
         });
         mTopicRightMore = (ImageView) mRootView.findViewById(R.id.mTopicRightMore);
@@ -212,6 +193,42 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mUsedNewsFeed = feed;
         mSource = source;
         loadData();
+    }
+
+    public boolean isDetailVisibility() {
+        return isDetailVisibility;
+    }
+
+    public void onBackPressed() {
+        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null) {
+            negativeScreenNewsDetailView.onBackPressed();
+            negativeScreenNewsDetailView.destroyDrawingCache();
+            negativeScreenNewsDetailView = null;
+            isDetailVisibility = false;
+            return;
+        }
+        if (mAlphaAnimationOut != null && mRootView != null) {
+            mRootView.startAnimation(mAlphaAnimationOut);
+            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mRootView.setVisibility(GONE);
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
+                    mRootView = null;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     public View getNewsView() {
@@ -679,9 +696,12 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                         intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
 //                        startActivity(intent);
                     } else {
-                        NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
-                        negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
+                        if (negativeScreenNewsDetailView == null) {
+                            isDetailVisibility = true;
+                            negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                            mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                            negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
+                        }
                     }
                 }
             });

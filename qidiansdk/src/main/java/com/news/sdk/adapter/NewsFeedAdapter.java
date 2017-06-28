@@ -310,7 +310,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
-            holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
+            if (!TextUtil.isListEmpty(strArrBigImgUrl) && num > 0 && num < strArrBigImgUrl.size()) {
+                holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
+            }
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());

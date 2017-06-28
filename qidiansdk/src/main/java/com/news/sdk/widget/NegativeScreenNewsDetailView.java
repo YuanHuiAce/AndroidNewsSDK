@@ -739,31 +739,35 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.mDetailLeftBack) {
-            if (mAlphaAnimationOut != null) {
-                mRootView.startAnimation(mAlphaAnimationOut);
-                mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mRootView.setVisibility(GONE);
-                        destroy();
-                        mRootView.removeAllViews();
-                        mRootView.destroyDrawingCache();
-                        mRootView = null;
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
+            onBackPressed();
         } else if (view.getId() == R.id.mNewsDetailLoaddingWrapper) {
             loadData();
+        }
+    }
+
+    public void onBackPressed() {
+        if (mAlphaAnimationOut != null && mRootView != null) {
+            mRootView.startAnimation(mAlphaAnimationOut);
+            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mRootView.setVisibility(GONE);
+                    destroy();
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
+                    mRootView = null;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
     }
 

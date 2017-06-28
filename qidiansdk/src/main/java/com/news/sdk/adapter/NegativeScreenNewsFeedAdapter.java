@@ -63,6 +63,8 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     private boolean isNeedShowDisLikeIcon = false;
     private boolean isAttention;
     private RequestManager mRequestManager;
+    private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
+    private NegativeScreenNewsTopicView negativeScreenNewsTopicView;
 
     public NegativeScreenNewsFeedAdapter(Context context, NegativeScreenNewsFeedView view, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -279,7 +281,9 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
-            holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
+            if (!TextUtil.isListEmpty(strArrBigImgUrl) && num > 0 && num < strArrBigImgUrl.size()) {
+                holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
+            }
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
             LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
             holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
@@ -649,6 +653,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         ivCard.setLayoutParams(localLayoutParams);
     }
 
+
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (!TextUtil.isEmptyString(strTitle)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
@@ -714,6 +719,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         TextUtil.setLayoutBgResource(mContext, imageView, R.color.color6);
     }
 
+
     /**
      * item的点击事件
      *
@@ -765,9 +771,11 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
-                    NegativeScreenNewsTopicView negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
-                    mRootView.addView(negativeScreenNewsTopicView.getNewsView());
-                    negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+                    if (negativeScreenNewsTopicView == null) {
+                        negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
+                        mRootView.addView(negativeScreenNewsTopicView.getNewsView());
+                        negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+                    }
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
@@ -776,9 +784,11 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
-                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+                    if (negativeScreenNewsDetailView == null) {
+                        negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                        negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+                    }
                 }
                 if (feed.isRead()) {
                     TextUtil.setTextColor(mContext, tvTitle, R.color.color3);
@@ -863,6 +873,23 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             return;
         }
         tag.setText(content);
+    }
+
+    public void removeDetailView() {
+        if (negativeScreenNewsDetailView != null) {
+            negativeScreenNewsDetailView.onBackPressed();
+            negativeScreenNewsDetailView.destroyDrawingCache();
+            negativeScreenNewsDetailView = null;
+        }
+        if (negativeScreenNewsTopicView != null) {
+            if (negativeScreenNewsTopicView.isDetailVisibility()) {
+                negativeScreenNewsTopicView.onBackPressed();
+            } else {
+                negativeScreenNewsTopicView.onBackPressed();
+                negativeScreenNewsTopicView.destroyDrawingCache();
+                negativeScreenNewsTopicView = null;
+            }
+        }
     }
 
     /**
