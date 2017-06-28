@@ -7,7 +7,8 @@
     <LinearLayout
         android:id="@+id/channel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/channel1"
@@ -31,7 +32,6 @@
         android:id="@+id/news_feed_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/channel"
         android:animationCache="false"
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:clipToPadding="false"
@@ -85,8 +85,12 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <include
         layout="@layout/qd_loading_view_anim"

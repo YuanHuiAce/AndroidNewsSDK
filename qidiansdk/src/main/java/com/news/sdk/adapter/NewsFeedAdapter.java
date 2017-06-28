@@ -132,7 +132,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 900:
                         return NewsFeed.TIME_LINE;
                     case 4://奇点号Item
-                        return NewsFeed.SERRCH_ITEM;
+                        return NewsFeed.SEARCH_ITEM;
                     case 5:
                         return NewsFeed.TOPIC;
                     case 6:
@@ -887,7 +887,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                     mContext.startActivity(intent);
                 } else if (feed.getRtype() == 6) {
-
                     if (onPlayClickListener != null) {
                         if (onPlayClickListener.onItemClick(rlNewsContent, feed)) {
                             setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);

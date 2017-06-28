@@ -249,10 +249,12 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         carefulLayout = (LinearLayout) findViewById(R.id.carefulLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mBottomLine = findViewById(R.id.mBottomLine);
+
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mDetailPlayShow = (ImageView) findViewById(R.id.iv_detail_image_play);
         mTitleBottomLine = findViewById(R.id.title_bottom_line);
+
         mNoNetworkImage = (ImageView) findViewById(R.id.detail_image_bg);
         mNoet = (TextView) findViewById(R.id.tv_detail_video_noet);
         mNoNetShow = (RelativeLayout) findViewById(R.id.nonet_show);
@@ -264,6 +266,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         imageAni = (ProgressBar) findViewById(R.id.imageAni);
         textAni = (TextView) findViewById(R.id.textAni);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
+
         mDetailHeader = (RelativeLayout) findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);

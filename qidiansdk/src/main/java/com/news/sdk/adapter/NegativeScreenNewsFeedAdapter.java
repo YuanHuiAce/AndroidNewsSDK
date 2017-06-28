@@ -1,19 +1,11 @@
 package com.news.sdk.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,12 +23,6 @@ import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.AttentionListEntity;
 import com.news.sdk.entity.NewsFeed;
-import com.news.sdk.pages.AttentionActivity;
-import com.news.sdk.pages.NewsDetailAty2;
-import com.news.sdk.pages.NewsDetailVideoAty;
-import com.news.sdk.pages.NewsFeedFgt;
-import com.news.sdk.pages.NewsTopicAty;
-import com.news.sdk.pages.SubscribeListActivity;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -44,23 +30,23 @@ import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.PlayerManager;
+import com.news.sdk.widget.NegativeScreenNewsDetailView;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
+import com.news.sdk.widget.NegativeScreenNewsTopicView;
+import com.news.sdk.widget.NegativeScreenVideoDetailView;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private final NegativeScreenNewsFeedView mView;
+    private RelativeLayout mRootView;
     private String mstrKeyWord;
     private int mScreenWidth;
     private Context mContext;
@@ -131,7 +117,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     case 900:
                         return NewsFeed.TIME_LINE;
                     case 4://奇点号Item
-                        return NewsFeed.SERRCH_ITEM;
+                        return NewsFeed.SEARCH_ITEM;
                     case 5:
                         return NewsFeed.TOPIC;
                     case 6:
@@ -177,6 +163,10 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         isNeedShowDisLikeIcon = false;
     }
 
+    public void setRootView(RelativeLayout rootView) {
+        mRootView = rootView;
+    }
+
     @Override
     public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
         //广告
@@ -218,7 +208,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
-            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
@@ -244,7 +233,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
-            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             final TextView tvTitle = holder.getView(R.id.title_textView);
@@ -296,7 +284,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
             setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
-            setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
             llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
@@ -321,7 +308,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.setGlideDrawViewURI(mRequestManager, R.id.icon_source, feed.getIcon());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
-            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
@@ -448,7 +434,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
-            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
 //            if (position == 0) {
@@ -551,7 +536,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.getView(R.id.tv_video_comments).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setCommentClick(feed);
                 }
             });
             ImageUtil.setAlphaImage((ImageView) holder.getView(R.id.image_play), R.drawable.video_play);
@@ -565,7 +549,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
-            setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
 //            holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
                 holder.getView(R.id.tve_video_source_username).setVisibility(View.GONE);
@@ -591,15 +574,8 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.title_textView));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
             setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
-            holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setCommentClick(feed);
-                }
-            });
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-            setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
             newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
             holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
             if (isAttention) {
@@ -613,26 +589,17 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     }
 
     private void setOpenAttentionPage(AttentionListEntity attention, int index) {
-        Intent attentionAty = new Intent(mContext, AttentionActivity.class);
-        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
-        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_TITLE, attention.getName());
-        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_INDEX, index);
-        ((Activity) mContext).startActivityForResult(attentionAty, CommonConstant.REQUEST_ATTENTION_CODE);
+//        Intent attentionAty = new Intent(mContext, AttentionActivity.class);
+//        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
+//        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_TITLE, attention.getName());
+//        attentionAty.putExtra(CommonConstant.KEY_ATTENTION_INDEX, index);
+//        ((Activity) mContext).startActivityForResult(attentionAty, CommonConstant.REQUEST_ATTENTION_CODE);
     }
 
     private void setOpenSubscribeListPage(ArrayList<AttentionListEntity> attentionListEntities) {
-        Intent intent = new Intent(mContext, SubscribeListActivity.class);
-        intent.putExtra(CommonConstant.KEY_SUBSCRIBE_LIST, attentionListEntities);
-        ((Activity) mContext).startActivityForResult(intent, CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE);
-    }
-
-    public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
-        isCkeckVisity = isVisity;
-        notifyDataSetChanged();
-    }
-
-    public void setIntroductionNewsFeed(introductionNewsFeed mIntroductionNewsFeed) {
-        this.mIntroductionNewsFeed = mIntroductionNewsFeed;
+//        Intent intent = new Intent(mContext, SubscribeListActivity.class);
+//        intent.putExtra(CommonConstant.KEY_SUBSCRIBE_LIST, attentionListEntities);
+//        ((Activity) mContext).startActivityForResult(intent, CommonConstant.REQUEST_SUBSCRIBE_LIST_CODE);
     }
 
     public void ClickDeleteFavorite(final ImageView checkDelete, final NewsFeed feed) {
@@ -652,17 +619,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         });
     }
 
-    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onPlayClickListener != null) {
-                    onPlayClickListener.onPlayClick(view, feed);
-                }
-            }
-        });
-    }
-
     public void setVideoDuration(TextView durationView, int duration, String clickNums) {
         durationView.setVisibility(View.VISIBLE);
         if (duration != 0) {
@@ -674,19 +630,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             durationView.setVisibility(View.GONE);
         }
         TextUtil.setTextColor(mContext, durationView, R.color.color10);
-    }
-
-    private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
-        if (onPlayClickListener != null) {
-            onPlayClickListener.onShareClick(imageView, newsFeed);
-        }
-    }
-
-    private void setCommentClick(NewsFeed newsFeed) {
-        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
-//        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
-        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
     }
 
     private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
@@ -702,42 +645,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             localLayoutParams.height = mCardHeight;
         }
         ivCard.setLayoutParams(localLayoutParams);
-    }
-
-    private void setNewsTime(TextViewExtend tvComment, String updateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calendar = dateFormat.getCalendar();
-        try {
-            Date date = dateFormat.parse(updateTime);
-            long between = System.currentTimeMillis() - date.getTime();
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            if (between >= (24 * 3600000)) {
-                if (isAttention) {
-                    tvComment.setText(month + "月" + day + "日");
-                } else {
-                    tvComment.setText("");
-                }
-            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                if (isAttention) {
-                    tvComment.setText(between / 3600000 + "小时前");
-                } else {
-                    tvComment.setText("");
-                }
-            } else {
-                int time = (int) (between * 60 / 3600000);
-                if (time > 0) {
-                    tvComment.setText(between * 60 / 3600000 + "分钟前");
-                } else if (time <= 0) {
-                    tvComment.setText("");
-                } else {
-                    tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
-                }
-            }
-        } catch (ParseException e) {
-            tvComment.setText(updateTime);
-            e.printStackTrace();
-        }
     }
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
@@ -797,8 +704,8 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
-        textView.setText(TextUtil.getCommentNum(strText));
-        TextUtil.setTextColor(mContext, textView, R.color.color3);
+//        textView.setText(TextUtil.getCommentNum(strText));
+//        TextUtil.setTextColor(mContext, textView, R.color.color3);
     }
 
     private void setBottomLineColor(ImageView imageView) {
@@ -856,27 +763,23 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
-                    Intent intent = new Intent(mContext, NewsTopicAty.class);
-                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
-                    intent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    mContext.startActivity(intent);
+                    NegativeScreenNewsTopicView negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
+                    mRootView.addView(negativeScreenNewsTopicView.getNewsView());
+                    negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
-                    mContext.startActivity(intent);
+                    NegativeScreenVideoDetailView negativeScreenNewsDetailView = new NegativeScreenVideoDetailView(mContext);
+                    mRootView.addView(negativeScreenNewsDetailView.getRootView());
+                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+//                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
+//                    mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_FEED_SOURCE);
-                    ArrayList<String> imageList = feed.getImgs();
-                    if (imageList != null && imageList.size() != 0) {
-                        intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
-                    }
-                    mContext.startActivity(intent);
+                    NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 }
                 if (feed.isRead()) {
                     TextUtil.setTextColor(mContext, tvTitle, R.color.color3);
@@ -885,36 +788,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                 }
             }
         });
-    }
-
-    clickShowPopWindow mClickShowPopWindow;
-
-    public void setClickShowPopWindow(clickShowPopWindow mClickShowPopWindow) {
-        this.mClickShowPopWindow = mClickShowPopWindow;
-    }
-
-    NewsFeed DeleteClickBean;
-    View DeleteView;
-
-    private void setDeleteClick(final ImageView imageView, final NewsFeed feed, final View view) {
-        imageView.setVisibility(View.GONE);
-//        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
-//            imageView.setAlpha(0.5f);
-//        } else {
-//            imageView.setAlpha(1.0f);
-//        }
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DeleteView = view;
-//                DeleteClickBean = feed;
-//                int[] LocationOnScreen = new int[2];
-//                int[] LocationInWindow = new int[2];
-//                imageView.getLocationInWindow(LocationInWindow);
-//                mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth() / 2, LocationInWindow[1] + imageView.getHeight() / 2,
-//                        feed);
-//            }
-//        });
     }
 
     private void setNewsFeedReadAndUploadUserAction(NewsFeed feed, String toPage) {
@@ -993,46 +866,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         tag.setText(content);
     }
 
-    int height;
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void disLikeDeleteItem() {
-        final ViewWrapper wrapper = new ViewWrapper(DeleteView);
-        height = DeleteView.getHeight();
-        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(550);
-        changeH.start();
-        changeH.setInterpolator(new AccelerateInterpolator());
-        changeH.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mNewsFeedDao.deleteOnceDate(DeleteClickBean);
-//                ObjectAnimator.ofFloat(wrapper, "height", 0, deleteViewHeight).setDuration(0).start();
-                ArrayList<NewsFeed> arrayList = getNewsFeed();
-                arrayList.remove(DeleteClickBean);
-                notifyDataSetChanged();
-            }
-        });
-    }
-
-
-    class ViewWrapper {
-        private View mTarget;
-
-        public ViewWrapper(View mTarget) {
-            this.mTarget = mTarget;
-        }
-
-        public int getHeight() {
-            int height = mTarget.getLayoutParams().height;
-            return height;
-        }
-
-        public void setHeight(int height) {
-            mTarget.getLayoutParams().height = height;
-            mTarget.requestLayout();
-        }
-    }
-
     /**
      * 接口回调传入数据的添加与删除
      * <p/>
@@ -1040,27 +873,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
      */
     public interface introductionNewsFeed {
         public void getDate(NewsFeed feed, boolean isCheck);
-    }
-
-    public interface clickShowPopWindow {
-        public void showPopWindow(int x, int y, NewsFeed feed);
-    }
-
-
-    //视频播放接口
-    private OnPlayClickListener onPlayClickListener;
-
-    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener) {
-        this.onPlayClickListener = onPlayClickListener;
-
-    }
-
-    public interface OnPlayClickListener {
-        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
-
-        boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
-
-        void onShareClick(ImageView imageView, NewsFeed feed);
     }
 
 }

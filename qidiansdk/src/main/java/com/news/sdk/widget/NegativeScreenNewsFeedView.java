@@ -1,5 +1,6 @@
 package com.news.sdk.widget;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -65,7 +66,7 @@ import java.util.List;
 public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     private Context mContext;
-    RelativeLayout mRootView;
+    RelativeLayout mRootView, detail_layout;
     private TextView mChannel1, mChannel2;
     public static String KEY_NEWS_ID = "key_news_id";
     public static final int PULL_DOWN_REFRESH = 1;
@@ -127,6 +128,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         ThemeManager.registerThemeChangeListener(this);
         mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID, this);
         bgLayout = (RelativeLayout) mRootView.findViewById(R.id.bgLayout);
+        detail_layout = (RelativeLayout) mRootView.findViewById(R.id.detail_layout);
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         mivShareBg = (ImageView) mRootView.findViewById(R.id.share_bg_imageView);
@@ -193,6 +195,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         addHFView();
         mAdapter = new NegativeScreenNewsFeedAdapter(mContext, this, null);
         mlvNewsFeed.setAdapter(mAdapter);
+        mAdapter.setRootView(detail_layout);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
         initTheme();
         //load news data
@@ -326,7 +329,6 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         mlvNewsFeed.getRefreshableView().smoothScrollToPosition(0);
     }
 
-
     public void refreshData() {
         if (mlvNewsFeed == null) {//防止listview为空
             return;
@@ -340,6 +342,40 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
             }
         };
         mHandler.postDelayed(mThread, 1000);
+    }
+
+    public void removeView() {
+        if (detail_layout != null) {
+            int totalIndex = detail_layout.getChildCount();
+            if (totalIndex > 0) {
+                for (int index = detail_layout.getChildCount(); index >= 0; index--) {
+                    final View view = detail_layout.getChildAt(index);
+                    if (view != null) {
+                        if (mAlphaAnimationOut != null) {
+                            view.startAnimation(mAlphaAnimationOut);
+                            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    detail_layout.removeView(view);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+            } else {
+                ((Activity) mContext).finish();
+            }
+        }
     }
 
 
@@ -542,9 +578,9 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 }
             }
         }
-//        for (Iterator it = result.iterator(); it.hasNext();) {
+//        for (Iterator it = result.iterator(); it.hasNext(); ) {
 //            NewsFeed newsFeed = (NewsFeed) it.next();
-//            if(newsFeed.getRtype()==3){
+//            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8) {
 //                it.remove();
 //            }
 //        }

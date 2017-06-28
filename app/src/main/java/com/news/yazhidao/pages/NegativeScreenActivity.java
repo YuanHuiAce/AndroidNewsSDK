@@ -6,16 +6,25 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
+import com.news.sdk.common.HttpConstant;
 import com.news.sdk.common.ThemeManager;
+import com.news.sdk.entity.User;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
@@ -24,7 +33,12 @@ import com.news.sdk.utils.manager.UserManager;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
 import com.news.yazhidao.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.List;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -33,8 +47,6 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-
-import static com.news.sdk.common.CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
 
 
 public class NegativeScreenActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
@@ -52,13 +64,13 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         //展示广点通sdk
         SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, true);
         //展示广点通API
-        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
+        SharedPreManager.mInstance(this).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, false);
         setContentView(R.layout.activity_main);
         cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(44);
+        mainView.setChannelId(1);
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();
@@ -71,6 +83,7 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         filter.addAction(CommonConstant.SHARE_SINA_WEIBO_ACTION);
         filter.addAction(CommonConstant.SHARE_QQ_ACTION);
         registerReceiver(mReceiver, filter);
+        uploadInformation();
     }
 
     //设置字体大小不随手机设置而改变
@@ -91,6 +104,63 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.destroyView();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mainView.removeView();
+    }
+
+    private void uploadInformation() {
+        if (SharedPreManager.mInstance(this).getUser(this) != null) {
+            try {
+                List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
+                final JSONArray array = new JSONArray();
+                for (int i = 0; i < packages.size(); i++) {
+                    PackageInfo packageInfo = packages.get(i);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("app_id", packageInfo.packageName);
+                    jsonObject.put("active", 1);
+                    jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
+                    array.put(jsonObject);
+                }
+                /** 设置品牌 */
+                final String brand = Build.BRAND;
+                /** 设置设备型号 */
+                final String platform = Build.MODEL;
+                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
+                RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                User user = SharedPreManager.mInstance(this).getUser(this);
+                if (user != null) {
+                    uid = Long.valueOf(user.getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("province", SharedPreManager.mInstance(this).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.mInstance(this).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.mInstance(this).get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("brand", brand);
+                jsonObject.put("model", platform);
+                jsonObject.put("apps", array);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                });
+                requestQueue.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
