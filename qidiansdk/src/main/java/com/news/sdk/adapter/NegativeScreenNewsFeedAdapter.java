@@ -771,11 +771,9 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
-                    if (negativeScreenNewsTopicView == null) {
-                        negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
-                        mRootView.addView(negativeScreenNewsTopicView.getNewsView());
-                        negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
-                    }
+                    negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
+                    mRootView.addView(negativeScreenNewsTopicView.getNewsView());
+                    negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
@@ -784,11 +782,9 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    if (negativeScreenNewsDetailView == null) {
-                        negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
-                        negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
-                    }
+                    negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 }
                 if (feed.isRead()) {
                     TextUtil.setTextColor(mContext, tvTitle, R.color.color3);

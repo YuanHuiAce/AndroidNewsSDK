@@ -1,6 +1,5 @@
 package com.news.sdk.widget;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -344,15 +343,15 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         mHandler.postDelayed(mThread, 1000);
     }
 
-    public void removeView() {
+    public boolean removeView() {
         if (detail_layout != null) {
             int totalIndex = detail_layout.getChildCount();
             if (totalIndex > 0) {
                 mAdapter.removeDetailView();
-            } else {
-                ((Activity) mContext).finish();
+                return true;
             }
         }
+        return false;
     }
 
 

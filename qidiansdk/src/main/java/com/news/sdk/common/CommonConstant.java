@@ -106,21 +106,37 @@ public final class CommonConstant {
     public static final String AD_RELATED_POS = "ad_related_pos";
     public static final String AD_RELATED_VIDEO_POS = "ad_related_video_pos";
     //纹字锁屏
+//    //广点通SDK id 广告位id
+//    public static final String APPID = "1105877613";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "7050724232050966";
+//    public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
+//    public static final String NEWS_FEED_GDT_SDK_VIDEOPOSID = "6070425272634002";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "6070025262721451";
+//    public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
+//    public static final String NEWS_RELATE_GDT_SDK_SMALLPOSID = "3090125252826711";
+//    public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "541";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "589";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
+    //纹字锁屏负一平单
     //广点通SDK id 广告位id
     public static final String APPID = "1105877613";
     public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
-    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "7050724232050966";
+    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "3090924212656959";
     public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
     public static final String NEWS_FEED_GDT_SDK_VIDEOPOSID = "6070425272634002";
-    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "6070025262721451";
+    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9080427292926594";
     public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
     public static final String NEWS_RELATE_GDT_SDK_SMALLPOSID = "3090125252826711";
     public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
-    public static final String NEWS_FEED_GDT_API_BIGPOSID = "541";
-    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "589";
-    public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
+    public static final String NEWS_FEED_GDT_API_BIGPOSID = "547";
+    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "590";
+    public static final String NEWS_RELATE_GDT_API_SMALLID = "551";
     // 掌上资讯
 //    public static final String APPID = "1106095837";
 //    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "8090525296494580";

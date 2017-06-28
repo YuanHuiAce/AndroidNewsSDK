@@ -696,12 +696,10 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                         intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
 //                        startActivity(intent);
                     } else {
-                        if (negativeScreenNewsDetailView == null) {
-                            isDetailVisibility = true;
-                            negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                            mRootView.addView(negativeScreenNewsDetailView.getNewsView());
-                            negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
-                        }
+                        isDetailVisibility = true;
+                        negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                        negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
                     }
                 }
             });
