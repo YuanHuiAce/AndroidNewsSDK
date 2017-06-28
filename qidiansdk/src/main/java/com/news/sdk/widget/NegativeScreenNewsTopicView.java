@@ -91,6 +91,7 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     private int mPager = 1;
     private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
     private boolean isDetailVisibility;
+    private boolean isRelease;
 
     public NegativeScreenNewsTopicView(Context context) {
         super(context);
@@ -199,8 +200,12 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         return isDetailVisibility;
     }
 
+    public boolean isRelease() {
+        return isRelease;
+    }
+
     public void onBackPressed() {
-        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null) {
+        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null && !negativeScreenNewsDetailView.isRelease()) {
             negativeScreenNewsDetailView.onBackPressed();
             negativeScreenNewsDetailView.destroyDrawingCache();
             negativeScreenNewsDetailView = null;
@@ -217,6 +222,8 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    isDetailVisibility = false;
+                    isRelease = true;
                     mRootView.setVisibility(GONE);
                     mRootView.removeAllViews();
                     mRootView.destroyDrawingCache();

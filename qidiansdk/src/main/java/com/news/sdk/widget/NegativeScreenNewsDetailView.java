@@ -155,6 +155,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private int prcent;
     private String Aid, source, title;
     private boolean isUploadBigAd;
+    private boolean isRelease;
 
     public NegativeScreenNewsDetailView(Context context) {
         super(context);
@@ -370,6 +371,10 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
 
     public View getNewsView() {
         return this.mRootView;
+    }
+
+    public boolean isRelease() {
+        return isRelease;
     }
 
     public void addHeadView() {
@@ -756,6 +761,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    isRelease = true;
                     mRootView.setVisibility(GONE);
                     destroy();
                     mRootView.removeAllViews();

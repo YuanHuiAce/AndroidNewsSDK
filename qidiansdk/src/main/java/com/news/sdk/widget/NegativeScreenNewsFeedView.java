@@ -344,12 +344,8 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
     }
 
     public boolean removeView() {
-        if (detail_layout != null) {
-            int totalIndex = detail_layout.getChildCount();
-            if (totalIndex > 0) {
-                mAdapter.removeDetailView();
-                return true;
-            }
+        if (mAdapter != null) {
+          return mAdapter.removeDetailView();
         }
         return false;
     }

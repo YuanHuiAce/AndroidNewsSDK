@@ -108,7 +108,9 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
 
     @Override
     public void onBackPressed() {
-        mainView.removeView();
+        if (!mainView.removeView()) {
+            this.finish();
+        }
     }
 
     private void uploadInformation() {

@@ -871,21 +871,36 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         tag.setText(content);
     }
 
-    public void removeDetailView() {
+    public boolean isNeedReleaseView() {
+        if (negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isRelease()) {
+            return true;
+        }
+        if (negativeScreenNewsTopicView != null && negativeScreenNewsTopicView.isRelease()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeDetailView() {
         if (negativeScreenNewsDetailView != null) {
             negativeScreenNewsDetailView.onBackPressed();
             negativeScreenNewsDetailView.destroyDrawingCache();
             negativeScreenNewsDetailView = null;
+            return true;
         }
         if (negativeScreenNewsTopicView != null) {
             if (negativeScreenNewsTopicView.isDetailVisibility()) {
                 negativeScreenNewsTopicView.onBackPressed();
-            } else {
+                return true;
+            }
+            if (!negativeScreenNewsTopicView.isDetailVisibility() && !negativeScreenNewsTopicView.isRelease()) {
                 negativeScreenNewsTopicView.onBackPressed();
                 negativeScreenNewsTopicView.destroyDrawingCache();
                 negativeScreenNewsTopicView = null;
+                return true;
             }
         }
+        return false;
     }
 
     /**
