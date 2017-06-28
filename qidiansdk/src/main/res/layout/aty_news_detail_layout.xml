@@ -24,8 +24,7 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:gravity="center"
-            android:scaleType="centerInside"
-            android:visibility="gone"/>
+            android:scaleType="centerInside"/>
 
     </RelativeLayout>
 
