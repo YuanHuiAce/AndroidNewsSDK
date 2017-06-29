@@ -41,6 +41,7 @@ import com.news.sdk.entity.NewsTopic;
 import com.news.sdk.entity.TopicBaseInfo;
 import com.news.sdk.entity.TopicClass;
 import com.news.sdk.net.volley.NewsTopicRequestGet;
+import com.news.sdk.receiver.HomeWatcher;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
@@ -95,6 +96,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     private String mSource;
     private RequestManager mRequestManager;
     private int mPager = 1;
+    private HomeWatcher mHomeWatcher;
 
     @Override
     protected boolean translucentStatus() {
@@ -329,9 +331,26 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mHomeWatcher == null) {
+            mHomeWatcher = new HomeWatcher(this);
+            mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+            mHomeWatcher.startWatch();
+        }
         LogUtil.onPageStart(CommonConstant.LOG_PAGE_TOPICPAGE);
         lastTime = System.currentTimeMillis();
     }
+
+    HomeWatcher.OnHomePressedListener mOnHomePressedListener = new HomeWatcher.OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            finish();
+        }
+
+
+        @Override
+        public void onHomeLongPressed() {
+        }
+    };
 
     @Override
     public void finish() {
@@ -347,6 +366,10 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onPause() {
+        if (mHomeWatcher != null) {
+            mHomeWatcher.stopWatch();
+            mHomeWatcher = null;
+        }
         LogUtil.onPageEnd(CommonConstant.LOG_PAGE_TOPICPAGE);
         nowTime = System.currentTimeMillis();
         //上报日志
