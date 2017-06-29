@@ -556,7 +556,9 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                 lpBig.width = with;
                 lpBig.height = (int) (with * 9 / 16.0f);
                 childBigPicHolder.ivBigPicture.setLayoutParams(lpBig);
-                setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                if (!TextUtil.isListEmpty(strArrBigImgUrl) && num >= 0 && num < strArrBigImgUrl.size()) {
+                    setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                }
                 setTitleTextBySpannable(childBigPicHolder.tvTitle, feed.getTitle(), false);
                 setSourceViewText(childBigPicHolder.tvSource, feed.getPname());
                 setCommentViewText(childBigPicHolder.tvCommentNum, feed.getComment() + "");

@@ -281,7 +281,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             lpBigPic.width = with;
             lpBigPic.height = height;
             ivBigPic.setLayoutParams(lpBigPic);
-            if (!TextUtil.isListEmpty(strArrBigImgUrl) && num > 0 && num < strArrBigImgUrl.size()) {
+            if (!TextUtil.isListEmpty(strArrBigImgUrl) && num >= 0 && num < strArrBigImgUrl.size()) {
                 holder.setGlideDrawViewURI(mRequestManager, R.id.title_img_View, strArrBigImgUrl.get(num), with, height, feed.getRtype());
             }
             setTitleTextByBigSpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
