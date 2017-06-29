@@ -115,8 +115,20 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mSpecialNewsHeaderView = new NewsTopicHeaderView(mContext);
         mivShareBg = (ImageView) mRootView.findViewById(R.id.share_bg_imageView);
         mTopicHeader = (RelativeLayout) mRootView.findViewById(R.id.mTopicHeader);
+        mTopicHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mNewsDetailLoaddingWrapper = mRootView.findViewById(R.id.mNewsDetailLoaddingWrapper);
         mHeaderDivider = mRootView.findViewById(R.id.mHeaderDivider);
+        mHeaderDivider.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         bgLayout = (RelativeLayout) mRootView.findViewById(R.id.bgLayout);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);

@@ -883,6 +883,10 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
 
     public boolean removeDetailView() {
         if (negativeScreenNewsDetailView != null) {
+            if (negativeScreenNewsDetailView.isRelease()) {
+                negativeScreenNewsDetailView = null;
+                return false;
+            }
             negativeScreenNewsDetailView.onBackPressed();
             negativeScreenNewsDetailView.destroyDrawingCache();
             negativeScreenNewsDetailView = null;

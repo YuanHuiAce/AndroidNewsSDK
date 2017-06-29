@@ -183,7 +183,19 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         mDetailHeader = (RelativeLayout) mRootView.findViewById(R.id.mDetailHeader);
+        mDetailHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mHeaderDivider = mRootView.findViewById(R.id.mHeaderDivider);
+        mHeaderDivider.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mDetailLeftBack = (ImageView) mRootView.findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDetailRightMore = (ImageView) mRootView.findViewById(R.id.mDetailRightMore);
