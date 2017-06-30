@@ -77,7 +77,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private PullToRefreshListView mlvNewsFeed;
-    private int mChannelId =44;
+    private int mChannelId =1;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
