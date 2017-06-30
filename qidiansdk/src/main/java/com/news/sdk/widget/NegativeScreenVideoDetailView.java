@@ -1,11 +1,15 @@
 package com.news.sdk.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.jinsedeyuzhou.IPlayer;
+import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
@@ -51,11 +57,13 @@ import com.news.sdk.net.volley.NewsDetailADRequestPost;
 import com.news.sdk.net.volley.NewsDetailRequest;
 import com.news.sdk.net.volley.RelatePointRequestPost;
 import com.news.sdk.pages.NewsDetailWebviewAty;
+import com.news.sdk.receiver.HomeWatcher;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
+import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
@@ -76,7 +84,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by Berkeley on 6/27/17.
  */
 
-public class NegativeScreenVideoDetailView extends View implements ThemeManager.OnThemeChangeListener, View.OnClickListener ,NativeAD.NativeAdListener{
+public class NegativeScreenVideoDetailView extends RelativeLayout implements ThemeManager.OnThemeChangeListener, View.OnClickListener, NativeAD.NativeAdListener {
     private Context mContext;
 
     private RelativeLayout view;
@@ -147,6 +155,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
     private RelativeLayout mOnlinesContainer;
     private ImageView mTitleOff;
     private LinearLayout mTitleContainer;
+    private HomeWatcher mHomeWatcher;
 
 
     public NegativeScreenVideoDetailView(Context context) {
@@ -156,7 +165,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
     }
 
     private void init() {
-        view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.aty_negative_screen_video_detail_layout, null);
+        view = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.aty_negative_screen_video_detail_layout, this);
         //初始化相关参数
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
@@ -304,12 +313,12 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
             private int getScrollY() {
                 int height = 0;
                 for (int i = 0; i < mCurrentFirstVisibleItem; i++) {
-                   ItemRecord itemRecord = (ItemRecord) recordSp.get(i);
+                    ItemRecord itemRecord = (ItemRecord) recordSp.get(i);
                     if (null != itemRecord) {
                         height += itemRecord.height;
                     }
                 }
-               ItemRecord itemRecord = (ItemRecord) recordSp.get(mCurrentFirstVisibleItem);
+                ItemRecord itemRecord = (ItemRecord) recordSp.get(mCurrentFirstVisibleItem);
                 if (null == itemRecord) {
                     itemRecord = new ItemRecord();
                 }
@@ -319,12 +328,12 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
 
         mAdapter = new NegativeScreenNewsDetailFgtAdapter(mContext, null);
         mNewsDetailList.setAdapter(mAdapter);
-        mAdapter.setRootView(view);
         addHeadView();
         initPlayer();
         setTheme();
-
     }
+
+
     public Rect rect = new Rect();
 
     public int getVisibilityPercents(View view) {
@@ -375,14 +384,13 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
                     mTitleOff.setImageResource(R.drawable.ic_title_on);
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.requestLayout();
-                }else
-                {
+                } else {
                     mDetailVideoTitle.setMaxLines(2);
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.setImageResource(R.drawable.ic_title_off);
                     mTitleOff.requestLayout();
                 }
-                isShow=!isShow;
+                isShow = !isShow;
 
             }
         });
@@ -439,71 +447,14 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
         footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
         footerView_layout.setVisibility(View.GONE);
+        lv.addFooterView(footerView);
         footView_tv.setVisibility(View.VISIBLE);
 
 
     }
 
-    private void initPlayer() {
-        vplayer = new VPlayPlayer(mContext);
-        //视频相关
-        mFullVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_fullscreen);
-        mVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_container);
-        mDetailShow = (RelativeLayout) view.findViewById(R.id.detial_video_show);
-        mDetailBg = (ImageView) view.findViewById(R.id.detail_image_bg);
-        mDetailShow.setOnClickListener(this);
-        int widths = mScreenWidth - DensityUtil.dip2px(mContext, 0);
-        RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) mDetailBg.getLayoutParams();
-        lpVideo.width = widths;
-        lpVideo.height = (int) (widths * 185 / 330.0f);
-        mDetailBg.setLayoutParams(lpVideo);
-        if (vplayer != null && vplayer.getParent() != null)
-            ((ViewGroup) vplayer.getParent()).removeAllViews();
 
-
-
-        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
-            @Override
-            public void onShare() {
-
-            }
-
-            @Override
-            public void onPlayCancel() {
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
-                    if (vplayer.getParent() != null)
-                        ((ViewGroup) vplayer.getParent()).removeAllViews();
-                }
-                mDetailShow.setVisibility(View.VISIBLE);
-                mVideoContainer.setVisibility(View.GONE);
-            }
-        });
-
-        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
-            @Override
-            public void completion(IMediaPlayer mp) {
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
-                }
-                if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
-                    mFullVideoContainer.removeAllViews();
-                    mFullVideoContainer.setVisibility(View.GONE);
-                } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
-                    mVideoContainer.removeAllViews();
-                    mVideoContainer.setVisibility(View.GONE);
-                }
-
-                mDetailShow.setVisibility(View.VISIBLE);
-
-            }
-        });
-
-    }
-
-    public void setNewsFeed(NewsFeed newsFeed,String source) {
+    public void setNewsFeed(NewsFeed newsFeed, String source) {
         this.mNewsFeed = newsFeed;
         mSource = source;
         if (mNewsFeed != null) {
@@ -519,6 +470,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
         mSource = source;
         loadData();
     }
+
     public View getRootView() {
         return this.view;
     }
@@ -528,6 +480,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.mDetailLeftBack) {
+            onBackUp();
             if (mAlphaAnimationOut != null) {
                 view.startAnimation(mAlphaAnimationOut);
                 mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
@@ -564,7 +517,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
             if (vplayer != null && vplayer.getParent() != null) {
                 ((ViewGroup) vplayer.getParent()).removeAllViews();
             }
-            if (vplayer != null&&mResult!=null) {
+            if (vplayer != null && mResult != null) {
                 vplayer.setTitle(mResult.getTitle());
                 vplayer.play(mResult.getVideourl());
                 mVideoContainer.addView(vplayer);
@@ -596,6 +549,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
         TextUtil.setTextColor(mContext, mDetailVideoTitle, R.color.color2);
         TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.attention_detail_video_shape);
         ImageUtil.setAlphaImage(adImageView);
+        TextUtil.setImageResource(mContext, mDetailLeftBack, R.drawable.detial_video_back);
         ImageUtil.setAlphaImage(mDetailBg);
         ImageUtil.setAlphaView(mDetailLeftBack);
         if (vplayer != null)
@@ -661,6 +615,11 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
     }
 
     private void initData() {
+        int widths = mScreenWidth - DensityUtil.dip2px(mContext, 0);
+        RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) mDetailBg.getLayoutParams();
+        lpVideo.width = widths;
+        lpVideo.height = (int) (widths * 185 / 330.0f);
+        mDetailBg.setLayoutParams(lpVideo);
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
         mDetailVideoTitle.setText(mResult.getTitle());
         if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null) {
@@ -670,6 +629,8 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
             mVideoContainer.addView(vplayer);
         }
 
+
+        mAdapter.setRootView((RelativeLayout) view.getParent());
 
 
     }
@@ -755,6 +716,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
             requestQueue.add(relateRequestPost);
         }
     }
+
     public void setNoRelatedDate() {
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         if (viewpointPage > 1) {
@@ -827,6 +789,7 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
             }
         }
     }
+
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(mAdCount);
@@ -965,4 +928,178 @@ public class NegativeScreenVideoDetailView extends View implements ThemeManager.
         loadRelatedData();
         adLayout.setVisibility(View.GONE);
     }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+       if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return onBackUp();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    public boolean onBackUp() {
+        if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
+            ((Activity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+            if (frameLayout != null) {
+                frameLayout.removeAllViews();
+            }
+            mFullVideoContainer.setVisibility(View.GONE);
+            mDetailShow.setVisibility(View.GONE);
+            mVideoContainer.addView(vplayer);
+            vplayer.showBottomControl(true);
+
+            return true;
+        } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
+            if (vplayer != null) {
+                vplayer.stop();
+                vplayer.release();
+            }
+            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+            if (frameLayout != null) {
+                frameLayout.removeAllViews();
+            }
+            mDetailShow.setVisibility(View.VISIBLE);
+            mVideoContainer.setVisibility(View.GONE);
+            return false;
+        }
+
+        return false;
+    }
+
+    private void initPlayer() {
+        vplayer = new VPlayPlayer(mContext);
+        //视频相关
+        mFullVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_fullscreen);
+        mVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_container);
+        mDetailShow = (RelativeLayout) view.findViewById(R.id.detial_video_show);
+        mDetailBg = (ImageView) view.findViewById(R.id.detail_image_bg);
+        mDetailShow.setOnClickListener(this);
+        if (vplayer != null && vplayer.getParent() != null)
+            ((ViewGroup) vplayer.getParent()).removeAllViews();
+        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
+            @Override
+            public void onShare() {
+
+            }
+
+            @Override
+            public void onPlayCancel() {
+                if (vplayer != null) {
+                    vplayer.stop();
+                    vplayer.release();
+                    if (vplayer.getParent() != null)
+                        ((ViewGroup) vplayer.getParent()).removeAllViews();
+                }
+                mDetailShow.setVisibility(View.VISIBLE);
+                mVideoContainer.setVisibility(View.GONE);
+            }
+        });
+
+
+        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
+            @Override
+            public void completion(IMediaPlayer mp) {
+                if (vplayer != null) {
+                    vplayer.stop();
+                    vplayer.release();
+                }
+                if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
+                    ((Activity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    mFullVideoContainer.removeAllViews();
+                    mFullVideoContainer.setVisibility(View.GONE);
+                } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
+                    mVideoContainer.removeAllViews();
+                    mVideoContainer.setVisibility(View.GONE);
+                }
+
+                mDetailShow.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+    }
+
+    //把获取焦点强制为True，就有焦点了
+    @Override
+    public boolean isFocused() {
+//        return super.isFocused();
+        return true;
+    }
+
+    public void OnDestory()
+    {
+        if (vplayer != null) {
+            vplayer.stop();
+            vplayer.release();
+            if (vplayer.getParent() != null)
+                ((ViewGroup) vplayer.getParent()).removeAllViews();
+            vplayer.onDestory();
+        }
+        vplayer = null;
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (vplayer != null) {
+            vplayer.onChanged(newConfig);
+            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                }
+                mFullVideoContainer.setVisibility(View.GONE);
+                mDetailShow.setVisibility(View.GONE);
+                mVideoContainer.addView(vplayer);
+                vplayer.showBottomControl(true);
+
+            } else {
+                FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                }
+                mDetailShow.setVisibility(View.VISIBLE);
+                mFullVideoContainer.setVisibility(View.VISIBLE);
+                mFullVideoContainer.addView(vplayer);
+                if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                    vplayer.showBottomControl(false);
+            }
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mHomeWatcher = new HomeWatcher(mContext);
+        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+        mHomeWatcher.startWatch();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        OnDestory();
+        mHomeWatcher.stopWatch();
+        mHomeWatcher=null;
+        super.onDetachedFromWindow();
+    }
+
+    HomeWatcher.OnHomePressedListener mOnHomePressedListener = new HomeWatcher.OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            Logger.e("aaa", "点击home键");
+            onBackUp();
+        }
+
+
+        @Override
+        public void onHomeLongPressed() {
+            Logger.e("aaa", "长按home键");
+            onBackUp();
+        }
+    };
+
+
 }

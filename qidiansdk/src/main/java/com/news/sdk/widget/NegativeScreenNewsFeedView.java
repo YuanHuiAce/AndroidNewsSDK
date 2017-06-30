@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -63,7 +64,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
+public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     private Context mContext;
     RelativeLayout mRootView, detail_layout;
@@ -76,7 +77,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private PullToRefreshListView mlvNewsFeed;
-    private int mChannelId = 1;
+    private int mChannelId =44;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -112,7 +113,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
     }
 
     private void initializeViews() {
-        mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.negative_screen_news, null);
+        mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.negative_screen_news, this);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
@@ -344,11 +345,35 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         mHandler.postDelayed(mThread, 1000);
     }
 
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (detail_layout != null) {
+            int totalIndex = detail_layout.getChildCount();
+            if (totalIndex > 0) {
+                for (int index = detail_layout.getChildCount()-1; index >= 0; index--) {
+                    final View view = detail_layout.getChildAt(index);
+                    if (view.onKeyDown(keyCode,event))
+                    {
+                        return true;
+                    }
+
+                }
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
+
     public void removeView() {
         if (detail_layout != null) {
             int totalIndex = detail_layout.getChildCount();
             if (totalIndex > 0) {
-                for (int index = detail_layout.getChildCount(); index >= 0; index--) {
+                for (int index = detail_layout.getChildCount()-1; index >= 0; index--) {
                     final View view = detail_layout.getChildAt(index);
                     if (view != null) {
                         if (mAlphaAnimationOut != null) {
@@ -370,6 +395,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                                 }
                             });
                         }
+                        view.setVisibility(View.GONE);
                     }
                 }
             } else {

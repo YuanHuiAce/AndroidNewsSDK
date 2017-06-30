@@ -769,6 +769,8 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                     NegativeScreenVideoDetailView negativeScreenNewsDetailView = new NegativeScreenVideoDetailView(mContext);
+                    negativeScreenNewsDetailView.setFocusable(true);
+                    negativeScreenNewsDetailView.setFocusableInTouchMode(true);
                     mRootView.addView(negativeScreenNewsDetailView.getRootView());
                     negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
 //                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);

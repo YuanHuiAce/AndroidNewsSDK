@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
@@ -106,8 +108,17 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         super.onDestroy();
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mainView.onKeyDown(keyCode,event))
+            return true;
+        return super.onKeyDown(keyCode, event);
+    }
+
     @Override
     public void onBackPressed() {
+        Log.v("FocusId:",  this.getWindow().getDecorView().findFocus()+"");
         mainView.removeView();
     }
 
@@ -282,4 +293,6 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
             }
         }
     }
+
+
 }

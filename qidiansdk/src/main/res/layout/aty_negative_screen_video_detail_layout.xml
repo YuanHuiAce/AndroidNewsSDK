@@ -9,7 +9,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/transparent">
+        android:background="@color/white">
+        <com.news.sdk.widget.VideoContainer
+            android:id="@+id/detail_video_container"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <RelativeLayout
+            android:id="@+id/detial_video_show"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/detail_image_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/iv_detail_image_play"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/video_play" />
+        </RelativeLayout>
 
 
         <RelativeLayout
@@ -38,29 +61,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/detial_video_show"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
 
-            <ImageView
-                android:id="@+id/detail_image_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/iv_detail_image_play"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/video_play" />
-        </RelativeLayout>
-
-        <com.news.sdk.widget.VideoContainer
-            android:id="@+id/detail_video_container"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
 
     </FrameLayout>
 
