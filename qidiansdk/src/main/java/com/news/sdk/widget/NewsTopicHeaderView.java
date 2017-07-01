@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.news.sdk.R;
 import com.news.sdk.entity.TopicBaseInfo;
 import com.news.sdk.utils.ImageUtil;
@@ -45,7 +45,7 @@ public class NewsTopicHeaderView extends RelativeLayout {
         TextUtil.setTextColor(mContext, mTopicDetail, R.color.color3);
     }
 
-    public void setHeaderViewData(TopicBaseInfo topicBaseInfo, int screenWidth) {
+    public void setHeaderViewData(TopicBaseInfo topicBaseInfo, int screenWidth, RequestManager requestManager) {
         mTopicBaseInfo = topicBaseInfo;
         String url = mTopicBaseInfo.getCover();
         if (!TextUtil.isEmptyString(url)) {
@@ -54,7 +54,7 @@ public class NewsTopicHeaderView extends RelativeLayout {
             layoutParams.height = (int) (screenWidth * 86 / 360.0f);
             mTopicView.setLayoutParams(layoutParams);
             ImageUtil.setAlphaImage(mTopicView);
-            Glide.with(mContext).load(Uri.parse(url)).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
+            requestManager.load(Uri.parse(url)).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
         } else {
             mTopicView.setVisibility(View.GONE);
         }

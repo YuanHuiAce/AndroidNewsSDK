@@ -29,6 +29,8 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NOTIFICATION_RECEIVED = "notification_receive";
     //用户收到推送消息并打开通知
     public static final String US_BAINEWS_NOTIFICATION_OPENED = "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_TOPIC= "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_VIDEO= "notification_open";
 
     public static final String FILE_USER = "user";
     public static final String FILE_AD = "ad";
@@ -93,19 +95,18 @@ public final class CommonConstant {
     public static final String SHARE_WECHAT_ACTION = "share_wechat_action";
     public static final String SHARE_SINA_WEIBO_ACTION = "share_sina_weibo_action";
     public static final String SHARE_QQ_ACTION = "share_qq_action";
+    //通知登录action
+    public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
+    public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
+    public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
 
     public static final String AD_CHANNEL = "ad_channel";
     public static final String AD_FEED_POS = "ad_feed_pos";
     public static final String AD_FEED_VIDEO_POS = "ad_feed_video_pos";
     public static final String AD_RELATED_POS = "ad_related_pos";
     public static final String AD_RELATED_VIDEO_POS = "ad_related_video_pos";
-    //广点通SDK id 广告位id
-//    public static final String APPID = "1105847205";
-//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
-//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "1040627242105512";
-//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "1090626242209528";
-//    public static final String NEWS_RELATE_GDT_SDK_SMALLID = "7050727232406589";
     //纹字锁屏
+    //广点通SDK id 广告位id
     public static final String APPID = "1105877613";
     public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
     public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "7050724232050966";
@@ -117,15 +118,58 @@ public final class CommonConstant {
     public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
     //广点通API id 广告位id
     public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
-    public static final String NEWS_FEED_GDT_API_BIGPOSID = "718";
-    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "717";
-    public static final String NEWS_RELATE_GDT_API_SMALLID = "716";
+    public static final String NEWS_FEED_GDT_API_BIGPOSID = "541";
+    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "589";
+    public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
+    //纹字锁屏负一平单
+    //广点通SDK id 广告位id
+//    public static final String APPID = "1105877613";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "3090924212656959";
+//    public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
+//    public static final String NEWS_FEED_GDT_SDK_VIDEOPOSID = "6070425272634002";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9080427292926594";
+//    public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
+//    public static final String NEWS_RELATE_GDT_SDK_SMALLPOSID = "3090125252826711";
+//    public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "547";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "590";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "551";
+    // 掌上资讯
+//    public static final String APPID = "1106095837";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "8090525296494580";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "7040728256596531";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "4010524216093553";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "821";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "820";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "818";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "817";
+    //奇点资讯
+//    public static final String APPID = "1105877613";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "8090525296494580";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "6070029272151833";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "2050022262519096";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "821";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "480";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "533";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "484";
+    // 白牌
+//    public static final String APPID = "1106172490";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "4060024238715397";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "6050429278110358";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9030521238313470";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "838";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "837";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "835";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "834";
 
-    //通知登录action
-    public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
-    public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
-    public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
-    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
+
+    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇 9.纹字负一平单频道 10.纹字负一平多频道
     public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
@@ -134,6 +178,8 @@ public final class CommonConstant {
     //qidian 奇点资讯
     //huangli 黄历天气
     //wenzi	纹字锁屏
+    //wenzifs 纹字负一平单频道
+    //wenzifm 纹字负一平多频道
     //lybrowser	猎鹰浏览器
     //baipai 白牌
     //yingyonghui 应用汇

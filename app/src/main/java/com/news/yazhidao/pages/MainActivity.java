@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
         //umeng统计
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         //显示个人中心
-        SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, true);
+        SharedPreManager.mInstance(this).save(CommonConstant.FILE_USER_CENTER, CommonConstant.USER_CENTER_SHOW, false);
         //activity 跳转
         TextView tv = (TextView) findViewById(R.id.tv);
         tv.setOnClickListener(new View.OnClickListener() {
@@ -197,8 +197,6 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
     protected void onResume() {
         MobclickAgent.onResume(this);
         super.onResume();
-        User user = SharedPreManager.mInstance(this).getUser(this);
-        mainView.setUserCenterImg(user.getUserIcon());
     }
 
     @Override
@@ -226,10 +224,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
                 if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
                     return true;
             }
-            if (vPlayPlayer != null) {
-                if (vPlayPlayer.onKeyDown(keyCode, event))
-                    return true;
-            }
+//            if (vPlayPlayer != null) {
+//                if (vPlayPlayer.onKeyDown(keyCode, event))
+//                    return true;
+//            }
         }
 
         return super.onKeyDown(keyCode, event);
@@ -249,10 +247,10 @@ public class MainActivity extends AppCompatActivity implements ThemeManager.OnTh
             PlayerManager.videoPlayView = null;
         }
 
-        if (vPlayPlayer != null) {
-            vPlayPlayer.onDestory();
-            vPlayPlayer = null;
-        }
+//        if (vPlayPlayer != null) {
+//            vPlayPlayer.onDestory();
+//            vPlayPlayer = null;
+//        }
         super.onDestroy();
     }
 

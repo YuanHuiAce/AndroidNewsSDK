@@ -101,7 +101,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="AuthorizeAdapter"
-                android:value="com.news.yazhidao.pages.CustomShareAdapter" />
+                android:value="pages.CustomShareAdapter" />
 
             <intent-filter>
                 <data android:scheme="tencent100371282" />
@@ -129,25 +129,20 @@
             android:process=":remote" />
         <service
             android:name=".service.UpdateService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <!--umeng-->
-        <!--yyh 5907fa5b65b6d661ee000239 -->
-        <!--ly 58f9d3c904e205169000013b -->
-        <!--<meta-data-->
-            <!--android:name="UMENG_APPKEY"-->
-            <!--android:value="5907fa5b65b6d661ee000239"></meta-data>-->
-
+        <!--qd 551a6a28fd98c5b574000788 -->
+        <!--掌上资讯 5907fa5b65b6d661ee000239 -->
+        <!--白牌 58f9d3c904e205169000013b -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="58f9d3c904e205169000013b"/>
+            android:value="5907fa5b65b6d661ee000239" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
-
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="9ff4e4befc9c53d8da4ee8b337d9b174">
-        </meta-data>
+            android:value="9ff4e4befc9c53d8da4ee8b337d9b174" />
 
     </application>
 

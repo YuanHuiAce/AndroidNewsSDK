@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.news.yazhidao.pages.MainActivity;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.net.volley.request.UploadUmengPushIdRequest;
@@ -16,7 +17,6 @@ import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.pages.NewsTopicAty;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.TextUtil;
-import com.news.yazhidao.pages.MainActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;
@@ -128,6 +128,40 @@ public class DemoApplication extends Application {
                     detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailIntent);
                     MobclickAgent.onEvent(DemoApplication.this, "notification_open");
+                } else if ("action_notification_topic".equals(messageAction)) {
+                    MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
+                    String newsidTopic = msg.extra.get("newsid");
+                    String collectionTopic = msg.extra.get("collection");
+                    String newVersionTopic = msg.extra.get("version");
+                    String rtypeTopic = msg.extra.get("rtype");
+                    if (!TextUtil.isEmptyString(newsidTopic)) {
+                        Intent detailIntent = new Intent(context, NewsTopicAty.class);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsidTopic);
+                        detailIntent.putExtra(NewsTopicAty.KEY_NID, Integer.valueOf(newsidTopic));
+                        detailIntent.putExtra(CommonConstant.KEY_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_COLLECTION, collectionTopic);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_PUSH_NEWS, collectionTopic);
+                        detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(detailIntent);
+                        MobclickAgent.onEvent(DemoApplication.this, "notification_open");
+                    }
+                } else if ("action_notification_video".equals(messageAction)) {
+                    MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
+                    String newsidVideo = msg.extra.get("newsid");
+                    String collectionVideo = msg.extra.get("collection");
+                    String newVersionVideo = msg.extra.get("version");
+                    String rtypeVideo = msg.extra.get("rtype");
+                    if (!TextUtil.isEmptyString(newsid)) {
+                        Intent detailIntent = new Intent(context, NewsDetailVideoAty.class);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsidVideo);
+                        detailIntent.putExtra(NewsTopicAty.KEY_NID, Integer.valueOf(newsidVideo));
+                        detailIntent.putExtra(CommonConstant.KEY_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_COLLECTION, collectionVideo);
+                        detailIntent.putExtra(NewsFeedFgt.KEY_PUSH_NEWS, collectionVideo);
+                        detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(detailIntent);
+                        MobclickAgent.onEvent(DemoApplication.this, "notification_open");
+                    }
                 } else if (!TextUtil.isEmptyString(newVersion)) {
                 } else {
                     Intent HomeIntent = new Intent(context, MainActivity.class);

@@ -97,14 +97,14 @@
                     android:scaleType="centerInside" />
 
                 <!--<TextView-->
-                    <!--android:id="@+id/mDetailRightMore"-->
-                    <!--android:layout_width="48dp"-->
-                    <!--android:layout_height="48dp"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:clickable="true"-->
-                    <!--android:drawableRight="@drawable/detai_video_share"-->
-                    <!--android:paddingRight="15dp"-->
-                    <!--/>-->
+                <!--android:id="@+id/mDetailRightMore"-->
+                <!--android:layout_width="48dp"-->
+                <!--android:layout_height="48dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:clickable="true"-->
+                <!--android:drawableRight="@drawable/detai_video_share"-->
+                <!--android:paddingRight="15dp"-->
+                <!--/>-->
 
                 <ImageView
                     android:id="@+id/mDetailRightMore"
@@ -113,7 +113,7 @@
                     android:layout_alignParentRight="true"
                     android:clickable="true"
                     android:gravity="center"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"/>
 
 
             </RelativeLayout>
@@ -133,7 +133,8 @@
             android:id="@+id/mDetailBottomBanner"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
 
             <View
                 android:id="@+id/mBottomLine"

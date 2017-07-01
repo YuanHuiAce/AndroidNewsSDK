@@ -47,7 +47,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         comment_content.setText(string);
         TextView original = holder.getView(R.id.original);
         final String strTitle = newsDetailCommentItem.getNtitle();
-        CharSequence titleStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
+        CharSequence titleStr = Html.fromHtml("[原文]" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
         original.setText(titleStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
         if (newsDetailCommentItem.getUpflag() == 0) {
@@ -93,6 +93,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         deleteCommentItem((ImageView) holder.getView(R.id.del_icon), position);
         ImageUtil.setAlphaImage(comment_content);
         TextUtil.setLayoutBgResource(mContext, holder.getView(R.id.line1_layout), R.color.color5);
+        TextUtil.setLayoutBgResource(mContext, original, R.drawable.bg_my_comment_title);
         TextUtil.setTextColor(mContext, love_count, R.color.color3);
         TextUtil.setTextColor(mContext, pub_time, R.color.color3);
         TextUtil.setTextColor(mContext, comment_content, R.color.color2);

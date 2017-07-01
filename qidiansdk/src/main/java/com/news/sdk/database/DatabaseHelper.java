@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 201;
+    private static int DATABASE_VERSION = 220;
     private HashMap<String, Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -44,6 +44,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static ArrayList<VideoChannel> mVideoChannels = new ArrayList<>();
 
     static {
+        /**
+         *视频二级子默认频道
+         */
         mVideoChannels.add(new VideoChannel(4401, "新闻", 0, 1));
         mVideoChannels.add(new VideoChannel(4402, "搞笑", 0, 2));
         mVideoChannels.add(new VideoChannel(4403, "萌宠萌娃", 0, 3));

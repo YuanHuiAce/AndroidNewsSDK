@@ -33,11 +33,11 @@ import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
-import com.news.sdk.widget.CustomDialog;
-import com.news.yazhidao.R;
-import com.news.yazhidao.service.UpdateService;
+import com.news.sdk.widget.CustomDialogUpdate;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.PushAgent;
+import com.news.yazhidao.R;
+import com.news.yazhidao.service.UpdateService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -365,7 +365,8 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onResponse(Version response) {
                         if (DeviceInfoUtil.getApkVersionCode(SettingAty.this) < response.getVersion_code()) {
-                            showUpdateDialog(response);
+//                            showUpdateDialog(response);
+                            showUpdateDialogNew(response);
                         } else {
                             Toast.makeText(getApplicationContext(), "当前已是最新版本", Toast.LENGTH_SHORT).show();
                         }
@@ -379,15 +380,13 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 });
         QiDianApplication.getInstance().getRequestQueue().add(versionRequest);
     }
-
     /**
      * 自定义升级弹窗
      */
-    protected void showUpdateDialog(final Version version) {
-        CustomDialog.Builder builder = new CustomDialog.Builder(SettingAty.this);
-        builder.setTitle("发现新版本");
+    protected void showUpdateDialogNew(final Version version) {
+        CustomDialogUpdate.Builder builder = new CustomDialogUpdate.Builder(this);
         builder.setMessage(version.getUpdateLog());
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (version.isForceUpdate()) {
@@ -397,7 +396,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
             }
         });
 
-        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("立即升级", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bundle bundle = new Bundle();
@@ -412,6 +411,40 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         builder.setCancelable(false);
         builder.create().show();
     }
+
+
+//    /**
+//     * 自定义升级弹窗
+//     */
+//    protected void showUpdateDialog(final Version version) {
+//        CustomDialog.Builder builder = new CustomDialog.Builder(SettingAty.this);
+//        builder.setTitle("发现新版本");
+//        builder.setMessage(version.getUpdateLog());
+//        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (version.isForceUpdate()) {
+//                    ((Activity) SettingAty.this).finish();
+//                }
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Bundle bundle = new Bundle();
+//                Intent intent = new Intent(SettingAty.this, UpdateService.class);
+//                intent.putExtra("downloadLink", version.getDownloadLink());
+//                intent.putExtra("md5", version.getMd5());
+//                bundle.putSerializable("version", version);
+//                SettingAty.this.startService(intent);
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.setCancelable(false);
+//        builder.create().show();
+//    }
 
     @Override
     public void onThemeChanged() {

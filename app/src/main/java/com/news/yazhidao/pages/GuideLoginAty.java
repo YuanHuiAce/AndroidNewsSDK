@@ -72,6 +72,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 }
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
+                ShareSDK.initSDK(this);
                 Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);
                 //回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
                 weibo.setPlatformActionListener(new PlatformActionListener() {
@@ -139,7 +140,6 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onCancel(Platform arg0, int arg1) {
                         // TODO Auto-generated method stub
-
                     }
                 });
                 //authorize与showUser单独调用一个即可
@@ -151,6 +151,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 }
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
+                ShareSDK.initSDK(this);
                 Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
                 //回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
                 wechat.setPlatformActionListener(new PlatformActionListener() {

@@ -3,7 +3,6 @@ package com.news.sdk.pages;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -77,7 +76,6 @@ import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
-import com.news.sdk.widget.CustomDialog;
 import com.news.sdk.widget.SmallVideoContainer;
 import com.news.sdk.widget.TextViewExtend;
 import com.news.sdk.widget.VideoContainer;
@@ -183,6 +181,9 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
     private String Aid, source, title;
     private boolean isUploadBigAd;
     private TextView mRelateView;
+    private TextView mDetailOnlines;
+    private TextView mDetailAgree;
+    private TextView mDetailAgainst;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -288,7 +289,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                                     NewsFeed feed = new NewsFeed();
                                     feed.setAid(Long.valueOf(Aid));
                                     feed.setSource(source);
-                                    feed.setPname(relatedItemEntity.getTitle());
+                                    feed.setPname(relatedItemEntity.getPname());
                                     feed.setCtime(System.currentTimeMillis());
                                     newsFeeds.add(feed);
                                     LogUtil.userShowLog(newsFeeds, mContext);
@@ -390,6 +391,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         mRelateView = (TextView) mCommentTitleView.findViewById(R.id.detail_ViewPoint);
         mDetailSharedTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
         mDetailVideoTitle.setText(mResult.getTitle());
+//
+        mDetailOnlines = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_onlines);
+        mDetailAgree = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_agree);
+        mDetailAgainst = (TextView) mCommentTitleView.findViewById(R.id.tv_detail_video_against);
         //关心
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
@@ -579,7 +584,21 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         TextUtil.setTextColor(mContext, detail_shared_MoreComment, R.color.color1);
         TextUtil.setLayoutBgResource(mContext, detail_shared_MoreComment, R.drawable.bg_select_comment_more);
         TextUtil.setLayoutBgResource(mContext, mVideoShowBg, R.color.color13);
-        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.color.color10);
+        TextUtil.setLayoutBgResource(mContext, relativeLayout_attention, R.drawable.attention_detail_video_shape);
+        TextUtil.setTextColor(mContext, tv_attention_title, R.color.color2);
+        TextUtil.setTextColor(mContext, mDetailOnlines, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgree, R.color.color3);
+//        TextUtil.setTextColor(mContext, mDetailAgainst, R.color.color3);
+        ImageUtil.setAlphaView(mDetailAgree);
+        ImageUtil.setAlphaView(mDetailAgainst);
+        if (isAttention) {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
+        } else {
+            TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
+        }
+        ImageUtil.setAlphaView(attention_btn);
+//        TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
+        ImageUtil.setAlphaImage(iv_attention_icon);
         ImageUtil.setAlphaImage(adImageView);
         ImageUtil.setAlphaImage(mClose);
         ImageUtil.setAlphaImage(mDetailBg);
@@ -695,7 +714,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_press);
         } else {
             attention_btn.setText("关注");
@@ -703,7 +722,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             attention_btn.setCompoundDrawables(drawable, null, null, null);
             attention_btn.setPadding(DensityUtil.dip2px(mContext, 13), DensityUtil.dip2px(mContext, 2), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 2));
-            ImageUtil.setAlphaImage(attention_btn);
+//            TextUtil.setTextColor(mContext,attention_btn,R.color.color10);
             TextUtil.setLayoutBgResource(mContext, attention_btn, R.drawable.bg_attention_btn_nor);
         }
     }
@@ -988,42 +1007,42 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         holder.ivPraise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
-                if (user != null && user.isVisitor()) {
-                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
-                } else {
-//                    if ((user.getMuid() + "").equals(comment.getUid())) {
-//                        Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
-//                        return;
+//                User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+//                if (user != null && user.isVisitor()) {
+//                    AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
+//                } else {
+////                    if ((user.getMuid() + "").equals(comment.getUid())) {
+////                        Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+////                        return;
+////                    }
+//                    if (comment.getUpflag() == 0) {
+//                        comment.setUpflag(1);
+//                        holder.ivPraise.setImageResource(R.drawable.bg_praised);
+//                        int num = 0;
+//                        if (comment.getCommend() == 0) {
+//                            num = 1;
+//                        } else {
+//                            num = comment.getCommend() + 1;
+//                        }
+//                        holder.tvPraiseCount.setVisibility(View.VISIBLE);
+//                        comment.setCommend(num);
+//                        holder.tvPraiseCount.setText(num + "");
+//                        addNewsLove(user, comment, true);
+//                    } else {
+//                        comment.setUpflag(0);
+//                        holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+//                        int num = 0;
+//                        if (comment.getCommend() != 0) {
+//                            num = comment.getCommend() - 1;
+//                        }
+//                        if (num == 0) {
+//                            holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+//                        }
+//                        comment.setCommend(num);
+//                        holder.tvPraiseCount.setText(num + "");
+//                        addNewsLove(user, comment, false);
 //                    }
-                    if (comment.getUpflag() == 0) {
-                        comment.setUpflag(1);
-                        holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                        int num = 0;
-                        if (comment.getCommend() == 0) {
-                            num = 1;
-                        } else {
-                            num = comment.getCommend() + 1;
-                        }
-                        holder.tvPraiseCount.setVisibility(View.VISIBLE);
-                        comment.setCommend(num);
-                        holder.tvPraiseCount.setText(num + "");
-                        addNewsLove(user, comment, true);
-                    } else {
-                        comment.setUpflag(0);
-                        holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-                        int num = 0;
-                        if (comment.getCommend() != 0) {
-                            num = comment.getCommend() - 1;
-                        }
-                        if (num == 0) {
-                            holder.tvPraiseCount.setVisibility(View.INVISIBLE);
-                        }
-                        comment.setCommend(num);
-                        holder.tvPraiseCount.setText(num + "");
-                        addNewsLove(user, comment, false);
-                    }
-                }
+//                }
             }
         });
     }
@@ -1083,13 +1102,16 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             vplayer.onPause();
         }
         if (mSmallLayout.getVisibility() == View.VISIBLE) {
-            vplayer.stop();
-            vplayer.release();
-            mSmallLayout.setVisibility(View.GONE);
-            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-            if (frameLayout != null) {
-                frameLayout.removeAllViews();
+            if (vplayer!=null) {
+                vplayer.stop();
+                vplayer.release();
+                FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                }
             }
+            mSmallLayout.setVisibility(View.GONE);
+
         }
     }
 
@@ -1277,11 +1299,14 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 }
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer.getParent() != null)
+                if (vplayer != null && vplayer.getParent() != null) {
                     ((ViewGroup) vplayer.getParent()).removeAllViews();
-                vplayer.setTitle(mResult.getTitle());
-                vplayer.play(mResult.getVideourl(), position);
-                mDetailVideo.addView(vplayer);
+                }
+                if (vplayer!=null) {
+                    vplayer.setTitle(mResult.getTitle());
+                    vplayer.play(mResult.getVideourl(), position);
+                    mDetailVideo.addView(vplayer);
+                }
 
 
             }
@@ -1305,10 +1330,10 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (vplayer != null && vplayer.isPlay()) {
                     vplayer.stop();
                     vplayer.release();
-                    mSmallScreen.removeAllViews();
-                    mSmallLayout.setVisibility(View.GONE);
-                    mVideoShowBg.setVisibility(View.VISIBLE);
                 }
+                mSmallScreen.removeAllViews();
+                mSmallLayout.setVisibility(View.GONE);
+                mVideoShowBg.setVisibility(View.VISIBLE);
             }
         });
         //视频新增
@@ -1318,13 +1343,13 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
         lpVideo.height = (int) (widths * 185 / 330.0f);
         mDetailBg.setLayoutParams(lpVideo);
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
-        if (vplayer.getParent() != null)
+        if (vplayer != null && vplayer.getParent() != null)
             ((ViewGroup) vplayer.getParent()).removeAllViews();
 //        vp.setTitle(mResult.getTitle());
 //        vp.start(mResult.getVideourl());
 
 
-        if (NetworkUtils.isWifiAvailable(mContext)) {
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null) {
             mVideoShowBg.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl(), position);
@@ -1332,92 +1357,54 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             mDetailVideo.addView(vplayer);
         }
 
-        vplayer.setOnShareListener(new IPlayer.OnShareListener() {
-            @Override
-            public void onShare() {
+        if (vplayer != null)
+            vplayer.setOnShareListener(new IPlayer.OnShareListener() {
+                @Override
+                public void onShare() {
 
-            }
-
-            @Override
-            public void onPlayCancel() {
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
                 }
-                mVideoShowBg.setVisibility(View.VISIBLE);
-                mDetailVideo.setVisibility(View.GONE);
-                if (vplayer.getParent() != null)
-                    ((ViewGroup) vplayer.getParent()).removeAllViews();
-            }
-        });
 
-
-        vplayer.setCompletionListener(new IPlayer.CompletionListener() {
-            @Override
-            public void completion(IMediaPlayer mp) {
-                if (mSmallLayout.getVisibility() == View.VISIBLE) {
-                    mSmallScreen.removeAllViews();
-                    mSmallLayout.setVisibility(View.GONE);
-                } else if (mFullScreen.getVisibility() == View.VISIBLE) {
-                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    mFullScreen.removeAllViews();
-                    mFullScreen.setVisibility(View.GONE);
-                } else if (mDetailVideo.getVisibility() == View.VISIBLE) {
-                    mDetailVideo.removeAllViews();
+                @Override
+                public void onPlayCancel() {
+                    if (vplayer != null) {
+                        vplayer.stop();
+                        vplayer.release();
+                        if (vplayer.getParent() != null)
+                            ((ViewGroup) vplayer.getParent()).removeAllViews();
+                    }
+                    mVideoShowBg.setVisibility(View.VISIBLE);
                     mDetailVideo.setVisibility(View.GONE);
                 }
-                if (vplayer != null) {
-                    vplayer.stop();
-                    vplayer.release();
-                }
-                position = 0;
+            });
 
-                mVideoShowBg.setVisibility(View.VISIBLE);
-
-            }
-        });
-    }
-
-
-    /**
-     * 自定义升级弹窗
-     */
-    protected void showNetworkDialog() {
-        CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-        builder.setTitle("流量使用提示");
-        builder.setMessage("继续播放，运营商收取流量费用");
-        builder.setNegativeButton("取消播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.setPositiveButton("继续播放", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mVideoShowBg.setVisibility(View.GONE);
-                mDetailVideo.setVisibility(View.VISIBLE);
-                if (vplayer.getParent() != null) {
-                    ((ViewGroup) vplayer.getParent()).removeAllViews();
-                }
-                vplayer.setTitle(mResult.getTitle());
-                vplayer.setAllowModible(true);
-                mDetailVideo.addView(vplayer);
-                vplayer.play(mResult.getVideourl(), position);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        vplayer.play(mResult.getVideourl(), position);
+        if (vplayer != null)
+            vplayer.setCompletionListener(new IPlayer.CompletionListener() {
+                @Override
+                public void completion(IMediaPlayer mp) {
+                    if (mSmallLayout.getVisibility() == View.VISIBLE) {
+                        mSmallScreen.removeAllViews();
+                        mSmallLayout.setVisibility(View.GONE);
+                    } else if (mFullScreen.getVisibility() == View.VISIBLE) {
+                        ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        mFullScreen.removeAllViews();
+                        mFullScreen.setVisibility(View.GONE);
+                    } else if (mDetailVideo.getVisibility() == View.VISIBLE) {
+                        mDetailVideo.removeAllViews();
+                        mDetailVideo.setVisibility(View.GONE);
                     }
-                }, 100);
-                dialog.dismiss();
-            }
-        });
+                    if (vplayer != null) {
+                        vplayer.stop();
+                        vplayer.release();
+                    }
+                    position = 0;
 
-        builder.create().show();
+                    mVideoShowBg.setVisibility(View.VISIBLE);
 
+                }
+            });
     }
+
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -1448,7 +1435,7 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
 //                        }
 
                         else {
-                            if (vplayer.getParent() != null)
+                            if (vplayer != null && vplayer.getParent() != null)
                                 ((ViewGroup) vplayer.getParent()).removeAllViews();
                             vplayer.stop();
                             vplayer.release();

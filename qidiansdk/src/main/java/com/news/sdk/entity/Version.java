@@ -23,7 +23,7 @@ public class Version implements Serializable {
     //版本号
     private int version_code;
     //更新日志
-    private String updateLog;
+    private String updateLog="1、发现新版本，更新内容\n2、发现新版本,请更新内容，\n3、发现新版本，更新内容\n5、发现新版本，请更新内容";
     //下载连接
     private String downloadLink;
     //是否强制更新
