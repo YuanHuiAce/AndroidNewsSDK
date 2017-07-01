@@ -53,7 +53,7 @@
         android:supportsRtl="true">
         <!--SplashAty-->
         <activity
-            android:name=".pages.NegativeScreenActivity"
+            android:name=".pages.SplashAty"
             android:configChanges="orientation|screenSize|keyboardHidden|layoutDirection"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

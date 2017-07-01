@@ -1,6 +1,5 @@
 package com.news.sdk.widget;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -77,7 +76,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private PullToRefreshListView mlvNewsFeed;
-    private int mChannelId =1;
+    private int mChannelId = 1;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -346,16 +345,14 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     }
 
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (detail_layout != null) {
             int totalIndex = detail_layout.getChildCount();
             if (totalIndex > 0) {
-                for (int index = detail_layout.getChildCount()-1; index >= 0; index--) {
+                for (int index = detail_layout.getChildCount() - 1; index >= 0; index--) {
                     final View view = detail_layout.getChildAt(index);
-                    if (view.onKeyDown(keyCode,event))
-                    {
+                    if (view.onKeyDown(keyCode, event)) {
                         return true;
                     }
 
@@ -367,41 +364,11 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     }
 
 
-
-
-    public void removeView() {
-        if (detail_layout != null) {
-            int totalIndex = detail_layout.getChildCount();
-            if (totalIndex > 0) {
-                for (int index = detail_layout.getChildCount()-1; index >= 0; index--) {
-                    final View view = detail_layout.getChildAt(index);
-                    if (view != null) {
-                        if (mAlphaAnimationOut != null) {
-                            view.startAnimation(mAlphaAnimationOut);
-                            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                    detail_layout.removeView(view);
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-                        }
-                        view.setVisibility(View.GONE);
-                    }
-                }
-            } else {
-                ((Activity) mContext).finish();
-            }
+    public boolean removeView() {
+        if (mAdapter != null) {
+            return mAdapter.removeDetailView();
         }
+        return false;
     }
 
 

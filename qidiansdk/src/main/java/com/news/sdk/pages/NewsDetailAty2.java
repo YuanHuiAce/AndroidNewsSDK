@@ -37,6 +37,7 @@ import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
+import com.news.sdk.receiver.HomeWatcher;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
@@ -110,6 +111,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private boolean isUserComment;
     private String mSource;
     private boolean isForeground;
+    private HomeWatcher mHomeWatcher;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -244,6 +246,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        if (mHomeWatcher == null) {
+            mHomeWatcher = new HomeWatcher(this);
+            mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+            mHomeWatcher.startWatch();
+        }
         LogUtil.onPageStart(CommonConstant.LOG_PAGE_DETAILPAGE);
         lastTime = System.currentTimeMillis();
         if (mRefreshReceiver == null) {
@@ -254,9 +261,25 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
+    HomeWatcher.OnHomePressedListener mOnHomePressedListener = new HomeWatcher.OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            finish();
+        }
+
+
+        @Override
+        public void onHomeLongPressed() {
+        }
+    };
+
     @Override
     protected void onPause() {
         LogUtil.onPageEnd(CommonConstant.LOG_PAGE_DETAILPAGE);
+        if (mHomeWatcher != null) {
+            mHomeWatcher.stopWatch();
+            mHomeWatcher = null;
+        }
         nowTime = System.currentTimeMillis();
         if (mDetailFgt != null) {
             String percent = mDetailFgt.getPercent();

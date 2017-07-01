@@ -1,6 +1,5 @@
 package com.news.sdk.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -156,6 +155,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private int prcent;
     private String Aid, source, title;
     private boolean isUploadBigAd;
+    private boolean isRelease;
 
     public NegativeScreenNewsDetailView(Context context) {
         super(context);
@@ -172,6 +172,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
         mRequestManager = Glide.with(mContext);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID, this);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -182,7 +183,19 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         mDetailHeader = (RelativeLayout) mRootView.findViewById(R.id.mDetailHeader);
+        mDetailHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mHeaderDivider = mRootView.findViewById(R.id.mHeaderDivider);
+        mHeaderDivider.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mDetailLeftBack = (ImageView) mRootView.findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDetailRightMore = (ImageView) mRootView.findViewById(R.id.mDetailRightMore);
@@ -373,6 +386,10 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         return this.mRootView;
     }
 
+    public boolean isRelease() {
+        return isRelease;
+    }
+
     public void addHeadView() {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -397,7 +414,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mDetailWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         mDetailWebView.getSettings().setLoadWithOverviewMode(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge((Activity) mContext), "VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(mContext), "VideoJavaScriptBridge");
         //梁帅：判断图片是不是  不显示
         mDetailWebView.setWebViewClient(new WebViewClient() {
 
@@ -740,31 +757,36 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.mDetailLeftBack) {
-            if (mAlphaAnimationOut != null) {
-                mRootView.startAnimation(mAlphaAnimationOut);
-                mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        mRootView.setVisibility(GONE);
-                        destroy();
-                        mRootView.removeAllViews();
-                        mRootView.destroyDrawingCache();
-                        mRootView = null;
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
+            onBackPressed();
         } else if (view.getId() == R.id.mNewsDetailLoaddingWrapper) {
             loadData();
+        }
+    }
+
+    public void onBackPressed() {
+        if (mAlphaAnimationOut != null && mRootView != null) {
+            mRootView.startAnimation(mAlphaAnimationOut);
+            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    isRelease = true;
+                    mRootView.setVisibility(GONE);
+                    destroy();
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
+                    mRootView = null;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
     }
 

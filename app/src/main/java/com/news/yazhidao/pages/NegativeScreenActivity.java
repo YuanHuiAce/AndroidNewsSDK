@@ -119,7 +119,9 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
     @Override
     public void onBackPressed() {
         Log.v("FocusId:",  this.getWindow().getDecorView().findFocus()+"");
-        mainView.removeView();
+        if (!mainView.removeView()) {
+            this.finish();
+        }
     }
 
     private void uploadInformation() {

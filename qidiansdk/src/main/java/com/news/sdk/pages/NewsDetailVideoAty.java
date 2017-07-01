@@ -42,6 +42,7 @@ import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.DetailOperateRequest;
 import com.news.sdk.net.volley.NewsDetailRequest;
+import com.news.sdk.receiver.HomeWatcher;
 import com.news.sdk.utils.AuthorizedUserUtil;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
@@ -135,6 +136,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private View mTitleBottomLine;
     private ImageView mDetailPlayShow;
     private TextView mNoet;
+    private HomeWatcher mHomeWatcher;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -303,6 +305,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        if (mHomeWatcher == null) {
+            mHomeWatcher = new HomeWatcher(this);
+            mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+            mHomeWatcher.startWatch();
+        }
         LogUtil.onPageStart(CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
         mDurationStart = System.currentTimeMillis();
         lastTime = System.currentTimeMillis();
@@ -313,9 +320,24 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             registerReceiver(mRefreshReceiver, filter);
         }
     }
+    HomeWatcher.OnHomePressedListener mOnHomePressedListener = new HomeWatcher.OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            finish();
+        }
+
+
+        @Override
+        public void onHomeLongPressed() {
+        }
+    };
 
     @Override
     protected void onPause() {
+        if (mHomeWatcher != null) {
+            mHomeWatcher.stopWatch();
+            mHomeWatcher = null;
+        }
         LogUtil.onPageEnd(CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
         nowTime = System.currentTimeMillis();
         //上报日志
@@ -532,7 +554,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             //视频全屏退出
             if (vPlayPlayer.onKeyDown(keyCode, event))
                 return true;
-
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
@@ -540,7 +561,6 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 mDetailCommentNum.setVisibility(mCommentNum == 0 ? View.GONE : View.VISIBLE);
                 return true;
             }
-
         }
         //系统音量键控制
         else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {

@@ -89,6 +89,9 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     private String mSource;
     private RequestManager mRequestManager;
     private int mPager = 1;
+    private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
+    private boolean isDetailVisibility;
+    private boolean isRelease;
 
     public NegativeScreenNewsTopicView(Context context) {
         super(context);
@@ -112,8 +115,20 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mSpecialNewsHeaderView = new NewsTopicHeaderView(mContext);
         mivShareBg = (ImageView) mRootView.findViewById(R.id.share_bg_imageView);
         mTopicHeader = (RelativeLayout) mRootView.findViewById(R.id.mTopicHeader);
+        mTopicHeader.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         mNewsDetailLoaddingWrapper = mRootView.findViewById(R.id.mNewsDetailLoaddingWrapper);
         mHeaderDivider = mRootView.findViewById(R.id.mHeaderDivider);
+        mHeaderDivider.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         bgLayout = (RelativeLayout) mRootView.findViewById(R.id.bgLayout);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
@@ -158,28 +173,7 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAlphaAnimationOut != null) {
-                    mRootView.startAnimation(mAlphaAnimationOut);
-                    mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            mRootView.setVisibility(GONE);
-                            mRootView.removeAllViews();
-                            mRootView.destroyDrawingCache();
-                            mRootView = null;
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
+                onBackPressed();
             }
         });
         mTopicRightMore = (ImageView) mRootView.findViewById(R.id.mTopicRightMore);
@@ -212,6 +206,48 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         mUsedNewsFeed = feed;
         mSource = source;
         loadData();
+    }
+
+    public boolean isDetailVisibility() {
+        return isDetailVisibility;
+    }
+
+    public boolean isRelease() {
+        return isRelease;
+    }
+
+    public void onBackPressed() {
+        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null && !negativeScreenNewsDetailView.isRelease()) {
+            negativeScreenNewsDetailView.onBackPressed();
+            negativeScreenNewsDetailView.destroyDrawingCache();
+            negativeScreenNewsDetailView = null;
+            isDetailVisibility = false;
+            return;
+        }
+        if (mAlphaAnimationOut != null && mRootView != null) {
+            mRootView.startAnimation(mAlphaAnimationOut);
+            mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    isDetailVisibility = false;
+                    isRelease = true;
+                    mRootView.setVisibility(GONE);
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
+                    mRootView = null;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     public View getNewsView() {
@@ -532,7 +568,9 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                 lpBig.width = with;
                 lpBig.height = (int) (with * 9 / 16.0f);
                 childBigPicHolder.ivBigPicture.setLayoutParams(lpBig);
-                setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                if (!TextUtil.isListEmpty(strArrBigImgUrl) && num >= 0 && num < strArrBigImgUrl.size()) {
+                    setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                }
                 setTitleTextBySpannable(childBigPicHolder.tvTitle, feed.getTitle(), false);
                 setSourceViewText(childBigPicHolder.tvSource, feed.getPname());
                 setCommentViewText(childBigPicHolder.tvCommentNum, feed.getComment() + "");
@@ -679,7 +717,8 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                         intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
 //                        startActivity(intent);
                     } else {
-                        NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                        isDetailVisibility = true;
+                        negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
                         mRootView.addView(negativeScreenNewsDetailView.getNewsView());
                         negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
                     }

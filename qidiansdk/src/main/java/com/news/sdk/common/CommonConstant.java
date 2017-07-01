@@ -121,6 +121,22 @@ public final class CommonConstant {
     public static final String NEWS_FEED_GDT_API_BIGPOSID = "541";
     public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "589";
     public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
+    //纹字锁屏负一平单
+    //广点通SDK id 广告位id
+//    public static final String APPID = "1105877613";
+//    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
+//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "3090924212656959";
+//    public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
+//    public static final String NEWS_FEED_GDT_SDK_VIDEOPOSID = "6070425272634002";
+//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9080427292926594";
+//    public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
+//    public static final String NEWS_RELATE_GDT_SDK_SMALLPOSID = "3090125252826711";
+//    public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
+//    //广点通API id 广告位id
+//    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
+//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "547";
+//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "590";
+//    public static final String NEWS_RELATE_GDT_API_SMALLID = "551";
     // 掌上资讯
 //    public static final String APPID = "1106095837";
 //    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "8090525296494580";
@@ -153,8 +169,8 @@ public final class CommonConstant {
 //    public static final String NEWS_RELATE_GDT_API_SMALLID = "834";
 
 
-    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇
-    public static final int NEWS_CTYPE = 5;
+    //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题 7.应用汇 9.纹字负一平单频道 10.纹字负一平多频道
+    public static final int NEWS_CTYPE = 3;
     //平台1.ios 2.android 3.网页 4.无法识别
     public static final int NEWS_PTYPE = 2;
 
@@ -162,6 +178,8 @@ public final class CommonConstant {
     //qidian 奇点资讯
     //huangli 黄历天气
     //wenzi	纹字锁屏
+    //wenzifs 纹字负一平单频道
+    //wenzifm 纹字负一平多频道
     //lybrowser	猎鹰浏览器
     //baipai 白牌
     //yingyonghui 应用汇

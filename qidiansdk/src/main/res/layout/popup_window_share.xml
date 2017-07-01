@@ -54,7 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/line_layout"
         android:orientation="horizontal"
-        android:weightSum="4" />
+        android:weightSum="4"
+        android:visibility="gone"/>
     <!--<HorizontalScrollView-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
