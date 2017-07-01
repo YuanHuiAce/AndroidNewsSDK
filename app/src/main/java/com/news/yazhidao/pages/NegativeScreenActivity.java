@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
@@ -70,7 +72,7 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(1);
+        mainView.setChannelId(44);
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();
@@ -106,8 +108,17 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         super.onDestroy();
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mainView.onKeyDown(keyCode,event))
+            return true;
+        return super.onKeyDown(keyCode, event);
+    }
+
     @Override
     public void onBackPressed() {
+        Log.v("FocusId:",  this.getWindow().getDecorView().findFocus()+"");
         if (!mainView.removeView()) {
             this.finish();
         }
@@ -284,4 +295,6 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
             }
         }
     }
+
+
 }

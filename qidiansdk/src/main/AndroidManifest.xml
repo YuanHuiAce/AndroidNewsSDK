@@ -58,7 +58,8 @@
         <activity
             android:name=".pages.DeveloperAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme" />
+            android:theme="@style/SwipeBackTheme"
+             />
         <activity
             android:name=".pages.AttentionActivity"
             android:screenOrientation="portrait"
@@ -76,7 +77,11 @@
         <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
         <activity
             android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 

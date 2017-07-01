@@ -114,5 +114,15 @@
         <attr name="ctvProgress" format="float"/>
         <attr name="ctvDirection" format="integer"/>
     </declare-styleable>
+    
+    <declare-styleable name="CustomDeveloperView">
+        <attr name="cdvTagVisible" format="boolean"/>
+        <attr name="cdvDesText" format="string"/>
+        <attr name="cdvDesTextColor" format="color"/>
+        <attr name="cdvDesTextSize" format="color"/>
+        <attr name="cdvInfoText" format="string"/>
+        <attr name="cdvInfoTextColor" format="color"/>
+        <attr name="cdvInfoTextSize" format="dimension"/>
+    </declare-styleable>
 
 </resources>

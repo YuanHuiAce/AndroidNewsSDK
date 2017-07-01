@@ -1,7 +1,6 @@
 package com.news.sdk.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
 import android.text.TextUtils;
@@ -24,8 +23,6 @@ import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.AttentionListEntity;
 import com.news.sdk.entity.NewsFeed;
-import com.news.sdk.pages.NewsDetailVideoAty;
-import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -36,6 +33,7 @@ import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.widget.NegativeScreenNewsDetailView;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
 import com.news.sdk.widget.NegativeScreenNewsTopicView;
+import com.news.sdk.widget.NegativeScreenVideoDetailView;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -776,10 +774,15 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
-                    mContext.startActivity(intent);
+                    NegativeScreenVideoDetailView negativeScreenNewsDetailView = new NegativeScreenVideoDetailView(mContext);
+                    negativeScreenNewsDetailView.setFocusable(true);
+                    negativeScreenNewsDetailView.setFocusableInTouchMode(true);
+                    mRootView.addView(negativeScreenNewsDetailView.getRootView());
+                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+//                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
+//                    mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);

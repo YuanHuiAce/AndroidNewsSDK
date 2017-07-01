@@ -40,6 +40,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.IPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
@@ -74,6 +75,7 @@ import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
+import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
@@ -627,6 +629,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(newsFeedRequestPost);
     }
+
 
     private String getFirstItemTime(ArrayList<NewsFeed> newsFeedArrayList) {
         if (!TextUtil.isListEmpty(newsFeedArrayList)) {
@@ -1743,6 +1746,35 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
     /**
      * 视频播放控制
      */
+    public void updateClicktimes(int nid)
+    {
+        if (!NetUtil.checkNetWork(mContext)) {
+            ToastUtil.toastShort("无法连接到网络，请稍后再试");
+            return;
+        }
+        RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
+        User user = SharedPreManager.mInstance(mContext).getUser(mContext);
+        int userID = 0;
+        if (user != null) {
+            userID = user.getMuid();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET, HttpConstant.URL_VIDEO_INCREASE_TIMES+"nid="+nid+"&uid="+userID,
+                 new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObj) {
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        requestQueue.add(request);
+    }
 
     public void playVideoControl() {
         if (null == vPlayer) {
@@ -1773,6 +1805,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.setDuration(feed.getDuration());
                 vPlayer.play(feed.getVideourl());
+                updateClicktimes(feed.getNid());
                 removeVPlayer();
                 mItemVideo.addView(vPlayer);
                 vPlayer.setShowContoller(false);
@@ -1805,7 +1838,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                     NewsFeedFgt.this.startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
                 else
                     ((Activity) mContext).startActivityForResult(intent, NewsFeedFgt.REQUEST_CODE);
-
+                updateClicktimes(feed.getNid());
                 getActivity().overridePendingTransition(R.anim.qd_aty_right_enter, R.anim.qd_aty_no_ani);
                 lastPostion = vPlayer.cPostion;
                 return true;

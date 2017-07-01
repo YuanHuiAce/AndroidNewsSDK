@@ -246,4 +246,16 @@ public class HttpConstant {
      * 获取二级频道接口
      */
     public static final String URL_VIDEO_CHANNEL_LIST=URL_SERVER_HOST+"/ns/ch/scho?";
+
+    /**
+     * 视频详情点赞和倒赞接口
+     */
+
+    public static final String URL_VIDEO_ATTITUDE=URL_SERVER_HOST+"/ns/vdnews/commend";
+
+
+    /**
+     * 视频播放量更新接口
+     */
+    public static final String URL_VIDEO_INCREASE_TIMES=URL_SERVER_HOST+"/ns/vdnews/ptimes?";
 }

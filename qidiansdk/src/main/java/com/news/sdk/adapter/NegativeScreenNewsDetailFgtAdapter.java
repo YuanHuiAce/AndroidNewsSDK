@@ -1,8 +1,6 @@
 package com.news.sdk.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.MotionEvent;
@@ -21,8 +19,6 @@ import com.news.sdk.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.sdk.adapter.abslistview.MultiItemTypeSupport;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.entity.RelatedItemEntity;
-import com.news.sdk.pages.NewsDetailFgt;
-import com.news.sdk.pages.NewsDetailVideoAty;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -30,6 +26,7 @@ import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.NegativeScreenNewsDetailView;
+import com.news.sdk.widget.NegativeScreenVideoDetailView;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -345,13 +342,12 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
                     LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
                     AdUtil.upLoadContentClick(relatedItemEntity.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
-                    setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(CommonConstant.KEY_SOURCE, CommonConstant.LOG_CLICK_RELATE_SOURCE);
-                    intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
-                    ((Activity) mContext).startActivityForResult(intent, 1060);
-                    ((Activity) mContext).finish();
-                    ((Activity) mContext).overridePendingTransition(0, 0);
+                    mRootView.removeAllViews();
+                    mRootView.destroyDrawingCache();
+                    setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE);
+                    NegativeScreenVideoDetailView negativeScreenNewsDetailView = new NegativeScreenVideoDetailView(mContext);
+                    mRootView.addView(negativeScreenNewsDetailView.getRootView());
+                    negativeScreenNewsDetailView.setData(relatedItemEntity.getNid() + "", "", "", CommonConstant.LOG_CLICK_RELATE_SOURCE);
                 } else {
                     mRootView.removeAllViews();
                     mRootView.destroyDrawingCache();

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -62,7 +63,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
+public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     private Context mContext;
     RelativeLayout mRootView, detail_layout;
@@ -111,7 +112,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
     }
 
     private void initializeViews() {
-        mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.negative_screen_news, null);
+        mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.negative_screen_news, this);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
@@ -343,9 +344,29 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         mHandler.postDelayed(mThread, 1000);
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (detail_layout != null) {
+            int totalIndex = detail_layout.getChildCount();
+            if (totalIndex > 0) {
+                for (int index = detail_layout.getChildCount() - 1; index >= 0; index--) {
+                    final View view = detail_layout.getChildAt(index);
+                    if (view.onKeyDown(keyCode, event)) {
+                        return true;
+                    }
+
+                }
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
     public boolean removeView() {
         if (mAdapter != null) {
-          return mAdapter.removeDetailView();
+            return mAdapter.removeDetailView();
         }
         return false;
     }
@@ -550,12 +571,12 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 }
             }
         }
-        for (Iterator it = result.iterator(); it.hasNext(); ) {
-            NewsFeed newsFeed = (NewsFeed) it.next();
-            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8) {
-                it.remove();
-            }
-        }
+//        for (Iterator it = result.iterator(); it.hasNext(); ) {
+//            NewsFeed newsFeed = (NewsFeed) it.next();
+//            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8) {
+//                it.remove();
+//            }
+//        }
         if (flag == PULL_DOWN_REFRESH && !mIsFirst && !TextUtil.isListEmpty(result)) {
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);

@@ -15,6 +15,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -25,6 +27,13 @@ import android.view.WindowManager;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.utils.manager.SharedPreManager;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -369,6 +378,24 @@ public class DeviceInfoUtil {
         }
         return null;
     }
+    /**
+     * 获取应用程序名称
+     */
+    public static String getAppName(Context context)
+    {
+        try
+        {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            int labelRes = packageInfo.applicationInfo.labelRes;
+            return context.getResources().getString(labelRes);
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 获取当前app VersionCode版本
@@ -592,7 +619,7 @@ public class DeviceInfoUtil {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
                     String deviceid = mTelephonyManager.getDeviceId();
-                    return TextUtils.isEmpty(deviceid)?SharedPreManager.mInstance(context).get("flag", "imei"):deviceid;
+                    return TextUtils.isEmpty(deviceid) ? SharedPreManager.mInstance(context).get("flag", "imei") : deviceid;
                 }
             }
         } catch (Exception e) {
@@ -605,17 +632,185 @@ public class DeviceInfoUtil {
      * 保存设置IMSI
      */
     public static String getDeviceImsi(Context context) {
+        String subscriberId="";
         try {
             if (context != null) {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
-                    String subscriberId = mTelephonyManager.getSubscriberId();
-                    return TextUtils.isEmpty(subscriberId)?SharedPreManager.mInstance(context).get("flag", "imei"):subscriberId;
+                    subscriberId = mTelephonyManager.getSubscriberId();
+                    return TextUtils.isEmpty(subscriberId) ? SharedPreManager.mInstance(context).get("flag", "imei") : subscriberId;
                 }
             }
         } catch (Exception e) {
             return "";
         }
-        return "";
+        return subscriberId;
+    }
+
+
+    /**
+     * 获取手机型号
+     *
+     * @return 手机型号
+     */
+    public static String getSystemModel() {
+        return android.os.Build.MODEL;
+    }
+
+    /**
+     * 获取手机厂商
+     *
+     * @return 手机厂商
+     */
+    public static String getDeviceBrand() {
+        return android.os.Build.BRAND;
+    }
+
+
+    /**
+     * BASEBAND-VER
+     * 基带版本
+     * return String
+     */
+
+    public static String getBaseband_Ver() {
+        String Version = "";
+        try {
+            Class cl = Class.forName("android.os.SystemProperties");
+            Object invoker = cl.newInstance();
+            Method m = cl.getMethod("get", new Class[]{String.class, String.class});
+            Object result = m.invoke(invoker, new Object[]{"gsm.version.baseband", "no message"});
+// System.out.println(">>>>>>><<<<<<<" +(String)result);
+            Version = (String) result;
+        } catch (Exception e) {
+        }
+        return Version;
+    }
+
+
+    /**
+     * CORE-VER
+     * 内核版本
+     * return String
+     */
+
+    public static String getLinuxCore_Ver() {
+        Process process = null;
+        String kernelVersion = "";
+        try {
+            process = Runtime.getRuntime().exec("cat /proc/version");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        // get the output line
+        InputStream outs = process.getInputStream();
+        InputStreamReader isrout = new InputStreamReader(outs);
+        BufferedReader brout = new BufferedReader(isrout, 8 * 1024);
+
+
+        String result = "";
+        String line;
+        // get the whole standard output string
+        try {
+            while ((line = brout.readLine()) != null) {
+                result += line;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        try {
+            if (result != "") {
+                String Keyword = "version ";
+                int index = result.indexOf(Keyword);
+                line = result.substring(index + Keyword.length());
+                index = line.indexOf(" ");
+                kernelVersion = line.substring(0, index);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return kernelVersion;
+    }
+
+    /**
+     * INNER-VER
+     * 内部版本
+     * return String
+     */
+
+    public static String getInner_Ver() {
+        String ver = "";
+
+        if (android.os.Build.DISPLAY.contains(android.os.Build.VERSION.INCREMENTAL)) {
+            ver = android.os.Build.DISPLAY;
+        } else {
+            ver = android.os.Build.VERSION.INCREMENTAL;
+        }
+        return ver;
+
+    }
+
+    // 获取CPU名字
+
+    public static String getCpuName() {
+
+        try {
+
+            FileReader fr = new FileReader("/proc/cpuinfo");
+
+            BufferedReader br = new BufferedReader(fr);
+
+            String text = br.readLine();
+
+            String[] array = text.split(":\\s+", 2);
+
+            for (int i = 0; i < array.length; i++) {
+
+            }
+
+            return array[1];
+
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return null;
+
+    }
+
+    public static  String getTotalMemory() {
+        String str1 = "/proc/meminfo";
+        String str2="";
+        try {
+            FileReader fr = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+            while ((str2 = localBufferedReader.readLine()) != null) {
+            }
+        } catch (IOException e) {
+        }
+        return str2;
+    }
+
+
+
+
+    public static  String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return String.valueOf(totalBlocks * blockSize);
     }
 }

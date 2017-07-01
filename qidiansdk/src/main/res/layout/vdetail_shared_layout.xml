@@ -5,55 +5,56 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/detail_video_title"
+    <LinearLayout
+        android:id="@+id/detail_video_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="16dp"
-        android:textSize="@dimen/font3" />
+        android:layout_marginTop="12dp"
+        android:paddingRight="15dp"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/detail_video_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:lineSpacingExtra="4dp"
+            android:textSize="@dimen/font2"
+            />
+
+        <ImageView
+            android:id="@+id/ib_title_onff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="15dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_title_off"
+            />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/detail_container_onlines"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="12dp"
-        android:visibility="gone"
-        >
+        android:layout_marginTop="8dp">
 
         <LinearLayout
             android:id="@+id/rl_tag_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp">
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="12dp"
+            android:orientation="horizontal"
+            android:visibility="gone" />
 
-            <com.news.sdk.widget.TextViewExtend
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/tag_video_shape"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:text="生活"
-                android:textColor="#837c78"
-                android:textSize="12sp" />
-
-            <com.news.sdk.widget.TextViewExtend
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="3dp"
-                android:background="@drawable/tag_video_shape"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:text="人民名义"
-                android:textColor="#837c78"
-                android:textSize="12sp" />
-
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_detail_onlines"
@@ -61,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:text="15万次播放"
             android:textColor="#9a9a9a"
             android:textSize="11sp" />
 
@@ -70,8 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_tag_container"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginLeft="12dp">
 
             <TextView
                 android:id="@+id/tv_detail_video_agree"
@@ -79,20 +78,25 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_agree_detail_video_normal"
                 android:drawablePadding="5dp"
-                android:textSize="@dimen/font7"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
                 android:textColor="@color/color3"
-                android:text="3" />
+                android:textSize="@dimen/font7" />
 
             <TextView
                 android:id="@+id/tv_detail_video_against"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
                 android:drawableLeft="@drawable/ic_detail_video_against_normal"
                 android:drawablePadding="5dp"
-                android:layout_marginLeft="18dp"
-                android:textSize="@dimen/font7"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginTop="1dp"
+                android:paddingTop="8dp"
                 android:textColor="@color/color3"
-                android:text="3" />
+                android:textSize="@dimen/font7" />
 
         </LinearLayout>
 
@@ -171,9 +175,7 @@
         android:textSize="@dimen/font5"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/detail_attention_item"
-       />
+    <include layout="@layout/detail_attention_item" />
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
@@ -181,7 +183,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="28dp"
         android:visibility="gone">
 
         <!--<ImageView-->

@@ -4,6 +4,7 @@ package com.news.sdk.pages;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -87,7 +88,9 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
     protected void setContentView() {
         setContentView(R.layout.aty_channnel_operate);
     }
-
+    private int mSecretNumber = 0;
+    private static final long MIN_CLICK_INTERVAL = 600;
+    private long mLastClickTime;
     @Override
     protected void initializeViews() {
         bgLayout = (LinearLayout) findViewById(R.id.subscribe_main_layout);
@@ -99,6 +102,28 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         icon_1 = (ImageView) findViewById(R.id.icon_1);
         icon_2 = (ImageView) findViewById(R.id.icon_2);
         tvTitle = (TextView) findViewById(R.id.title);
+        tvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long currentClickTime = SystemClock.uptimeMillis();
+                long elapsedTime = currentClickTime - mLastClickTime;
+                mLastClickTime = currentClickTime;
+
+                if (elapsedTime < MIN_CLICK_INTERVAL) {
+                    ++mSecretNumber;
+                    if (5 == mSecretNumber) {
+                        try {
+                            Intent intent = new Intent(ChannelOperateAty.this, DeveloperAty.class);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                        }
+
+                    }
+                } else {
+                    mSecretNumber = 0;
+                }
+            }
+        });
         mDividingLine = findViewById(R.id.mHeaderDivider);
         mbgLine = findViewById(R.id.bg_line);
         mLine1 = findViewById(R.id.line1);
