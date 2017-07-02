@@ -63,6 +63,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     private RequestManager mRequestManager;
     private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
     private NegativeScreenNewsTopicView negativeScreenNewsTopicView;
+    private NegativeScreenVideoDetailView negativeScreenVideoDetailView;
 
     public NegativeScreenNewsFeedAdapter(Context context, NegativeScreenNewsFeedView view, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -549,7 +550,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.setGlideDrawViewURI(mRequestManager, R.id.iv_video_source_avatarHd, feed.getIcon());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             //视频播放
-//            setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
+            setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
@@ -773,16 +774,20 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mRootView.addView(negativeScreenNewsTopicView.getNewsView());
                     negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
-                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-                    NegativeScreenVideoDetailView negativeScreenNewsDetailView = new NegativeScreenVideoDetailView(mContext);
-                    negativeScreenNewsDetailView.setFocusable(true);
-                    negativeScreenNewsDetailView.setFocusableInTouchMode(true);
-                    mRootView.addView(negativeScreenNewsDetailView.getRootView());
-                    negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
-//                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-//                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-//                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
-//                    mContext.startActivity(intent);
+
+                    if (onPlayClickListener != null) {
+                        if (onPlayClickListener.onItemClick(rlNewsContent, feed)) {
+                            setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+                        }
+                    }
+// else {
+//                        setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+//                        negativeScreenVideoDetailView = new NegativeScreenVideoDetailView(mContext);
+//                        negativeScreenVideoDetailView.setFocusable(true);
+//                        negativeScreenVideoDetailView.setFocusableInTouchMode(true);
+//                        mRootView.addView(negativeScreenVideoDetailView.getRootView());
+//                        negativeScreenVideoDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+//                    }
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
@@ -895,6 +900,16 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             negativeScreenNewsDetailView = null;
             return true;
         }
+
+//        if (negativeScreenVideoDetailView != null) {
+//            if (negativeScreenVideoDetailView.onBackUp()) {
+//                return true;
+//            }else {
+//                mRootView.removeAllViews();
+//                negativeScreenVideoDetailView=null;
+//                return true;
+//            }
+//        }
         if (negativeScreenNewsTopicView != null) {
             if (negativeScreenNewsTopicView.isDetailVisibility()) {
                 negativeScreenNewsTopicView.onBackPressed();
@@ -907,9 +922,21 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                 return true;
             }
         }
+
+
         return false;
     }
 
+    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onPlayClickListener != null) {
+                    onPlayClickListener.onPlayClick(view, feed);
+                }
+            }
+        });
+    }
     /**
      * 接口回调传入数据的添加与删除
      * <p/>
@@ -917,6 +944,24 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
      */
     public interface introductionNewsFeed {
         public void getDate(NewsFeed feed, boolean isCheck);
+    }
+
+    //视频播放接口
+    private NewsFeedAdapter.OnPlayClickListener onPlayClickListener;
+
+    public void setOnPlayClickListener(NewsFeedAdapter.OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
+
+    }
+
+
+
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+
+        boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
+
+        void onShareClick(ImageView imageView, NewsFeed feed);
     }
 
 }

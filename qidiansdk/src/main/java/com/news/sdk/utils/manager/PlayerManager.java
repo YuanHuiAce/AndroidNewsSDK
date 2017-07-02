@@ -7,7 +7,6 @@ import com.news.sdk.entity.NewsFeed;
 
 /**
  * Created by Berkeley on 12/19/16.
- * 这样写有问题
  */
 public class PlayerManager {
 

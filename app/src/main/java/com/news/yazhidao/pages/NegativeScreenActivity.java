@@ -30,6 +30,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
+import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
@@ -72,7 +73,7 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(44);
+        mainView.setChannelId(1);
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();
@@ -108,12 +109,22 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         super.onDestroy();
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mainView.onKeyDown(keyCode,event))
-            return true;
+        if (PlayerManager.videoPlayView != null) {
+            if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
+                return true;
+        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (PlayerManager.videoPlayView != null)
+        {
+            PlayerManager.videoPlayView.onPause();
+        }
     }
 
     @Override

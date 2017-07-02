@@ -67,6 +67,7 @@ import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
+import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
@@ -622,14 +623,13 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         mDetailBg.setLayoutParams(lpVideo);
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
         mDetailVideoTitle.setText(mResult.getTitle());
-        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null) {
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null&&!vplayer.isPlay()) {
             mDetailShow.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl());
+            removeVPlayer();
             mVideoContainer.addView(vplayer);
         }
-
-
         mAdapter.setRootView((RelativeLayout) view.getParent());
 
 
@@ -932,7 +932,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-       if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             return onBackUp();
         }
         return super.onKeyDown(keyCode, event);
@@ -941,7 +941,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
 
     public boolean onBackUp() {
         if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
-            ((Activity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
             if (frameLayout != null) {
                 frameLayout.removeAllViews();
@@ -952,25 +952,30 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             vplayer.showBottomControl(true);
 
             return true;
-        } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
-            if (vplayer != null) {
-                vplayer.stop();
-                vplayer.release();
-            }
-            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-            if (frameLayout != null) {
-                frameLayout.removeAllViews();
-            }
-            mDetailShow.setVisibility(View.VISIBLE);
-            mVideoContainer.setVisibility(View.GONE);
-            return false;
         }
+//        else if (mVideoContainer.getVisibility() == View.VISIBLE) {
+//            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+//            if (frameLayout != null) {
+//                frameLayout.removeAllViews();
+//            }
+//            if (vplayer != null) {
+//                vplayer.stop();
+//                vplayer.release();
+//            }
+//            mDetailShow.setVisibility(View.VISIBLE);
+//            mVideoContainer.setVisibility(View.GONE);
+//            return false;
+//        }
 
         return false;
     }
 
     private void initPlayer() {
-        vplayer = new VPlayPlayer(mContext);
+        if (PlayerManager.videoPlayView != null) {
+            vplayer = PlayerManager.videoPlayView;
+        } else {
+            vplayer = PlayerManager.getPlayerManager().initialize(mContext);
+        }
         //视频相关
         mFullVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_fullscreen);
         mVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_container);
@@ -1007,7 +1012,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
                     vplayer.release();
                 }
                 if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
-                    ((Activity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     mFullVideoContainer.removeAllViews();
                     mFullVideoContainer.setVisibility(View.GONE);
                 } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
@@ -1019,9 +1024,25 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
 
             }
         });
-
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null&&vplayer.isPlay()) {
+            mDetailShow.setVisibility(View.GONE);
+            vplayer.setTitle(mResult.getTitle());
+            vplayer.play(mResult.getVideourl());
+            removeVPlayer();
+            mVideoContainer.addView(vplayer);
+        }
     }
 
+    /**
+     * 释放播放器
+     */
+    public void removeVPlayer() {
+        if (vplayer != null) {
+            ViewGroup parent = (ViewGroup) vplayer.getParent();
+            if (parent != null)
+                parent.removeAllViews();
+        }
+    }
     //把获取焦点强制为True，就有焦点了
     @Override
     public boolean isFocused() {
@@ -1029,8 +1050,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         return true;
     }
 
-    public void OnDestory()
-    {
+    public void OnDestory() {
         if (vplayer != null) {
             vplayer.stop();
             vplayer.release();
@@ -1073,6 +1093,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
         mHomeWatcher = new HomeWatcher(mContext);
         mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
         mHomeWatcher.startWatch();
@@ -1082,7 +1103,12 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     protected void onDetachedFromWindow() {
         OnDestory();
         mHomeWatcher.stopWatch();
-        mHomeWatcher=null;
+        mHomeWatcher = null;
+        if (vplayer != null) {
+            vplayer.stop();
+            vplayer.release();
+            vplayer = null;
+        }
         super.onDetachedFromWindow();
     }
 
