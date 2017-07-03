@@ -33,10 +33,12 @@ import com.news.sdk.common.ThemeManager;
 import com.news.sdk.entity.User;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.ImageUtil;
+import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -175,7 +177,7 @@ public class SharePopupWindow extends PopupWindow {
 //            if (i == mTypedArray.length() - 1) {
 //                viewExtend.setPadding(margin, margin, margin, margin);
 //            } else {
-                viewExtend.setPadding(margin, margin, 0, margin);
+            viewExtend.setPadding(margin, margin, 0, margin);
 //            }
             final String strShareName = mShareName[i];
             viewExtend.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +214,17 @@ public class SharePopupWindow extends PopupWindow {
                     } else if ("夜间模式".equals(strShareName)) {
                         ThemeManager.setThemeMode(ThemeManager.getThemeMode() == ThemeManager.ThemeMode.DAY
                                 ? ThemeManager.ThemeMode.NIGHT : ThemeManager.ThemeMode.DAY);
+                        LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_CHANGEMODE, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, null, false);
                     } else {
+                        if (mNid != 0) {
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("nid", Long.valueOf(mNid));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_SHARE, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, false);
+                        }
                         Intent intent = new Intent();
                         int whereabout = 0;
                         User user = SharedPreManager.mInstance(mContext).getUser(mContext);
@@ -220,18 +232,18 @@ public class SharePopupWindow extends PopupWindow {
 //                            if (user.isVisitor()) {
 //                                AuthorizedUserUtil.sendUserLoginBroadcast(mContext);
 //                            } else {
-                                if ("微信朋友圈".equals(strShareName)) {
-                                    whereabout = 1;
-                                    intent.setAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
-                                } else if ("微信好友".equals(strShareName)) {
-                                    whereabout = 2;
-                                    intent.setAction(CommonConstant.SHARE_WECHAT_ACTION);
-                                } else if ("新浪微博".equals(strShareName)) {
-                                    whereabout = 4;
-                                    intent.setAction(CommonConstant.SHARE_SINA_WEIBO_ACTION);
-                                } else if ("QQ好友".equals(strShareName)) {
-                                    whereabout = 3;
-                                    intent.setAction(CommonConstant.SHARE_QQ_ACTION);
+                            if ("微信朋友圈".equals(strShareName)) {
+                                whereabout = 1;
+                                intent.setAction(CommonConstant.SHARE_WECHAT_MOMENTS_ACTION);
+                            } else if ("微信好友".equals(strShareName)) {
+                                whereabout = 2;
+                                intent.setAction(CommonConstant.SHARE_WECHAT_ACTION);
+                            } else if ("新浪微博".equals(strShareName)) {
+                                whereabout = 4;
+                                intent.setAction(CommonConstant.SHARE_SINA_WEIBO_ACTION);
+                            } else if ("QQ好友".equals(strShareName)) {
+                                whereabout = 3;
+                                intent.setAction(CommonConstant.SHARE_QQ_ACTION);
 //                                }
                             }
                         }

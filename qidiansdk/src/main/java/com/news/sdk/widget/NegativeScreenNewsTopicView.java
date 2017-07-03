@@ -217,7 +217,7 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     }
 
     public void onBackPressed() {
-        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null && !negativeScreenNewsDetailView.isRelease()) {
+        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null ) {
             negativeScreenNewsDetailView.onBackPressed();
             negativeScreenNewsDetailView.destroyDrawingCache();
             negativeScreenNewsDetailView = null;

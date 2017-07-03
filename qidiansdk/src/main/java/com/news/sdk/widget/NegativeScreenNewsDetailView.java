@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Handler;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -155,12 +156,25 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private int prcent;
     private String Aid, source, title;
     private boolean isUploadBigAd;
-    private boolean isRelease;
+    private boolean isVisable;
+    private boolean isFirst;
+    private static NegativeScreenNewsDetailView instance;
 
     public NegativeScreenNewsDetailView(Context context) {
         super(context);
         mContext = context;
         initializeViews();
+    }
+
+    public static NegativeScreenNewsDetailView getInstance() {
+        if (instance == null) {
+            synchronized (NegativeScreenNewsDetailView.class) {
+                if (instance == null) {
+                    instance = new NegativeScreenNewsDetailView(QiDianApplication.getAppContext());
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -169,6 +183,8 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     }
 
     protected void initializeViews() {
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
         mRequestManager = Glide.with(mContext);
@@ -385,8 +401,8 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         return this.mRootView;
     }
 
-    public boolean isRelease() {
-        return isRelease;
+    public boolean isVisable() {
+        return isVisable;
     }
 
     public void addHeadView() {
@@ -504,12 +520,39 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         footView_tv.setVisibility(View.VISIBLE);
     }
 
-    public void setNewsFeed(NewsFeed newsFeed, String source) {
-        mNewsFeed = newsFeed;
-        mSource = source;
-        if (mNewsFeed != null) {
+    public void setNewsFeed(final NewsFeed newsFeed, final String source) {
+        if (newsFeed != null && mAlphaAnimationIn != null) {
+            if (!TextUtil.isListEmpty(beanList)) {
+                viewpointPage = 1;
+                beanList.removeAll(beanList);
+            }
+            isFirst = true;
+            mRootView.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.VISIBLE);
+            isVisable = true;
+            mNewsDetailList.getRefreshableView().setSelection(0);
+            mNewsDetailList.getRefreshableView().smoothScrollToPosition(0);
+            mNewsFeed = newsFeed;
+            mSource = source;
             mNid = mNewsFeed.getNid() + "";
             loadData();
+            mRootView.startAnimation(mAlphaAnimationIn);
+            mAlphaAnimationIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mRootView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
         }
     }
 
@@ -682,7 +725,6 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
             bgLayout.setVisibility(View.VISIBLE);
             isRefresh = true;
             mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-            bgLayout.setVisibility(View.VISIBLE);
             if (mNewsFeed != null) {
                 mNid = mNewsFeed.getNid() + "";
             }
@@ -700,9 +742,6 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                     loadADData();
                     isRefresh = false;
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
                     if (result != null) {
                         mResult = result;
                         mNewsFeed = convert2NewsFeed(result);
@@ -714,7 +753,14 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                         LogUtil.userClickLog(mNewsFeed, mContext, mSource);
                     } else {
                         ToastUtil.toastShort("此新闻暂时无法查看!");
-//                        mContext.finish();
+                    }
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
+                        bgLayout.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                bgLayout.setVisibility(View.GONE);
+                            }
+                        }, 500);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -764,6 +810,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
 
     public void onBackPressed() {
         if (mAlphaAnimationOut != null && mRootView != null) {
+            isVisable = false;
             mRootView.startAnimation(mAlphaAnimationOut);
             mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -773,12 +820,12 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    isRelease = true;
-                    mRootView.setVisibility(GONE);
-                    destroy();
-                    mRootView.removeAllViews();
-                    mRootView.destroyDrawingCache();
-                    mRootView = null;
+                    mRootView.setVisibility(View.GONE);
+//                    mRootView.setVisibility(View.GONE);
+//                    destroy();
+//                    mRootView.removeAllViews();
+//                    mRootView.destroyDrawingCache();
+//                    mRootView = null;
                 }
 
                 @Override
@@ -788,6 +835,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
             });
         }
     }
+
 
     public void destroy() {
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
@@ -892,7 +940,8 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         if (!TextUtil.isListEmpty(marrlist)) {
             LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
-            if (dataRef != null && TextUtil.isEmptyString(title)) {
+            if (dataRef != null && isFirst) {
+                isFirst = false;
                 title = dataRef.getTitle();
                 adtvTitle.setText(dataRef.getDesc());
                 final String url = dataRef.getImgUrl();

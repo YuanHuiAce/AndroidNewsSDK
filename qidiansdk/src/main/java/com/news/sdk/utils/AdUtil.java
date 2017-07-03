@@ -85,6 +85,11 @@ public class AdUtil {
             /** 设置屏幕分辨率 */
             adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
             /** 客户端浏览器*/
+            try {
+                adDeviceEntity.setUa(WebSettings.getDefaultUserAgent(mContext));
+            }catch (Exception e){
+                adDeviceEntity.setUa("");
+            }
             adDeviceEntity.setUa(WebSettings.getDefaultUserAgent(mContext));
             /** 设置屏幕密度*/
             adDeviceEntity.setDensity(mContext.getApplicationContext().getResources().getDisplayMetrics().densityDpi + "");

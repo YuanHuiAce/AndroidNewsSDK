@@ -62,6 +62,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+
+
 public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     private Context mContext;
@@ -345,7 +347,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
 
     public boolean removeView() {
         if (mAdapter != null) {
-          return mAdapter.removeDetailView();
+            return mAdapter.removeDetailView();
         }
         return false;
     }
@@ -552,7 +554,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         }
         for (Iterator it = result.iterator(); it.hasNext(); ) {
             NewsFeed newsFeed = (NewsFeed) it.next();
-            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8) {
+            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8 || newsFeed.getStyle() == 0) {
                 it.remove();
             }
         }

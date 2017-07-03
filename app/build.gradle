@@ -88,7 +88,6 @@ def buildTime() {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.6.2'

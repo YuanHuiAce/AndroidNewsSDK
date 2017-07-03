@@ -459,6 +459,15 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             if (mNewsFeedFgtPopWindow != null) {
+                if (feed.getNid() != 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(feed.getNid()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_DISLIKE, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, false);
+                }
                 String pName = feed.getPname();
                 mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
             }
@@ -913,10 +922,9 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
             } else {
                 setRefreshComplete();
                 ArrayList<NewsFeed> newsFeeds;
-                if (mChannelId==44) {
+                if (mChannelId == 44) {
                     newsFeeds = mNewsFeedDao.queryByChannelId(mChannelId);
-                }else
-                {
+                } else {
                     newsFeeds = mNewsFeedDao.queryByChannelId(scid);
                 }
                 if (TextUtil.isListEmpty(newsFeeds)) {

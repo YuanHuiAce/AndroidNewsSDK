@@ -415,10 +415,10 @@ public class DeviceInfoUtil {
             Class<?> clazz = Class.forName("android.os.Build");
             Class<?> paraTypes = Class.forName("java.lang.String");
             Method method = clazz.getDeclaredMethod("getString", paraTypes);
-            if (!method.isAccessible()) {
+            if (method != null && !method.isAccessible()) {
                 method.setAccessible(true);
+                serial = (String) method.invoke(new Build(), "ro.serialno");
             }
-            serial = (String) method.invoke(new Build(), "ro.serialno");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -592,7 +592,7 @@ public class DeviceInfoUtil {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
                     String deviceid = mTelephonyManager.getDeviceId();
-                    return TextUtils.isEmpty(deviceid)?SharedPreManager.mInstance(context).get("flag", "imei"):deviceid;
+                    return TextUtils.isEmpty(deviceid) ? SharedPreManager.mInstance(context).get("flag", "imei") : deviceid;
                 }
             }
         } catch (Exception e) {
@@ -610,7 +610,7 @@ public class DeviceInfoUtil {
                 TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 if (mTelephonyManager != null) {
                     String subscriberId = mTelephonyManager.getSubscriberId();
-                    return TextUtils.isEmpty(subscriberId)?SharedPreManager.mInstance(context).get("flag", "imei"):subscriberId;
+                    return TextUtils.isEmpty(subscriberId) ? SharedPreManager.mInstance(context).get("flag", "imei") : subscriberId;
                 }
             }
         } catch (Exception e) {

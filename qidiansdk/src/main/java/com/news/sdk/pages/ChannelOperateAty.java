@@ -23,12 +23,17 @@ import com.news.sdk.R;
 import com.news.sdk.adapter.ChannelNormalAdapter;
 import com.news.sdk.adapter.ChannelSelectedAdapter;
 import com.news.sdk.common.BaseActivity;
+import com.news.sdk.common.CommonConstant;
 import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.ChannelItemDao;
 import com.news.sdk.entity.ChannelItem;
+import com.news.sdk.utils.LogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.channel.NormalGridView;
 import com.news.sdk.widget.channel.SelectedGridView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -206,6 +211,15 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
                 userAdapter.setVisible(false);
                 //添加到最后一个
                 userAdapter.addItem(channel);
+                if (channel.getId() != 0) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("nid", Long.valueOf(channel.getId()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    LogUtil.userActionLog(this, CommonConstant.LOG_ATYPE_ADDCHANNEL, CommonConstant.LOG_PAGE_CHANNELPAGE, CommonConstant.LOG_PAGE_CHANNELPAGE, jsonObject, false);
+                }
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         try {
@@ -352,12 +366,14 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
         }).start();
         ArrayList<ChannelItem> channelItems = userAdapter.getChannnelList();
         if (selectedChannelListCurrent.size() != channelItems.size()) {
+            LogUtil.userActionLog(this, CommonConstant.LOG_ATYPE_MOVECHANNEL, CommonConstant.LOG_PAGE_CHANNELPAGE, CommonConstant.LOG_PAGE_CHANNELPAGE, null, false);
             Intent data = new Intent();
             data.putExtra(KEY_USER_SELECT, channelItems);
             setResult(MainAty.REQUEST_CODE, data);
         } else {
             for (int i = 0; i < selectedChannelListCurrent.size(); i++) {
                 if (selectedChannelListCurrent.get(i).getId() != channelItems.get(i).getId()) {
+                    LogUtil.userActionLog(this, CommonConstant.LOG_ATYPE_MOVECHANNEL, CommonConstant.LOG_PAGE_CHANNELPAGE, CommonConstant.LOG_PAGE_CHANNELPAGE, null, false);
                     Intent data = new Intent();
                     data.putExtra(KEY_USER_SELECT, channelItems);
                     setResult(MainAty.REQUEST_CODE, data);

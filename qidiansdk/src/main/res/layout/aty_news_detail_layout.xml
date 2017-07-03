@@ -79,8 +79,7 @@
         android:id="@+id/mDetailBottomBanner"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone">
+        android:layout_alignParentBottom="true">
 
         <View
             android:id="@+id/mBottomLine"

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.news.yazhidao.pages.MainActivity;
 import com.news.sdk.application.QiDianApplication;
 import com.news.sdk.common.CommonConstant;
 import com.news.sdk.net.volley.request.UploadUmengPushIdRequest;
@@ -17,6 +16,7 @@ import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.pages.NewsTopicAty;
 import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.TextUtil;
+import com.news.yazhidao.pages.MainActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengCallback;
 import com.umeng.message.IUmengRegisterCallback;

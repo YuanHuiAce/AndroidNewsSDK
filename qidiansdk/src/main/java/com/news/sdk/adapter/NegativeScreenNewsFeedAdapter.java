@@ -782,8 +782,10 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mContext.startActivity(intent);
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    if (negativeScreenNewsDetailView == null) {
+                        negativeScreenNewsDetailView = NegativeScreenNewsDetailView.getInstance();
+                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    }
                     negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 }
                 if (feed.isRead()) {
@@ -871,25 +873,15 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         tag.setText(content);
     }
 
-    public boolean isNeedReleaseView() {
-        if (negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isRelease()) {
-            return true;
-        }
-        if (negativeScreenNewsTopicView != null && negativeScreenNewsTopicView.isRelease()) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean removeDetailView() {
-        if (negativeScreenNewsDetailView != null) {
-            if (negativeScreenNewsDetailView.isRelease()) {
-                negativeScreenNewsDetailView = null;
-                return false;
-            }
+        if (negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isVisable()) {
+//            if (negativeScreenNewsDetailView.isRelease()) {
+//                negativeScreenNewsDetailView = null;
+//                return false;
+//            }
             negativeScreenNewsDetailView.onBackPressed();
-            negativeScreenNewsDetailView.destroyDrawingCache();
-            negativeScreenNewsDetailView = null;
+//            negativeScreenNewsDetailView.destroyDrawingCache();
+//            negativeScreenNewsDetailView = null;
             return true;
         }
         if (negativeScreenNewsTopicView != null) {

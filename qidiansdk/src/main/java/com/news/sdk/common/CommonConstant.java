@@ -228,6 +228,17 @@ public final class CommonConstant {
     public static final String LOG_ATYPE_MYMESSAGES = "myMessages";
     public static final String LOG_ATYPE_MYSETTING = "mySetting";
     public static final String LOG_ATYPE_PROFILECLICK = "profileClick";
+    public static final String LOG_ATYPE_LIKE = "like";
+    public static final String LOG_ATYPE_COMMENT = "comment";
+    public static final String LOG_ATYPE_SHARE = "share";
+    public static final String LOG_ATYPE_COLLECT = "collect";
+    public static final String LOG_ATYPE_CHANGEMODE = "changeMode";
+    public static final String LOG_ATYPE_FEEDVIDEOPLAY = "feedVideoPlay";
+    public static final String LOG_ATYPE_DISLIKE = "dislike";
+    public static final String LOG_ATYPE_PUBLISHERCLICK = "publisherClick";
+    public static final String LOG_ATYPE_FONTSETTING = "fontSetting";
+    public static final String LOG_ATYPE_MOVECHANNEL = "moveChannel";
+    public static final String LOG_ATYPE_ADDCHANNEL = "addChannel";
 
     /**
      * page取值	对应页面
@@ -239,6 +250,7 @@ public final class CommonConstant {
      * searchPage	搜索页面
      * pfeedPage	来源feed流页面
      * attentionPage	关注页面
+     * attentionListPage 关注列表页面
      * myCommentPage	我的评论页面
      * myCollectionPage	我的收藏页面
      * myMessagePage	我的消息页面
@@ -254,6 +266,7 @@ public final class CommonConstant {
     public static final String LOG_PAGE_LOGINPAGE = "loginPage";
     public static final String LOG_PAGE_SEARCHPAGE = "searchPage";
     public static final String LOG_PAGE_ATTENTIONPAGE = "attentionPage";
+    public static final String LOG_PAGE_ATTENTIONLISTPAGE = "attentionListPage";
     public static final String LOG_PAGE_PFEEDPAGE = "pfeedPage";
     public static final String LOG_PAGE_MYCOMMENTPAGE = "myCommentPage";
     public static final String LOG_PAGE_MYCOLLECTIONPAGE = "myCollectionPage";

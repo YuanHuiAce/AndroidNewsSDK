@@ -42,6 +42,8 @@ import com.news.yazhidao.service.UpdateService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.taobao.accs.ACCSManager.mContext;
+
 
 public class SettingAty extends BaseActivity implements View.OnClickListener {
 
@@ -133,6 +135,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                LogUtil.userActionLog(SettingAty.this, CommonConstant.LOG_ATYPE_FONTSETTING, CommonConstant.LOG_PAGE_SETTINGPAGE, CommonConstant.LOG_PAGE_SETTINGPAGE, null, false);
                 switch (checkedId) {
                     case R.id.mRadioNormal:
                         mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_NORMAL).commit();
@@ -268,6 +271,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                     ThemeManager.setThemeMode(ThemeManager.ThemeMode.DAY);
                     mDayNightImg.setImageResource(R.mipmap.ic_setting_push_off);
                 }
+                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_CHANGEMODE, CommonConstant.LOG_PAGE_MYMESSAGEPAGE, CommonConstant.LOG_PAGE_MYMESSAGEPAGE, null, false);
                 break;
             case R.id.mSettingClearCache:
                 AlertDialog.Builder clearBuilder = new AlertDialog.Builder(this);

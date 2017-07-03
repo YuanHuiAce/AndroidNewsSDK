@@ -11,11 +11,10 @@ import com.news.sdk.widget.swipebackactivity.SwipeBackActivity;
 import com.news.sdk.widget.swipebackactivity.SwipeBackActivityHelper;
 
 
-
 /**
  * Created by feng on 3/23/15.
  */
-public abstract class BaseActivity extends SwipeBackActivity implements ThemeManager.OnThemeChangeListener{
+public abstract class BaseActivity extends SwipeBackActivity implements ThemeManager.OnThemeChangeListener {
 
     protected SwipeBackActivityHelper mHelper;
 
@@ -65,11 +64,21 @@ public abstract class BaseActivity extends SwipeBackActivity implements ThemeMan
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.fontScale != 1) {//非默认值
+            getResources();
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public Resources getResources() {
         Resources res = super.getResources();
-        Configuration config=new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config,res.getDisplayMetrics() );
+        if (res.getConfiguration().fontScale != 1) {//非默认值
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();//设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
         return res;
     }
 

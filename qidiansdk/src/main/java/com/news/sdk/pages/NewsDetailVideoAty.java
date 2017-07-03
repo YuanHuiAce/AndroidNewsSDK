@@ -180,7 +180,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             TextUtil.setImageResource(this, mDetailRightMore, R.drawable.btn_detail_right_more);
         } else {
             ImageUtil.setAlphaImage(mDetailLeftBack, R.drawable.detial_video_back);
-            ImageUtil.setAlphaImage( mDetailRightMore, R.drawable.detai_video_share);
+            ImageUtil.setAlphaImage(mDetailRightMore, R.drawable.detai_video_share);
         }
         TextUtil.setLayoutBgResource(this, mTitleBottomLine, R.color.color5);
         TextUtil.setLayoutBgResource(this, mDetailView, R.color.color6);
@@ -206,6 +206,13 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public class RefreshPageBroReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("nid", Long.valueOf(mNid));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            LogUtil.userActionLog(NewsDetailVideoAty.this, CommonConstant.LOG_ATYPE_COMMENT, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, true);
             isUserComment = true;
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
@@ -317,6 +324,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             registerReceiver(mRefreshReceiver, filter);
         }
     }
+
     HomeWatcher.OnHomePressedListener mOnHomePressedListener = new HomeWatcher.OnHomePressedListener() {
         @Override
         public void onHomePressed() {
@@ -665,8 +673,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             } else {
                 ToastUtil.toastShort("当前网络不可用，请检查网络设置");
             }
-        }else if (getId==R.id.mDetailRightMore)
-        {
+        } else if (getId == R.id.mDetailRightMore) {
             if (mNewsFeed != null) {
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);

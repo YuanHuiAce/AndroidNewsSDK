@@ -120,6 +120,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("nid", Long.valueOf(mNid));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            LogUtil.userActionLog(NewsDetailAty2.this, CommonConstant.LOG_ATYPE_COMMENT, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE, jsonObject, true);
             isUserComment = true;
             mCommentNum = mCommentNum + 1;
             mDetailCommentNum.setVisibility(View.VISIBLE);
