@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Handler;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,7 +63,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
-import com.news.sdk.utils.LogUtil;
+import com.news.sdk.utils.NegativeLogUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
@@ -160,7 +159,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private boolean isFirst;
     private static NegativeScreenNewsDetailView instance;
 
-    public NegativeScreenNewsDetailView(Context context) {
+    private NegativeScreenNewsDetailView(Context context) {
         super(context);
         mContext = context;
         initializeViews();
@@ -188,7 +187,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
         mRequestManager = Glide.with(mContext);
-        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID, this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID, this);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -297,7 +296,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                                     feed.setPname(relatedItemEntity.getPname());
                                     feed.setCtime(System.currentTimeMillis());
                                     newsFeeds.add(feed);
-                                    LogUtil.userShowLog(newsFeeds, mContext);
+                                    NegativeLogUtil.userShowLog(newsFeeds, mContext);
                                 }
                             }
                         }
@@ -331,7 +330,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                     feed.setPname(title);
                     feed.setCtime(System.currentTimeMillis());
                     newsFeeds.add(feed);
-                    LogUtil.userShowLog(newsFeeds, mContext);
+                    NegativeLogUtil.userShowLog(newsFeeds, mContext);
                 }
             }
 
@@ -505,7 +504,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         RelativeLayout.LayoutParams adLayoutParams = (RelativeLayout.LayoutParams) adImageView.getLayoutParams();
         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 30);
         adLayoutParams.width = imageWidth;
-        if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID)) {
+        if (TextUtil.isEmptyString(CommonConstant.NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID)) {
             adLayoutParams.height = (int) (imageWidth * 627 / 1200.0f);
         } else {
             adLayoutParams.height = (int) (imageWidth * 10 / 19.0f);
@@ -561,6 +560,16 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         mDocid = docId;
         mTitle = title;
         mSource = source;
+        mNewsFeed = null;
+        if (!TextUtil.isListEmpty(beanList)) {
+            viewpointPage = 1;
+            beanList.removeAll(beanList);
+        }
+        isFirst = true;
+        bgLayout.setVisibility(View.VISIBLE);
+        isVisable = true;
+        mNewsDetailList.getRefreshableView().setSelection(0);
+        mNewsDetailList.getRefreshableView().smoothScrollToPosition(0);
         loadData();
     }
 
@@ -608,7 +617,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("nid", Integer.valueOf(mNid));
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_SMALLID)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_RELATE_GDT_API_NEGATIVESMALLID)));
                 jsonObject.put("p", viewpointPage);
                 jsonObject.put("c", (6));
                 jsonObject.put("ads", SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
@@ -750,7 +759,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                                     SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                                     "text/html", "utf-8", null);
                         }
-                        LogUtil.userClickLog(mNewsFeed, mContext, mSource);
+                        NegativeLogUtil.userClickLog(mNewsFeed, mContext, mSource);
                     } else {
                         ToastUtil.toastShort("此新闻暂时无法查看!");
                     }
@@ -809,7 +818,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     }
 
     public void onBackPressed() {
-        if (mAlphaAnimationOut != null && mRootView != null) {
+        if (mAlphaAnimationOut != null && mRootView != null && mRootView.getParent() != null) {
             isVisable = false;
             mRootView.startAnimation(mAlphaAnimationOut);
             mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
@@ -821,6 +830,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mRootView.setVisibility(View.GONE);
+                    ((ViewGroup) mRootView.getParent()).removeView(mRootView);
 //                    mRootView.setVisibility(View.GONE);
 //                    destroy();
 //                    mRootView.removeAllViews();
@@ -850,7 +860,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     private void loadADData() {
         if (mNativeAD != null && SharedPreManager.mInstance(mContext).getBoolean(CommonConstant.FILE_AD, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE)) {
             mNativeAD.loadAD(mAdCount);
-            Aid = CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID;
+            Aid = CommonConstant.NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID;
             source = CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE;
             adPosition = SharedPreManager.mInstance(mContext).getAdDetailPosition(CommonConstant.FILE_AD, CommonConstant.AD_RELATED_POS);
         } else {
@@ -860,16 +870,16 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                 adLoadNewsFeedEntity.setUid(SharedPreManager.mInstance(mContext).getUser(mContext).getMuid());
                 Gson gson = new Gson();
                 //加入详情页广告位id
-                Aid = CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID;
+                Aid = CommonConstant.NEWS_DETAIL_GDT_API_NEGATIVEBIGPOSID;
                 source = CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE;
-                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID)));
+                adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_DETAIL_GDT_API_NEGATIVEBIGPOSID)));
                 RequestQueue requestQueue = QiDianApplication.getInstance().getRequestQueue();
                 NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                     @Override
                     public void onResponse(final ArrayList<NewsFeed> result) {
                         loadRelatedData();
                         if (!TextUtil.isListEmpty(result)) {
-                            LogUtil.adGetLog(mContext, mAdCount, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                            NegativeLogUtil.adGetLog(mContext, mAdCount, result.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NEGATIVEBIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                             final NewsFeed newsFeed = result.get(0);
                             if (newsFeed != null) {
                                 adtvTitle.setText(newsFeed.getTitle());
@@ -910,7 +920,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                                     @Override
                                     public void onClick(View view) {
                                         AdUtil.upLoadContentClick(newsFeed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
-                                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
+                                        NegativeLogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_API_NEGATIVEBIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, newsFeed.getPname());
                                         Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                                         AdIntent.putExtra("key_url", newsFeed.getPurl());
                                         mContext.startActivity(AdIntent);
@@ -938,7 +948,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
         marrlist = list;
         adLayout.setVisibility(View.VISIBLE);
         if (!TextUtil.isListEmpty(marrlist)) {
-            LogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            NegativeLogUtil.adGetLog(mContext, mAdCount, list.size(), Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             final NativeADDataRef dataRef = list.get(0);
             if (dataRef != null && isFirst) {
                 isFirst = false;
@@ -958,7 +968,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                 adLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
+                        NegativeLogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, dataRef.getTitle());
                         dataRef.onClicked(adLayout);
                     }
                 });

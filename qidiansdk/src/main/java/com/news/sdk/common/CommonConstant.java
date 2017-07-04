@@ -29,8 +29,8 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NOTIFICATION_RECEIVED = "notification_receive";
     //用户收到推送消息并打开通知
     public static final String US_BAINEWS_NOTIFICATION_OPENED = "notification_open";
-    public static final String US_BAINEWS_NOTIFICATION_TOPIC= "notification_open";
-    public static final String US_BAINEWS_NOTIFICATION_VIDEO= "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_TOPIC = "notification_open";
+    public static final String US_BAINEWS_NOTIFICATION_VIDEO = "notification_open";
 
     public static final String FILE_USER = "user";
     public static final String FILE_AD = "ad";
@@ -125,18 +125,18 @@ public final class CommonConstant {
     //广点通SDK id 广告位id
 //    public static final String APPID = "1105877613";
 //    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
-//    public static final String NEWS_FEED_GDT_SDK_BIGPOSID = "3090924212656959";
-//    public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
+    public static final String NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID = "3090924212656959";
+    //    public static final String NEWS_FEED_GDT_SDK_SMALLPOSID = "5060928232423659";
 //    public static final String NEWS_FEED_GDT_SDK_VIDEOPOSID = "6070425272634002";
-//    public static final String NEWS_DETAIL_GDT_SDK_BIGPOSID = "9080427292926594";
-//    public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
+    public static final String NEWS_DETAIL_GDT_SDK_NEGATIVEBIGPOSID = "9080427292926594";
+    //    public static final String NEWS_DETAIL_GDT_SDK_VIDEOPOSID = "6010220232334033";
 //    public static final String NEWS_RELATE_GDT_SDK_SMALLPOSID = "3090125252826711";
 //    public static final String NEWS_RELATE_GDT_SDK_VIDEOPOSID = "9090725242133034";
-//    //广点通API id 广告位id
+    //广点通API id 广告位id
 //    public static final String NEWS_FEED_GDT_API_SPLASHPOSID = "719";
-//    public static final String NEWS_FEED_GDT_API_BIGPOSID = "547";
-//    public static final String NEWS_DETAIL_GDT_API_BIGPOSID = "590";
-//    public static final String NEWS_RELATE_GDT_API_SMALLID = "551";
+    public static final String NEWS_FEED_GDT_API_NEGATIVEBIGPOSID = "547";
+    public static final String NEWS_DETAIL_GDT_API_NEGATIVEBIGPOSID = "590";
+    public static final String NEWS_RELATE_GDT_API_NEGATIVESMALLID = "551";
     // 掌上资讯
 //    public static final String APPID = "1106095837";
 //    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "8090525296494580";

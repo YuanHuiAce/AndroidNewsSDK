@@ -46,7 +46,7 @@ import com.news.sdk.pages.NewsDetailWebviewAty;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
-import com.news.sdk.utils.LogUtil;
+import com.news.sdk.utils.NegativeLogUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 
@@ -90,13 +90,25 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     private RequestManager mRequestManager;
     private int mPager = 1;
     private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
-    private boolean isDetailVisibility;
-    private boolean isRelease;
+    private boolean isVisable;
 
-    public NegativeScreenNewsTopicView(Context context) {
+    private static NegativeScreenNewsTopicView instance;
+
+    private NegativeScreenNewsTopicView(Context context) {
         super(context);
         mContext = context;
         initializeViews();
+    }
+
+    public static NegativeScreenNewsTopicView getInstance() {
+        if (instance == null) {
+            synchronized (NegativeScreenNewsDetailView.class) {
+                if (instance == null) {
+                    instance = new NegativeScreenNewsTopicView(QiDianApplication.getAppContext());
+                }
+            }
+        }
+        return instance;
     }
 
     protected void initializeViews() {
@@ -202,30 +214,52 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
     }
 
     public void setData(int tid, NewsFeed feed, String source) {
-        mtid = tid;
-        mUsedNewsFeed = feed;
-        mSource = source;
-        loadData();
+        if (feed != null && mAlphaAnimationIn != null) {
+            mtid = tid;
+            mUsedNewsFeed = feed;
+            mSource = source;
+            isVisable = true;
+            if (!TextUtil.isListEmpty(marrTopicClass)) {
+                marrTopicClass.removeAll(marrTopicClass);
+                mPager = 1;
+            }
+            mlvSpecialNewsFeed.getRefreshableView().setSelection(0);
+            mlvSpecialNewsFeed.getRefreshableView().smoothScrollToPosition(0);
+            mRootView.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.VISIBLE);
+            loadData();
+            mRootView.startAnimation(mAlphaAnimationIn);
+            mAlphaAnimationIn.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mRootView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
-    public boolean isDetailVisibility() {
-        return isDetailVisibility;
-    }
-
-    public boolean isRelease() {
-        return isRelease;
+    public boolean isVisable() {
+        return isVisable;
     }
 
     public void onBackPressed() {
-        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null ) {
+        if (mAlphaAnimationOut != null && negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isVisable()) {
             negativeScreenNewsDetailView.onBackPressed();
-            negativeScreenNewsDetailView.destroyDrawingCache();
-            negativeScreenNewsDetailView = null;
-            isDetailVisibility = false;
             return;
         }
         if (mAlphaAnimationOut != null && mRootView != null) {
             mRootView.startAnimation(mAlphaAnimationOut);
+            isVisable = false;
             mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -234,12 +268,8 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    isDetailVisibility = false;
-                    isRelease = true;
-                    mRootView.setVisibility(GONE);
-                    mRootView.removeAllViews();
-                    mRootView.destroyDrawingCache();
-                    mRootView = null;
+                    mRootView.setVisibility(View.GONE);
+                    ((ViewGroup) mRootView.getParent()).removeView(mRootView);
                 }
 
                 @Override
@@ -280,7 +310,7 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                     mAdapter.setTopicData(marrTopicClass);
                     mAdapter.notifyDataSetChanged();
                     bgLayout.setVisibility(View.GONE);
-                    LogUtil.userClickLog(mUsedNewsFeed, mContext, mSource);
+                    NegativeLogUtil.userClickLog(mUsedNewsFeed, mContext, mSource);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -377,18 +407,22 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
 
         @Override
         public int getChildType(int groupPosition, int childPosition) {
-            NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
-            int type = feed.getStyle();
-            if (0 == type) {
-                return NewsFeed.NO_PIC;
-            } else if (1 == type || 2 == type) {
-                return NewsFeed.ONE_AND_TWO_PIC;
-            } else if (3 == type) {
-                return NewsFeed.THREE_PIC;
-            } else if (11 == type || 12 == type || 13 == type) {
-                return NewsFeed.BIG_PIC;
-            } else if (6 == type || 8 == type) {
-                return NewsFeed.VIDEO_SMALL;
+            if (!TextUtil.isListEmpty(arrTopicClass)) {
+                NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
+                int type = feed.getStyle();
+                if (0 == type) {
+                    return NewsFeed.NO_PIC;
+                } else if (1 == type || 2 == type) {
+                    return NewsFeed.ONE_AND_TWO_PIC;
+                } else if (3 == type) {
+                    return NewsFeed.THREE_PIC;
+                } else if (11 == type || 12 == type || 13 == type) {
+                    return NewsFeed.BIG_PIC;
+                } else if (6 == type || 8 == type) {
+                    return NewsFeed.VIDEO_SMALL;
+                } else {
+                    return NewsFeed.EMPTY;
+                }
             } else {
                 return NewsFeed.EMPTY;
             }
@@ -408,23 +442,25 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-            TopicClass.TopicClassBaseInfo topicClassBaseInfo = arrTopicClass.get(groupPosition).getTopicClassBaseInfo();
-            final GroupHolder groupHolder;
-            if (convertView == null || convertView.getTag().getClass() != GroupHolder.class) {
-                groupHolder = new GroupHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_news_topic_group, null, false);
-                groupHolder.ivColor = (ImageView) convertView.findViewById(R.id.mGroupColor);
-                groupHolder.tvTitle = (TextView) convertView.findViewById(R.id.mGroupTitle);
-                convertView.setTag(groupHolder);
-            } else {
-                groupHolder = (GroupHolder) convertView.getTag();
+            if (!TextUtil.isListEmpty(arrTopicClass)) {
+                TopicClass.TopicClassBaseInfo topicClassBaseInfo = arrTopicClass.get(groupPosition).getTopicClassBaseInfo();
+                final GroupHolder groupHolder;
+                if (convertView == null || convertView.getTag().getClass() != GroupHolder.class) {
+                    groupHolder = new GroupHolder();
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.item_news_topic_group, null, false);
+                    groupHolder.ivColor = (ImageView) convertView.findViewById(R.id.mGroupColor);
+                    groupHolder.tvTitle = (TextView) convertView.findViewById(R.id.mGroupTitle);
+                    convertView.setTag(groupHolder);
+                } else {
+                    groupHolder = (GroupHolder) convertView.getTag();
+                }
+                TextUtil.setLayoutBgResource(mContext, convertView.findViewById(R.id.line_bottom_imageView), R.color.color5);
+                TextUtil.setLayoutBgColor(mContext, convertView.findViewById(R.id.content_layout), R.color.color5);
+                groupHolder.tvTitle.setText(topicClassBaseInfo.getName());
+                TextUtil.setTextColor(mContext, groupHolder.tvTitle, R.color.color3);
+                TextUtil.setLayoutBgResource(mContext, groupHolder.ivColor, R.color.color1);
+                convertView.setOnClickListener(null);
             }
-            TextUtil.setLayoutBgResource(mContext, convertView.findViewById(R.id.line_bottom_imageView), R.color.color5);
-            TextUtil.setLayoutBgColor(mContext, convertView.findViewById(R.id.content_layout), R.color.color5);
-            groupHolder.tvTitle.setText(topicClassBaseInfo.getName());
-            TextUtil.setTextColor(mContext, groupHolder.tvTitle, R.color.color3);
-            TextUtil.setLayoutBgResource(mContext, groupHolder.ivColor, R.color.color1);
-            convertView.setOnClickListener(null);
             return convertView;
         }
 
@@ -432,197 +468,199 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
         @Override
         public View getChildView(final int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-            NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
-            ChildNoPicHolder childNoPicHolderHolder;
-            ChildOnePicHolder childOnePicHolder;
-            ChildThreePicHolder childThreePicHolder;
-            ChildBigPicHolder childBigPicHolder;
-            ChildSmallVideoHolder childSmallVideoHolder;
-            View vNoPic;
-            View vOnePic;
-            View vThreePic;
-            View vBigPic;
-            View vEmpty;
-            View vSmallVideo;
-            currentType = getChildType(groupPosition, childPosition);
-            if (currentType == NewsFeed.NO_PIC) {
-                if (convertView == null) {
-                    childNoPicHolderHolder = new ChildNoPicHolder();
-                    vNoPic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_item_no_pic, null);
-                    childNoPicHolderHolder.rlContent = (RelativeLayout) vNoPic.findViewById(R.id.news_content_relativeLayout);
-                    childNoPicHolderHolder.tvTitle = (TextView) vNoPic.findViewById(R.id.title_textView);
-                    childNoPicHolderHolder.tvSource = (TextViewExtend) vNoPic.findViewById(R.id.news_source_TextView);
-                    childNoPicHolderHolder.tvCommentNum = (TextViewExtend) vNoPic.findViewById(R.id.comment_num_textView);
-                    childNoPicHolderHolder.tvType = (TextViewExtend) vNoPic.findViewById(R.id.type_textView);
-                    childNoPicHolderHolder.ivDelete = (ImageView) vNoPic.findViewById(R.id.delete_imageView);
-                    childNoPicHolderHolder.ivBottomLine = (ImageView) vNoPic.findViewById(R.id.line_bottom_imageView);
-                    childNoPicHolderHolder.ivIcon = (ImageView) vNoPic.findViewById(R.id.icon_source);
-                    childNoPicHolderHolder.ivIcon.setVisibility(View.GONE);
-                    vNoPic.setTag(childNoPicHolderHolder);
-                    convertView = vNoPic;
-                } else {
-                    childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
+            if (!TextUtil.isListEmpty(arrTopicClass)) {
+                NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
+                ChildNoPicHolder childNoPicHolderHolder;
+                ChildOnePicHolder childOnePicHolder;
+                ChildThreePicHolder childThreePicHolder;
+                ChildBigPicHolder childBigPicHolder;
+                ChildSmallVideoHolder childSmallVideoHolder;
+                View vNoPic;
+                View vOnePic;
+                View vThreePic;
+                View vBigPic;
+                View vEmpty;
+                View vSmallVideo;
+                currentType = getChildType(groupPosition, childPosition);
+                if (currentType == NewsFeed.NO_PIC) {
+                    if (convertView == null) {
+                        childNoPicHolderHolder = new ChildNoPicHolder();
+                        vNoPic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_item_no_pic, null);
+                        childNoPicHolderHolder.rlContent = (RelativeLayout) vNoPic.findViewById(R.id.news_content_relativeLayout);
+                        childNoPicHolderHolder.tvTitle = (TextView) vNoPic.findViewById(R.id.title_textView);
+                        childNoPicHolderHolder.tvSource = (TextViewExtend) vNoPic.findViewById(R.id.news_source_TextView);
+                        childNoPicHolderHolder.tvCommentNum = (TextViewExtend) vNoPic.findViewById(R.id.comment_num_textView);
+                        childNoPicHolderHolder.tvType = (TextViewExtend) vNoPic.findViewById(R.id.type_textView);
+                        childNoPicHolderHolder.ivDelete = (ImageView) vNoPic.findViewById(R.id.delete_imageView);
+                        childNoPicHolderHolder.ivBottomLine = (ImageView) vNoPic.findViewById(R.id.line_bottom_imageView);
+                        childNoPicHolderHolder.ivIcon = (ImageView) vNoPic.findViewById(R.id.icon_source);
+                        childNoPicHolderHolder.ivIcon.setVisibility(View.GONE);
+                        vNoPic.setTag(childNoPicHolderHolder);
+                        convertView = vNoPic;
+                    } else {
+                        childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
+                    }
+                    setTitleTextBySpannable(childNoPicHolderHolder.tvTitle, feed.getTitle(), false);
+                    setSourceViewText(childNoPicHolderHolder.tvSource, feed.getPname());
+                    setCommentViewText(childNoPicHolderHolder.tvCommentNum, feed.getComment() + "");
+                    setNewsContentClick(childNoPicHolderHolder.rlContent, feed);
+                    newsTag(childNoPicHolderHolder.tvType, feed.getRtype());
+                    childNoPicHolderHolder.ivDelete.setVisibility(View.GONE);
+                    setSourceIcon(childNoPicHolderHolder.ivIcon, feed.getIcon());
+                    setBottomLineColor(childNoPicHolderHolder.ivBottomLine);
+                    setBottomLine(childNoPicHolderHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+                } else if (currentType == NewsFeed.ONE_AND_TWO_PIC) {
+                    if (convertView == null) {
+                        childOnePicHolder = new ChildOnePicHolder();
+                        vOnePic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_item_one_pic, null);
+                        childOnePicHolder.ivPicture = (ImageView) vOnePic.findViewById(R.id.title_img_View);
+                        childOnePicHolder.rlContent = (RelativeLayout) vOnePic.findViewById(R.id.news_content_relativeLayout);
+                        childOnePicHolder.tvTitle = (TextView) vOnePic.findViewById(R.id.title_textView);
+                        childOnePicHolder.tvSource = (TextViewExtend) vOnePic.findViewById(R.id.news_source_TextView);
+                        childOnePicHolder.tvCommentNum = (TextViewExtend) vOnePic.findViewById(R.id.comment_num_textView);
+                        childOnePicHolder.tvType = (TextViewExtend) vOnePic.findViewById(R.id.type_textView);
+                        childOnePicHolder.ivDelete = (ImageView) vOnePic.findViewById(R.id.delete_imageView);
+                        childOnePicHolder.llSourceOnePic = (LinearLayout) vOnePic.findViewById(R.id.source_content_linearLayout);
+                        childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
+                        childOnePicHolder.ivIcon = (ImageView) vOnePic.findViewById(R.id.icon_source);
+                        childOnePicHolder.ivIcon.setVisibility(View.GONE);
+                        vOnePic.setTag(childOnePicHolder);
+                        convertView = vOnePic;
+                    } else {
+                        childOnePicHolder = (ChildOnePicHolder) convertView.getTag();
+                    }
+                    RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childOnePicHolder.ivPicture.getLayoutParams();
+                    lpCard.width = mCardWidth;
+                    lpCard.height = mCardHeight;
+                    childOnePicHolder.ivPicture.setLayoutParams(lpCard);
+                    setImageUri(childOnePicHolder.ivPicture, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
+                    setTitleTextBySpannable(childOnePicHolder.tvTitle, feed.getTitle(), false);
+                    setSourceViewText(childOnePicHolder.tvSource, feed.getPname());
+                    setCommentViewText(childOnePicHolder.tvCommentNum, feed.getComment() + "");
+                    setNewsContentClick(childOnePicHolder.rlContent, feed);
+                    newsTag(childOnePicHolder.tvType, feed.getRtype());
+                    childOnePicHolder.ivDelete.setVisibility(View.GONE);
+                    setSourceIcon(childOnePicHolder.ivIcon, feed.getIcon());
+                    setBottomLineColor(childOnePicHolder.ivBottomLine);
+                    setBottomLine(childOnePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+                } else if (currentType == NewsFeed.THREE_PIC) {
+                    if (convertView == null) {
+                        childThreePicHolder = new ChildThreePicHolder();
+                        vThreePic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_card, null);
+                        childThreePicHolder.ivPicture1 = (ImageView) vThreePic.findViewById(R.id.image_card1);
+                        childThreePicHolder.ivPicture2 = (ImageView) vThreePic.findViewById(R.id.image_card2);
+                        childThreePicHolder.ivPicture3 = (ImageView) vThreePic.findViewById(R.id.image_card3);
+                        childThreePicHolder.rlContent = (RelativeLayout) vThreePic.findViewById(R.id.news_content_relativeLayout);
+                        childThreePicHolder.tvTitle = (TextView) vThreePic.findViewById(R.id.title_textView);
+                        childThreePicHolder.tvSource = (TextViewExtend) vThreePic.findViewById(R.id.news_source_TextView);
+                        childThreePicHolder.tvCommentNum = (TextViewExtend) vThreePic.findViewById(R.id.comment_num_textView);
+                        childThreePicHolder.tvType = (TextViewExtend) vThreePic.findViewById(R.id.type_textView);
+                        childThreePicHolder.ivDelete = (ImageView) vThreePic.findViewById(R.id.delete_imageView);
+                        childThreePicHolder.ivBottomLine = (ImageView) vThreePic.findViewById(R.id.line_bottom_imageView);
+                        childThreePicHolder.ivIcon = (ImageView) vThreePic.findViewById(R.id.icon_source);
+                        childThreePicHolder.ivIcon.setVisibility(View.GONE);
+                        vThreePic.setTag(childThreePicHolder);
+                        convertView = vThreePic;
+                    } else {
+                        childThreePicHolder = (ChildThreePicHolder) convertView.getTag();
+                    }
+                    ArrayList<String> strArrImgUrl = feed.getImgs();
+                    setCardMargin(childThreePicHolder.ivPicture1, 15, 1, 3);
+                    setCardMargin(childThreePicHolder.ivPicture2, 1, 1, 3);
+                    setCardMargin(childThreePicHolder.ivPicture3, 1, 15, 3);
+                    setImageUri(childThreePicHolder.ivPicture1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+                    setImageUri(childThreePicHolder.ivPicture2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+                    setImageUri(childThreePicHolder.ivPicture3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
+                    setTitleTextBySpannable(childThreePicHolder.tvTitle, feed.getTitle(), false);
+                    setSourceViewText(childThreePicHolder.tvSource, feed.getPname());
+                    setCommentViewText(childThreePicHolder.tvCommentNum, feed.getComment() + "");
+                    setNewsContentClick(childThreePicHolder.rlContent, feed);
+                    newsTag(childThreePicHolder.tvType, feed.getRtype());
+                    childThreePicHolder.ivDelete.setVisibility(View.GONE);
+                    setSourceIcon(childThreePicHolder.ivIcon, feed.getIcon());
+                    setBottomLineColor(childThreePicHolder.ivBottomLine);
+                    setBottomLine(childThreePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+                } else if (currentType == NewsFeed.BIG_PIC) {
+                    if (convertView == null) {
+                        childBigPicHolder = new ChildBigPicHolder();
+                        vBigPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_big_pic2, null);
+                        childBigPicHolder.ivBigPicture = (ImageView) vBigPic.findViewById(R.id.title_img_View);
+                        childBigPicHolder.rlContent = (RelativeLayout) vBigPic.findViewById(R.id.news_content_relativeLayout);
+                        childBigPicHolder.tvTitle = (TextView) vBigPic.findViewById(R.id.title_textView);
+                        childBigPicHolder.tvSource = (TextViewExtend) vBigPic.findViewById(R.id.news_source_TextView);
+                        childBigPicHolder.tvCommentNum = (TextViewExtend) vBigPic.findViewById(R.id.comment_num_textView);
+                        childBigPicHolder.tvType = (TextViewExtend) vBigPic.findViewById(R.id.type_textView);
+                        childBigPicHolder.ivDelete = (ImageView) vBigPic.findViewById(R.id.delete_imageView);
+                        childBigPicHolder.ivIcon = (ImageView) vBigPic.findViewById(R.id.icon_source);
+                        childBigPicHolder.ivIcon.setVisibility(View.GONE);
+                        vBigPic.setTag(childBigPicHolder);
+                        convertView = vBigPic;
+                    } else {
+                        childBigPicHolder = (ChildBigPicHolder) convertView.getTag();
+                    }
+                    ArrayList<String> strArrBigImgUrl = feed.getImgs();
+                    int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+                    int num = feed.getStyle() - 11;
+                    RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) childBigPicHolder.ivBigPicture.getLayoutParams();
+                    lpBig.width = with;
+                    lpBig.height = (int) (with * 9 / 16.0f);
+                    childBigPicHolder.ivBigPicture.setLayoutParams(lpBig);
+                    if (!TextUtil.isListEmpty(strArrBigImgUrl) && num >= 0 && num < strArrBigImgUrl.size()) {
+                        setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                    }
+                    setTitleTextBySpannable(childBigPicHolder.tvTitle, feed.getTitle(), false);
+                    setSourceViewText(childBigPicHolder.tvSource, feed.getPname());
+                    setCommentViewText(childBigPicHolder.tvCommentNum, feed.getComment() + "");
+                    setNewsContentClick(childBigPicHolder.rlContent, feed);
+                    newsTag(childBigPicHolder.tvType, feed.getRtype());
+                    setSourceIcon(childBigPicHolder.ivIcon, feed.getIcon());
+                    childBigPicHolder.ivDelete.setVisibility(View.GONE);
+                } else if (currentType == NewsFeed.VIDEO_SMALL) {
+                    if (convertView == null) {
+                        childSmallVideoHolder = new ChildSmallVideoHolder();
+                        vSmallVideo = LayoutInflater.from(mContext).inflate(R.layout.ll_video_item_small, null);
+                        childSmallVideoHolder.rlContent = (RelativeLayout) vSmallVideo.findViewById(R.id.news_content_relativeLayout);
+                        childSmallVideoHolder.tvTitle = (TextView) vSmallVideo.findViewById(R.id.title_textView);
+                        childSmallVideoHolder.tvSource = (TextViewExtend) vSmallVideo.findViewById(R.id.news_source_TextView);
+                        childSmallVideoHolder.tvCommentNum = (TextViewExtend) vSmallVideo.findViewById(R.id.comment_num_textView);
+                        childSmallVideoHolder.tvType = (TextViewExtend) vSmallVideo.findViewById(R.id.type_textView);
+                        childSmallVideoHolder.ivDelete = (ImageView) vSmallVideo.findViewById(R.id.delete_imageView);
+                        childSmallVideoHolder.ivBottomLine = (ImageView) vSmallVideo.findViewById(R.id.line_bottom_imageView);
+                        childSmallVideoHolder.ivIcon = (ImageView) vSmallVideo.findViewById(R.id.icon_source);
+                        childSmallVideoHolder.ivPicture = (ImageView) vSmallVideo.findViewById(R.id.title_img_View);
+                        childSmallVideoHolder.tvDuration = (TextView) vSmallVideo.findViewById(R.id.tv_video_duration);
+                        childSmallVideoHolder.ivIcon.setVisibility(View.GONE);
+                        vSmallVideo.setTag(childSmallVideoHolder);
+                        convertView = vSmallVideo;
+                    } else {
+                        childSmallVideoHolder = (ChildSmallVideoHolder) convertView.getTag();
+                    }
+                    RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childSmallVideoHolder.ivPicture.getLayoutParams();
+                    lpCard.width = mCardWidth;
+                    lpCard.height = mCardHeight;
+                    childSmallVideoHolder.ivPicture.setLayoutParams(lpCard);
+                    setImageUri(childSmallVideoHolder.ivPicture, feed.getThumbnail(), mCardWidth, mCardHeight, feed.getRtype());
+                    setTitleTextBySpannable(childSmallVideoHolder.tvTitle, feed.getTitle(), false);
+                    setSourceViewText(childSmallVideoHolder.tvSource, feed.getPname());
+                    setCommentViewText(childSmallVideoHolder.tvCommentNum, feed.getComment() + "");
+                    setNewsContentClick(childSmallVideoHolder.rlContent, feed);
+                    newsTag(childSmallVideoHolder.tvType, feed.getRtype());
+                    childSmallVideoHolder.ivDelete.setVisibility(View.GONE);
+                    setSourceIcon(childSmallVideoHolder.ivIcon, feed.getIcon());
+                    setBottomLineColor(childSmallVideoHolder.ivBottomLine);
+                    setBottomLine(childSmallVideoHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+                } else if (currentType == NewsFeed.EMPTY) {
+                    if (convertView == null) {
+                        childNoPicHolderHolder = new ChildNoPicHolder();
+                        vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_empty, null);
+                        childNoPicHolderHolder.rlContent = (RelativeLayout) vEmpty.findViewById(R.id.news_content_relativeLayout);
+                        vEmpty.setTag(childNoPicHolderHolder);
+                        convertView = vEmpty;
+                    } else {
+                        childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
+                    }
+                    childNoPicHolderHolder.rlContent.setVisibility(View.GONE);
                 }
-                setTitleTextBySpannable(childNoPicHolderHolder.tvTitle, feed.getTitle(), false);
-                setSourceViewText(childNoPicHolderHolder.tvSource, feed.getPname());
-                setCommentViewText(childNoPicHolderHolder.tvCommentNum, feed.getComment() + "");
-                setNewsContentClick(childNoPicHolderHolder.rlContent, feed);
-                newsTag(childNoPicHolderHolder.tvType, feed.getRtype());
-                childNoPicHolderHolder.ivDelete.setVisibility(View.GONE);
-                setSourceIcon(childNoPicHolderHolder.ivIcon, feed.getIcon());
-                setBottomLineColor(childNoPicHolderHolder.ivBottomLine);
-                setBottomLine(childNoPicHolderHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
-            } else if (currentType == NewsFeed.ONE_AND_TWO_PIC) {
-                if (convertView == null) {
-                    childOnePicHolder = new ChildOnePicHolder();
-                    vOnePic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_item_one_pic, null);
-                    childOnePicHolder.ivPicture = (ImageView) vOnePic.findViewById(R.id.title_img_View);
-                    childOnePicHolder.rlContent = (RelativeLayout) vOnePic.findViewById(R.id.news_content_relativeLayout);
-                    childOnePicHolder.tvTitle = (TextView) vOnePic.findViewById(R.id.title_textView);
-                    childOnePicHolder.tvSource = (TextViewExtend) vOnePic.findViewById(R.id.news_source_TextView);
-                    childOnePicHolder.tvCommentNum = (TextViewExtend) vOnePic.findViewById(R.id.comment_num_textView);
-                    childOnePicHolder.tvType = (TextViewExtend) vOnePic.findViewById(R.id.type_textView);
-                    childOnePicHolder.ivDelete = (ImageView) vOnePic.findViewById(R.id.delete_imageView);
-                    childOnePicHolder.llSourceOnePic = (LinearLayout) vOnePic.findViewById(R.id.source_content_linearLayout);
-                    childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
-                    childOnePicHolder.ivIcon = (ImageView) vOnePic.findViewById(R.id.icon_source);
-                    childOnePicHolder.ivIcon.setVisibility(View.GONE);
-                    vOnePic.setTag(childOnePicHolder);
-                    convertView = vOnePic;
-                } else {
-                    childOnePicHolder = (ChildOnePicHolder) convertView.getTag();
-                }
-                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childOnePicHolder.ivPicture.getLayoutParams();
-                lpCard.width = mCardWidth;
-                lpCard.height = mCardHeight;
-                childOnePicHolder.ivPicture.setLayoutParams(lpCard);
-                setImageUri(childOnePicHolder.ivPicture, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
-                setTitleTextBySpannable(childOnePicHolder.tvTitle, feed.getTitle(), false);
-                setSourceViewText(childOnePicHolder.tvSource, feed.getPname());
-                setCommentViewText(childOnePicHolder.tvCommentNum, feed.getComment() + "");
-                setNewsContentClick(childOnePicHolder.rlContent, feed);
-                newsTag(childOnePicHolder.tvType, feed.getRtype());
-                childOnePicHolder.ivDelete.setVisibility(View.GONE);
-                setSourceIcon(childOnePicHolder.ivIcon, feed.getIcon());
-                setBottomLineColor(childOnePicHolder.ivBottomLine);
-                setBottomLine(childOnePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
-            } else if (currentType == NewsFeed.THREE_PIC) {
-                if (convertView == null) {
-                    childThreePicHolder = new ChildThreePicHolder();
-                    vThreePic = LayoutInflater.from(mContext).inflate(R.layout.qd_ll_news_card, null);
-                    childThreePicHolder.ivPicture1 = (ImageView) vThreePic.findViewById(R.id.image_card1);
-                    childThreePicHolder.ivPicture2 = (ImageView) vThreePic.findViewById(R.id.image_card2);
-                    childThreePicHolder.ivPicture3 = (ImageView) vThreePic.findViewById(R.id.image_card3);
-                    childThreePicHolder.rlContent = (RelativeLayout) vThreePic.findViewById(R.id.news_content_relativeLayout);
-                    childThreePicHolder.tvTitle = (TextView) vThreePic.findViewById(R.id.title_textView);
-                    childThreePicHolder.tvSource = (TextViewExtend) vThreePic.findViewById(R.id.news_source_TextView);
-                    childThreePicHolder.tvCommentNum = (TextViewExtend) vThreePic.findViewById(R.id.comment_num_textView);
-                    childThreePicHolder.tvType = (TextViewExtend) vThreePic.findViewById(R.id.type_textView);
-                    childThreePicHolder.ivDelete = (ImageView) vThreePic.findViewById(R.id.delete_imageView);
-                    childThreePicHolder.ivBottomLine = (ImageView) vThreePic.findViewById(R.id.line_bottom_imageView);
-                    childThreePicHolder.ivIcon = (ImageView) vThreePic.findViewById(R.id.icon_source);
-                    childThreePicHolder.ivIcon.setVisibility(View.GONE);
-                    vThreePic.setTag(childThreePicHolder);
-                    convertView = vThreePic;
-                } else {
-                    childThreePicHolder = (ChildThreePicHolder) convertView.getTag();
-                }
-                ArrayList<String> strArrImgUrl = feed.getImgs();
-                setCardMargin(childThreePicHolder.ivPicture1, 15, 1, 3);
-                setCardMargin(childThreePicHolder.ivPicture2, 1, 1, 3);
-                setCardMargin(childThreePicHolder.ivPicture3, 1, 15, 3);
-                setImageUri(childThreePicHolder.ivPicture1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
-                setImageUri(childThreePicHolder.ivPicture2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
-                setImageUri(childThreePicHolder.ivPicture3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
-                setTitleTextBySpannable(childThreePicHolder.tvTitle, feed.getTitle(), false);
-                setSourceViewText(childThreePicHolder.tvSource, feed.getPname());
-                setCommentViewText(childThreePicHolder.tvCommentNum, feed.getComment() + "");
-                setNewsContentClick(childThreePicHolder.rlContent, feed);
-                newsTag(childThreePicHolder.tvType, feed.getRtype());
-                childThreePicHolder.ivDelete.setVisibility(View.GONE);
-                setSourceIcon(childThreePicHolder.ivIcon, feed.getIcon());
-                setBottomLineColor(childThreePicHolder.ivBottomLine);
-                setBottomLine(childThreePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
-            } else if (currentType == NewsFeed.BIG_PIC) {
-                if (convertView == null) {
-                    childBigPicHolder = new ChildBigPicHolder();
-                    vBigPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_big_pic2, null);
-                    childBigPicHolder.ivBigPicture = (ImageView) vBigPic.findViewById(R.id.title_img_View);
-                    childBigPicHolder.rlContent = (RelativeLayout) vBigPic.findViewById(R.id.news_content_relativeLayout);
-                    childBigPicHolder.tvTitle = (TextView) vBigPic.findViewById(R.id.title_textView);
-                    childBigPicHolder.tvSource = (TextViewExtend) vBigPic.findViewById(R.id.news_source_TextView);
-                    childBigPicHolder.tvCommentNum = (TextViewExtend) vBigPic.findViewById(R.id.comment_num_textView);
-                    childBigPicHolder.tvType = (TextViewExtend) vBigPic.findViewById(R.id.type_textView);
-                    childBigPicHolder.ivDelete = (ImageView) vBigPic.findViewById(R.id.delete_imageView);
-                    childBigPicHolder.ivIcon = (ImageView) vBigPic.findViewById(R.id.icon_source);
-                    childBigPicHolder.ivIcon.setVisibility(View.GONE);
-                    vBigPic.setTag(childBigPicHolder);
-                    convertView = vBigPic;
-                } else {
-                    childBigPicHolder = (ChildBigPicHolder) convertView.getTag();
-                }
-                ArrayList<String> strArrBigImgUrl = feed.getImgs();
-                int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-                int num = feed.getStyle() - 11;
-                RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) childBigPicHolder.ivBigPicture.getLayoutParams();
-                lpBig.width = with;
-                lpBig.height = (int) (with * 9 / 16.0f);
-                childBigPicHolder.ivBigPicture.setLayoutParams(lpBig);
-                if (!TextUtil.isListEmpty(strArrBigImgUrl) && num >= 0 && num < strArrBigImgUrl.size()) {
-                    setImageUri(childBigPicHolder.ivBigPicture, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
-                }
-                setTitleTextBySpannable(childBigPicHolder.tvTitle, feed.getTitle(), false);
-                setSourceViewText(childBigPicHolder.tvSource, feed.getPname());
-                setCommentViewText(childBigPicHolder.tvCommentNum, feed.getComment() + "");
-                setNewsContentClick(childBigPicHolder.rlContent, feed);
-                newsTag(childBigPicHolder.tvType, feed.getRtype());
-                setSourceIcon(childBigPicHolder.ivIcon, feed.getIcon());
-                childBigPicHolder.ivDelete.setVisibility(View.GONE);
-            } else if (currentType == NewsFeed.VIDEO_SMALL) {
-                if (convertView == null) {
-                    childSmallVideoHolder = new ChildSmallVideoHolder();
-                    vSmallVideo = LayoutInflater.from(mContext).inflate(R.layout.ll_video_item_small, null);
-                    childSmallVideoHolder.rlContent = (RelativeLayout) vSmallVideo.findViewById(R.id.news_content_relativeLayout);
-                    childSmallVideoHolder.tvTitle = (TextView) vSmallVideo.findViewById(R.id.title_textView);
-                    childSmallVideoHolder.tvSource = (TextViewExtend) vSmallVideo.findViewById(R.id.news_source_TextView);
-                    childSmallVideoHolder.tvCommentNum = (TextViewExtend) vSmallVideo.findViewById(R.id.comment_num_textView);
-                    childSmallVideoHolder.tvType = (TextViewExtend) vSmallVideo.findViewById(R.id.type_textView);
-                    childSmallVideoHolder.ivDelete = (ImageView) vSmallVideo.findViewById(R.id.delete_imageView);
-                    childSmallVideoHolder.ivBottomLine = (ImageView) vSmallVideo.findViewById(R.id.line_bottom_imageView);
-                    childSmallVideoHolder.ivIcon = (ImageView) vSmallVideo.findViewById(R.id.icon_source);
-                    childSmallVideoHolder.ivPicture = (ImageView) vSmallVideo.findViewById(R.id.title_img_View);
-                    childSmallVideoHolder.tvDuration = (TextView) vSmallVideo.findViewById(R.id.tv_video_duration);
-                    childSmallVideoHolder.ivIcon.setVisibility(View.GONE);
-                    vSmallVideo.setTag(childSmallVideoHolder);
-                    convertView = vSmallVideo;
-                } else {
-                    childSmallVideoHolder = (ChildSmallVideoHolder) convertView.getTag();
-                }
-                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childSmallVideoHolder.ivPicture.getLayoutParams();
-                lpCard.width = mCardWidth;
-                lpCard.height = mCardHeight;
-                childSmallVideoHolder.ivPicture.setLayoutParams(lpCard);
-                setImageUri(childSmallVideoHolder.ivPicture, feed.getThumbnail(), mCardWidth, mCardHeight, feed.getRtype());
-                setTitleTextBySpannable(childSmallVideoHolder.tvTitle, feed.getTitle(), false);
-                setSourceViewText(childSmallVideoHolder.tvSource, feed.getPname());
-                setCommentViewText(childSmallVideoHolder.tvCommentNum, feed.getComment() + "");
-                setNewsContentClick(childSmallVideoHolder.rlContent, feed);
-                newsTag(childSmallVideoHolder.tvType, feed.getRtype());
-                childSmallVideoHolder.ivDelete.setVisibility(View.GONE);
-                setSourceIcon(childSmallVideoHolder.ivIcon, feed.getIcon());
-                setBottomLineColor(childSmallVideoHolder.ivBottomLine);
-                setBottomLine(childSmallVideoHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
-            } else if (currentType == NewsFeed.EMPTY) {
-                if (convertView == null) {
-                    childNoPicHolderHolder = new ChildNoPicHolder();
-                    vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_empty, null);
-                    childNoPicHolderHolder.rlContent = (RelativeLayout) vEmpty.findViewById(R.id.news_content_relativeLayout);
-                    vEmpty.setTag(childNoPicHolderHolder);
-                    convertView = vEmpty;
-                } else {
-                    childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
-                }
-                childNoPicHolderHolder.rlContent.setVisibility(View.GONE);
             }
             return convertView;
         }
@@ -717,8 +755,9 @@ public class NegativeScreenNewsTopicView extends View implements ThemeManager.On
                         intent.putExtra(NewsDetailFgt.KEY_NEWS_ID, feed.getNid() + "");
 //                        startActivity(intent);
                     } else {
-                        isDetailVisibility = true;
-                        negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
+                        if (negativeScreenNewsDetailView == null) {
+                            negativeScreenNewsDetailView = NegativeScreenNewsDetailView.getInstance();
+                        }
                         mRootView.addView(negativeScreenNewsDetailView.getNewsView());
                         negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_TOPIC_SOURCE);
                     }

@@ -27,7 +27,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
-import com.news.sdk.utils.LogUtil;
+import com.news.sdk.utils.NegativeLogUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.widget.NegativeScreenNewsDetailView;
 import com.news.sdk.widget.TextViewExtend;
@@ -51,6 +51,7 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
     private SharedPreferences mSharedPreferences;
     private RequestManager mRequestManager;
     private RelativeLayout mRootView;
+    private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
 
     public NegativeScreenNewsDetailFgtAdapter(Context context, ArrayList<RelatedItemEntity> datas) {
         super(context, datas, new MultiItemTypeSupport<RelatedItemEntity>() {
@@ -289,9 +290,9 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
         }
         if (!relatedItemEntity.isRead()) {
             relatedItemEntity.setRead(true);
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), true);
+            NegativeLogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), true);
         } else {
-            LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), false);
+            NegativeLogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_RELATECLICK, formPage, toPage, relatedItemEntity.getNid(), false);
         }
     }
 
@@ -335,14 +336,14 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
                 }
                 firstClick = System.currentTimeMillis();
                 if (relatedItemEntity.getDataRef() != null) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, relatedItemEntity.getPname());
+                    NegativeLogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_DETAIL_GDT_SDK_BIGPOSID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE, relatedItemEntity.getPname());
                     NativeADDataRef dataRef = relatedItemEntity.getDataRef();
                     dataRef.onClicked(rlNewsContent);
                     return;
                 }
                 int type = relatedItemEntity.getRtype();
                 if (type == 3) {
-                    LogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
+                    NegativeLogUtil.adClickLog(Long.valueOf(CommonConstant.NEWS_RELATE_GDT_API_SMALLID), mContext, CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE, relatedItemEntity.getPname());
                     AdUtil.upLoadContentClick(relatedItemEntity.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (relatedItemEntity.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_VIDEODETAILPAGE, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
@@ -353,11 +354,14 @@ public class NegativeScreenNewsDetailFgtAdapter extends MultiItemCommonAdapter<R
                     ((Activity) mContext).finish();
                     ((Activity) mContext).overridePendingTransition(0, 0);
                 } else {
-                    mRootView.removeAllViews();
-                    mRootView.destroyDrawingCache();
+//                    mRootView.removeAllViews();
+//                    mRootView.destroyDrawingCache();
                     setNewsFeedReadAndUploadUserAction(relatedItemEntity, CommonConstant.LOG_PAGE_DETAILPAGE, CommonConstant.LOG_PAGE_DETAILPAGE);
-                    NegativeScreenNewsDetailView negativeScreenNewsDetailView = new NegativeScreenNewsDetailView(mContext);
-                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
+                    if (negativeScreenNewsDetailView == null) {
+                        negativeScreenNewsDetailView = NegativeScreenNewsDetailView.getInstance();
+//                        View view = negativeScreenNewsDetailView.getNewsView();
+//                        mRootView.addView(view);
+                    }
                     negativeScreenNewsDetailView.setData(relatedItemEntity.getNid() + "", "", "", CommonConstant.LOG_CLICK_RELATE_SOURCE);
                 }
                 if (relatedItemEntity.isRead()) {

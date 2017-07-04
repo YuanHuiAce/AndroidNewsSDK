@@ -47,15 +47,21 @@ public class CommonViewHolder {
         mConvertView.setTag(this);
     }
 
-    public static CommonViewHolder get(Context mContext, View mConvertView, ViewGroup mViewGroup, int mLayoutId, int mPosition) {
+    public static CommonViewHolder get(Context mContext, View mConvertView, ViewGroup mViewGroup, int layoutId, int mPosition) {
         if (mConvertView == null) {
-            View itemView = LayoutInflater.from(mContext).inflate(mLayoutId, mViewGroup, false);
+            View itemView = LayoutInflater.from(mContext).inflate(layoutId, mViewGroup, false);
             CommonViewHolder viewHolder = new CommonViewHolder(mContext, itemView, mViewGroup, mPosition);
-            viewHolder.mLayoutId = mLayoutId;
+            viewHolder.mLayoutId = layoutId;
             return viewHolder;
         } else {
             CommonViewHolder viewHolder = (CommonViewHolder) mConvertView.getTag();
             viewHolder.mPosition = mPosition;
+            if (viewHolder.mLayoutId != layoutId) {
+                viewHolder = null;
+                View itemView = LayoutInflater.from(mContext).inflate(layoutId, mViewGroup, false);
+                viewHolder = new CommonViewHolder(mContext, itemView, mViewGroup, mPosition);
+                viewHolder.mLayoutId = layoutId;
+            }
             return viewHolder;
         }
     }

@@ -92,6 +92,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:id="@+id/topic_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <include
         layout="@layout/qd_loading_view_anim"
         android:visibility="visible" />

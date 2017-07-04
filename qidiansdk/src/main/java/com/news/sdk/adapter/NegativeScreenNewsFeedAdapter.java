@@ -48,7 +48,7 @@ import java.util.ArrayList;
 public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private final NegativeScreenNewsFeedView mView;
-    private RelativeLayout mRootView;
+    private RelativeLayout mRootView, mTopicRootView;
     private String mstrKeyWord;
     private int mScreenWidth;
     private Context mContext;
@@ -167,8 +167,9 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         isNeedShowDisLikeIcon = false;
     }
 
-    public void setRootView(RelativeLayout rootView) {
+    public void setRootView(RelativeLayout rootView, RelativeLayout topicRootView) {
         mRootView = rootView;
+        mTopicRootView = topicRootView;
     }
 
     @Override
@@ -771,8 +772,10 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     AdUtil.upLoadContentClick(feed.getAdDetailEntity(), mContext, down_x[0], down_y[0], up_x[0], up_y[0]);
                 } else if (type == 4) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_TOPICPAGE);
-                    negativeScreenNewsTopicView = new NegativeScreenNewsTopicView(mContext);
-                    mRootView.addView(negativeScreenNewsTopicView.getNewsView());
+                    if (negativeScreenNewsTopicView == null) {
+                        negativeScreenNewsTopicView = NegativeScreenNewsTopicView.getInstance();
+                    }
+                    mTopicRootView.addView(negativeScreenNewsTopicView.getNewsView());
                     negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
@@ -784,8 +787,8 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     if (negativeScreenNewsDetailView == null) {
                         negativeScreenNewsDetailView = NegativeScreenNewsDetailView.getInstance();
-                        mRootView.addView(negativeScreenNewsDetailView.getNewsView());
                     }
+                    mRootView.addView(negativeScreenNewsDetailView.getNewsView());
                     negativeScreenNewsDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 }
                 if (feed.isRead()) {
@@ -874,27 +877,13 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     }
 
     public boolean removeDetailView() {
-        if (negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isVisable()) {
-//            if (negativeScreenNewsDetailView.isRelease()) {
-//                negativeScreenNewsDetailView = null;
-//                return false;
-//            }
+        if (negativeScreenNewsDetailView != null && negativeScreenNewsDetailView.isVisable() && negativeScreenNewsDetailView.getNewsView().getParent() != null && negativeScreenNewsDetailView.getNewsView() != null) {
             negativeScreenNewsDetailView.onBackPressed();
-//            negativeScreenNewsDetailView.destroyDrawingCache();
-//            negativeScreenNewsDetailView = null;
             return true;
         }
-        if (negativeScreenNewsTopicView != null) {
-            if (negativeScreenNewsTopicView.isDetailVisibility()) {
-                negativeScreenNewsTopicView.onBackPressed();
-                return true;
-            }
-            if (!negativeScreenNewsTopicView.isDetailVisibility() && !negativeScreenNewsTopicView.isRelease()) {
-                negativeScreenNewsTopicView.onBackPressed();
-                negativeScreenNewsTopicView.destroyDrawingCache();
-                negativeScreenNewsTopicView = null;
-                return true;
-            }
+        if (negativeScreenNewsTopicView != null && negativeScreenNewsTopicView.isVisable() && negativeScreenNewsTopicView.getNewsView().getParent() != null && negativeScreenNewsTopicView.getNewsView() != null) {
+            negativeScreenNewsTopicView.onBackPressed();
+            return true;
         }
         return false;
     }

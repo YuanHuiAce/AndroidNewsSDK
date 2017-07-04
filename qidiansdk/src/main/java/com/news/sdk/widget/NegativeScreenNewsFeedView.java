@@ -44,8 +44,7 @@ import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
 import com.news.sdk.utils.ImageUtil;
-import com.news.sdk.utils.LogUtil;
-import com.news.sdk.utils.Logger;
+import com.news.sdk.utils.NegativeLogUtil;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.manager.SharedPreManager;
@@ -63,11 +62,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-
 public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnThemeChangeListener, NativeAD.NativeAdListener {
 
     private Context mContext;
-    RelativeLayout mRootView, detail_layout;
+    RelativeLayout mRootView, detail_layout, topic_layout;
     private TextView mChannel1, mChannel2;
     public static String KEY_NEWS_ID = "key_news_id";
     public static final int PULL_DOWN_REFRESH = 1;
@@ -127,9 +125,10 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         intentFilter.addAction(CommonConstant.CHANGE_COMMENT_NUM_ACTION);
         mContext.registerReceiver(mRefreshReceiver, intentFilter);
         ThemeManager.registerThemeChangeListener(this);
-        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID, this);
+        mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID, this);
         bgLayout = (RelativeLayout) mRootView.findViewById(R.id.bgLayout);
         detail_layout = (RelativeLayout) mRootView.findViewById(R.id.detail_layout);
+        topic_layout = (RelativeLayout) mRootView.findViewById(R.id.topic_layout);
         imageAni = (ProgressBar) mRootView.findViewById(R.id.imageAni);
         textAni = (TextView) mRootView.findViewById(R.id.textAni);
         mivShareBg = (ImageView) mRootView.findViewById(R.id.share_bg_imageView);
@@ -180,7 +179,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                         for (int i = 0; i < 4; i++) {
                             newsFeeds.add(mUploadArrNewsFeed.poll());
                         }
-                        LogUtil.userShowLog(newsFeeds, mContext);
+                        NegativeLogUtil.userShowLog(newsFeeds, mContext);
                     }
                 }
             }
@@ -196,7 +195,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         addHFView();
         mAdapter = new NegativeScreenNewsFeedAdapter(mContext, this, null);
         mlvNewsFeed.setAdapter(mAdapter);
-        mAdapter.setRootView(detail_layout);
+        mAdapter.setRootView(detail_layout, topic_layout);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.qd_listview_empty_view, null));
         initTheme();
         //load news data
@@ -380,7 +379,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
 
     private void loadAD() {
         if (mNativeAD == null) {
-            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID, this);
+            mNativeAD = new NativeAD(QiDianApplication.getInstance().getAppContext(), CommonConstant.APPID, CommonConstant.NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID, this);
         }
         if (mNativeAD != null && !isADRefresh && !TextUtil.isEmptyString(CommonConstant.APPID)) {
             mNativeAD.loadAD(AD_COUNT);
@@ -427,7 +426,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
+                NegativeLogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_LOADFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
             }
         } else {
             if (mFlag) {
@@ -451,7 +450,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                LogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
+                NegativeLogUtil.userActionLog(mContext, CommonConstant.LOG_ATYPE_REFRESHFEED, CommonConstant.LOG_PAGE_FEEDPAGE, CommonConstant.LOG_PAGE_FEEDPAGE, jsonObject, true);
             }
         }
         adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
@@ -546,15 +545,16 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 if (newsFeed.getRtype() == 3) {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                     newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID));
-                    LogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    NegativeLogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                 } else {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_SOURCE);
                 }
             }
         }
+//         || newsFeed.getStyle() == 0
         for (Iterator it = result.iterator(); it.hasNext(); ) {
             NewsFeed newsFeed = (NewsFeed) it.next();
-            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8 || newsFeed.getStyle() == 0) {
+            if (newsFeed.getRtype() == 6 || newsFeed.getRtype() == 8) {
                 it.remove();
             }
         }
@@ -736,7 +736,6 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                Logger.e("aaa", "文字的改变！！！");
                 mAdapter.notifyDataSetChanged();
             } else if (CommonConstant.CHANGE_COMMENT_NUM_ACTION.equals(intent.getAction()) && intent != null) {
                 int newsId = intent.getIntExtra(CommonConstant.NEWS_ID, 0);
@@ -832,7 +831,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                                 for (int i = 0; i < 4; i++) {
                                     newsFeeds.add(mUploadArrNewsFeed.poll());
                                 }
-                                LogUtil.userShowLog(newsFeeds, mContext);
+                                NegativeLogUtil.userShowLog(newsFeeds, mContext);
                             }
                         }
                         break;
@@ -963,7 +962,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
                 if (44 == mChannelId) {
                     newsFeed.setChannel(44);
                 }
-                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID));
+                newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID));
                 newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
                 newsFeed.setDataRef(data);
                 if (PULL_DOWN_REFRESH == flag) {
@@ -992,7 +991,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
     @Override
     public void onADLoaded(List<NativeADDataRef> list) {
         if (!TextUtil.isListEmpty(list)) {
-            LogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
+            NegativeLogUtil.adGetLog(mContext, AD_COUNT, list.size(), Long.valueOf(CommonConstant.NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_SDK_SOURCE);
             mADs = list;
             addADToList(adFlag);
         }
@@ -1053,7 +1052,7 @@ public class NegativeScreenNewsFeedView extends View implements ThemeManager.OnT
         if (user != null) {
             int uid = user.getMuid();
             //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
-            int ctype = CommonConstant.NEWS_CTYPE;
+            int ctype = 9;
             //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
             int ptype = CommonConstant.NEWS_PTYPE;
             //mid
