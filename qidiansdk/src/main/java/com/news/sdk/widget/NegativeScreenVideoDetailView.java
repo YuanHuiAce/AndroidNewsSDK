@@ -1,5 +1,6 @@
 package com.news.sdk.widget;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -382,13 +383,21 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             public void onClick(View v) {
                 if (!isShow) {
                     mDetailVideoTitle.setMaxLines(Integer.MAX_VALUE);
-                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+//                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, 180f);
+                    anim.setDuration(500);
+                    anim.start();
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.requestLayout();
+//                    mTitleOff.requestLayout();
                 } else {
                     mDetailVideoTitle.setMaxLines(2);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 180, 0f);
+                    anim.setDuration(500);
+                    anim.start();
                     mDetailVideoTitle.requestLayout();
-                    mTitleOff.setImageResource(R.drawable.ic_title_off);
+//                    mDetailVideoTitle.requestLayout();
+//                    mTitleOff.setImageResource(R.drawable.ic_title_off);
                     mTitleOff.requestLayout();
                 }
                 isShow = !isShow;
@@ -623,7 +632,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         mDetailBg.setLayoutParams(lpVideo);
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
         mDetailVideoTitle.setText(mResult.getTitle());
-        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null&&!vplayer.isPlay()) {
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null && !vplayer.isPlay()) {
             mDetailShow.setVisibility(View.GONE);
             vplayer.setTitle(mResult.getTitle());
             vplayer.play(mResult.getVideourl());
@@ -940,32 +949,31 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
 
 
     public boolean onBackUp() {
+
         if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
             ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-            if (frameLayout != null) {
-                frameLayout.removeAllViews();
-            }
+            removeVPlayer();
             mFullVideoContainer.setVisibility(View.GONE);
             mDetailShow.setVisibility(View.GONE);
             mVideoContainer.addView(vplayer);
             vplayer.showBottomControl(true);
 
             return true;
+        } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
+            PlayerManager.isList=false;
+            removeVPlayer();
+            if (vplayer != null) {
+                vplayer.stop();
+                vplayer.release();
+            }
+            mDetailShow.setVisibility(View.VISIBLE);
+            mVideoContainer.setVisibility(View.GONE);
+            if (PlayerManager.videoPlayView != null) {
+                PlayerManager.videoPlayView.onDestory();
+                PlayerManager.videoPlayView = null;
+            }
+            return false;
         }
-//        else if (mVideoContainer.getVisibility() == View.VISIBLE) {
-//            FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-//            if (frameLayout != null) {
-//                frameLayout.removeAllViews();
-//            }
-//            if (vplayer != null) {
-//                vplayer.stop();
-//                vplayer.release();
-//            }
-//            mDetailShow.setVisibility(View.VISIBLE);
-//            mVideoContainer.setVisibility(View.GONE);
-//            return false;
-//        }
 
         return false;
     }
@@ -1003,6 +1011,12 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             }
         });
 
+        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null && vplayer.isPlay()) {
+            mDetailShow.setVisibility(View.GONE);
+            removeVPlayer();
+            mVideoContainer.addView(vplayer);
+        }
+
 
         vplayer.setCompletionListener(new IPlayer.CompletionListener() {
             @Override
@@ -1019,18 +1033,11 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
                     mVideoContainer.removeAllViews();
                     mVideoContainer.setVisibility(View.GONE);
                 }
-
                 mDetailShow.setVisibility(View.VISIBLE);
-
             }
         });
-        if (NetworkUtils.isWifiAvailable(mContext) && vplayer != null&&vplayer.isPlay()) {
-            mDetailShow.setVisibility(View.GONE);
-            vplayer.setTitle(mResult.getTitle());
-            vplayer.play(mResult.getVideourl());
-            removeVPlayer();
-            mVideoContainer.addView(vplayer);
-        }
+
+
     }
 
     /**
@@ -1042,13 +1049,9 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             if (parent != null)
                 parent.removeAllViews();
         }
+
     }
-    //把获取焦点强制为True，就有焦点了
-    @Override
-    public boolean isFocused() {
-//        return super.isFocused();
-        return true;
-    }
+
 
     public void OnDestory() {
         if (vplayer != null) {
@@ -1067,14 +1070,24 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         if (vplayer != null) {
             vplayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
-                if (frameLayout != null) {
-                    frameLayout.removeAllViews();
+                if (vplayer.getStatus() == PlayStateParams.STATE_PAUSED || vplayer.isPlay()) {
+                    FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                    if (frameLayout != null) {
+                        frameLayout.removeAllViews();
+                    }
+                    mFullVideoContainer.setVisibility(View.GONE);
+                    mDetailShow.setVisibility(View.GONE);
+                    mVideoContainer.addView(vplayer);
+                    vplayer.showBottomControl(true);
+                } else {
+                    FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
+                    if (frameLayout != null) {
+                        frameLayout.removeAllViews();
+                    }
+                    mFullVideoContainer.setVisibility(View.GONE);
+                    mDetailShow.setVisibility(View.VISIBLE);
+                    vplayer.showBottomControl(true);
                 }
-                mFullVideoContainer.setVisibility(View.GONE);
-                mDetailShow.setVisibility(View.GONE);
-                mVideoContainer.addView(vplayer);
-                vplayer.showBottomControl(true);
 
             } else {
                 FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
@@ -1104,11 +1117,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         OnDestory();
         mHomeWatcher.stopWatch();
         mHomeWatcher = null;
-        if (vplayer != null) {
-            vplayer.stop();
-            vplayer.release();
-            vplayer = null;
-        }
+
         super.onDetachedFromWindow();
     }
 

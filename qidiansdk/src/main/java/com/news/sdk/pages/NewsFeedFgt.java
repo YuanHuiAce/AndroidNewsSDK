@@ -2288,6 +2288,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
                     }
                 }
+                vPlayer.isPlay();
 
                 if (vPlayer.getStatus() == PlayStateParams.STATE_PLAYING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
                     removeVPlayer();

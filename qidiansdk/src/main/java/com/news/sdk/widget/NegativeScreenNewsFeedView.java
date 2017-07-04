@@ -12,8 +12,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +54,6 @@ import com.news.sdk.entity.ADLoadVideoFeedEntity;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
 import com.news.sdk.net.volley.NewsFeedRequestPost;
-import com.news.sdk.pages.NewsDetailVideoAty;
-import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DateUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -71,7 +67,6 @@ import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.transitionseverywhere.TransitionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -383,9 +378,19 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         if (negativeScreenVideoDetailView != null) {
             if (negativeScreenVideoDetailView.onBackUp()) {
                 return true;
-            }else {
+            } else {
+                negativeScreenVideoDetailView.setVisibility(View.GONE);
                 detail_layout.removeAllViews();
-                negativeScreenVideoDetailView=null;
+                negativeScreenVideoDetailView = null;
+//                mAdapter.setNewsFeed(null);
+//                mAdapter.notifyDataSetChanged();
+//                mAdapter.setNewsFeed(mArrNewsFeed);
+//                mAdapter.notifyDataSetChanged();
+                mlvNewsFeed.setVisibility(View.VISIBLE);
+                playVideoControl();
+
+
+//
                 return true;
             }
         }
@@ -404,8 +409,21 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
+        OnDestory();
+
     }
 
+
+    public void OnDestory() {
+        if (vPlayer != null) {
+            vPlayer.stop();
+            vPlayer.release();
+            if (vPlayer.getParent() != null)
+                ((ViewGroup) vPlayer.getParent()).removeAllViews();
+            vPlayer.onDestory();
+        }
+        vPlayer = null;
+    }
 
     /**
      * 当前新闻feed流fragment的父容器是否是MainAty,如果是则进行刷新动画
@@ -902,8 +920,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                     }
                 }
 
-                if (mChannelId==44&&portrait)
-                {
+                if (mChannelId == 44 && portrait&&detail_layout.getChildCount() == 0) {
                     VideoVisibleControl();
                 }
             }
@@ -1131,85 +1148,79 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
-        if (44!=mChannelId)
+        if (44!=mChannelId) {
             return;
+        }
+        else if (detail_layout.getChildCount() != 0)
+        {
+//            mAdapter.notifyDataSetChanged();
+            return ;
+        }
         super.onConfigurationChanged(newConfig);
         if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 portrait = true;
                 vPlayerContainer.setVisibility(View.GONE);
-                mHandler.postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                removeVPlayer();
-                                TransitionManager.beginDelayedTransition(vPlayerContainer);
-                                int position = getPlayItemPosition();
-                                if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())&&position != -1) {
-                                        FrameLayout playItemView = getPlayItemView(position);
-                                        playItemView.removeAllViews();
-                                        ViewGroup itemView = (ViewGroup) playItemView.getParent();
-                                        if (itemView != null) {
-                                            itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-                                        }
-                                        playItemView.addView(vPlayer);
-                                        vPlayer.showBottomControl(true);
-                                } else {
-                                    if (vPlayer != null) {
-                                        vPlayer.stop();
-                                        vPlayer.release();
-                                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                                        if (frameLayout != null) {
-                                            frameLayout.removeView(vPlayer);
-                                            View itemView = (View) frameLayout.getParent();
-                                            if (itemView != null) {
-                                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
-                                                if (videoSHow != null) {
-                                                    videoSHow.setVisibility(View.VISIBLE);
-                                                }
-                                            }
-                                        }
-                                    }
+                removeVPlayer();
+                int position = getPlayItemPosition();
+                if ((vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay()) && position != -1) {
+                    FrameLayout playItemView = getPlayItemView(position);
+                    playItemView.removeAllViews();
+                    ViewGroup itemView = (ViewGroup) playItemView.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+                    }
+                    playItemView.addView(vPlayer);
+                    vPlayer.showBottomControl(true);
+                } else {
+                    if (vPlayer != null) {
+                        vPlayer.stop();
+                        vPlayer.release();
+                        FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                        if (frameLayout != null) {
+                            frameLayout.removeView(vPlayer);
+                            View itemView = (View) frameLayout.getParent();
+                            if (itemView != null) {
+                                View videoSHow = itemView.findViewById(R.id.rl_video_show);
+                                if (videoSHow != null) {
+                                    videoSHow.setVisibility(View.VISIBLE);
                                 }
-
                             }
-                        }, 0);
+                        }
+                    }
+                }
             } else {
                 portrait = false;
-                mHandler.postDelayed(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                                if (frameLayout != null) {
-                                    frameLayout.removeView(vPlayer);
-                                    View itemView = (View) frameLayout.getParent();
-                                    if (itemView != null) {
-                                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
-                                        if (videoSHow != null) {
-                                            videoSHow.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                }
-                                vPlayerContainer.setVisibility(View.VISIBLE);
-                                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                vPlayerContainer.addView(vPlayer, lp);
-                                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
-                                    vPlayer.showBottomControl(false);
-                            }
-                        }, 0);
-
+                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeView(vPlayer);
+                    View itemView = (View) frameLayout.getParent();
+                    if (itemView != null) {
+                        View videoSHow = itemView.findViewById(R.id.rl_video_show);
+                        if (videoSHow != null) {
+                            videoSHow.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+                vPlayerContainer.setVisibility(View.VISIBLE);
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                vPlayerContainer.addView(vPlayer, lp);
+                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                    vPlayer.showBottomControl(false);
             }
-
         } else {
             mAdapter.notifyDataSetChanged();
         }
+
+
     }
 
     public void playVideoControl() {
-        if (null == vPlayer) {
+        if (PlayerManager.videoPlayView != null) {
+            vPlayer = PlayerManager.videoPlayView;
+        } else {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         }
         vPlayer.setShowMediaList(true);
@@ -1227,9 +1238,9 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                     vPlayer.stop();
                     vPlayer.release();
                 }
-//                if (lastPostion != -1) {
-                    removeViews();
-//                }
+                if (lastPostion != -1) {
+                removeViews();
+                }
                 View view = (View) relativeLayout.getParent();
                 ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
                 mItemVideo.removeAllViews();
@@ -1249,15 +1260,20 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                 if (vPlayer.cPostion != lastPostion && lastPostion != -1) {
                     vPlayer.stop();
                     vPlayer.release();
-                    removeViews();
-                } else {
-                    removeViews();
+                }
+                removeViews();
+
+                View show = rlNewsContent.findViewById(R.id.rl_video_show);
+                if (show != null) {
+                    show.setVisibility(View.VISIBLE);
                 }
                 negativeScreenVideoDetailView = new NegativeScreenVideoDetailView(mContext);
-                negativeScreenVideoDetailView.setFocusable(true);
-                negativeScreenVideoDetailView.setFocusableInTouchMode(true);
+//                negativeScreenVideoDetailView.setFocusable(true);
+//                negativeScreenVideoDetailView.setFocusableInTouchMode(true);
                 detail_layout.addView(negativeScreenVideoDetailView.getRootView());
+                PlayerManager.isList=true;
                 negativeScreenVideoDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+                mlvNewsFeed.setVisibility(View.GONE);
                 lastPostion = vPlayer.cPostion;
                 return true;
             }
@@ -1273,45 +1289,46 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
             }
         });
 
-            vPlayer.setOnShareListener(new IPlayer.OnShareListener() {
-                @Override
-                public void onShare() {
+        vPlayer.setOnShareListener(new IPlayer.OnShareListener() {
+            @Override
+            public void onShare() {
 
+            }
+
+            @Override
+            public void onPlayCancel() {
+                if (vPlayer != null) {
+                    vPlayer.stop();
+                    vPlayer.release();
                 }
+                removeViews();
+            }
+        });
 
-                @Override
-                public void onPlayCancel() {
+
+        vPlayer.setCompletionListener(new IPlayer.CompletionListener() {
+            @Override
+            public void completion(IMediaPlayer mp) {
+                if (vPlayerContainer.getVisibility() == View.VISIBLE) {
+                    ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    if (vPlayer != null) {
+                        vPlayer.stop();
+                        vPlayer.release();
+                    }
+                    vPlayerContainer.removeAllViews();
+                    vPlayerContainer.setVisibility(View.GONE);
+                } else {
                     if (vPlayer != null) {
                         vPlayer.stop();
                         vPlayer.release();
                     }
                     removeViews();
-                }
-            });
 
-
-            vPlayer.setCompletionListener(new IPlayer.CompletionListener() {
-                @Override
-                public void completion(IMediaPlayer mp) {
-                        if (vPlayerContainer.getVisibility() == View.VISIBLE) {
-                            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            if (vPlayer != null) {
-                                vPlayer.stop();
-                                vPlayer.release();
-                            }
-                            vPlayerContainer.removeAllViews();
-                            vPlayerContainer.setVisibility(View.GONE);
-                        } else {
-                            if (vPlayer != null) {
-                                vPlayer.stop();
-                                vPlayer.release();
-                            }
-                            removeViews();
-                            lastPostion = -1;
-                        }
+                    lastPostion = -1;
                 }
-            });
-        }
+            }
+        });
+    }
 
     /**
      * 根据位置获取当前可见item 对象
@@ -1336,7 +1353,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
             return;
         ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
         if (frameLayout != null && frameLayout.getChildCount() > 0) {
-            frameLayout.removeAllViews();
+            frameLayout.removeView(vPlayer);
             View itemView = (View) frameLayout.getParent();
             if (itemView != null) {
                 View show = itemView.findViewById(R.id.rl_video_show);
@@ -1345,6 +1362,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                 }
             }
         }
+
     }
 
     /**
@@ -1392,6 +1410,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         }
         return -1;
     }
+
     /**
      * 滑动控制视频是否播放
      */
@@ -1399,7 +1418,9 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         try {
             if (vPlayer == null)
                 return;
-
+            if (negativeScreenVideoDetailView!=null)
+                Log.v("VideoVisibleControl","negativeScreenVideoDetailView"+negativeScreenVideoDetailView);
+            Log.v("VideoVisibleControl",detail_layout.getChildCount()+"::::::"+detail_layout);
             if (getPlayItemPosition() == -1) {
                 vPlayer.stop();
                 vPlayer.release();

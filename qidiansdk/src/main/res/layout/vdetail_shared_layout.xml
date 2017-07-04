@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="12dp"
-        android:paddingRight="15dp"
+
         android:orientation="horizontal"
         >
 
@@ -32,6 +32,7 @@
             android:layout_alignParentRight="true"
             android:paddingLeft="15dp"
             android:paddingBottom="8dp"
+            android:paddingRight="15dp"
             android:paddingTop="8dp"
             android:background="@null"
             android:scaleType="centerInside"
