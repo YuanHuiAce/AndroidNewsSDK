@@ -39,6 +39,7 @@ import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.bean.PlayerFeed;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.sdk.R;
@@ -51,8 +52,10 @@ import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.ADLoadNewsFeedEntity;
 import com.news.sdk.entity.ADLoadVideoFeedEntity;
+import com.news.sdk.entity.ChannelItem;
 import com.news.sdk.entity.NewsFeed;
 import com.news.sdk.entity.User;
+import com.news.sdk.net.volley.ChannelListRequest;
 import com.news.sdk.net.volley.NewsFeedRequestPost;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DateUtil;
@@ -92,7 +95,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private LinkedList<NewsFeed> mUploadArrNewsFeed = new LinkedList<>();
     private PullToRefreshListView mlvNewsFeed;
-    private int mChannelId = 1;
+    private int mChannelId = 3;
     private NewsFeedDao mNewsFeedDao;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
@@ -129,6 +132,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
     }
 
     private void initializeViews() {
+        setChannelList();
         mRootView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.negative_screen_news, this);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
@@ -465,7 +469,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
         adLoadNewsFeedEntity.setAds(SharedPreManager.mInstance(mContext).getAdChannelInt(CommonConstant.FILE_AD, CommonConstant.AD_CHANNEL));
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_BIGPOSID)));
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, CommonConstant.NEWS_FEED_GDT_API_NEGATIVEBIGPOSID)));
         Gson gson = new Gson();
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -605,8 +609,8 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                 }
                 if (newsFeed.getRtype() == 3) {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
-                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID));
-                    NegativeLogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_BIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
+                    newsFeed.setAid(Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NEGATIVEBIGPOSID));
+                    NegativeLogUtil.adGetLog(mContext, 1, 1, Long.valueOf(CommonConstant.NEWS_FEED_GDT_API_NEGATIVEBIGPOSID), CommonConstant.LOG_SHOW_FEED_AD_GDT_API_SOURCE);
                 } else {
                     newsFeed.setSource(CommonConstant.LOG_SHOW_FEED_SOURCE);
                 }
@@ -918,7 +922,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                     }
                 }
 
-                if (mChannelId == 44 && portrait&&detail_layout.getChildCount() == 0) {
+                if (mChannelId == 44 && portrait && detail_layout.getChildCount() == 0) {
                     VideoVisibleControl();
                 }
             }
@@ -992,6 +996,22 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void setChannelList() {
+        ChannelListRequest<ArrayList<ChannelItem>> newsFeedRequestPost = new ChannelListRequest(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
+        }.getType(), HttpConstant.URL_FETCH_CHANNEL_LIST + "channel=" + CommonConstant.NEWS_NEGATIVECTYPE, new Response.Listener<ArrayList<ChannelItem>>() {
+            @Override
+            public void onResponse(final ArrayList<ChannelItem> result) {
+                if (!TextUtil.isListEmpty(result)) {
+                    if (result.get(0).getId() != 0) {
+                        mChannelId = result.get(0).getId();
+                        SharedPreManager.mInstance(mContext).save(CommonConstant.FILE_AD, CommonConstant.NEGATIVE_CHANNEL, result.get(0).getId());
+                    }
+                }
+            }
+        }, null);
+        QiDianApplication.getInstance().getRequestQueue().add(newsFeedRequestPost);
     }
 
     private void addADToList(int flag) {
@@ -1146,13 +1166,11 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
-        if (44!=mChannelId) {
+        if (44 != mChannelId) {
             return;
-        }
-        else if (detail_layout.getChildCount() != 0)
-        {
+        } else if (detail_layout.getChildCount() != 0) {
 //            mAdapter.notifyDataSetChanged();
-            return ;
+            return;
         }
         super.onConfigurationChanged(newConfig);
         if (vPlayer != null) {
@@ -1237,7 +1255,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
                     vPlayer.release();
                 }
                 if (lastPostion != -1) {
-                removeViews();
+                    removeViews();
                 }
                 View view = (View) relativeLayout.getParent();
                 ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
@@ -1269,7 +1287,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
 //                negativeScreenVideoDetailView.setFocusable(true);
 //                negativeScreenVideoDetailView.setFocusableInTouchMode(true);
                 detail_layout.addView(negativeScreenVideoDetailView.getRootView());
-                PlayerManager.isList=true;
+                PlayerManager.isList = true;
                 negativeScreenVideoDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 mlvNewsFeed.setVisibility(View.GONE);
                 lastPostion = vPlayer.cPostion;
@@ -1416,9 +1434,9 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         try {
             if (vPlayer == null)
                 return;
-            if (negativeScreenVideoDetailView!=null)
-                Log.v("VideoVisibleControl","negativeScreenVideoDetailView"+negativeScreenVideoDetailView);
-            Log.v("VideoVisibleControl",detail_layout.getChildCount()+"::::::"+detail_layout);
+            if (negativeScreenVideoDetailView != null)
+                Log.v("VideoVisibleControl", "negativeScreenVideoDetailView" + negativeScreenVideoDetailView);
+            Log.v("VideoVisibleControl", detail_layout.getChildCount() + "::::::" + detail_layout);
             if (getPlayItemPosition() == -1) {
                 vPlayer.stop();
                 vPlayer.release();
