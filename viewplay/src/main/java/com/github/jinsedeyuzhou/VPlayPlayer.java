@@ -152,6 +152,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     private IPlayer.OnNetChangeListener onNetChangeListener;
     private IPlayer.OnErrorListener onErrorListener;
     private IPlayer.OnPreparedListener onPreparedListener;
+    private onConfigurationChangeListener onConfigurationChangeListener;
 
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -673,6 +674,18 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
      */
     public void toggleFullScreen() {
         mClick = true;
+//        if (onConfigurationChangeListener!=null)
+//        {
+//
+//            onConfigurationChangeListener.onChange(mIsLand);
+//            if (!mIsLand) {
+//                full.setImageResource(R.mipmap.ic_fullscreen_exit);
+//            } else {
+//                full.setImageResource(R.mipmap.ic_fullscreen);
+//            }
+//            mIsLand=!mIsLand;
+//
+//        }else {
         if (!mIsLand) {
             if (onClickOrientationListener != null) {
                 onClickOrientationListener.landscape();
@@ -689,6 +702,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mClickPort = false;
         }
         updateFullScreenButton();
+//        }
     }
 
 
@@ -1542,6 +1556,14 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     }
 
+    public interface onConfigurationChangeListener {
+        void onChange(boolean portrait);
+    }
+
+    public void setOnConfigurationChangeListener(onConfigurationChangeListener var) {
+        this.onConfigurationChangeListener = var;
+    }
+
 
     public void setOnClickOrientationListener(IPlayer.OnClickOrientationListener var1) {
         onClickOrientationListener = var1;
@@ -1618,11 +1640,10 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                 pause();
                 hide(false);
                 isShowContoller = false;
-                if (currentPosition!=0) {
+                if (currentPosition != 0) {
                     mVideoDuration.setText(generateTime(currentPosition));
                     mDurationContainer.setVisibility(View.VISIBLE);
-                }else
-                {
+                } else {
                     mDurationContainer.setVisibility(View.GONE);
                 }
                 mVideoNetTie.setVisibility(View.VISIBLE);

@@ -4,22 +4,27 @@
         <!-- Customize your theme here. -->
         <item name="android:windowAnimationStyle">@android:style/Animation.Toast</item>
     </style>
+
     <style name="home_style">
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="SwipeBackLayout">
         <item name="edge_size">50dip</item>
         <item name="shadow_left">@drawable/shadow_left</item>
         <item name="shadow_right">@drawable/shadow_right</item>
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
     </style>
+
     <style name="popupWindowAnimation" mce_bogus="1" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/enter</item>
         <item name="android:windowExitAnimation">@anim/exit</item>
     </style>
+
     <style name="title_text_style">
         <item name="android:textSize">@dimen/new_font1</item>
     </style>
+
     <style name="UserComment" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -29,11 +34,13 @@
         <item name="android:windowBackground">@color/line_gray</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
     <style name="main_title_bar_style">
         <item name="android:background">@color/theme_color</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/title_bar_height</item>
     </style>
+
     <style name="title_bar_style">
         <item name="android:background">@color/common_header_bg</item>
         <item name="android:layout_width">fill_parent</item>
@@ -86,6 +93,26 @@
     <style name="ThemeAnimation" parent="android:Theme">
         <item name="android:windowAnimationStyle">@style/noAnimation</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="DeveloperTag">
+        <item name="android:layout_width">3dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@color/color1</item>
+
+    </style>
+
+    <style name="DeveloperTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/color2</item>
+        <item name="android:textSize">@dimen/font2</item>
+        <item name="android:textStyle">bold</item>
+
     </style>
 
     <style name="noAnimation">

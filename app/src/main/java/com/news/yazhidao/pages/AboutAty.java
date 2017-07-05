@@ -1,11 +1,14 @@
 package com.news.yazhidao.pages;
 
+import android.content.Intent;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.sdk.common.BaseActivity;
+import com.news.sdk.pages.DeveloperAty;
 import com.news.sdk.utils.ImageUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.yazhidao.R;
@@ -43,8 +46,6 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
         mAboutLeftBack.setOnClickListener(this);
         mAboutVersion = (TextView) findViewById(R.id.mAboutVersion);
         mAboutVersion.setText("V" + getResources().getString(R.string.app_version));
-
-
         setTheme();
 
     }
@@ -58,12 +59,33 @@ public class AboutAty extends BaseActivity implements View.OnClickListener {
     protected void loadData() {
 
     }
-
+    private int mSecretNumber = 0;
+    private static final long MIN_CLICK_INTERVAL = 600;
+    private long mLastClickTime;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mAboutLeftBack:
                 finish();
+                break;
+            case R.id.mAboutVersion:
+                long currentClickTime = SystemClock.uptimeMillis();
+                long elapsedTime = currentClickTime - mLastClickTime;
+                mLastClickTime = currentClickTime;
+
+                if (elapsedTime < MIN_CLICK_INTERVAL) {
+                    ++mSecretNumber;
+                    if (2 == mSecretNumber) {
+                        try {
+                            Intent intent = new Intent(this, DeveloperAty.class);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                        }
+
+                    }
+                } else {
+                    mSecretNumber = 0;
+                }
                 break;
         }
     }

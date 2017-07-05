@@ -66,7 +66,9 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <include layout="@layout/detail_attention_item" />
+    <include
+        layout="@layout/detail_attention_item"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/adLayout"
@@ -74,15 +76,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp" />
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp" />
 
     <RelativeLayout
         android:id="@+id/detail_Hot_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="22dp">
 
         <TextView
             android:id="@+id/detail_hotComment"
@@ -135,8 +138,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="17dp"
         android:layout_marginRight="16dp"
+        android:layout_marginTop="17dp"
         android:visibility="gone">
 
         <TextView

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp">
+
+    <View
+        android:id="@+id/developer_tag"
+        android:layout_width="3dp"
+        android:layout_height="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@color/color1"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/tv_developer_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:textSize="@dimen/font4"
+        android:maxLines="1"
+        android:textColor="@color/color2"
+        android:text="用户信息" />
+
+    <TextView
+        android:id="@+id/tv_developer_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="30dp"
+        android:maxLines="1"
+        android:text="用户信息"
+        android:ellipsize="end"
+        android:textSize="@dimen/font4"
+        android:textColor="@color/color3"
+
+        />
+
+
+    <View
+        android:id="@+id/custom_developer_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color5" />
+</RelativeLayout>

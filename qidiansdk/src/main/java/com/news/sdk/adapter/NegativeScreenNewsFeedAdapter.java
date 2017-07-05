@@ -1,7 +1,6 @@
 package com.news.sdk.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
 import android.text.TextUtils;
@@ -24,8 +23,6 @@ import com.news.sdk.common.ThemeManager;
 import com.news.sdk.database.NewsFeedDao;
 import com.news.sdk.entity.AttentionListEntity;
 import com.news.sdk.entity.NewsFeed;
-import com.news.sdk.pages.NewsDetailVideoAty;
-import com.news.sdk.pages.NewsFeedFgt;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.DensityUtil;
 import com.news.sdk.utils.DeviceInfoUtil;
@@ -36,6 +33,7 @@ import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.widget.NegativeScreenNewsDetailView;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
 import com.news.sdk.widget.NegativeScreenNewsTopicView;
+import com.news.sdk.widget.NegativeScreenVideoDetailView;
 import com.news.sdk.widget.TextViewExtend;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
@@ -65,6 +63,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
     private RequestManager mRequestManager;
     private NegativeScreenNewsDetailView negativeScreenNewsDetailView;
     private NegativeScreenNewsTopicView negativeScreenNewsTopicView;
+    private NegativeScreenVideoDetailView negativeScreenVideoDetailView;
 
     public NegativeScreenNewsFeedAdapter(Context context, NegativeScreenNewsFeedView view, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -552,7 +551,7 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
             holder.setGlideDrawViewURI(mRequestManager, R.id.iv_video_source_avatarHd, feed.getIcon());
             setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
             //视频播放
-//            setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
+            setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
             //item点击事件跳转到详情页播放
             setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed, (TextView) holder.getView(R.id.tv_video_title));
             setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(), feed.getClicktimesStr());
@@ -778,11 +777,20 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                     mTopicRootView.addView(negativeScreenNewsTopicView.getNewsView());
                     negativeScreenNewsTopicView.setData(feed.getNid(), feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
                 } else if (feed.getRtype() == 6) {
-                    setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    intent.putExtra(NewsFeedFgt.CURRENT_POSITION, 0);
-                    mContext.startActivity(intent);
+
+                    if (onPlayClickListener != null) {
+                        if (onPlayClickListener.onItemClick(rlNewsContent, feed)) {
+                            setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+                        }
+                    }
+// else {
+//                        setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
+//                        negativeScreenVideoDetailView = new NegativeScreenVideoDetailView(mContext);
+//                        negativeScreenVideoDetailView.setFocusable(true);
+//                        negativeScreenVideoDetailView.setFocusableInTouchMode(true);
+//                        mRootView.addView(negativeScreenVideoDetailView.getRootView());
+//                        negativeScreenVideoDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
+//                    }
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     if (negativeScreenNewsDetailView == null) {
@@ -888,6 +896,16 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
         return false;
     }
 
+    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onPlayClickListener != null) {
+                    onPlayClickListener.onPlayClick(view, feed);
+                }
+            }
+        });
+    }
     /**
      * 接口回调传入数据的添加与删除
      * <p/>
@@ -895,6 +913,24 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
      */
     public interface introductionNewsFeed {
         public void getDate(NewsFeed feed, boolean isCheck);
+    }
+
+    //视频播放接口
+    private NewsFeedAdapter.OnPlayClickListener onPlayClickListener;
+
+    public void setOnPlayClickListener(NewsFeedAdapter.OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
+
+    }
+
+
+
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+
+        boolean onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
+
+        void onShareClick(ImageView imageView, NewsFeed feed);
     }
 
 }

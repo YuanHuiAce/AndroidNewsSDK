@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
@@ -28,6 +30,7 @@ import com.news.sdk.entity.User;
 import com.news.sdk.utils.AdUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
+import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.news.sdk.utils.manager.UserManager;
 import com.news.sdk.widget.NegativeScreenNewsFeedView;
@@ -107,7 +110,26 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (PlayerManager.videoPlayView != null) {
+            if (PlayerManager.videoPlayView.onKeyDown(keyCode, event))
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (PlayerManager.videoPlayView != null)
+        {
+            PlayerManager.videoPlayView.onPause();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
+        Log.v("FocusId:",  this.getWindow().getDecorView().findFocus()+"");
         if (!mainView.removeView()) {
             this.finish();
         }
@@ -284,4 +306,6 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
             }
         }
     }
+
+
 }

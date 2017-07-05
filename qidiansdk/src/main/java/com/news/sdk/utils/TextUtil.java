@@ -212,9 +212,42 @@ public class TextUtil {
         return cssBuilder.toString();
     }
 
+    public static String negativeGenerateCSS(String color) {
+        String bgColor = "f8f8f8";
+        String lineColor = "e8e8e8";
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            bgColor = "202020";
+            lineColor = "2a2a2a";
+        }
+        StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
+        cssBuilder.append("" +
+                "body {word-wrap:break-word;font-family:Arial; margin: 14px 18px 18px 18px; background-color: #" + bgColor + ";} " +
+                "h3 { margin: 0px; } h1, h2, h3, h4, h5, h6 { line-height: 150%; font-size: 18px;}" +
+                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#" + lineColor + ";width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
+                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; h1, h2, h3, h4, h5, h6 { line-height: 150%; font-size: 18px;}}" +
+                ".content img { width: 100%; }" +
+                ".p_img { text-align: center; }" +
+                ".p_video { text-align: center;position: relative; }" +
+                "a { text-decoration: none; color:#" + color + ";}" +
+                "a:link { text-decoration: none; color:#" + color + ";}" +
+                "a:visited { text-decoration: none; color:#" + color + ";}" +
+                "a:hover { text-decoration: none; color:#" + color + ";}" +
+                "a:active { text-decoration: nonecolor:#" + color + ";}"
+        );
+        cssBuilder.append("</style>");
+        return cssBuilder.toString();
+    }
+
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
         return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url,isLoadImag){console.log(\"img pro \"+url);if(!isLoadImag){return}if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";
+    }
+
+    /*
+    * 将所有的a标签设置为不点击后无效果
+    */
+    public static String linkDisAble() {
+        return "<script type=\"text/javascript\">window.onload=function(){ var linkArray = document.getElementsByTagName('a');for(var i=1;i<linkArray.length;i++){linkArray[i].setAttribute(\"href\",\"javascript:volid(0);\");}}</script>";
     }
 
 
@@ -247,6 +280,84 @@ public class TextUtil {
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() + generateJs() +
+                "</head>" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #" + titleColor + ";\">" +
+                detail.getTitle() +
+                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #" + commentColor + ";\" class=\"top\"><span>" +
+                detail.getPname() + "</span>" +
+                "&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #" + commentColor + "\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
+        if (detail.getCommentSize() != 0) {
+            contentBuilder.append("&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #" + commentColor + "\">" + detail.getCommentSize() + "评论" + "</span>");
+        }
+        contentBuilder.append("</div><div class=\"content\">");
+
+        ArrayList<HashMap<String, String>> content = detail.getContent();
+        if (!TextUtil.isListEmpty(content)) {
+//            HashMap<String, String> add = new HashMap<>();
+//            add.put("vid", "<iframe allowfullscreen=\\\"\\\" class=\\\"video_iframe\\\" data-src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" frameborder=\\\"0\\\" height=\\\"375\\\" src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" width=\\\"500\\\"></iframe>");
+//            content.add(add);
+            for (HashMap<String, String> map : content) {
+                String txt = map.get("txt");
+                String img = map.get("img");
+                String vid = map.get("vid");
+                String imgUrl = "file:///android_asset/deail_default.png";
+                String playImgUrl = "file:///android_asset/detail_play_default.png";
+                if (!TextUtil.isEmptyString(txt)) {
+//                    txt = "<h1>" + txt + "</h1>";
+                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #" + titleColor + ";\">" + txt + "</p>");
+                }
+                if (!TextUtil.isEmptyString(img)) {
+                    Logger.e("jigang", "img " + img);
+                    /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
+                    String imgColor = "1";
+                    if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+                        imgColor = "0.5";
+                    }
+                    contentBuilder.append("<p class=\"p_img\"><img style=\"opacity:" + imgColor + "\" src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "'," + !isLoadImgs + ")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
+                }
+                if (!TextUtil.isEmptyString(vid)) {
+                    int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
+                    int h = (int) (w * 0.75);
+                    vid = vid.replace("\"", "\'");
+                    String url = parseVideoUrl(vid, w, h);
+                    if (url.contains("player.html")) {
+                        contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
+                    } else {
+                        contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><img src=\"" + playImgUrl + "\" style=\"width: 100%;height: auto\"></p>");
+                    }
+                }
+            }
+        }
+        contentBuilder.append("</div></body></html>");
+        return contentBuilder.toString();
+    }
+
+    public static String neagtiveGenarateHTML(NewsDetail detail, int textSize, boolean isLoadImgs) {
+        if (detail == null) {
+            return "";
+        }
+        int titleTextSize, commentTextSize, contentTextSize;
+        if (textSize == CommonConstant.TEXT_SIZE_NORMAL) {
+            titleTextSize = 24;
+            commentTextSize = 12;
+            contentTextSize = 18;
+        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
+            titleTextSize = 26;
+            commentTextSize = 14;
+            contentTextSize = 20;
+        } else {
+            titleTextSize = 28;
+            commentTextSize = 16;
+            contentTextSize = 22;
+        }
+        String titleColor = "333333";
+        String commentColor = "999999";
+        if (ThemeManager.getThemeMode() == ThemeManager.ThemeMode.NIGHT) {
+            titleColor = "909090";
+            commentColor = "545454";
+        }
+        StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
+                negativeGenerateCSS(titleColor) + generateJs() + linkDisAble() +
                 "</head>" +
                 "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #" + titleColor + ";\">" +
                 detail.getTitle() +

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class LogUtil {
 
+
     private static UserLogBasicInfoEntity getLogBasicInfo(Context context, Long userId) {
         UserLogBasicInfoEntity userLogBasicInfoEntity = new UserLogBasicInfoEntity();
         userLogBasicInfoEntity.setUid(userId);
@@ -89,12 +90,14 @@ public class LogUtil {
                     @Override
                     public void onResponse(String arg0) {
                         //返回正确后的操作
+                        QiDianApplication.upload++;
                     }
                 }, new Response.ErrorListener() {
 
+
             @Override
             public void onErrorResponse(VolleyError arg0) {
-
+                QiDianApplication.unload++;
             }
         });
 //        JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_LOG_POST_NEWS_READ, jsonObject,
