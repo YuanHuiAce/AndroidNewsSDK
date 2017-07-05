@@ -30,7 +30,7 @@
             android:layout_alignParentRight="true"
             android:background="@null"
             android:paddingBottom="8dp"
-            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_title_off" />

@@ -1725,9 +1725,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     }
                                 }
                                 vPlayerContainer.setVisibility(View.VISIBLE);
-                                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                vPlayerContainer.addView(vPlayer, lp);
+//                                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+//                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                                vPlayerContainer.addView(vPlayer, lp);
+                                vPlayerContainer.addView(vPlayer);
                                 if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                                     vPlayer.showBottomControl(false);
                             }
@@ -2296,6 +2297,7 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                         itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
                     }
                 }
+                vPlayer.isPlay();
 
                 if (vPlayer.getStatus() == PlayStateParams.STATE_PLAYING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
                     removeVPlayer();

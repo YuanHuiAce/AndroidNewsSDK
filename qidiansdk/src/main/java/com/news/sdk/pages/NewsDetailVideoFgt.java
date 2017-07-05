@@ -1,5 +1,6 @@
 package com.news.sdk.pages;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -417,14 +418,20 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
             public void onClick(View v) {
                 if (!isShow) {
                     mDetailVideoTitle.setMaxLines(Integer.MAX_VALUE);
-                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+//                    mTitleOff.setImageResource(R.drawable.ic_title_on);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, 180f);
+                    anim.setDuration(100);
+                    anim.start();
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.requestLayout();
                 }else
                 {
                     mDetailVideoTitle.setMaxLines(2);
                     mDetailVideoTitle.requestLayout();
-                    mTitleOff.setImageResource(R.drawable.ic_title_off);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 180, 0f);
+                    anim.setDuration(100);
+                    anim.start();
+//                    mTitleOff.setImageResource(R.drawable.ic_title_off);
                     mTitleOff.requestLayout();
                 }
                 isShow=!isShow;

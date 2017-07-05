@@ -824,13 +824,6 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     }
 
     public void onBackPressed() {
-        if (LinkWebView != null) {
-            ((ViewGroup) LinkWebView.getParent()).removeView(LinkWebView);
-            LinkWebView.removeAllViews();
-            LinkWebView.destroy();
-            LinkWebView = null;
-            return;
-        }
         if (mAlphaAnimationOut != null && mRootView != null && mRootView.getParent() != null) {
             isVisable = false;
             mRootView.startAnimation(mAlphaAnimationOut);

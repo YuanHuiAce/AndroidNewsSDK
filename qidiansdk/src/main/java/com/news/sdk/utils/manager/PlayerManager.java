@@ -13,6 +13,7 @@ public class PlayerManager {
     public static PlayerManager videoPlayViewManage;
     public static VPlayPlayer videoPlayView;
     public static NewsFeed newsFeed;
+    public static boolean isList;
 
 
     private PlayerManager() {

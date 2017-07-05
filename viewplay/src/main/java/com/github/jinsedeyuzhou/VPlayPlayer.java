@@ -387,6 +387,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
          * 不支持此设备
          */
         if (!playerSupport) {
+            status= PlayStateParams.STATE_ERROR;
             showStatus(activity.getResources().getString(R.string.not_support));
         }
 

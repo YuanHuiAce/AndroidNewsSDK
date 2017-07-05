@@ -106,6 +106,11 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         }
         ThemeManager.unregisterThemeChangeListener(this);
         mainView.destroyView();
+
+        if (PlayerManager.videoPlayView != null) {
+            PlayerManager.videoPlayView.onDestory();
+            PlayerManager.videoPlayView = null;
+        }
         super.onDestroy();
     }
 
