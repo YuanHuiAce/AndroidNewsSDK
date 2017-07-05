@@ -419,8 +419,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 if (!isShow) {
                     mDetailVideoTitle.setMaxLines(Integer.MAX_VALUE);
 //                    mTitleOff.setImageResource(R.drawable.ic_title_on);
-                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, -900f);
-                    anim.setDuration(500);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, 180f);
+                    anim.setDuration(100);
                     anim.start();
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.requestLayout();
@@ -428,8 +428,8 @@ public class NewsDetailVideoFgt extends Fragment implements NativeAD.NativeAdLis
                 {
                     mDetailVideoTitle.setMaxLines(2);
                     mDetailVideoTitle.requestLayout();
-                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, 180f);
-                    anim.setDuration(500);
+                    ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 180, 0f);
+                    anim.setDuration(100);
                     anim.start();
 //                    mTitleOff.setImageResource(R.drawable.ic_title_off);
                     mTitleOff.requestLayout();

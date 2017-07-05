@@ -73,7 +73,7 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(44);
+        mainView.setChannelId(1);
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();

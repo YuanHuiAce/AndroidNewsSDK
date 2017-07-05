@@ -385,7 +385,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
                     mDetailVideoTitle.setMaxLines(Integer.MAX_VALUE);
 //                    mTitleOff.setImageResource(R.drawable.ic_title_on);
                     ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 0f, 180f);
-                    anim.setDuration(500);
+                    anim.setDuration(100);
                     anim.start();
                     mDetailVideoTitle.requestLayout();
                     mTitleOff.requestLayout();
@@ -393,7 +393,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
                 } else {
                     mDetailVideoTitle.setMaxLines(2);
                     ObjectAnimator anim = ObjectAnimator.ofFloat(mTitleOff, "rotation", 180, 0f);
-                    anim.setDuration(500);
+                    anim.setDuration(100);
                     anim.start();
                     mDetailVideoTitle.requestLayout();
 //                    mDetailVideoTitle.requestLayout();

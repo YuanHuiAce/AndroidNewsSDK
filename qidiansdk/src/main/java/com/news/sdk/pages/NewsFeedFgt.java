@@ -1717,9 +1717,10 @@ public class NewsFeedFgt extends Fragment implements ThemeManager.OnThemeChangeL
                                     }
                                 }
                                 vPlayerContainer.setVisibility(View.VISIBLE);
-                                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                vPlayerContainer.addView(vPlayer, lp);
+//                                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+//                                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                                vPlayerContainer.addView(vPlayer, lp);
+                                vPlayerContainer.addView(vPlayer);
                                 if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                                     vPlayer.showBottomControl(false);
                             }

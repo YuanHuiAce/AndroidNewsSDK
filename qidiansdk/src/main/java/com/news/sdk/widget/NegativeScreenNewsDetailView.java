@@ -431,6 +431,7 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
                 Intent intent = new Intent(mContext, RelevantViewWebviewAty.class);
                 intent.putExtra(RelevantViewWebviewAty.KEY_URL, contentUrl);
                 mContext.startActivity(intent);
+//                view.loadUrl(contentUrl);
                 return true;
             }
 
@@ -764,6 +765,11 @@ public class NegativeScreenNewsDetailView extends View implements ThemeManager.O
     }
 
     public void onBackPressed() {
+        if (mDetailWebView.canGoBack())
+        {
+            mDetailWebView.goBack();
+            return ;
+        }
         if (mAlphaAnimationOut != null && mRootView != null) {
             mRootView.startAnimation(mAlphaAnimationOut);
             mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {

@@ -1223,7 +1223,7 @@ public class NegativeScreenNewsFeedView extends RelativeLayout implements ThemeM
         } else {
             vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         }
-        vPlayer.setShowMediaList(true);
+//        vPlayer.setShowMediaList(true);
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
