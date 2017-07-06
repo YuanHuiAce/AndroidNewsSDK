@@ -235,6 +235,10 @@ public final class SharedPreManager {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 0);
     }
 
+    public int getNegativeChannelInt(String spName, String key) {
+        return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 3);
+    }
+
     public int getAdChannelInt(String spName, String key) {
         return getSettings(spName, Context.MODE_MULTI_PROCESS).getInt(key, 2);
     }

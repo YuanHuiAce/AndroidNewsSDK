@@ -51,6 +51,8 @@ import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
+import static com.taobao.accs.ACCSManager.mContext;
+
 
 public class NegativeScreenActivity extends AppCompatActivity implements ThemeManager.OnThemeChangeListener {
     NegativeScreenNewsFeedView mainView;
@@ -73,7 +75,8 @@ public class NegativeScreenActivity extends AppCompatActivity implements ThemeMa
         ThemeManager.registerThemeChangeListener(this);
         newsLayout = (RelativeLayout) findViewById(R.id.newsLayout);
         mainView = new NegativeScreenNewsFeedView(this);
-        mainView.setChannelId(44);
+        mainView.setChannelId(1);
+        mainView.setChannelId(SharedPreManager.mInstance(mContext).getNegativeChannelInt(CommonConstant.FILE_AD, CommonConstant.NEGATIVE_CHANNEL));
         newsLayout.addView(mainView.getNewsView());
         //注册登录监听广播
         mReceiver = new UserReceiver();

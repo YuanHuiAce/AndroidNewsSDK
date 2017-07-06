@@ -99,7 +99,7 @@ public final class CommonConstant {
     public static final String USER_LOGIN_ACTION = "sdk_user_login_action";
     public static final String USER_LOGOUT_ACTION = "sdk_user_logout_action";
     public static final String USER_LOGIN_SUCCESS_ACTION = "user_login_success_action";
-
+    public static final String NEGATIVE_CHANNEL = "negative_channel";
     public static final String AD_CHANNEL = "ad_channel";
     public static final String AD_FEED_POS = "ad_feed_pos";
     public static final String AD_FEED_VIDEO_POS = "ad_feed_video_pos";
@@ -123,6 +123,7 @@ public final class CommonConstant {
     public static final String NEWS_RELATE_GDT_API_SMALLID = "545";
     //纹字锁屏负一平单
     //广点通SDK id 广告位id
+    public static final int NEWS_NEGATIVECTYPE = 9;
 //    public static final String APPID = "1105877613";
 //    public static final String NEWS_FEED_GDT_SDK_SPLASHPOSID = "1080226252003596";
     public static final String NEWS_FEED_GDT_SDK_NEGATIVEBIGPOSID = "3090924212656959";
