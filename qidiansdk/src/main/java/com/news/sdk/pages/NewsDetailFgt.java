@@ -537,6 +537,7 @@ public class NewsDetailFgt extends Fragment implements NativeAD.NativeAdListener
         });
         //关注
         relativeLayout_attention = (RelativeLayout) mViewPointLayout.findViewById(R.id.relativeLayout_attention);
+        relativeLayout_attention.setVisibility(View.GONE);
         iv_attention_icon = (ImageView) mViewPointLayout.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextView) mViewPointLayout.findViewById(R.id.tv_attention_title);
         attention_btn = (TextView) mViewPointLayout.findViewById(R.id.attention_btn);

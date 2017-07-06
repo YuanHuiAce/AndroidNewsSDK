@@ -783,14 +783,6 @@ public class NegativeScreenNewsFeedAdapter extends MultiItemCommonAdapter<NewsFe
                             setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
                         }
                     }
-// else {
-//                        setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_VIDEODETAILPAGE);
-//                        negativeScreenVideoDetailView = new NegativeScreenVideoDetailView(mContext);
-//                        negativeScreenVideoDetailView.setFocusable(true);
-//                        negativeScreenVideoDetailView.setFocusableInTouchMode(true);
-//                        mRootView.addView(negativeScreenVideoDetailView.getRootView());
-//                        negativeScreenVideoDetailView.setNewsFeed(feed, CommonConstant.LOG_CLICK_FEED_SOURCE);
-//                    }
                 } else {
                     setNewsFeedReadAndUploadUserAction(feed, CommonConstant.LOG_PAGE_DETAILPAGE);
                     if (negativeScreenNewsDetailView == null) {

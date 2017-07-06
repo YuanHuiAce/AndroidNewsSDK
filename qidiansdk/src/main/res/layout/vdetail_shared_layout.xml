@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="12dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal"
-        android:paddingRight="15dp">
+        >
 
         <TextView
             android:id="@+id/detail_video_title"
@@ -30,7 +31,6 @@
             android:layout_alignParentRight="true"
             android:background="@null"
             android:paddingBottom="8dp"
-            android:paddingRight="15dp"
             android:paddingTop="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_title_off" />

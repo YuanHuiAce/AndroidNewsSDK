@@ -36,8 +36,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.jinsedeyuzhou.IPlayer;
+import com.github.jinsedeyuzhou.MediaPlayer;
 import com.github.jinsedeyuzhou.PlayStateParams;
-import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,6 +68,7 @@ import com.news.sdk.utils.Logger;
 import com.news.sdk.utils.NetUtil;
 import com.news.sdk.utils.TextUtil;
 import com.news.sdk.utils.ToastUtil;
+import com.news.sdk.utils.manager.MediaManager;
 import com.news.sdk.utils.manager.PlayerManager;
 import com.news.sdk.utils.manager.SharedPreManager;
 import com.qq.e.ads.nativ.NativeAD;
@@ -105,7 +106,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     private NewsFeed mNewsFeed;
     private NewsDetail mResult;
     private String mNid;
-    private VPlayPlayer vplayer;
+    private MediaPlayer vplayer;
     private RequestManager mRequestManager;
     private boolean isBottom;
     private boolean isLoadDate;
@@ -482,7 +483,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     }
 
     public View getRootView() {
-        return this.view;
+        return this;
     }
 
 
@@ -490,29 +491,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.mDetailLeftBack) {
-            onBackUp();
-            if (mAlphaAnimationOut != null) {
-                view.startAnimation(mAlphaAnimationOut);
-                mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        view.setVisibility(GONE);
-                        view.removeAllViews();
-                        view.destroyDrawingCache();
-                        view = null;
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
+            finishView();
         } else if (id == R.id.mDetailRightMore) {
 
         } else if (id == R.id.mNewsDetailLoaddingWrapper) {
@@ -659,7 +638,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         mNewsFeed.setPtime(result.getPtime());
         mNewsFeed.setComment(result.getComment());
         mNewsFeed.setChannel(result.getChannel());
-        mNewsFeed.setStyle(result.getImgNum());
+//        mNewsFeed.setStyle(result.getImgNum());
 //        mNewsFeed.setImageUrl(mImageUrl);
         mNewsFeed.setNid(result.getNid());
         return mNewsFeed;
@@ -947,9 +926,50 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
         return super.onKeyDown(keyCode, event);
     }
 
+    public void finishView() {
+        if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
+            ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            removeVPlayer();
+            mFullVideoContainer.setVisibility(View.GONE);
+            mDetailShow.setVisibility(View.GONE);
+            mVideoContainer.addView(vplayer);
+            vplayer.showBottomControl(true);
+            return;
+        } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
+            PlayerManager.isList = false;
+            removeVPlayer();
+            if (vplayer != null) {
+                vplayer.stop();
+                vplayer.release();
+            }
+            mDetailShow.setVisibility(View.VISIBLE);
+            mVideoContainer.setVisibility(View.GONE);
+            if (mAlphaAnimationOut != null) {
+                view.startAnimation(mAlphaAnimationOut);
+                mAlphaAnimationOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        view.setVisibility(GONE);
+                        ((RelativeLayout) view.getParent()).removeAllViews();
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
+        }
+
+    }
 
     public boolean onBackUp() {
-
         if (mFullVideoContainer.getVisibility() == View.VISIBLE) {
             ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             removeVPlayer();
@@ -959,7 +979,7 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             vplayer.showBottomControl(true);
             return true;
         } else if (mVideoContainer.getVisibility() == View.VISIBLE) {
-            PlayerManager.isList=false;
+            PlayerManager.isList = false;
             removeVPlayer();
             if (vplayer != null) {
                 vplayer.stop();
@@ -967,10 +987,10 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
             }
             mDetailShow.setVisibility(View.VISIBLE);
             mVideoContainer.setVisibility(View.GONE);
-            if (PlayerManager.videoPlayView != null) {
-                PlayerManager.videoPlayView.onDestory();
-                PlayerManager.videoPlayView = null;
-            }
+//            if (PlayerManager.videoPlayView != null) {
+//                PlayerManager.videoPlayView.onDestory();
+//                PlayerManager.videoPlayView = null;
+//            }
             return false;
         }
 
@@ -978,10 +998,12 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     }
 
     private void initPlayer() {
-        if (PlayerManager.videoPlayView != null) {
-            vplayer = PlayerManager.videoPlayView;
-        } else {
-            vplayer = PlayerManager.getPlayerManager().initialize(mContext);
+        if (vplayer == null) {
+            if (MediaManager.videoPlayView != null) {
+                vplayer = MediaManager.videoPlayView;
+            } else {
+                vplayer = MediaManager.getPlayerManager().initialize(mContext);
+            }
         }
         //视频相关
         mFullVideoContainer = (VideoContainer) view.findViewById(R.id.detail_video_fullscreen);
@@ -1105,7 +1127,6 @@ public class NegativeScreenVideoDetailView extends RelativeLayout implements The
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
         mHomeWatcher = new HomeWatcher(mContext);
         mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
         mHomeWatcher.startWatch();

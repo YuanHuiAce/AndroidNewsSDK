@@ -3,9 +3,9 @@ package com.github.jinsedeyuzhou;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -38,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jinsedeyuzhou.adapter.PlayerAdapter;
 import com.github.jinsedeyuzhou.bean.PlayerFeed;
@@ -57,11 +58,11 @@ import static com.github.jinsedeyuzhou.utils.StringUtils.generateTime;
 /**
  * Created by Berkeley on 11/2/16.
  */
-public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, View.OnClickListener
+public class MediaPlayer extends FrameLayout implements View.OnTouchListener, View.OnClickListener
         , IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnInfoListener {
-    private static final String TAG = VPlayPlayer.class.getSimpleName();
+    private static final String TAG = MediaPlayer.class.getSimpleName();
     private Context mContext;
-    private Activity activity;
+    private ContextWrapper activity;
 
     private View contollerbar;
     private IjkVideoView mVideoView;
@@ -202,18 +203,18 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
     };
 
 
-    public VPlayPlayer(Context context) {
+    public MediaPlayer(Context context) {
         super(context);
         init(context);
 
     }
 
-    public VPlayPlayer(Context context, AttributeSet attrs) {
+    public MediaPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public VPlayPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MediaPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
 
@@ -221,7 +222,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
     private void init(Context context) {
         this.mContext = context;
-        activity = (Activity)context;
+        activity = (ContextWrapper) context;
         initView();
         initMediaQuality();
         initAction();
@@ -349,7 +350,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                         }
                     } else {
                         if (mIsLand && !isLock) {
-                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
                             mIsLand = false;
                             mClick = false;
@@ -367,29 +368,30 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
                         }
                     } else {
                         if (!mIsLand) {
-                            if ((rotation >= 60 && rotation <= 120))
-                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-                            else if (((rotation >= 230) && (rotation <= 310)))
-                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                            if ((rotation >= 60 && rotation <= 120)) ;
+//                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                            else if (((rotation >= 230) && (rotation <= 310))) ;
+//                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                             mIsLand = true;
                             mClick = false;
                         } else {
-                            if ((rotation >= 60 && rotation <= 120))
-                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-                            else if (((rotation >= 230) && (rotation <= 310)))
-                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                            if ((rotation >= 60 && rotation <= 120)) ;
+//                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                            else if (((rotation >= 230) && (rotation <= 310))) ;
+//                                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                         }
                     }
                 }
             }
         };
-        portrait = WindowUtils.getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        portrait = true;
+//                WindowUtils.getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         hideAll();
         /**
          * 不支持此设备
          */
         if (!playerSupport) {
-            status= PlayStateParams.STATE_ERROR;
+            status = PlayStateParams.STATE_ERROR;
             showStatus(activity.getResources().getString(R.string.not_support));
         }
 
@@ -521,7 +523,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 //            }
 
         } else if (id == R.id.full) {
-            toggleFullScreen();
+            Toast.makeText(mContext, "待开发", Toast.LENGTH_SHORT).show();
+//            toggleFullScreen();
         } else if (id == R.id.sound) {
             Log.v(TAG, "onclick:" + PlayerApplication.isSound);
             if (!PlayerApplication.isSound) {
@@ -535,8 +538,8 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             }
             PlayerApplication.isSound = !PlayerApplication.isSound;
         } else if (id == R.id.iv_video_finish) {
-            if (!onBackPressed())
-                activity.finish();
+//            if (!onBackPressed())
+//                activity.finish();
         } else if (id == R.id.app_video_lock) {
             if (!isLock) {
                 isLock = true;
@@ -693,14 +696,14 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             if (onClickOrientationListener != null) {
                 onClickOrientationListener.landscape();
             }
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             mIsLand = true;
             mClickLand = false;
         } else {
             if (onClickOrientationListener != null) {
                 onClickOrientationListener.portrait();
             }
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             mIsLand = false;
             mClickPort = false;
         }
@@ -926,16 +929,16 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
 
     private void setFullScreen(boolean fullScreen) {
-        if (activity != null) {
-            WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
-            if (fullScreen) {
-                attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-                activity.getWindow().setAttributes(attrs);
-            } else {
-                attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                activity.getWindow().setAttributes(attrs);
-            }
-        }
+//        if (activity != null) {
+////            WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
+//            if (fullScreen) {
+////                attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+////                activity.getWindow().setAttributes(attrs);
+//            } else {
+//                attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//                activity.getWindow().setAttributes(attrs);
+//            }
+//        }
 
     }
 
@@ -1363,7 +1366,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mClick = true; // 是否点击
             mIsLand = false;
             mClickPort = false;
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -1376,7 +1379,7 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
             mClick = true; // 是否点击
             mIsLand = false;
             mClickPort = false;
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return true;
 //            }
 //            return true;
@@ -1594,15 +1597,15 @@ public class VPlayPlayer extends FrameLayout implements View.OnTouchListener, Vi
 
 //============================网络监听================================
 
-    /**
-     * 获得某个控件
-     *
-     * @param ViewId
-     * @return
-     */
-    public View getView(int ViewId) {
-        return activity.findViewById(ViewId);
-    }
+//    /**
+//     * 获得某个控件
+//     *
+//     * @param ViewId
+//     * @return
+//     */
+//    public View getView(int ViewId) {
+//        return mContext.findViewById(ViewId);
+//    }
 
     /**
      * 注册网络监听器
